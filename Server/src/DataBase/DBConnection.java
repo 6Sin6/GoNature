@@ -102,14 +102,6 @@ public class DBConnection {
         System.gc(); // Force garbage collection to release resources.
     }
 
-    /**
-     * Returns the current database connection.
-     *
-     * @return The established SQL Connection.
-     */
-    public Connection getConnection() {
-        return this.conn;
-    }
     public void insertRecord(String tableName, String... values){
         try{
             if(!actions.insertRecord(tableName, values)){
