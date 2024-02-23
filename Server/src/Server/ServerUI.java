@@ -12,7 +12,7 @@ public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
 	public static Vector<Student> students=new Vector<Student>();
 
-	public static void main( String args[] ) throws Exception
+	public static void main( String args[] )
 	   {   
 		 launch(args);
 	  } // end main
@@ -27,6 +27,7 @@ public class ServerUI extends Application {
 	
 	public static void runServer(ServerPortFrameController guiController)
 	{
+		 EchoServer sv;
 		 int port = 0; //Port to listen on
 
 	        try
@@ -38,17 +39,21 @@ public class ServerUI extends Application {
 	        {
 	        	System.out.println("ERROR - Could not connect!");
 	        }
-	    	
-	        EchoServer sv = new EchoServer(port,guiController);
-	        
-	        try 
-	        {
-	          sv.listen(); //Start listening for connections
-	        } 
-	        catch (Exception ex) 
-	        {
-	          System.out.println("ERROR - Could not listen for clients!");
-	        }
+	    	try {
+				sv = new EchoServer(port, guiController);
+				try
+				{
+					sv.listen(); //Start listening for connections
+				}
+				catch (Exception ex)
+				{
+					System.out.println("ERROR - Could not listen for clients!");
+				}
+
+			}
+			catch (Exception e){
+				guiController.addtolog("");
+			}
 	}
 	
 
