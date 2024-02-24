@@ -85,6 +85,21 @@ public class ServerPortFrameController implements Initializable {
             primaryStage.show();
     }
 
+    public void setDefaultValues() {
+        this.TextFieldPassword.setText("Aa123456");
+        this.TextfieldUserName.setText("Eyal");
+        this.portxt.setText("5555");
+        // Set default value for the ComboBox to "192.168.194.1" if it exists in the items list
+        String defaultURL = "192.168.194.1";
+        if (list.contains(defaultURL)) {
+            this.URLComboBox.setValue(defaultURL);
+        } else {
+            // Handle the case where the default value doesn't exist in the items list
+            // You might want to set a different default value or handle this case differently
+            System.err.println("Default URL not found in the list: " + defaultURL);
+        }
+    }
+
     public void getExitBtn(ActionEvent event) throws Exception {
         addtolog("Exit Server");
         System.exit(0);
@@ -117,6 +132,7 @@ public class ServerPortFrameController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
+        setDefaultValues();
     }
 
     public void toggleControllers(boolean flag) {

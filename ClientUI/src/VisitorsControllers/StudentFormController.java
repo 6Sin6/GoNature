@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import Entities.Student;
 import VisitorsUI.ClientUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

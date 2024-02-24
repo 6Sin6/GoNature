@@ -1,7 +1,6 @@
 package VisitorsControllers;
 
 
-import Entities.Student;
 import client.ChatClient;
 import VisitorsUI.ClientUI;
 import javafx.event.ActionEvent;
@@ -52,7 +51,6 @@ public  class AcademicFrameController   {
 			if(ChatClient.s1.getId().equals("Error"))
 			{
 				System.out.println("Student ID Not Found");
-				
 			}
 			else {
 				System.out.println("Student ID Found");

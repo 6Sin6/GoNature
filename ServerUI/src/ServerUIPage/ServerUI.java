@@ -21,22 +21,22 @@ public class ServerUI extends Application {
     }
 
     public static void runServer(ServerPortFrameController guiController) {
-        int port = 0; //Port to listen on
-        try {
-            port = Integer.parseInt(guiController.getPort()); //Set port to 5555
+        int port = 5555; // Fallback port
 
+        try {
+            port = Integer.parseInt(guiController.getPort());
         } catch (Throwable t) {
-            System.out.println("ERROR - Could not connect!");
+            System.out.println("Failed to connect on requested port. Using fallback port 5555");
         }
+
         try {
-
             GoNatureServer sv = GoNatureServer.getInstance(port, guiController);
-            try {
-                sv.listen(); //Start listening for connections
-            } catch (Exception ex) {
-                guiController.addtolog("ERROR - Could not listen for clients!");
-            }
 
+            try {
+                sv.listen();
+            } catch (Exception ex) {
+                guiController.addtolog("Error: Failed to listen for clients!");
+            }
         } catch (Exception e) {
             guiController.addtolog(e.getMessage());
         }
@@ -44,7 +44,4 @@ public class ServerUI extends Application {
     public static void closeServer() throws IOException {
         GoNatureServer.closeServer();
     }
-
-
-
 }

@@ -5,8 +5,6 @@
 package client;
 
 import CommonClientUI.ChatIF;
-import Entities.Faculty;
-import Entities.Student;
 
 import java.io.*;
 
@@ -26,7 +24,6 @@ public class ChatClient extends AbstractClient {
      * The interface type variable.  It allows the implementation of
      * the display method in the client.
      */
-    public static Student s1 = new Student(null,null,null,new Faculty(null,null));
     ChatIF clientUI;
     public static boolean awaitResponse = false;
 
@@ -42,9 +39,8 @@ public class ChatClient extends AbstractClient {
 
     public ChatClient(String host, int port, ChatIF clientUI)
             throws IOException {
-        super(host, port); //Call the superclass constructor
+        super(host, port);
         this.clientUI = clientUI;
-        //openConnection();
     }
 
     //Instance methods ************************************************
@@ -61,10 +57,7 @@ public class ChatClient extends AbstractClient {
             if (msg.equals("Disconnect")) {
                 closeConnection();
             }
-
             awaitResponse = false;
-
-
         }
     }
 
@@ -74,8 +67,7 @@ public class ChatClient extends AbstractClient {
          * @param message The message from the UI.
          */
 
-        public void handleMessageFromClientUI (Object message)
-        {
+        public void handleMessageFromClientUI (Object message) throws IOException {
             try {
                 openConnection();//in order to send more than one message
                 awaitResponse = true;
@@ -99,12 +91,8 @@ public class ChatClient extends AbstractClient {
         /**
          * This method terminates the client.
          */
-        public void quit()
-        {
-            try {
-                closeConnection();
-            } catch (IOException e) {
-            }
+        public void quit() throws IOException {
+            closeConnection();
             System.exit(0);
         }
     }

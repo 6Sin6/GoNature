@@ -84,7 +84,11 @@ public class GoNatureServer extends AbstractServer {
             (Object msg, ConnectionToClient client) throws SQLException {
         if (msg instanceof String) {
             this.controller.addtolog("Message received from " + client);
-
+            if (msg.equals("dc")) {
+                this.sendToAllClients("Disconnect");
+            } else {
+                this.sendToAllClients("12345");
+            }
         }
         else if (msg instanceof ArrayList<?>) {
             this.controller.addtolog("Message received from " + client);
