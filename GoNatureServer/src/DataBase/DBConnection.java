@@ -1,10 +1,14 @@
 package DataBase;
 
+import Entities.OpCodes;
+import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Manages the database connection for the application.
@@ -18,7 +22,7 @@ public class DBConnection {
 
     private final ServerPortFrameController controller;
 
-    private DBActions actions;
+    private DBController actions;
 
     /**
      * Private constructor to prevent instantiation.
@@ -36,7 +40,7 @@ public class DBConnection {
         if (!setConnection(controller.getURLComboBox(), controller.getUserName(), controller.getPassword())) {
             throw new SQLException("SQL connection failed");
         }
-        this.actions = new DBActions(conn);
+        this.actions = new DBController(conn);
     }
 
     /**
@@ -118,5 +122,33 @@ public class DBConnection {
         }
     }
 
+    public ArrayList<Order> getOrders() {
+        try {
+            ResultSet results = actions.selectRecords("", "");
+            return new ArrayList<>();
+        } catch (SQLException e) {
+            this.controller.addtolog(e.getMessage());
+            return null;
+        }
+    }
 
+    public Order getOrderById(String orderId) {
+        try {
+            ResultSet results = actions.selectRecords("", "");
+            return (Order) results;
+        } catch (SQLException e) {
+            this.controller.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean updateOrderById(Order updatedOrder) {
+        try {
+            ResultSet results = actions.selectRecords("", "");
+            return true;
+        } catch (SQLException e) {
+            this.controller.addtolog(e.getMessage());
+            return false;
+        }
+    }
 }

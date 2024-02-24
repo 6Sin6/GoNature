@@ -7,10 +7,10 @@ import java.sql.*;
  * Provides methods for performing actions on the database, with integration
  * to update or log through the ServerPortFrameController.
  */
-public class DBActions {
+public class DBController {
     private final Connection conn;
 
-    public DBActions(Connection conn) {
+    public DBController(Connection conn) {
         this.conn = conn;
     }
 
@@ -95,7 +95,7 @@ public class DBActions {
      * @param whereClause The WHERE clause to specify which records to select.
      * @return A ResultSet containing the selected records, or null if an error occurs.
      */
-    public ResultSet selectRecords( String tableName, String whereClause) throws SQLException {
+    public ResultSet selectRecords(String tableName, String whereClause) throws SQLException {
         String sql = "SELECT * FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
