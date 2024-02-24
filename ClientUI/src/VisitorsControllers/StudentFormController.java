@@ -22,7 +22,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class StudentFormController implements Initializable {
-	private Student s;
 	@FXML
 	private Label idLbl;
 	@FXML
@@ -51,14 +50,6 @@ public class StudentFormController implements Initializable {
 	private ComboBox cmbFaculty;	
 	
 	ObservableList<String> list;
-		
-	public void loadStudent(Student s1) {
-		this.s=s1;
-		this.idtext.setText((s.getId()));
-		this.txtName.setText(s.getPName());
-		this.txtSurname.setText(s.getLName());		
-		this.cmbFaculty.setValue(s.getFc().getFName());
-	}
 	
 	// creating list of Faculties
 	private void setFacultyComboBox() {

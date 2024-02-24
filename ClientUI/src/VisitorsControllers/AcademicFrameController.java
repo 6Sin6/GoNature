@@ -46,27 +46,19 @@ public  class AcademicFrameController   {
 		else
 		{
 			ClientUI.chat.accept(id);
-			
-		
-			if(ChatClient.s1.getId().equals("Error"))
-			{
-				System.out.println("Student ID Not Found");
-			}
-			else {
-				System.out.println("Student ID Found");
-				((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/VisitorsControllers/StudentForm.fxml").openStream());
-				StudentFormController studentFormController = loader.getController();		
-				studentFormController.loadStudent(ChatClient.s1);
-			
-				Scene scene = new Scene(root);			
-				scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/StudentForm.css").toExternalForm());
-				primaryStage.setTitle("Student Managment Tool");
-	
-				primaryStage.setScene(scene);		
-				primaryStage.show();
-			}
+
+			System.out.println("Student ID Found");
+			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+			Stage primaryStage = new Stage();
+			Pane root = loader.load(getClass().getResource("/VisitorsControllers/StudentForm.fxml").openStream());
+			StudentFormController studentFormController = loader.getController();
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/StudentForm.css").toExternalForm());
+			primaryStage.setTitle("Student Managment Tool");
+
+			primaryStage.setScene(scene);
+			primaryStage.show();
 		}
 	}
 
@@ -85,10 +77,6 @@ public  class AcademicFrameController   {
 		System.out.println("exit Academic Tool");
 		System.exit(0);
 	}
-	
-	public void loadStudent(Student s1) {
-		this.sfc.loadStudent(s1);
-	}	
 	
 	public  void display(String message) {
 		System.out.println("message");

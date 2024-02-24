@@ -67,7 +67,7 @@ public class ChatClient extends AbstractClient {
          * @param message The message from the UI.
          */
 
-        public void handleMessageFromClientUI (Object message) throws IOException {
+        public void handleMessageFromClientUI (Object message) {
             try {
                 openConnection();//in order to send more than one message
                 awaitResponse = true;
@@ -91,8 +91,12 @@ public class ChatClient extends AbstractClient {
         /**
          * This method terminates the client.
          */
-        public void quit() throws IOException {
-            closeConnection();
+        public void quit() {
+            try {
+                closeConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             System.exit(0);
         }
     }

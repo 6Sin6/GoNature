@@ -61,7 +61,7 @@ public class ClientController implements ChatIF
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.
    */
-  public void accept(Object Obj) throws IOException {
+  public void accept(Object Obj) {
 	  client.handleMessageFromClientUI(Obj);
   }
   
