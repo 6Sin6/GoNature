@@ -4,7 +4,6 @@ import gui.ServerPortFrameController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 
 /**
@@ -29,12 +28,14 @@ public class DBConnection {
      * @param controller The server port frame controller used for retrieving
      *                   connection details and logging.
      */
-    private DBConnection(ServerPortFrameController controller) throws Exception {
+    private DBConnection(ServerPortFrameController controller) throws ClassNotFoundException, SQLException {
         this.controller = controller;
-        if(!driverDefinition()){
-            throw new Exception("Driver definition failed");
+        if (!driverDefinition()) {
+            throw new ClassNotFoundException("Driver definition failed");
         }
-        setConnection(controller.getURLComboBox(), controller.getUserName(), controller.getPassword());
+        if (!setConnection(controller.getURLComboBox(), controller.getUserName(), controller.getPassword())) {
+            throw new SQLException("SQL connection failed");
+        }
         this.actions = new DBActions(conn);
     }
 
@@ -76,38 +77,39 @@ public class DBConnection {
      * @param user     The username for the database.
      * @param password The password for the database.
      */
-    private void setConnection(String url, String user, String password) {
+    private boolean setConnection(String url, String user, String password) {
         try {
-            this.conn = DriverManager.getConnection("jdbc:mysql://"+url+":3306/test?serverTimezone=IST", user, password);
+            this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=IST&useSSL=false", user, password);
             this.controller.addtolog("SQL connection succeed");
+            return true;
         } catch (SQLException ex) {
             logSQLException(ex);
+            return false;
         }
     }
+
     // Utility method to log SQL exceptions
     private void logSQLException(SQLException ex) {
         this.controller.addtolog("SQLException: " + ex.getMessage());
         this.controller.addtolog("SQLState: " + ex.getSQLState());
         this.controller.addtolog("VendorError: " + ex.getErrorCode());
     }
-    public void closeConnection(){
+
+    public void closeConnection() {
         try {
             this.conn.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception ignored) {
         }
         this.controller.addtolog("SQL connection closed");
         this.conn = null;
         dbConnection = null;
-        System.gc(); // Force garbage collection to release resources.
     }
 
-    public void insertRecord(String tableName, String... values){
-        try{
-            if(!actions.insertRecord(tableName, values)){
+    public void insertRecord(String tableName, String... values) {
+        try {
+            if (!actions.insertRecord(tableName, values)) {
                 this.controller.addtolog("Insert into " + tableName + " failed");
-            }
-            else{
+            } else {
                 this.controller.addtolog("Insert into " + tableName + " succeed");
                 this.controller.addtolog("Inserted record: " + String.join(", ", values));
             }

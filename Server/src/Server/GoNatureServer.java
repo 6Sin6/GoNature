@@ -3,16 +3,12 @@
 // license found at www.lloseng.com 
 package Server;
 
-import java.io.*;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
-import DataBase.DBActions;
 import DataBase.DBConnection;
 import gui.ServerPortFrameController;
-import logic.Faculty;
-import logic.Student;
 import OCSF.*;
 
 
@@ -27,12 +23,14 @@ import OCSF.*;
  * @version July 2000
  */
 
-public class EchoServer extends AbstractServer {
+public class GoNatureServer extends AbstractServer {
     //Class variables *************************************************
 
-
+    private static GoNatureServer server;
     private ServerPortFrameController controller;
     private DBConnection db;
+
+
 
     //Constructors ****************************************************
 
@@ -42,10 +40,23 @@ public class EchoServer extends AbstractServer {
      * @param port The port number to connect on.
      */
 
-    public EchoServer(int port, ServerPortFrameController controller) throws Exception {
+    private GoNatureServer(int port, ServerPortFrameController controller) throws Exception {
         super(port);
         this.controller=controller;
-        db = DBConnection.getInstance(controller);
+        try{
+            db = DBConnection.getInstance(controller);
+        }
+        catch (ClassNotFoundException | SQLException e){
+            controller.addtolog(e.getMessage());
+            super.close();
+        }
+    }
+
+    public static GoNatureServer getInstance(int port, ServerPortFrameController controller) throws Exception {
+        if (server == null) {
+            server = new GoNatureServer(port,controller);
+        }
+        return server;
     }
 
     //Instance methods ************************************************
@@ -64,8 +75,6 @@ public class EchoServer extends AbstractServer {
      */
     protected void serverStarted() {
         this.controller.addtolog("Server listening for connections on port " + getPort());
-
-
     }
 
 
@@ -99,8 +108,31 @@ public class EchoServer extends AbstractServer {
      * This method overrides the one in the superclass.  Called
      * when the server stops listening for connections.
      */
+    @Override
     protected void serverStopped() {
         this.controller.addtolog("Server has stopped listening for connections.");
     }
+
+    @Override
+    protected void serverClosed() {
+        controller.toggleControllers(false);
+        this.controller.addtolog("Server has closed.");
+        db.closeConnection();
+    }
+    public static void closeServer() throws IOException {
+        if (server == null) {
+            System.out.println("Server isn't initialized");
+            return;
+        }
+        server.sendToAllClients("Disconnect");
+        server.stopListening();
+        server.close();
+        server.controller.toggleControllers(false);
+        server = null;
+        System.exit(0);
+    }
+
+
+
 }
 //End of EchoServer class

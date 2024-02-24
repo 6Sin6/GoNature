@@ -1,4 +1,4 @@
-package logic;
+package Entities;
 
 
 public class Student {

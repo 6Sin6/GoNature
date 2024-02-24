@@ -105,6 +105,5 @@ public class DBActions {
         } catch (SQLException e) {
             throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
         }
-
     }
 }

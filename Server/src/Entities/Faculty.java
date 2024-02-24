@@ -1,4 +1,4 @@
-package logic;
+package Entities;
 import java.util.Collection;
 import java.util.HashMap;
 

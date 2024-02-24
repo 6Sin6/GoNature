@@ -2,13 +2,8 @@ package client;
 import javafx.application.Application;
 
 import javafx.stage.Stage;
-import logic.Faculty;
-import logic.Student;
 
-import java.util.Vector;
 import gui.AcademicFrameController;
-import gui.StudentFormController;
-import client.ClientController;
 
 public class ClientUI extends Application {
 	public static ClientController chat; //only one instance

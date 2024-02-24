@@ -1,24 +1,22 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.Faculty;
-import logic.Student;
-import Server.EchoServer;
 import Server.ServerUI;
 
 public class ServerPortFrameController implements Initializable {
@@ -29,7 +27,7 @@ public class ServerPortFrameController implements Initializable {
     @FXML
     private Button btnExit = null;
     @FXML
-    private Button btnDone = null;
+    private Button btnStart;
     @FXML
     private Label lbllist;
     @FXML
@@ -55,7 +53,8 @@ public class ServerPortFrameController implements Initializable {
     @FXML
     private TextField TextFieldPassword;
 
-
+    @FXML
+    private Button BtnStop;
     @FXML
     private TextField portxt;
     ObservableList<String> list;
@@ -70,39 +69,41 @@ public class ServerPortFrameController implements Initializable {
         if (p.trim().isEmpty()) {
             addtolog("You must enter a port number");
 
+        } else if (getURLComboBox().isEmpty() || getUserName().isEmpty() || getPassword().isEmpty()) {
+            addtolog("You must enter a URL, username and password");
+            addtolog("Please try again");
         } else {
-//			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-//			Stage primaryStage = new Stage();
-//			FXMLLoader loader = new FXMLLoader();
             ServerUI.runServer( this);
+            toggleControllers(true);
         }
     }
 
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));
-
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
-        primaryStage.setTitle("Client");
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
+            Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
+            primaryStage.setTitle("Server");
+            primaryStage.setScene(scene);
+            primaryStage.show();
     }
 
     public void getExitBtn(ActionEvent event) throws Exception {
-        addtolog("exit Academic Tool");
+        addtolog("Exit Server");
         System.exit(0);
+    }
+    @FXML
+    void stopServer(ActionEvent event) throws Exception {
+        ServerUI.closeServer();
     }
 
     public void addtolog(String str) {
-        String old = loggerTextArea.getText();
-        String newstr = old + "\n" + str;
-        loggerTextArea.setText(newstr);
+        System.out.println(str);
+        loggerTextArea.appendText(str+"\n");
     }
     private void setURLComboBox() {
         ArrayList<String> UrlComboList = new ArrayList<>();
         UrlComboList.add("localhost");
-        UrlComboList.add("shayddns.ddns.net");
+        UrlComboList.add("https://www.jetbrains.com/shop/eform/students");
         list = FXCollections.observableArrayList(UrlComboList);
         URLComboBox.setItems(list);
     }
@@ -118,5 +119,14 @@ public class ServerPortFrameController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
+    }
+
+    public void toggleControllers(boolean flag) {
+        btnStart.setDisable(flag);
+        TextfieldUserName.setDisable(flag);
+        TextFieldPassword.setDisable(flag);
+        URLComboBox.setDisable(flag);
+        portxt.setDisable(flag);
+        BtnStop.setDisable(!flag);
     }
 }
