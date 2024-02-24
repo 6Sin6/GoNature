@@ -1,6 +1,5 @@
 package DataBase;
 
-import Entities.OpCodes;
 import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 
@@ -20,9 +19,9 @@ public class DBConnection {
     private Connection conn;
     private static DBConnection dbConnection;
 
-    private final ServerPortFrameController controller;
+    private final ServerPortFrameController serverController;
 
-    private DBController actions;
+    private DBController dbController;
 
     /**
      * Private constructor to prevent instantiation.
@@ -33,14 +32,14 @@ public class DBConnection {
      *                   connection details and logging.
      */
     private DBConnection(ServerPortFrameController controller) throws ClassNotFoundException, SQLException {
-        this.controller = controller;
+        this.serverController = controller;
         if (!driverDefinition()) {
             throw new ClassNotFoundException("Driver definition failed");
         }
         if (!setConnection(controller.getURLComboBox(), controller.getUserName(), controller.getPassword())) {
             throw new SQLException("SQL connection failed");
         }
-        this.actions = new DBController(conn);
+        this.dbController = new DBController(conn);
     }
 
     /**
@@ -65,10 +64,10 @@ public class DBConnection {
     private boolean driverDefinition() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            this.controller.addtolog("Driver definition succeed");
+            this.serverController.addtolog("Driver definition succeed");
             return true;
         } catch (Exception ex) {
-            this.controller.addtolog("Driver definition failed");
+            this.serverController.addtolog("Driver definition failed");
             return false;
         }
     }
@@ -84,7 +83,7 @@ public class DBConnection {
     private boolean setConnection(String url, String user, String password) {
         try {
             this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=IST&useSSL=false&allowPublicKeyRetrieval=true", user, password);
-            this.controller.addtolog("SQL connection succeed");
+            this.serverController.addtolog("SQL connection succeed");
             return true;
         } catch (SQLException ex) {
             logSQLException(ex);
@@ -94,9 +93,9 @@ public class DBConnection {
 
     // Utility method to log SQL exceptions
     private void logSQLException(SQLException ex) {
-        this.controller.addtolog("SQLException: " + ex.getMessage());
-        this.controller.addtolog("SQLState: " + ex.getSQLState());
-        this.controller.addtolog("VendorError: " + ex.getErrorCode());
+        this.serverController.addtolog("SQLException: " + ex.getMessage());
+        this.serverController.addtolog("SQLState: " + ex.getSQLState());
+        this.serverController.addtolog("VendorError: " + ex.getErrorCode());
     }
 
     public void closeConnection() {
@@ -104,50 +103,50 @@ public class DBConnection {
             this.conn.close();
         } catch (Exception ignored) {
         }
-        this.controller.addtolog("SQL connection closed");
+        this.serverController.addtolog("SQL connection closed");
         this.conn = null;
         dbConnection = null;
     }
 
     public void insertRecord(String tableName, String... values) {
         try {
-            if (!actions.insertRecord(tableName, values)) {
-                this.controller.addtolog("Insert into " + tableName + " failed");
+            if (!dbController.insertRecord(tableName, values)) {
+                this.serverController.addtolog("Insert into " + tableName + " failed");
             } else {
-                this.controller.addtolog("Insert into " + tableName + " succeed");
-                this.controller.addtolog("Inserted record: " + String.join(", ", values));
+                this.serverController.addtolog("Insert into " + tableName + " succeed");
+                this.serverController.addtolog("Inserted record: " + String.join(", ", values));
             }
         } catch (SQLException e) {
-            this.controller.addtolog(e.getMessage());
+            this.serverController.addtolog(e.getMessage());
         }
     }
 
     public ArrayList<Order> getOrders() {
         try {
-            ResultSet results = actions.selectRecords("", "");
+            ResultSet results = dbController.selectRecords("", "");
             return new ArrayList<>();
         } catch (SQLException e) {
-            this.controller.addtolog(e.getMessage());
+            this.serverController.addtolog(e.getMessage());
             return null;
         }
     }
 
     public Order getOrderById(String orderId) {
         try {
-            ResultSet results = actions.selectRecords("", "");
+            ResultSet results = dbController.selectRecords("", "");
             return (Order) results;
         } catch (SQLException e) {
-            this.controller.addtolog(e.getMessage());
+            this.serverController.addtolog(e.getMessage());
             return null;
         }
     }
 
     public boolean updateOrderById(Order updatedOrder) {
         try {
-            ResultSet results = actions.selectRecords("", "");
+            ResultSet results = dbController.selectRecords("", "");
             return true;
         } catch (SQLException e) {
-            this.controller.addtolog(e.getMessage());
+            this.serverController.addtolog(e.getMessage());
             return false;
         }
     }
