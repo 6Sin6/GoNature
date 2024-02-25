@@ -93,12 +93,14 @@ public class ChatClient extends AbstractClient {
          */
         public void quit() {
             try {
+                sendToServer("quit");
                 closeConnection();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             System.exit(0);
         }
+
     }
 
 //End of ChatClient class

@@ -3,6 +3,7 @@ package ServerUIPage;
 import Server.GoNatureServer;
 import ServerUIPageController.ServerPortFrameController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -17,6 +18,13 @@ public class ServerUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ServerPortFrameController aFrame = new ServerPortFrameController();
+        primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+            try {
+                GoNatureServer.closeServer();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }));
         aFrame.start(primaryStage);
     }
 

@@ -75,7 +75,7 @@ public  class AcademicFrameController   {
 	
 	public void getExitBtn(ActionEvent event) throws Exception {
 		System.out.println("exit Academic Tool");
-		System.exit(0);
+		ClientUI.chat.close();
 	}
 	
 	public  void display(String message) {

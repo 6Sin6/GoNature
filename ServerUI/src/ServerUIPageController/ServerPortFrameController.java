@@ -2,6 +2,8 @@ package ServerUIPageController;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import ServerUIPage.ServerUI;
@@ -15,12 +17,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 
 public class ServerPortFrameController implements Initializable {
-    private StudentFormController sfc;
 
-    String temp = "";
 
     @FXML
     private Button btnExit = null;
@@ -55,6 +57,14 @@ public class ServerPortFrameController implements Initializable {
     private Button BtnStop;
     @FXML
     private TextField portxt;
+    @FXML
+    private TableView<Map> tableClients;
+
+    @FXML
+    private TableColumn<Map, String> colName;
+
+    @FXML
+    private TableColumn<Map, String> colIP;
     ObservableList<String> list;
 
     public String getPort() {
@@ -133,6 +143,30 @@ public class ServerPortFrameController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
         setDefaultValues();
+        colName.setCellValueFactory(new MapValueFactory<>("name"));
+        colIP.setCellValueFactory(new MapValueFactory<>("ip"));
+        tableClients.setRowFactory(tv -> {
+            TableRow<Map> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                    Map clickedRowData = row.getItem();
+                    // Handle the clicked row data, e.g., display it
+                    System.out.println("Selected row data: " + clickedRowData);
+                }
+            });
+            return row;
+        });
+    }
+    public void addRow(String name, String ip) {
+        Map<String, String> newRow = new HashMap<>();
+        newRow.put("name", name);
+        newRow.put("ip", ip);
+
+        tableClients.getItems().add(newRow);
+    }
+    public void removeRowByIP(String ip) {
+        // Use removeIf with a predicate to remove rows matching the condition
+        tableClients.getItems().removeIf(row -> ip.equals(row.get("ip")));
     }
 
     public void toggleControllers(boolean flag) {
