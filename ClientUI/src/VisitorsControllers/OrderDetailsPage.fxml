@@ -9,34 +9,31 @@
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane id="orderDetailsPageInfo" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="Your Order" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrderDetailsPageController">
-    <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="270.0" prefWidth="373.0">
-            <children>
-                <Label layoutX="79.0" layoutY="18.0" text="ID" />
-                <Label layoutX="79.0" layoutY="54.0" text="Number of visitors" />
-                <Label layoutX="79.0" layoutY="90.0" text="Park" />
-                <Label layoutX="80.0" layoutY="126.0" text="Email" />
-                <TextField id="telephoneNumbertxt" fx:id="txtTelephoneNumber" layoutX="221.0" layoutY="157.0">
-                    <effect>
-                        <InnerShadow />
-                    </effect>
-                </TextField>
-                <Label layoutX="79.0" layoutY="161.0" text="Telephone" />
-                <ComboBox id="cmbParkName" fx:id="cmbParkName" layoutX="221.0" layoutY="86.0" prefWidth="150.0" />
-                <Label layoutX="80.0" layoutY="199.0" text="Date" />
-                <Label layoutX="80.0" layoutY="238.0" text="Time" />
-                <Button id="btnSave" fx:id="btnSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false" onAction="#SaveChange" text="Save" />
-                <Button id="btnback" fx:id="btnback" layoutX="122.0" layoutY="305.0" mnemonicParsing="false" onAction="#returnMain" text="Back" />
-            <Label fx:id="lblStatusMsg" layoutX="189.0" layoutY="287.0" prefHeight="61.0" prefWidth="199.0" />
-            <Label fx:id="lblOrderNumber" layoutX="275.0" layoutY="18.0" />
-            <Label fx:id="lblNumberOfVisitors" layoutX="275.0" layoutY="54.0" />
-            <Label fx:id="lblEmail" layoutX="275.0" layoutY="126.0" />
-            <Label fx:id="lblVisitationDate" layoutX="275.0" layoutY="199.0" />
-            <Label fx:id="lblVisitationTime" layoutX="275.0" layoutY="238.0" />
-            </children>
+<AnchorPane id="orderDetailsPageInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrderDetailsPageController">
+    <children>
+        <Label layoutX="50.0" layoutY="18.0" text="Order ID" />
+        <Label layoutX="50.0" layoutY="54.0" text="Number of visitors" />
+        <Label layoutX="50.0" layoutY="90.0" text="Park" />
+        <Label layoutX="50.0" layoutY="126.0" text="Email" />
+        <TextField id="telephoneNumbertxt" fx:id="txtTelephoneNumber" layoutX="221.0" layoutY="157.0">
             <effect>
-                <DropShadow />
-            </effect></AnchorPane>
-    </content>
-</TitledPane>
+                <InnerShadow />
+            </effect>
+        </TextField>
+        <Label layoutX="50.0" layoutY="161.0" text="Telephone" />
+        <ComboBox id="cmbParkName" fx:id="cmbParkName" layoutX="221.0" layoutY="86.0" prefWidth="150.0" />
+        <Label layoutX="50.0" layoutY="199.0" text="Date" />
+        <Label layoutX="50.0" layoutY="238.0" text="Time" />
+        <Button id="btnSave" fx:id="btnSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false" onAction="#SaveChange" text="Save" />
+        <Button id="btnBack" fx:id="btnBack" layoutX="122.0" layoutY="305.0" mnemonicParsing="false" onAction="#returnMain" text="Back" />
+        <Label fx:id="lblStatusMsg" layoutX="221.0" layoutY="287.0" prefHeight="61.0" prefWidth="199.0" />
+        <Label fx:id="lblOrderNumber" layoutX="221.0" layoutY="18.0" />
+        <Label fx:id="lblNumberOfVisitors" layoutX="221.0" layoutY="54.0" />
+        <Label fx:id="lblEmail" layoutX="221.0" layoutY="126.0" />
+        <Label fx:id="lblVisitationDate" layoutX="221.0" layoutY="199.0" />
+        <Label fx:id="lblVisitationTime" layoutX="221.0" layoutY="238.0" />
+    </children>
+    <effect>
+        <DropShadow />
+    </effect>
+</AnchorPane>

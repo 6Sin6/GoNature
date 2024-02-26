@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -37,27 +38,25 @@ public class OrderDetailsPageController implements Initializable {
     private Label lblOrderNumber;
     @FXML
     private Label lblVisitationDate;
-
-    @FXML
-    private TextField txtTelephoneNumber;
     @FXML
     private Label lblVisitationTime;
     @FXML
     private Label lblNumberOfVisitors;
     @FXML
     private Label lblEmail;
+    @FXML
+    private Label lblStatusMsg;
+
+    @FXML
+    private TextField txtTelephoneNumber;
 
     @FXML
     private Button btnSave;
     @FXML
-    private Button btnback;
+    private Button btnBack;
 
     @FXML
     private ComboBox cmbParkName;
-
-    @FXML
-    private Label lblStatusMsg;
-
 
     ObservableList<String> list;
 
@@ -85,9 +84,11 @@ public class OrderDetailsPageController implements Initializable {
     // creating list of Faculties
     private void setcmbParkName() {
         ArrayList<String> al = new ArrayList<String>();
-        al.add("LonaPark");
+        al.add("Tel-Aviv - Central Park");
         al.add("EnGadiPark");
-        al.add("OfiraPark");
+        al.add("Karmiel - High Park");
+        al.add("LonaPark");
+        al.add("Herzliya - Nature Park");
         list = FXCollections.observableArrayList(al);
         cmbParkName.setItems(list);
     }
@@ -149,7 +150,7 @@ public class OrderDetailsPageController implements Initializable {
         ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
         Stage primaryStage = new Stage();
         try {
-            TitledPane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
+            AnchorPane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
             DashboardPageContoller dashboardPageContoller = loader.getController();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/DashboardPage.css").toExternalForm());
