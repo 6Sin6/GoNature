@@ -98,7 +98,7 @@ public class OrderDetailsPageController implements Initializable {
         String newParkName = (String) cmbParkName.getValue();
 
         if (!IsValidPhone(newTelNo)) {
-            lblStatusMsg.setText("Invalid Phone Number !");
+            lblStatusMsg.setText("Invalid Phone Number!");
             loadOrder(order);
             return;
         }
@@ -118,13 +118,13 @@ public class OrderDetailsPageController implements Initializable {
                 if (success) {
                     order = newOrder;
                 }
-                lblStatusMsg.setText(success ? "Succefully Updated !" : "Failed Updated");
+                lblStatusMsg.setText(success ? "Order has been Updated Successfully!" : "Failed Updating Order");
                 loadOrder(order);
             }
         }
         else
         {
-            lblStatusMsg.setText("No changes occured");
+            lblStatusMsg.setText("No changes have occurred");
         }
     }
 
