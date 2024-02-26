@@ -1,14 +1,13 @@
 package VisitorsUI;
-import Server.GoNatureServer;
+
+import Entities.Message;
+import Entities.OpCodes;
 import VisitorsControllers.DashboardPageContoller;
-import VisitorsControllers.OrderDetailsPageController;
+import client.ChatClient;
 import client.ClientController;
 import javafx.application.Application;
-
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 
 public class ClientUI extends Application {
@@ -28,8 +27,17 @@ public class ClientUI extends Application {
 		primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
             client.quit();
         }));
-		aFrame.start(primaryStage);
+		Message msg = new Message(OpCodes.SYNC_HANDCHECK);
+		ClientUI.client.accept(msg);
+		if(ChatClient.msg.GetMsgOpcode() == OpCodes.SYNC_HANDCHECK)
+		{
+			aFrame.start(primaryStage);
+		}
+		else
+		{
+			System.out.println("Error : Server not running");
+			System.exit(0); //terminate the program after error.
+		}
 	}
-
 
 }
