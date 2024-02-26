@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TitledPane id="dashPageInfo" fx:id="GoNatureOrderPage" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="GoNature Order page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.DashboardPageContoller">
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="165.0" prefWidth="598.0">
+            <children>
+                <Button id="orderByIDbtn" fx:id="orderByIDbtn" layoutX="105.0" layoutY="112.0" mnemonicParsing="false" onAction="#getOrderByID" text="Order by ID">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <effect>
+                        <DropShadow />
+                    </effect>
+                </Button>
+                <Label layoutX="21.0" layoutY="60.0" text="Enter ID: " />
+                <Label fx:id="orderByIDLbl" layoutX="106.0" layoutY="30.0" text="Order by ID" />
+                <Separator layoutX="294.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="381.0" prefWidth="6.0" />
+                <Button id="btnAllOrdersInfo" fx:id="viewAllOrdersbtn" layoutX="382.0" layoutY="75.0" mnemonicParsing="false" onAction="#viewALLOrdersAction" prefHeight="49.0" prefWidth="133.0" text="View all orders">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <effect>
+                        <DropShadow />
+                    </effect>
+                </Button>
+                <TextField id="enterIDtxtInfo" fx:id="orderIDtxt" layoutX="70.0" layoutY="56.0">
+                    <effect>
+                        <InnerShadow />
+                    </effect>
+                </TextField>
+            </children>
+            <effect>
+                <ColorAdjust />
+            </effect></AnchorPane>
+    </content>
+</TitledPane>

@@ -1,0 +1,23 @@
+#btnSaveOrderInfo {
+    /*-fx-background-color: rgba(255, 255, 255, .80);*/
+    -fx-background-color: skyblue;
+    -fx-text-fill: red;
+    -fx-padding: 6 6 6 6;
+    -fx-border-radius: 8;
+    -fx-font-weight : bold;
+}
+.root {
+    -fx-background-color: #deb887;
+}
+
+#backToDashInfo {
+    /*-fx-background-color: rgba(255, 255, 255, .80);*/
+    -fx-background-color: skyblue;
+    -fx-text-fill: red;
+    -fx-padding: 6 6 6 6;
+    -fx-border-radius: 8;
+    -fx-font-weight : bold;
+}
+.root {
+    -fx-background-color: #deb887;
+}
