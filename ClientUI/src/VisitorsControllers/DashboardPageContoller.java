@@ -11,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -27,7 +24,7 @@ public class DashboardPageContoller {
     private TitledPane GoNatureOrderPage;
 
     @FXML
-    private PasswordField enterIDTxt;
+    private TextField orderIDtxt;
 
     @FXML
     private Label orderByIDLbl;
@@ -38,7 +35,7 @@ public class DashboardPageContoller {
     @FXML
     private Button viewAllOrdersbtn=null;
 
-    private String getOrderNo(){return enterIDTxt.getText();}
+    private String getOrderNo(){return orderIDtxt.getText();}
     @FXML
     void getOrderByID(ActionEvent event) throws Exception {
             String id;
@@ -47,7 +44,6 @@ public class DashboardPageContoller {
             id=getOrderNo();
             if(id.trim().isEmpty())
             {
-
                 System.out.println("You must enter an order number");
             }
             else
@@ -78,12 +74,12 @@ public class DashboardPageContoller {
         Order o1 = (Order)ChatClient.msg.GetMsgData();
         ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
         Stage primaryStage = new Stage();
-        Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPageController.fxml").openStream());
+        Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
         OrderDetailsPageController orderDetailsPageController = loader.getController();
         orderDetailsPageController.loadOrder(o1);
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
         primaryStage.setTitle("OrderDetailsPage");
 
         primaryStage.setScene(scene);

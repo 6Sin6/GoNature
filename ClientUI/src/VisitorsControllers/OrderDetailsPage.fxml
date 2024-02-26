@@ -14,7 +14,7 @@
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="270.0" prefWidth="373.0">
             <children>
-                <TextField id="orderIDInfo" fx:id="orderIDtxt" editable="false" layoutX="221.0" layoutY="14.0" onAction="# ">
+                <TextField id="orderIDInfo" fx:id="orderIDtxt" editable="false" layoutX="221.0" layoutY="14.0">
                     <effect>
                         <InnerShadow />
                     </effect>
@@ -48,8 +48,8 @@
                     </effect>
                 </TextField>
                 <Label layoutX="80.0" layoutY="238.0" text="Time" />
-                <Button id="btnSaveOrderInfo" fx:id="yourOrderSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false" onAction= "# " text="Save" />
-                <Button id="backToDashInfo" fx:id="backToDashBoard" layoutX="122.0" layoutY="305.0" mnemonicParsing="false" onAction="# "  text="Back" />
+                <Button id="btnSaveOrderInfo" fx:id="yourOrderSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false"  text="Save" />
+                <Button id="backToDashInfo" fx:id="backToDashBoard" layoutX="122.0" layoutY="305.0" mnemonicParsing="false"   text="Back" />
             </children>
             <effect>
                 <DropShadow />

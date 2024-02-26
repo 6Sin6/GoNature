@@ -109,7 +109,7 @@ public class GoNatureServer extends AbstractServer {
                         }
                         break;
                     case GETORDERBYID:
-                    if (((Message) msg).GetMsgData() instanceof Integer) {
+                    if (((Message) msg).GetMsgData() instanceof String) {
                         newmsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
                         newmsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
                         client.sendToClient(newmsg);
