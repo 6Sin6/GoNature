@@ -32,22 +32,20 @@ import CommonClientUI.UtilsUI.*;
 
 public class OrderDetailsPageController implements Initializable {
     private Order order;
-    @FXML
-    private Label orderNumber;
 
     @FXML
-    private TextField orderNumbertxt;
+    private Label lblOrderNumber;
     @FXML
-    private TextField visitationDatetxt;
+    private Label lblVisitationDate;
 
     @FXML
-    private TextField telephoneNumbertxt;
+    private TextField txtTelephoneNumber;
     @FXML
-    private TextField visitationTimetxt;
+    private Label lblVisitationTime;
     @FXML
-    private TextField numberOfVisitorstxt;
+    private Label lblNumberOfVisitors;
     @FXML
-    private TextField Emailtxt;
+    private Label lblEmail;
 
     @FXML
     private Button btnSave;
@@ -66,13 +64,13 @@ public class OrderDetailsPageController implements Initializable {
 
     protected void loadOrder(Order o1) {
         this.order = o1;
-        this.orderNumbertxt.setText((order.getOrderNo()));
-        this.telephoneNumbertxt.setText(order.getTelephoneNumber());
-        this.visitationTimetxt.setText(UtilsUI.parseVisitTime(order.getVisitationTime()));
-        this.visitationDatetxt.setText(UtilsUI.parseVisitDate(order.getVisitationTime()));
+        this.lblOrderNumber.setText((order.getOrderNo()));
+        this.txtTelephoneNumber.setText(order.getTelephoneNumber());
+        this.lblVisitationTime.setText(UtilsUI.parseVisitTime(order.getVisitationTime()));
+        this.lblVisitationDate.setText(UtilsUI.parseVisitDate(order.getVisitationTime()));
         this.cmbParkName.setValue(order.getParkName());
-        this.numberOfVisitorstxt.setText(order.getNumberOfVisitors().toString());
-        this.Emailtxt.setText(order.getEmailAddress());
+        this.lblNumberOfVisitors.setText(order.getNumberOfVisitors().toString());
+        this.lblEmail.setText(order.getEmailAddress());
     }
 
 
@@ -96,7 +94,7 @@ public class OrderDetailsPageController implements Initializable {
 
     @FXML
     void SaveChange(ActionEvent event) throws Exception {
-        String newTelNo = telephoneNumbertxt.getText();
+        String newTelNo = txtTelephoneNumber.getText();
         String newParkName = (String) cmbParkName.getValue();
 
         if (!IsValidPhone(newTelNo)) {
@@ -133,7 +131,7 @@ public class OrderDetailsPageController implements Initializable {
     public void getUpdateBtn() throws ParseException {
         ClientController clientCon = ClientUI.client;
         SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = parser.parse(visitationDatetxt.getText() + " " + visitationTimetxt.getText());
+        Date date = parser.parse(lblVisitationDate.getText() + " " + lblVisitationTime.getText());
 
         Timestamp timestamp = new Timestamp(date.getTime());
     }
