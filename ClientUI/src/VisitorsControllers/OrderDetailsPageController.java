@@ -118,7 +118,7 @@ public class OrderDetailsPageController implements Initializable {
                 if (success) {
                     order = newOrder;
                 }
-                lblStatusMsg.setText(success ? "Order has been Updated Successfully!" : "Failed Updating Order");
+                lblStatusMsg.setText(success ? "Order Updated Successfully!" : "Failed Updating Order");
                 loadOrder(order);
             }
         }
