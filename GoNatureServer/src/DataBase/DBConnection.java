@@ -112,7 +112,6 @@ public class DBConnection {
             this.serverController.addtolog("Select from " + tableName + " succeeded");
             ArrayList<Order> orders = new ArrayList<>();
             while (results.next()) {
-                System.out.println("Time: " + results.getTimestamp("VisitationTime"));
                 orders.add(new Order(
                         results.getString("ParkName"),
                         results.getString("OrderNo"),
