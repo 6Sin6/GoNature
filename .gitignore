@@ -1,6 +1,9 @@
 # Intellij IDEA
 .idea
 
+# Build folders
+out/
+
 # Project exclude paths
 /GoNatureClient/bin/
 /GoNatureServer/bin/
