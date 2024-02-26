@@ -56,7 +56,7 @@ public class OrderDetailsPageController implements Initializable {
     private ComboBox cmbParkName;
 
     @FXML
-    private Label StatusMsgLbl;
+    private Label lblStatusMsg;
 
 
     ObservableList<String> list;
@@ -98,7 +98,7 @@ public class OrderDetailsPageController implements Initializable {
         String newParkName = (String) cmbParkName.getValue();
 
         if (!IsValidPhone(newTelNo)) {
-            StatusMsgLbl.setText("Invalid Phone Number !");
+            lblStatusMsg.setText("Invalid Phone Number !");
             loadOrder(order);
             return;
         }
@@ -118,13 +118,13 @@ public class OrderDetailsPageController implements Initializable {
                 if (success) {
                     order = newOrder;
                 }
-                StatusMsgLbl.setText(success ? "Succefully Updated !" : "Failed Updated");
+                lblStatusMsg.setText(success ? "Succefully Updated !" : "Failed Updated");
                 loadOrder(order);
             }
         }
         else
         {
-            StatusMsgLbl.setText("No changes occured");
+            lblStatusMsg.setText("No changes occured");
         }
     }
 
