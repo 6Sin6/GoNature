@@ -55,6 +55,14 @@ public class Order implements Serializable {
     public String toString() {
         return String.format("%s %s %s %d %s %s\n", ParkName, OrderNo, VisitationTime, NumberOfVisitors, TelephoneNumber, EmailAddress);
     }
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Order) {
+            Order order = (Order) o;
+            return this.ParkName.equals(order.getParkName()) && this.TelephoneNumber.equals(order.getTelephoneNumber());
+        }
+        return false;
+    }
 
 
 }

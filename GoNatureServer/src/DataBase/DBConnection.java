@@ -155,7 +155,7 @@ public class DBConnection {
         }
     }
 
-    public boolean updateOrderById(Order updatedOrder) {
+    public Boolean updateOrderById(Order updatedOrder) {
         try {
             String tableName = "prototype.orders";
             String setClause = "ParkName = '" + updatedOrder.getParkName() +

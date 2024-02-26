@@ -1,16 +1,10 @@
 package VisitorsControllers;
 
-import java.net.URL;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.ResourceBundle;
-
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
 import VisitorsUI.ClientUI;
+import client.ChatClient;
 import client.ClientController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,17 +13,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 public class OrderDetailsPageController implements Initializable {
     private Order order;
     @FXML
-    private Label orderNumber ;
+    private Label orderNumber;
 
     @FXML
     private TextField orderNumbertxt;
@@ -53,20 +52,24 @@ public class OrderDetailsPageController implements Initializable {
     @FXML
     private ComboBox cmbParkName;
 
+    @FXML
+    private Label StatusMsgLbl;
+
+
     ObservableList<String> list;
 
 
-
-    protected void loadOrder (Order o1) {
-        this.order=o1;
+    protected void loadOrder(Order o1) {
+        this.order = o1;
         this.orderNumbertxt.setText((order.getOrderNo()));
         this.telephoneNumbertxt.setText(order.getTelephoneNumber());
         this.visitationTimetxt.setText(parseVisitTime(order.getVisitationTime()));
         this.visitationDatetxt.setText(parseVisitDate(order.getVisitationTime()));
         this.cmbParkName.setValue(order.getParkName());
-        this.numberOfVisitorstxt.setText(order.getParkName());
+        this.numberOfVisitorstxt.setText(order.getNumberOfVisitors().toString());
         this.Emailtxt.setText(order.getEmailAddress());
     }
+
     private String parseVisitDate(Timestamp visitTime) {
         // Convert the Timestamp to a Date object
         Date date = new Date(visitTime.getTime());
@@ -78,6 +81,7 @@ public class OrderDetailsPageController implements Initializable {
 
         return dateFormat.format(date);
     }
+
     private String parseVisitTime(Timestamp visitTime) {
         // Convert the Timestamp to a Date object
         Date date = new Date(visitTime.getTime());
@@ -88,12 +92,13 @@ public class OrderDetailsPageController implements Initializable {
         return dateFormat.format(date);
     }
 
-    protected void loadOrders(ArrayList<Order> ordersList){
-        for (Order o : ordersList){
+    protected void loadOrders(ArrayList<Order> ordersList) {
+        for (Order o : ordersList) {
             System.out.println(o);
         }
 
     }
+
     // creating list of Faculties
     private void setcmbParkName() {
         ArrayList<String> al = new ArrayList<String>();
@@ -103,20 +108,54 @@ public class OrderDetailsPageController implements Initializable {
         list = FXCollections.observableArrayList(al);
         cmbParkName.setItems(list);
     }
+
     @FXML
-    void SaveChange(ActionEvent event) {
-        ArrayList<String> Datasend= new ArrayList<>();
-        if(!IsValidPhone(telephoneNumbertxt.getText())) {
-            System.out.println("Wrong Phone Number");
+    void SaveChange(ActionEvent event) throws Exception {
+        String newTelNo = telephoneNumbertxt.getText();
+        String newParkName = (String) cmbParkName.getValue();
+
+        if (!IsValidPhone(newTelNo)) {
+            StatusMsgLbl.setText("Invalid Phone Number !");
+            loadOrder(order);
             return;
         }
-        Datasend.add(telephoneNumbertxt.getText());
-        Datasend.add((String)cmbParkName.getValue());
-        ClientUI.client.accept(Datasend);
+        Order newOrder = new Order(newParkName,
+                order.getOrderNo(),
+                order.getVisitationTime(),
+                order.getNumberOfVisitors(),
+                newTelNo,
+                order.getEmailAddress());
+        if (!newOrder.equals(order)) {
+            Message msg = new Message(OpCodes.UPDATEORDER, newOrder);
+            ClientUI.client.accept(msg);
+            Message respondMsg = ChatClient.msg;
+            if(respondMsg.GetMsgData() instanceof Boolean)
+            {
+                boolean success = (boolean) respondMsg.GetMsgData();
+                if (success) {
+                    order = newOrder;
+                }
+                StatusMsgLbl.setText(success ? "Succefully Updated !" : "Failed Updated");
+                loadOrder(order);
+            }
+        }
+        else
+        {
+            StatusMsgLbl.setText("No changes occured");
+        }
     }
-    private boolean IsValidPhone(String phoneNumber){
+
+    public void getUpdateBtn() throws ParseException {
+        ClientController clientCon = ClientUI.client;
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = parser.parse(visitationDatetxt.getText() + " " + visitationTimetxt.getText());
+
+        Timestamp timestamp = new Timestamp(date.getTime());
+    }
+
+    private boolean IsValidPhone(String phoneNumber) {
         String numericPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
-        if( numericPhoneNumber.length()!=10 || phoneNumber.startsWith("05"))
+        if (numericPhoneNumber.length() != 10 || !phoneNumber.startsWith("05"))
             return false;
         return true;
     }
@@ -124,7 +163,7 @@ public class OrderDetailsPageController implements Initializable {
     @FXML
     void returnMain(ActionEvent event) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+        ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
         Stage primaryStage = new Stage();
         try {
             TitledPane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
@@ -134,23 +173,14 @@ public class OrderDetailsPageController implements Initializable {
             primaryStage.setTitle("DashboardPage");
             primaryStage.setScene(scene);
             primaryStage.show();
-        }
-        catch (NullPointerException e ){
-            System.out.println( "Error with opening Files");
+        } catch (NullPointerException e) {
+            System.out.println("Error with opening Files");
         }
     }
 
-    public void getUpdateBtn(ActionEvent event) throws Exception {
-        ClientController clientCon = ClientUI.client;
-        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = parser.parse(visitationTimetxt.getText());
-        Timestamp timestamp = new Timestamp(date.getTime());
 
-        Order order = new Order((String) cmbParkName.getValue(), orderNumbertxt.getText(), timestamp, NumOfVisitor(numberOfVisitorstxt.getText()), telephoneNumbertxt.getText(), Emailtxt.getText());
-        clientCon.accept(new Message(OpCodes.GETORDERBYID,order));
-    }
 
-    public Integer NumOfVisitor(String numOfVisitor){
+    public Integer NumOfVisitor(String numOfVisitor) {
         Integer IntNumOfVisitors = Integer.valueOf(numOfVisitor);
         return IntNumOfVisitors;
 
