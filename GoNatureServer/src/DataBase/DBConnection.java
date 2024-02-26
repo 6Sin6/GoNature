@@ -168,6 +168,7 @@ public class DBConnection {
                  this.serverController.addtolog("Update in " + tableName + " failed. Update order:" + updatedOrder);
                  return false;
             }
+            this.serverController.addtolog("Update in " + tableName + " succeeded. Update order:" + updatedOrder);
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());

@@ -134,7 +134,7 @@ public class OrderListPageController implements Initializable {
             Map<String, String> row = new HashMap<>();
             row.put("Order Number", item.getOrderNo());
             row.put("Park Name", item.getParkName());
-            row.put("NumberOfVisitors", item.getNumberOfVisitors().toString());
+            row.put("Number Of Visitors", item.getNumberOfVisitors().toString());
             row.put("Telephone", item.getTelephoneNumber());
             row.put("Email", item.getEmailAddress());
             row.put("Date", date);
