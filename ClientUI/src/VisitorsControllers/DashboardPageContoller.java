@@ -12,11 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class DashboardPageContoller {
@@ -50,10 +52,15 @@ public class DashboardPageContoller {
             else
             {
                 ClientUI.client.accept(new Message(OpCodes.GETORDERBYID,id));
-                if(ChatClient.msg.GetMsgOpcode()!= OpCodes.GETORDERBYID)
+                if(ChatClient.msg.GetMsgOpcode() != OpCodes.GETORDERBYID || ChatClient.msg.GetMsgData() == null)
                 {
                     System.out.println("Order Does Not Found");
-
+                    return;
+                }
+                if(((Order)ChatClient.msg.GetMsgData()).getOrderNo().equals(""))
+                {
+                    System.out.println("Order Does Not Found");
+                    return;
                 }
                 else {
                     try {
