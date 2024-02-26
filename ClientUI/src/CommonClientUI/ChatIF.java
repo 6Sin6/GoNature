@@ -12,11 +12,11 @@ package CommonClientUI;
  * @author Dr Timothy C. Lethbridge
  * @version July 2000
  */
-public interface ChatIF 
+public interface ChatIF
 {
   /**
    * Method that when overriden is used to display objects onto
    * a UI.
    */
-  public abstract void display(String message);
+  public abstract void respond(Object message);
 }

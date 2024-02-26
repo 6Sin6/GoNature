@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
@@ -22,5 +24,11 @@
       <TextField fx:id="TextfieldUserName" layoutX="114.0" layoutY="127.0" prefHeight="25.0" prefWidth="218.0" />
       <TextField fx:id="TextFieldPassword" layoutX="114.0" layoutY="166.0" prefHeight="25.0" prefWidth="218.0" />
       <Button fx:id="BtnStop" disable="true" layoutX="29.0" layoutY="284.0" mnemonicParsing="false" onAction="#stopServer" prefHeight="52.0" prefWidth="307.0" text="Stop Server" />
+      <TableView fx:id="tableClients" layoutX="438.0" layoutY="236.0" prefHeight="200.0" prefWidth="249.0">
+        <columns>
+          <TableColumn fx:id="colName" prefWidth="120.0" text="Client Name" />
+          <TableColumn fx:id="colIP" prefWidth="128.0" text="Client IP" />
+        </columns>
+      </TableView>
    </children>
 </Pane>

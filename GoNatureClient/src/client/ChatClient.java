@@ -5,6 +5,9 @@
 package client;
 
 import CommonClientUI.ChatIF;
+import Entities.Faculty;
+import Entities.Message;
+import Entities.Student;
 
 import java.io.*;
 
@@ -24,6 +27,7 @@ public class ChatClient extends AbstractClient {
      * The interface type variable.  It allows the implementation of
      * the display method in the client.
      */
+    public static Message msg = new Message(null);
     ChatIF clientUI;
     public static boolean awaitResponse = false;
 
@@ -39,8 +43,9 @@ public class ChatClient extends AbstractClient {
 
     public ChatClient(String host, int port, ChatIF clientUI)
             throws IOException {
-        super(host, port);
+        super(host, port); //Call the superclass constructor
         this.clientUI = clientUI;
+        //openConnection();
     }
 
     //Instance methods ************************************************
@@ -50,15 +55,11 @@ public class ChatClient extends AbstractClient {
      *
      * @param msg The message from the server.
      */
-    public void handleMessageFromServer(Object msg) throws IOException {
+    public void handleMessageFromServer(Object msg) {
         System.out.println("--> handleMessageFromServer");
-        if (msg instanceof String) {
-            clientUI.display((String) msg);
-            if (msg.equals("Disconnect")) {
-                closeConnection();
-            }
-            awaitResponse = false;
-        }
+        ChatClient.msg = (Message) msg;
+        clientUI.respond(msg);
+        awaitResponse = false;
     }
 
         /**
@@ -67,9 +68,10 @@ public class ChatClient extends AbstractClient {
          * @param message The message from the UI.
          */
 
-        public void handleMessageFromClientUI (Object message) {
+        public void handleMessageFromClientUI (Object message)
+        {
             try {
-                openConnection();//in order to send more than one message
+                openConnection();
                 awaitResponse = true;
                 sendToServer(message);
                 // wait for response
@@ -82,7 +84,7 @@ public class ChatClient extends AbstractClient {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                clientUI.display("Could not send message to server: Terminating client." + e);
+                clientUI.respond("Could not send message to server: Terminating client." + e);
                 quit();
             }
         }
@@ -91,16 +93,15 @@ public class ChatClient extends AbstractClient {
         /**
          * This method terminates the client.
          */
-        public void quit() {
+        public void quit()
+        {
             try {
                 sendToServer("quit");
                 closeConnection();
             } catch (IOException e) {
-                e.printStackTrace();
             }
             System.exit(0);
         }
-
     }
 
 //End of ChatClient class

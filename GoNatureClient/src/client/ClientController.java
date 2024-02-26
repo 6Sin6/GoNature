@@ -24,7 +24,7 @@ public class ClientController implements ChatIF
   /**
    * The default port to connect on.
    */
-   public static int DEFAULT_PORT;
+   public static int DEFAULT_PORT ;
   
   //Instance variables **********************************************
   
@@ -45,11 +45,11 @@ public class ClientController implements ChatIF
   {
     try 
     {
-      client = new ChatClient(host, port, this);
+      client= new ChatClient(host, port, this);
     } 
     catch(IOException exception) 
     {
-      System.out.println("Error: Can't setup connection!" + " Terminating client.");
+      System.out.println("Error: Can't setup connection!"+ " Terminating client.");
       System.exit(1);
     }
   }
@@ -61,7 +61,8 @@ public class ClientController implements ChatIF
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.
    */
-  public void accept(Object Obj) {
+  public void accept(Object Obj)
+  {
 	  client.handleMessageFromClientUI(Obj);
   }
   
@@ -71,15 +72,9 @@ public class ClientController implements ChatIF
    *
    * @param message The string to be displayed.
    */
-  @Override
-  public void display(String message) 
+  public void respond(Object message)
   {
     System.out.println("> " + message);
-  }
-
-  public void close() {
-    client.quit();
-    System.exit(0);
   }
 }
 //End of ConsoleChat class

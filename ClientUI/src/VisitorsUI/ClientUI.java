@@ -1,30 +1,28 @@
 package VisitorsUI;
+import VisitorsControllers.DashboardPageContoller;
 import client.ClientController;
 import javafx.application.Application;
 
 import javafx.stage.Stage;
 
-import VisitorsControllers.AcademicFrameController;
 
 public class ClientUI extends Application {
-	public static ClientController chat; //only one instance
+	public static ClientController client; //only one instance
 
 	public static void main( String args[] ) throws Exception
 	{
-		    launch(args);  
+		launch(args);
 	} // end main
-	 
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		 chat= new ClientController("87.71.194.146", 5555);
+		client= new ClientController("localhost", 5555);
 		// TODO Auto-generated method stub
-						  		
-		AcademicFrameController aFrame = new AcademicFrameController(); // create StudentFrame
-		 
+
+		DashboardPageContoller aFrame = new DashboardPageContoller(); // create StudentFrame
+
 		aFrame.start(primaryStage);
 	}
 
 
-	
-	
 }
