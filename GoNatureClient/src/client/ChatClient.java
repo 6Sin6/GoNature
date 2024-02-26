@@ -5,9 +5,7 @@
 package client;
 
 import CommonClientUI.ChatIF;
-import Entities.Faculty;
 import Entities.Message;
-import Entities.Student;
 
 import java.io.*;
 

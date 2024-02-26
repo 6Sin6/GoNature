@@ -89,10 +89,24 @@ public class DashboardPageContoller {
 
         if (ChatClient.msg.GetMsgOpcode() == OpCodes.GETALLORDERS) {
             try {
-                displayAllOrders(event, loader);
-                return;
-            } catch(Exception e) {
-                e.printStackTrace();
+                System.out.println("All orders received");
+                ArrayList<Order> OrderList = (ArrayList<Order>) ChatClient.msg.GetMsgData();
+                ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+                Stage primaryStage = new Stage();
+                Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderListPage.fxml").openStream());
+                OrderListPageController OrderListPageController  = loader.getController();
+                OrderListPageController.populateTable(OrderList);
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderListPage.css").toExternalForm());
+                primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+                    ClientUI.client.quit();
+                }));
+                primaryStage.setTitle("OrderListPage");
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            }
+            catch (Exception e){
+                System.out.println("error with open stream");
             }
         }
 

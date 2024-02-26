@@ -1,11 +1,13 @@
 package VisitorsControllers;
 
+import CommonClientUI.UtilsUI;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
 import VisitorsUI.ClientUI;
 import client.ChatClient;
 import client.ClientController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import CommonClientUI.UtilsUI.*;
+
+
 
 public class OrderDetailsPageController implements Initializable {
     private Order order;
@@ -63,34 +68,14 @@ public class OrderDetailsPageController implements Initializable {
         this.order = o1;
         this.orderNumbertxt.setText((order.getOrderNo()));
         this.telephoneNumbertxt.setText(order.getTelephoneNumber());
-        this.visitationTimetxt.setText(parseVisitTime(order.getVisitationTime()));
-        this.visitationDatetxt.setText(parseVisitDate(order.getVisitationTime()));
+        this.visitationTimetxt.setText(UtilsUI.parseVisitTime(order.getVisitationTime()));
+        this.visitationDatetxt.setText(UtilsUI.parseVisitDate(order.getVisitationTime()));
         this.cmbParkName.setValue(order.getParkName());
         this.numberOfVisitorstxt.setText(order.getNumberOfVisitors().toString());
         this.Emailtxt.setText(order.getEmailAddress());
     }
 
-    private String parseVisitDate(Timestamp visitTime) {
-        // Convert the Timestamp to a Date object
-        Date date = new Date(visitTime.getTime());
 
-        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        // Format the Date object into a string
-
-        return dateFormat.format(date);
-    }
-
-    private String parseVisitTime(Timestamp visitTime) {
-        // Convert the Timestamp to a Date object
-        Date date = new Date(visitTime.getTime());
-
-        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM:SS");
-
-        return dateFormat.format(date);
-    }
 
     protected void loadOrders(ArrayList<Order> ordersList) {
         for (Order o : ordersList) {
@@ -170,6 +155,9 @@ public class OrderDetailsPageController implements Initializable {
             DashboardPageContoller dashboardPageContoller = loader.getController();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/DashboardPage.css").toExternalForm());
+            primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
+                ClientUI.client.quit();
+            }));
             primaryStage.setTitle("DashboardPage");
             primaryStage.setScene(scene);
             primaryStage.show();

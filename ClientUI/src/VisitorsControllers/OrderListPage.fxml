@@ -3,25 +3,23 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<TitledPane id="orderListPageInfo" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="Orders list" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21">
-    <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="682.0">
-            <children>
-                <TableView prefHeight="325.0" prefWidth="600.0">
-                    <columns>
-                        <TableColumn id="orderListTableInfo" fx:id="orderIDParam" onEditStart="#orderIDEdit" prefWidth="75.0" text="Order ID" />
-                        <TableColumn fx:id="orderNameParam" onEditStart="#orderNameEdir" prefWidth="119.20001220703125" text="Number of visitors" />
-                        <TableColumn fx:id="orderEmailParam" onEditStart="#orderEmailEdit" prefWidth="82.39997863769531" text="Email" />
-                        <TableColumn fx:id="orderTelParam" onEditStart="#orderTelEdit" prefWidth="76.79998779296875" text="Telephone" />
-                        <TableColumn fx:id="orderParkParam" onEditStart="#orderParkEdit" prefWidth="76.79998779296875" text="Chosen park" />
-                        <TableColumn fx:id="orderDateParam" onEditStart="#orderDateEdit" prefWidth="80.800048828125" text="Date" />
-                        <TableColumn fx:id="orderTimeParam" onEditStart="#orderDateEdit" prefWidth="86.39996337890625" text="Time" />
-                    </columns>
-                </TableView>
-                <Button id="btnOrderListEditInfo" fx:id="editOrderbtn" layoutX="281.0" layoutY="334.0" mnemonicParsing="false" onAction="#editOrderListAction" text="Edit" />
-            </children></AnchorPane>
-    </content>
-</TitledPane>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrderListPageController">
+   <children>
+      <TableView fx:id="tableOrders" prefHeight="312.0" prefWidth="600.0">
+        <columns>
+          <TableColumn fx:id="colOrderNumber" prefWidth="106.0" text="Order Number" />
+          <TableColumn fx:id="colParkName" text="Park Name" />
+            <TableColumn fx:id="colNumberOfVisitors" prefWidth="121.0" text="Number Of Visitors" />
+            <TableColumn fx:id="colTelephone" prefWidth="69.0" text="Telephone" />
+            <TableColumn fx:id="colEmail" prefWidth="73.0" text="Email" />
+            <TableColumn fx:id="colDate" prefWidth="68.0" text="Date" />
+            <TableColumn fx:id="colTime" prefWidth="82.0" text="Time" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnEdit" layoutX="57.0" layoutY="341.0" mnemonicParsing="false" onAction="#editOrder" text="Edit " />
+      <Button fx:id="btnBack" layoutX="498.0" layoutY="341.0" mnemonicParsing="false" onAction="#returnToMenu" text="Back" />
+   </children>
+</Pane>
