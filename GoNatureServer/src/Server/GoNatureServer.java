@@ -163,7 +163,7 @@ public class GoNatureServer extends AbstractServer {
         server.close();
         server.controller.toggleControllers(false);
         server = null;
-        System.exit(0);
+//        System.exit(0);
     }
 
     @Override

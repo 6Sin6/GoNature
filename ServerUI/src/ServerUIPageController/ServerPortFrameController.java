@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import ServerUIPage.ServerUI;
 import VisitorsControllers.StudentFormController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -109,7 +110,7 @@ public class ServerPortFrameController implements Initializable {
             System.err.println("Default URL not found in the list: " + defaultURL);
         }
     }
-
+    @FXML
     public void getExitBtn(ActionEvent event) throws Exception {
         addtolog("Exit Server");
         System.exit(0);
@@ -118,11 +119,13 @@ public class ServerPortFrameController implements Initializable {
     void stopServer(ActionEvent event) throws Exception {
         ServerUI.closeServer();
     }
-
-    public void addtolog(String str) {
-        System.out.println(str);
-        loggerTextArea.appendText(str+"\n");
+    @FXML
+    public synchronized void addtolog(String str) {
+        System.out.println(str); // Consider removing or redirecting to a file logger for production
+        Platform.runLater(() -> loggerTextArea.appendText(str + "\n"));
     }
+
+    @FXML
     private void setURLComboBox() {
         ArrayList<String> UrlComboList = new ArrayList<>();
         UrlComboList.add("localhost");
@@ -130,15 +133,19 @@ public class ServerPortFrameController implements Initializable {
         list = FXCollections.observableArrayList(UrlComboList);
         URLComboBox.setItems(list);
     }
+    @FXML
     public String getURLComboBox() {
         return (String) URLComboBox.getValue();
     }
+    @FXML
     public String getUserName() {
         return TextfieldUserName.getText();
     }
+    @FXML
     public String getPassword() {
         return TextFieldPassword.getText();
     }
+    @FXML
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
@@ -157,6 +164,7 @@ public class ServerPortFrameController implements Initializable {
             return row;
         });
     }
+    @FXML
     public void addRow(String name, String ip) {
         Map<String, String> newRow = new HashMap<>();
         newRow.put("name", name);
@@ -164,11 +172,12 @@ public class ServerPortFrameController implements Initializable {
 
         tableClients.getItems().add(newRow);
     }
+    @FXML
     public void removeRowByIP(String ip) {
         // Use removeIf with a predicate to remove rows matching the condition
         tableClients.getItems().removeIf(row -> ip.equals(row.get("ip")));
     }
-
+    @FXML
     public void toggleControllers(boolean flag) {
         btnStart.setDisable(flag);
         TextfieldUserName.setDisable(flag);
