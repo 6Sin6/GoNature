@@ -19,11 +19,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -32,13 +30,12 @@ public class OrderDetailsPageController implements Initializable {
     private Order order;
     @FXML
     private Label orderNumber ;
-    @FXML
-    private Button returnBtn;
 
     @FXML
-    private Text orderNumbertxt;
+    private TextField orderNumbertxt;
     @FXML
-    private TextField parkNametxt;
+    private TextField visitationDatetxt;
+
     @FXML
     private TextField telephoneNumbertxt;
     @FXML
@@ -49,15 +46,9 @@ public class OrderDetailsPageController implements Initializable {
     private TextField Emailtxt;
 
     @FXML
-    private Label lblName;
-    @FXML
-    private Label lblSurname;
-    @FXML
-    private Label lblFaculty;
-    @FXML
     private Button btnSave;
     @FXML
-    private Button btnclose=null;
+    private Button btnback;
 
     @FXML
     private ComboBox cmbParkName;
@@ -70,11 +61,33 @@ public class OrderDetailsPageController implements Initializable {
         this.order=o1;
         this.orderNumbertxt.setText((order.getOrderNo()));
         this.telephoneNumbertxt.setText(order.getTelephoneNumber());
-        this.visitationTimetxt.setText((order.getVisitationTime()).toString());
+        this.visitationTimetxt.setText(parseVisitTime(order.getVisitationTime()));
+        this.visitationDatetxt.setText(parseVisitDate(order.getVisitationTime()));
         this.cmbParkName.setValue(order.getParkName());
         this.numberOfVisitorstxt.setText(order.getParkName());
         this.Emailtxt.setText(order.getEmailAddress());
     }
+    private String parseVisitDate(Timestamp visitTime) {
+        // Convert the Timestamp to a Date object
+        Date date = new Date(visitTime.getTime());
+
+        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Format the Date object into a string
+
+        return dateFormat.format(date);
+    }
+    private String parseVisitTime(Timestamp visitTime) {
+        // Convert the Timestamp to a Date object
+        Date date = new Date(visitTime.getTime());
+
+        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM:SS");
+
+        return dateFormat.format(date);
+    }
+
     protected void loadOrders(ArrayList<Order> ordersList){
         for (Order o : ordersList){
             System.out.println(o);
@@ -114,7 +127,7 @@ public class OrderDetailsPageController implements Initializable {
         ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
         Stage primaryStage = new Stage();
         try {
-            Pane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
+            TitledPane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
             DashboardPageContoller dashboardPageContoller = loader.getController();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/DashboardPage.css").toExternalForm());

@@ -5,6 +5,7 @@ import Entities.OpCodes;
 import Entities.Order;
 import VisitorsUI.ClientUI;
 import client.ChatClient;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,7 +57,21 @@ public class DashboardPageContoller {
                 }
                 else {
                     try {
-                        displayOrderDetailsPage(event,loader);
+                        System.out.println("Order Number has been Found");
+                        Order o1 = (Order)ChatClient.msg.GetMsgData();
+                        ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+                        Stage primaryStage = new Stage();
+                        TitledPane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
+                        OrderDetailsPageController orderDetailsPageController  = loader.getController();
+                        orderDetailsPageController.loadOrder(o1);
+                        Scene scene = new Scene(root);
+                        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
+                        primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+                            ClientUI.client.quit();
+                        }));
+                        primaryStage.setTitle("OrderDetailsPage");
+                        primaryStage.setScene(scene);
+                        primaryStage.show();
                     }
                     catch (Exception e){
                         System.out.println("error with open stream");
@@ -64,28 +79,6 @@ public class DashboardPageContoller {
                 }
             }
         }
-
-    private void displayOrderDetailsPage(ActionEvent event,FXMLLoader loader) throws IOException {
-        System.out.println("Order Number has been Found");
-        if(!(ChatClient.msg.GetMsgData() instanceof Order)){
-            System.out.println("Data is not order");
-            return;
-        }
-        Order o1 = (Order)ChatClient.msg.GetMsgData();
-        ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
-        Stage primaryStage = new Stage();
-        Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
-        OrderDetailsPageController orderDetailsPageController = loader.getController();
-        orderDetailsPageController.loadOrder(o1);
-
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
-        primaryStage.setTitle("OrderDetailsPage");
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-    }
 
     @FXML
     void viewALLOrdersAction(ActionEvent event) {
@@ -116,18 +109,18 @@ public class DashboardPageContoller {
 
         ArrayList<Order> ordersList = (ArrayList<Order>) ChatClient.msg.GetMsgData();
         System.out.println(ordersList);
-//        ((Node) event.getSource()).getScene().getWindow().hide();
-//        Stage primaryStage = new Stage();
-//        Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderListPageController.fxml").openStream());
-//        OrderDetailsPageController orderDetailsPageController = loader.getController();
-//        orderDetailsPageController.loadOrders(ordersList);
-//
-//        Scene scene = new Scene(root);
-//        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderListPageController.css").toExternalForm());
-//        primaryStage.setTitle("OrderListPage");
-//
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+        ((Node) event.getSource()).getScene().getWindow().hide();
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderListPageController.fxml").openStream());
+        OrderDetailsPageController orderDetailsPageController = loader.getController();
+        orderDetailsPageController.loadOrders(ordersList);
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderListPageController.css").toExternalForm());
+        primaryStage.setTitle("OrderListPage");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
     }
     public void start(Stage primaryStage) throws Exception {

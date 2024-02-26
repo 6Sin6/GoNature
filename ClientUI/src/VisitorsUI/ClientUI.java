@@ -1,9 +1,14 @@
 package VisitorsUI;
+import Server.GoNatureServer;
 import VisitorsControllers.DashboardPageContoller;
+import VisitorsControllers.OrderDetailsPageController;
 import client.ClientController;
 import javafx.application.Application;
 
+import javafx.application.Platform;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class ClientUI extends Application {
@@ -20,7 +25,9 @@ public class ClientUI extends Application {
 		// TODO Auto-generated method stub
 
 		DashboardPageContoller aFrame = new DashboardPageContoller(); // create StudentFrame
-
+		primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+            client.quit();
+        }));
 		aFrame.start(primaryStage);
 	}
 

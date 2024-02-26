@@ -14,18 +14,18 @@
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="270.0" prefWidth="373.0">
             <children>
-                <TextField id="orderIDInfo" fx:id="orderIDtxt" editable="false" layoutX="221.0" layoutY="14.0">
+                <TextField id="orderNumbertxt" fx:id="orderNumbertxt" editable="false" layoutX="221.0" layoutY="14.0">
                     <effect>
                         <InnerShadow />
                     </effect>
                 </TextField>
                 <Label layoutX="79.0" layoutY="18.0" text="ID" />
-                <TextField id="numOfVisOrderInfo" fx:id="yourOrderNumVis" editable="false" layoutX="221.0" layoutY="50.0">
+                <TextField id="numberOfVisitorstxt" fx:id="numberOfVisitorstxt" editable="false" layoutX="221.0" layoutY="50.0">
                     <effect>
                         <InnerShadow />
                     </effect>
                 </TextField>
-                <TextField id="emailOrderInfo" fx:id="yourOrderEmail" editable="false" layoutX="221.0" layoutY="122.0">
+                <TextField id="Emailtxt" fx:id="Emailtxt" editable="false" layoutX="221.0" layoutY="122.0">
                     <effect>
                         <InnerShadow />
                     </effect>
@@ -33,23 +33,23 @@
                 <Label layoutX="79.0" layoutY="54.0" text="Number of visitors" />
                 <Label layoutX="79.0" layoutY="90.0" text="Park" />
                 <Label layoutX="80.0" layoutY="126.0" text="Email" />
-                <TextField id="telOrderInfo" fx:id="yourOrderTel" layoutX="221.0" layoutY="157.0">
+                <TextField id="telephoneNumbertxt" fx:id="telephoneNumbertxt" layoutX="221.0" layoutY="157.0">
                     <effect>
                         <InnerShadow />
                     </effect>
                 </TextField>
                 <Label layoutX="79.0" layoutY="161.0" text="Telephone" />
-                <ComboBox id="parkOrderInfo" fx:id="yourOrderPark" layoutX="221.0" layoutY="86.0" prefWidth="150.0" />
-                <DatePicker id="dateOrderInfo" fx:id="yourOrderDate" editable="false" layoutX="223.0" layoutY="195.0" prefHeight="26.0" prefWidth="148.0" />
+                <ComboBox id="cmbParkName" fx:id="cmbParkName" layoutX="221.0" layoutY="86.0" prefWidth="150.0" />
+                <TextField id="visitationDatetxt" fx:id="visitationDatetxt"  layoutX="223.0" layoutY="195.0"  />
                 <Label layoutX="80.0" layoutY="199.0" text="Date" />
-                <TextField id="timeOrderInfo" fx:id="yourOrderTime" layoutX="223.0" layoutY="234.0">
+                <TextField id="visitationTimetxt" fx:id="visitationTimetxt" layoutX="223.0" layoutY="234.0">
                     <effect>
                         <InnerShadow />
                     </effect>
                 </TextField>
                 <Label layoutX="80.0" layoutY="238.0" text="Time" />
-                <Button id="btnSaveOrderInfo" fx:id="yourOrderSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false"  text="Save" />
-                <Button id="backToDashInfo" fx:id="backToDashBoard" layoutX="122.0" layoutY="305.0" mnemonicParsing="false"   text="Back" />
+                <Button id="btnSave" fx:id="btnSave" layoutX="419.0" layoutY="305.0" mnemonicParsing="false" onAction="#SaveChange" text="Save" />
+                <Button id="btnback" fx:id="btnback" layoutX="122.0" layoutY="305.0" mnemonicParsing="false" onAction="#returnMain" text="Back" />
             </children>
             <effect>
                 <DropShadow />

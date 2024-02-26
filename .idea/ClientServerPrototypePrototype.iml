@@ -13,10 +13,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.13" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.13 (2)" level="project" />
     <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="library" name="mysql-connector-java-8.0.13 (3)" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-8.0.13" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="188a2995-186e-42df-8f3e-e9625c82dc56" />
   </component>
 </module>

@@ -92,8 +92,8 @@ public class GoNatureServer extends AbstractServer {
             if (msg instanceof String){
                 if (msg.equals("quit")) {
                     this.controller.addtolog("Client " + client+" Disconnected");
-                    client.close();
                     controller.removeRowByIP(client.getInetAddress().getHostAddress());
+                    client.close();
                     return;
                 }
             }
@@ -161,7 +161,6 @@ public class GoNatureServer extends AbstractServer {
         server.close();
         server.controller.toggleControllers(false);
         server = null;
-        System.exit(0);
     }
 
     @Override
@@ -169,12 +168,7 @@ public class GoNatureServer extends AbstractServer {
         controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
     }
 
-    @Override
-    synchronized protected void clientDisconnected(
-            ConnectionToClient client) {
-        controller.addtolog(client.getInetAddress().getHostAddress() + " disconnected");
-        controller.removeRowByIP(client.getInetAddress().getHostAddress());
-    }
+
 
 
 }

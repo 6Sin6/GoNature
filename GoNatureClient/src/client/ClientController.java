@@ -76,5 +76,10 @@ public class ClientController implements ChatIF
   {
     System.out.println("> " + message);
   }
+
+  public void quit()
+  {
+	  client.quit();
+  }
 }
 //End of ConsoleChat class
