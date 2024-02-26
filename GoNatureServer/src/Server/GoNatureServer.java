@@ -3,22 +3,16 @@
 // license found at www.lloseng.com 
 package Server;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
 import DataBase.DBConnection;
 import Entities.Message;
+import Entities.OpCodes;
 import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 import server.AbstractServer;
 import server.ConnectionToClient;
 
-import Entities.OpCodes;
+import java.io.IOException;
+import java.sql.SQLException;
 
 
 /**
@@ -99,6 +93,9 @@ public class GoNatureServer extends AbstractServer {
             }
             if (msg instanceof Message){
                 switch (((Message) msg).GetMsgOpcode()){
+                    case SYNC_HANDCHECK:
+                        newmsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDCHECK);
+                        client.sendToClient(newmsg);
                     case GETALLORDERS:
                         if (((Message) msg).GetMsgData()==null) {
                             newmsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
@@ -167,9 +164,5 @@ public class GoNatureServer extends AbstractServer {
     protected void clientConnected(ConnectionToClient client) {
         controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
     }
-
-
-
-
 }
 //End of EchoServer class
