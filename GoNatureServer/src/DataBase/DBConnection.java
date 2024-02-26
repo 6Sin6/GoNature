@@ -79,7 +79,7 @@ public class DBConnection {
      */
     private boolean setConnection(String url, String user, String password) {
         try {
-            this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=IST&useSSL=false&allowPublicKeyRetrieval=true", user, password);
+            this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=Asia/Jerusalem&useSSL=false&allowPublicKeyRetrieval=true", user, password);
             this.serverController.addtolog("SQL connection succeed");
             return true;
         } catch (SQLException ex) {
@@ -112,6 +112,7 @@ public class DBConnection {
             this.serverController.addtolog("Select from " + tableName + " succeeded");
             ArrayList<Order> orders = new ArrayList<>();
             while (results.next()) {
+                System.out.println("Time: " + results.getTimestamp("VisitationTime"));
                 orders.add(new Order(
                         results.getString("ParkName"),
                         results.getString("OrderNo"),

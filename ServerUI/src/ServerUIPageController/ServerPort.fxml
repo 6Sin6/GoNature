@@ -11,7 +11,7 @@
 
 <Pane prefHeight="530.0" prefWidth="863.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerUIPageController.ServerPortFrameController">
    <children>
-      <Button fx:id="btnStart" layoutX="27.0" layoutY="213.0" mnemonicParsing="false" onAction="#Done" prefHeight="52.0" prefWidth="307.0" text="Start Server" />
+      <Button fx:id="btnStart" layoutX="27.0" layoutY="213.0" mnemonicParsing="false" onAction="#Done" prefHeight="52.0" prefWidth="307.0" text="Start GoNatureServer" />
       <TextField fx:id="portxt" layoutX="114.0" layoutY="24.0" prefHeight="25.0" prefWidth="218.0" />
       <Button fx:id="btnExit" layoutX="814.0" layoutY="483.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
       <Label layoutX="30.0" layoutY="28.0" text="Port" />
@@ -23,7 +23,7 @@
       <ComboBox fx:id="URLComboBox" layoutX="114.0" layoutY="88.0" prefHeight="25.0" prefWidth="218.0" />
       <TextField fx:id="TextfieldUserName" layoutX="114.0" layoutY="127.0" prefHeight="25.0" prefWidth="218.0" />
       <TextField fx:id="TextFieldPassword" layoutX="114.0" layoutY="166.0" prefHeight="25.0" prefWidth="218.0" />
-      <Button fx:id="BtnStop" disable="true" layoutX="29.0" layoutY="284.0" mnemonicParsing="false" onAction="#stopServer" prefHeight="52.0" prefWidth="307.0" text="Stop Server" />
+      <Button fx:id="BtnStop" disable="true" layoutX="29.0" layoutY="284.0" mnemonicParsing="false" onAction="#stopServer" prefHeight="52.0" prefWidth="307.0" text="Stop GoNatureServer" />
       <TableView fx:id="tableClients" layoutX="438.0" layoutY="236.0" prefHeight="200.0" prefWidth="249.0">
         <columns>
           <TableColumn fx:id="colName" prefWidth="120.0" text="Client Name" />

@@ -1,6 +1,6 @@
 package ServerUIPage;
 
-import Server.GoNatureServer;
+import GoNatureServer.GoNatureServer;
 import ServerUIPageController.ServerPortFrameController;
 import javafx.application.Application;
 import javafx.application.Platform;

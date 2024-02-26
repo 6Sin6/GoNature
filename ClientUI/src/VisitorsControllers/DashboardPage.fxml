@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<TitledPane id="dashPageInfo" fx:id="GoNatureOrderPage" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="GoNature Order page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.DashboardPageContoller">
-    <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="165.0" prefWidth="598.0">
-            <children>
-                <Button id="orderByIDbtn" fx:id="orderByIDbtn" layoutX="105.0" layoutY="112.0" mnemonicParsing="false" onAction="#getOrderByID" text="Order by ID">
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </Button>
-                <Label layoutX="21.0" layoutY="60.0" text="Enter ID: " />
-                <Label fx:id="orderByIDLbl" layoutX="106.0" layoutY="30.0" text="Order by ID" />
-                <Separator layoutX="294.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="381.0" prefWidth="6.0" />
-                <Button id="btnAllOrdersInfo" fx:id="viewAllOrdersbtn" layoutX="382.0" layoutY="75.0" mnemonicParsing="false" onAction="#viewALLOrdersAction" prefHeight="49.0" prefWidth="133.0" text="View all orders">
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </Button>
-                <TextField id="enterIDtxtInfo" fx:id="orderIDtxt" layoutX="70.0" layoutY="56.0">
-                    <effect>
-                        <InnerShadow />
-                    </effect>
-                </TextField>
-            </children>
-            <effect>
-                <ColorAdjust />
-            </effect></AnchorPane>
-    </content>
-</TitledPane>
+<AnchorPane id="dashPageInfo" fx:id="GoNatureDashboardPage" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.DashboardPageController">
+    <!-- Title Section -->
+    <children>
+        <HBox alignment="CENTER" layoutX="0.0" layoutY="10.0" prefHeight="50.0" prefWidth="600.0" spacing="5.0">
+            <ImageView fitHeight="64.0" fitWidth="64.0">
+                <image>
+                    <Image url="/assets/GoNatureLogo.png"/>
+                </image>
+            </ImageView>
+            <Label fx:id="titleText" text="GoNature Parks and Recreations Inc." />
+        </HBox>
+
+        <Label layoutX="70.0" layoutY="90.0" text="GoNatureServer IP Address" />
+        <TextField id="enterIDtxtInfo" fx:id="IPAddresstxt" layoutX="50.0" layoutY="110.0" text="localhost">
+        </TextField>
+
+        <!-- Search Section -->
+        <Label layoutX="70.0" layoutY="165.0" text="Search Order By ID" />
+        <TextField id="enterIDtxtInfo" fx:id="orderIDtxt" layoutX="50.0" layoutY="190.0">
+        </TextField>
+        <Button id="orderByIDbtn" fx:id="orderByIDbtn" layoutX="120.0" layoutY="230.0" mnemonicParsing="false" onAction="#getOrderByID" prefHeight="30.0" prefWidth="80.0" text="Search">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+
+        <!-- View All Orders Section -->
+        <Label layoutX="380.0" layoutY="160.0" text="Retrieve and view all orders" />
+        <Button id="btnAllOrdersInfo" fx:id="viewAllOrdersbtn" layoutX="380.0" layoutY="185.0" mnemonicParsing="false" onAction="#viewALLOrdersAction" prefHeight="28.0" prefWidth="150.0" text="View">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+
+        <Label fx:id="lblStatusMsg" layoutX="50.0" layoutY="281.0" prefHeight="61.0" prefWidth="200.0" textAlignment="CENTER" />
+    </children>
+</AnchorPane>

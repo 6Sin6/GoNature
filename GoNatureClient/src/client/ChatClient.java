@@ -81,7 +81,6 @@ public class ChatClient extends AbstractClient {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
                 clientUI.respond("Could not send message to server: Terminating client." + e);
                 quit();
             }

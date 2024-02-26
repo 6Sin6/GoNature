@@ -1,15 +1,10 @@
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
-package Server;
+package GoNatureServer;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
 
 import DataBase.DBConnection;
 import Entities.Message;
@@ -98,7 +93,10 @@ public class GoNatureServer extends AbstractServer {
                 }
             }
             if (msg instanceof Message){
-                switch (((Message) msg).GetMsgOpcode()){
+                switch (((Message) msg).GetMsgOpcode()) {
+                    case SYNC_HANDSHAKE:
+                        newmsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
+                        client.sendToClient(newmsg);
                     case GETALLORDERS:
                         if (((Message) msg).GetMsgData()==null) {
                             newmsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);

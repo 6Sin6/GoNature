@@ -15,7 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -28,9 +30,9 @@ import java.util.ResourceBundle;
 
 
 public class OrderListPageController implements Initializable {
-
     @FXML
     private Pane pane;
+
     @FXML
     private TableView<Map<String, String>> tableOrders;
 
@@ -62,6 +64,9 @@ public class OrderListPageController implements Initializable {
     @FXML
     private Button btnBack;
 
+    @FXML
+    private Label lblStatusMsg;
+
     private int rowIndex = -1;
     private ArrayList<Order> list;
 
@@ -69,33 +74,64 @@ public class OrderListPageController implements Initializable {
     void editOrder(ActionEvent event) {
         if (rowIndex == -1) {
             System.out.println("You must select an order");
-        } else {
-            FXMLLoader loader = new FXMLLoader();
-            try {
-                System.out.println("Order Number has been Found");
-                Order o1 = list.get(rowIndex);
-                ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
-                Stage primaryStage = new Stage();
-                TitledPane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
-                OrderDetailsPageController orderDetailsPageController = loader.getController();
-                orderDetailsPageController.loadOrder(o1);
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
-                primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
-                    ClientUI.client.quit();
-                }));
-                primaryStage.setTitle("OrderDetailsPage");
-                primaryStage.setScene(scene);
-                primaryStage.show();
-            } catch (Exception e) {
-                System.out.println("error with open stream");
-            }
+            lblStatusMsg.setText("You must select an order");
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader();
+        try {
+            System.out.println("Order Number has been found");
+            Order o1 = list.get(rowIndex);
+            ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
+            Stage primaryStage = new Stage();
+            AnchorPane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
+
+            OrderDetailsPageController orderDetailsPageController = loader.getController();
+            orderDetailsPageController.loadOrder(o1);
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
+
+            primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
+                ClientUI.client.quit();
+            }));
+
+            Image windowImage = new Image("/assets/GoNatureLogo.png");
+            primaryStage.getIcons().add(windowImage);
+
+            primaryStage.setTitle("GoNature - Order Details");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            System.out.println("error with open stream");
         }
     }
 
     @FXML
-    void returnToMenu(ActionEvent event) {
+    void returnMain(ActionEvent event) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
 
+        ((Node) event.getSource()).getScene().getWindow().hide();
+        Stage primaryStage = new Stage();
+
+        try {
+            AnchorPane root = loader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml").openStream());
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/DashboardPage.css").toExternalForm());
+
+            primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
+                ClientUI.client.quit();
+            }));
+
+            Image windowImage = new Image("/assets/GoNatureLogo.png");
+            primaryStage.getIcons().add(windowImage);
+
+            primaryStage.setTitle("GoNature - Dashboard");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (NullPointerException e) {
+            System.out.println("Error with opening Files");
+        }
     }
 
     @Override
@@ -138,7 +174,7 @@ public class OrderListPageController implements Initializable {
             row.put("Telephone", item.getTelephoneNumber());
             row.put("Email", item.getEmailAddress());
             row.put("Date", date);
-            row.put("Time", time);
+            row.put("Time", time.substring(0, time.length() - 3));
             tableData.add(row);
         }
         tableOrders.setItems(tableData);

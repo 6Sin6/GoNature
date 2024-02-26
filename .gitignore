@@ -2,7 +2,7 @@
 .idea
 
 # Build folders
-out/
+/out/
 
 
 # Project exclude paths

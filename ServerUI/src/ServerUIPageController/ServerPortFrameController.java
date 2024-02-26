@@ -90,7 +90,7 @@ public class ServerPortFrameController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerPort.fxml"));
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerPort.css").toExternalForm());
-            primaryStage.setTitle("Server");
+            primaryStage.setTitle("GoNatureServer");
             primaryStage.setScene(scene);
             primaryStage.show();
     }
