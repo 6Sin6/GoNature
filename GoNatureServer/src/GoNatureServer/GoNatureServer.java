@@ -176,8 +176,7 @@ public class GoNatureServer extends AbstractServer {
             server.controller.toggleControllers(false);
             server = null;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Server isn't initialized");
+            server.controller.addtolog("Server isn't initialized");
         }
     }
 
