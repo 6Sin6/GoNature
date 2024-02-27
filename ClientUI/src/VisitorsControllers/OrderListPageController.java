@@ -3,7 +3,6 @@ package VisitorsControllers;
 import CommonClientUI.UtilsUI;
 import Entities.Order;
 import VisitorsUI.ClientUI;
-import client.ChatClient;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

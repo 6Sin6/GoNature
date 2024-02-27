@@ -1,7 +1,10 @@
 package DataBase;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Provides methods for performing actions on the database, with integration

@@ -10,7 +10,7 @@
 #btnSave:hover, #btnBack:hover {
     -fx-border-color: #F0F0F0; /* Light green border color */
     -fx-text-fill: white; /* Text color */
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
 }
 
 /*#cmbParkName .list-cell {*/

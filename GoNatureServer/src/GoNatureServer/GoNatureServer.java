@@ -3,17 +3,16 @@
 // license found at www.lloseng.com 
 package GoNatureServer;
 
-import java.io.IOException;
-import java.sql.*;
-
 import DataBase.DBConnection;
 import Entities.Message;
+import Entities.OpCodes;
 import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 import server.AbstractServer;
 import server.ConnectionToClient;
 
-import Entities.OpCodes;
+import java.io.IOException;
+import java.sql.SQLException;
 
 
 /**
@@ -33,6 +32,8 @@ public class GoNatureServer extends AbstractServer {
     private static GoNatureServer server;
     private ServerPortFrameController controller;
     private DBConnection db;
+
+    private boolean connected = true;
 
 
     //Constructors ****************************************************
@@ -54,7 +55,8 @@ public class GoNatureServer extends AbstractServer {
         } catch (ClassNotFoundException | SQLException e) {
             controller.addtolog(e.getMessage());
             db = null;
-            super.close();
+            controller.addtolog("Server failed to initialize");
+            connected = false;
         }
     }
 
@@ -80,60 +82,67 @@ public class GoNatureServer extends AbstractServer {
      * when the server starts listening for connections.
      */
     protected void serverStarted() {
+        if (!connected) {
+            try {
+                closeServer();
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        }
         this.controller.addtolog("Server listening for connections on port " + getPort());
+        server.controller.toggleControllers(true);
     }
 
-    public void handleMessageFromClient
-            (Object msg, ConnectionToClient client) throws IOException {
-            Message newMsg = new Message(null, null);
+    public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
+        Message newMsg = new Message(null, null);
 
-            if (msg instanceof String){
-                if (msg.equals("quit")) {
-                    this.controller.addtolog("Client " + client+" Disconnected");
-                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
-                    client.close();
-                    return;
-                }
+        if (msg instanceof String) {
+            if (msg.equals("quit")) {
+                this.controller.addtolog("Client " + client + " Disconnected");
+                controller.removeRowByIP(client.getInetAddress().getHostAddress());
+                client.close();
+                return;
             }
+        }
 
-            if (msg instanceof Message){
-                switch (((Message) msg).GetMsgOpcode()) {
-                    case SYNC_HANDSHAKE:
-                        newMsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
+        if (msg instanceof Message) {
+            switch (((Message) msg).GetMsgOpcode()) {
+                case SYNC_HANDSHAKE:
+                    newMsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
+                    client.sendToClient(newMsg);
+                case GETALLORDERS:
+                    if (((Message) msg).GetMsgData() == null) {
+                        newMsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
+                        newMsg.SetMsgData(db.getOrders());
                         client.sendToClient(newMsg);
-                    case GETALLORDERS:
-                        if (((Message) msg).GetMsgData()==null) {
-                            newMsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
-                            newMsg.SetMsgData(db.getOrders());
-                            client.sendToClient(newMsg);
-                        } else {
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    case GETORDERBYID:
+                    } else {
+                        controller.addtolog("Error Data Type");
+                    }
+                    break;
+                case GETORDERBYID:
                     if (((Message) msg).GetMsgData() instanceof String) {
                         newMsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
                         newMsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
                         client.sendToClient(newMsg);
-                        }
-                        else{
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    case UPDATEORDER:
-                        if (((Message) msg).GetMsgData() instanceof Order) {
-                            newMsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
-                            newMsg.SetMsgData(db.updateOrderById((Order)(((Message) msg).GetMsgData())));
-                            client.sendToClient(newMsg);
-                        }
-                        else{
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    default:
-                        controller.addtolog("Error Unknown Opcode");
-                }
+                    } else {
+                        controller.addtolog("Error Data Type");
+                    }
+                    break;
+                case UPDATEORDER:
+                    if (((Message) msg).GetMsgData() instanceof Order) {
+                        newMsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
+                        newMsg.SetMsgData(db.updateOrderById((Order) (((Message) msg).GetMsgData())));
+                        client.sendToClient(newMsg);
+                    } else {
+                        controller.addtolog("Error Data Type");
+                    }
+                    break;
+                default:
+                    controller.addtolog("Error Unknown Opcode");
             }
+        }
     }
 
 
@@ -155,24 +164,27 @@ public class GoNatureServer extends AbstractServer {
         }
     }
 
-    public static void closeServer() throws IOException {
-        if (server == null) {
+    public static void closeServer() {
+        try {
+            if (server == null) {
+                System.out.println("Server isn't initialized");
+                return;
+            }
+            server.sendToAllClients("Disconnect");
+            server.stopListening();
+            server.close();
+            server.controller.toggleControllers(false);
+            server = null;
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Server isn't initialized");
-            return;
         }
-        server.sendToAllClients("Disconnect");
-        server.stopListening();
-        server.close();
-        server.controller.toggleControllers(false);
-        server = null;
     }
 
     @Override
     protected void clientConnected(ConnectionToClient client) {
         controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
     }
-
-
 
 
 }

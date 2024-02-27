@@ -3,7 +3,10 @@ package DataBase;
 import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -165,8 +168,8 @@ public class DBConnection {
                     "', EmailAddress = '" + updatedOrder.getEmailAddress() + "'";
             String whereClause = "OrderNo = '" + updatedOrder.getOrderNo() + "'";
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
-                 this.serverController.addtolog("Update in " + tableName + " failed. Update order:" + updatedOrder);
-                 return false;
+                this.serverController.addtolog("Update in " + tableName + " failed. Update order:" + updatedOrder);
+                return false;
             }
             this.serverController.addtolog("Update in " + tableName + " succeeded. Update order:" + updatedOrder);
             return true;

@@ -10,19 +10,24 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class DashboardPageController {
+public class DashboardPageController implements Initializable {
     private OrderDetailsPageController order;
 
     @FXML
@@ -46,11 +51,16 @@ public class DashboardPageController {
     @FXML
     private Label lblStatusMsg;
 
-    private String getOrderNo(){return orderIDtxt.getText();}
+    private static String CurrentIP = "localhost";
+
+    private String getOrderNo() {
+        return orderIDtxt.getText();
+    }
 
     private void buildConnection() {
         if (ClientUI.client == null) {
             System.out.println("Connecting to " + IPAddresstxt.getText() + " on port 5555...");
+            CurrentIP = IPAddresstxt.getText();
             ClientUI.client = new ClientController(IPAddresstxt.getText(), 5555);
 //            this.performHandshake();
         }
@@ -99,18 +109,18 @@ public class DashboardPageController {
 
             System.out.println("Order No. " + id + " found");
 
-            ((Node)event.getSource()).getScene().getWindow().hide();
+            ((Node) event.getSource()).getScene().getWindow().hide();
 
             Stage primaryStage = new Stage();
             AnchorPane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
 
-            OrderDetailsPageController orderDetailsPageController  = loader.getController();
+            OrderDetailsPageController orderDetailsPageController = loader.getController();
             orderDetailsPageController.loadOrder(o1);
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
 
-            primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+            primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
                 ClientUI.client.quit();
             }));
 
@@ -120,8 +130,7 @@ public class DashboardPageController {
             primaryStage.setTitle("GoNature - Order Details");
             primaryStage.setScene(scene);
             primaryStage.show();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("error with open stream");
         }
     }
@@ -132,12 +141,12 @@ public class DashboardPageController {
         this.buildConnection();
 
         FXMLLoader loader = new FXMLLoader();
-        Object message = new Message(OpCodes.GETALLORDERS,null);
+        Object message = new Message(OpCodes.GETALLORDERS, null);
         ClientUI.client.accept(message);
 
         if (ChatClient.msg.GetMsgOpcode() == OpCodes.GETALLORDERS) {
             try {
-                displayAllOrders(event,loader);
+                displayAllOrders(event, loader);
                 return;
             } catch (Exception e) {
                 System.out.println("error with open stream");
@@ -152,17 +161,17 @@ public class DashboardPageController {
         System.out.println("All orders received");
         ArrayList<Order> OrderList = (ArrayList<Order>) ChatClient.msg.GetMsgData();
 
-        ((Node)event.getSource()).getScene().getWindow().hide();
+        ((Node) event.getSource()).getScene().getWindow().hide();
         Stage primaryStage = new Stage();
 
         Pane root = loader.load(getClass().getResource("/VisitorsControllers/OrderListPage.fxml").openStream());
-        OrderListPageController OrderListPageController  = loader.getController();
+        OrderListPageController OrderListPageController = loader.getController();
         OrderListPageController.populateTable(OrderList);
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderListPage.css").toExternalForm());
 
-        primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
+        primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
             ClientUI.client.quit();
         }));
 
@@ -174,6 +183,11 @@ public class DashboardPageController {
         primaryStage.show();
     }
 
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        IPAddresstxt.setText(CurrentIP);
+    }
+
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/VisitorsControllers/DashboardPage.fxml"));
         Scene scene = new Scene(root);
@@ -181,10 +195,10 @@ public class DashboardPageController {
 
         Image windowImage = new Image("/assets/GoNatureLogo.png");
         primaryStage.getIcons().add(windowImage);
-
         primaryStage.setTitle("GoNature - Dashboard");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
 }

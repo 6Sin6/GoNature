@@ -10,7 +10,7 @@
 #btnEdit:hover, #btnBack:hover {
     -fx-border-color: #4CAF50; /* Light green border color */
     -fx-text-fill: white; /* Text color */
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
 }
 
 #lblTitle {

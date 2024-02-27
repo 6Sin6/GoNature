@@ -7,7 +7,7 @@ package client;
 import CommonClientUI.ChatIF;
 import Entities.Message;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -60,45 +60,43 @@ public class ChatClient extends AbstractClient {
         awaitResponse = false;
     }
 
-        /**
-         * This method handles all data coming from the UI
-         *
-         * @param message The message from the UI.
-         */
+    /**
+     * This method handles all data coming from the UI
+     *
+     * @param message The message from the UI.
+     */
 
-        public void handleMessageFromClientUI (Object message)
-        {
-            try {
-                openConnection();
-                awaitResponse = true;
-                sendToServer(message);
-                // wait for response
-                while (awaitResponse) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void handleMessageFromClientUI(Object message) {
+        try {
+            openConnection();
+            awaitResponse = true;
+            sendToServer(message);
+            // wait for response
+            while (awaitResponse) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                clientUI.respond("Could not send message to server: Terminating client." + e);
-                quit();
             }
-        }
-
-
-        /**
-         * This method terminates the client.
-         */
-        public void quit()
-        {
-            try {
-                sendToServer("quit");
-                closeConnection();
-            } catch (IOException e) {
-            }
-            System.exit(0);
+        } catch (IOException e) {
+            clientUI.respond("Could not send message to server: Terminating client." + e);
+            quit();
         }
     }
+
+
+    /**
+     * This method terminates the client.
+     */
+    public void quit() {
+        try {
+            sendToServer("quit");
+            closeConnection();
+        } catch (IOException e) {
+        }
+        System.exit(0);
+    }
+}
 
 //End of ChatClient class

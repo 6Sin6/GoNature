@@ -18,12 +18,8 @@ public class ServerUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ServerPortFrameController aFrame = new ServerPortFrameController();
-        primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
-            try {
-                GoNatureServer.closeServer();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
+            GoNatureServer.closeServer();
         }));
         aFrame.start(primaryStage);
     }

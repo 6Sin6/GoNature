@@ -1,11 +1,5 @@
 package ServerUIPageController;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import ServerUIPage.ServerUI;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,6 +15,12 @@ import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ServerPortFrameController implements Initializable {
     ObservableList<String> list;
@@ -56,7 +56,7 @@ public class ServerPortFrameController implements Initializable {
     private TextField TextfieldUserName;
 
     @FXML
-    private TextField TextFieldPassword;
+    private PasswordField TextFieldPassword;
 
     @FXML
     private Button BtnStop;
@@ -92,30 +92,29 @@ public class ServerPortFrameController implements Initializable {
             addtolog("Please try again");
         } else {
             ServerUI.runServer(this);
-            toggleControllers(true);
         }
     }
 
     public void start(Stage primaryStage) throws Exception {
-            Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerPort.fxml"));
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerPort.css").toExternalForm());
+        Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerPort.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerPort.css").toExternalForm());
 
-            Image windowImage = new Image("/assets/GoNatureServerLogo.png");
-            primaryStage.getIcons().add(windowImage);
+        Image windowImage = new Image("/assets/GoNatureServerLogo.png");
+        primaryStage.getIcons().add(windowImage);
 
-            primaryStage.setTitle("GoNature - Server");
+        primaryStage.setTitle("GoNature - Server");
 
-            primaryStage.setScene(scene);
-            primaryStage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     public void setDefaultValues() {
         this.TextFieldPassword.setText("Aa123456");
-        this.TextfieldUserName.setText("Eyal");
+        this.TextfieldUserName.setText("root");
         this.portxt.setText("5555");
-        // Set default value for the ComboBox to "192.168.194.1" if it exists in the items list
-        String defaultURL = "192.168.194.1";
+        // Set default value for the ComboBox to "localhost" if it exists in the items list
+        String defaultURL = "localhost";
         if (list.contains(defaultURL)) {
             this.URLComboBox.setValue(defaultURL);
         } else {
@@ -129,6 +128,7 @@ public class ServerPortFrameController implements Initializable {
         addtolog("Exit Server");
         System.exit(0);
     }
+
     @FXML
     void stopServer(ActionEvent event) throws Exception {
         ServerUI.closeServer();
@@ -146,15 +146,19 @@ public class ServerPortFrameController implements Initializable {
         list = FXCollections.observableArrayList(UrlComboList);
         URLComboBox.setItems(list);
     }
+
     public String getURLComboBox() {
         return (String) URLComboBox.getValue();
     }
+
     public String getUserName() {
         return TextfieldUserName.getText();
     }
+
     public String getPassword() {
         return TextFieldPassword.getText();
     }
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
@@ -174,6 +178,7 @@ public class ServerPortFrameController implements Initializable {
             return row;
         });
     }
+
     public void addRow(String name, String ip) {
         Map<String, String> newRow = new HashMap<>();
         newRow.put("name", name);
@@ -182,6 +187,7 @@ public class ServerPortFrameController implements Initializable {
 
         tableClients.getItems().add(newRow);
     }
+
     public void removeRowByIP(String ip) {
         // Use removeIf with a predicate to remove rows matching the condition
         tableClients.getItems().removeIf(row -> ip.equals(row.get("ip")));
