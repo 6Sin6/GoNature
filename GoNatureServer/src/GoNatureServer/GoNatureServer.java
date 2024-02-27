@@ -46,10 +46,14 @@ public class GoNatureServer extends AbstractServer {
     private GoNatureServer(int port, ServerPortFrameController controller) throws Exception {
         super(port);
         this.controller = controller;
+    }
+
+    public void initializeDBConnection(ServerPortFrameController controller) throws Exception {
         try {
             db = DBConnection.getInstance(controller);
         } catch (ClassNotFoundException | SQLException e) {
             controller.addtolog(e.getMessage());
+            db = null;
             super.close();
         }
     }
@@ -79,11 +83,10 @@ public class GoNatureServer extends AbstractServer {
         this.controller.addtolog("Server listening for connections on port " + getPort());
     }
 
-
-
     public void handleMessageFromClient
             (Object msg, ConnectionToClient client) throws IOException {
-            Message newmsg = new Message(null,null);
+            Message newMsg = new Message(null, null);
+
             if (msg instanceof String){
                 if (msg.equals("quit")) {
                     this.controller.addtolog("Client " + client+" Disconnected");
@@ -92,25 +95,26 @@ public class GoNatureServer extends AbstractServer {
                     return;
                 }
             }
+
             if (msg instanceof Message){
                 switch (((Message) msg).GetMsgOpcode()) {
                     case SYNC_HANDSHAKE:
-                        newmsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
-                        client.sendToClient(newmsg);
+                        newMsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
+                        client.sendToClient(newMsg);
                     case GETALLORDERS:
                         if (((Message) msg).GetMsgData()==null) {
-                            newmsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
-                            newmsg.SetMsgData(db.getOrders());
-                            client.sendToClient(newmsg);
+                            newMsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
+                            newMsg.SetMsgData(db.getOrders());
+                            client.sendToClient(newMsg);
                         } else {
                             controller.addtolog("Error Data Type");
                         }
                         break;
                     case GETORDERBYID:
                     if (((Message) msg).GetMsgData() instanceof String) {
-                        newmsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
-                        newmsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
-                        client.sendToClient(newmsg);
+                        newMsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
+                        newMsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
+                        client.sendToClient(newMsg);
                         }
                         else{
                             controller.addtolog("Error Data Type");
@@ -118,9 +122,9 @@ public class GoNatureServer extends AbstractServer {
                         break;
                     case UPDATEORDER:
                         if (((Message) msg).GetMsgData() instanceof Order) {
-                            newmsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
-                            newmsg.SetMsgData(db.updateOrderById((Order)(((Message) msg).GetMsgData())));
-                            client.sendToClient(newmsg);
+                            newMsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
+                            newMsg.SetMsgData(db.updateOrderById((Order)(((Message) msg).GetMsgData())));
+                            client.sendToClient(newMsg);
                         }
                         else{
                             controller.addtolog("Error Data Type");
@@ -146,7 +150,9 @@ public class GoNatureServer extends AbstractServer {
     protected void serverClosed() {
         controller.toggleControllers(false);
         this.controller.addtolog("Server has closed.");
-        db.closeConnection();
+        if (db != null) {
+            db.closeConnection();
+        }
     }
 
     public static void closeServer() throws IOException {

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class ClientUI extends Application {
 	public static ClientController client;
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 		launch(args);
 	}
 

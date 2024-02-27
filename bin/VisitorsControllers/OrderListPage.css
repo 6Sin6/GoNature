@@ -1,0 +1,25 @@
+.root {
+    -fx-background-color: #F0F0F0;
+}
+
+#btnEdit, #btnBack {
+    -fx-background-color: #3CB371;
+    -fx-text-fill: white;
+}
+
+#btnEdit:hover, #btnBack:hover {
+    -fx-border-color: #4CAF50; /* Light green border color */
+    -fx-text-fill: white; /* Text color */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
+#lblTitle {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #11142D;
+    -fx-padding: 0 0 20 0;
+}
+
+#vboxPage {
+    -fx-padding: 20 20 20 20;
+}

@@ -18,23 +18,28 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 
 public class ServerPortFrameController implements Initializable {
-
+    ObservableList<String> list;
 
     @FXML
     private Button btnExit = null;
+
     @FXML
     private Button btnStart;
+
     @FXML
     private Label lbllist;
+
     @FXML
     private TextArea loggerTextArea;
 
     @FXML
     private Label lblLogger;
+
     @FXML
     private Label lblSQLUser;
 
@@ -55,8 +60,10 @@ public class ServerPortFrameController implements Initializable {
 
     @FXML
     private Button BtnStop;
+
     @FXML
     private TextField portxt;
+
     @FXML
     private TableView<Map> tableClients;
 
@@ -65,7 +72,10 @@ public class ServerPortFrameController implements Initializable {
 
     @FXML
     private TableColumn<Map, String> colIP;
-    ObservableList<String> list;
+
+    @FXML
+    private TableColumn<Map, String> colStatus;
+
 
     public String getPort() {
         return portxt.getText();
@@ -81,7 +91,7 @@ public class ServerPortFrameController implements Initializable {
             addtolog("You must enter a URL, username and password");
             addtolog("Please try again");
         } else {
-            ServerUI.runServer( this);
+            ServerUI.runServer(this);
             toggleControllers(true);
         }
     }
@@ -90,7 +100,12 @@ public class ServerPortFrameController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerPort.fxml"));
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerPort.css").toExternalForm());
-            primaryStage.setTitle("GoNatureServer");
+
+            Image windowImage = new Image("/assets/GoNatureServerLogo.png");
+            primaryStage.getIcons().add(windowImage);
+
+            primaryStage.setTitle("GoNature - Server");
+
             primaryStage.setScene(scene);
             primaryStage.show();
     }
@@ -146,6 +161,7 @@ public class ServerPortFrameController implements Initializable {
         setDefaultValues();
         colName.setCellValueFactory(new MapValueFactory<>("name"));
         colIP.setCellValueFactory(new MapValueFactory<>("ip"));
+        colStatus.setCellValueFactory(new MapValueFactory<>("status"));
         tableClients.setRowFactory(tv -> {
             TableRow<Map> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -162,6 +178,7 @@ public class ServerPortFrameController implements Initializable {
         Map<String, String> newRow = new HashMap<>();
         newRow.put("name", name);
         newRow.put("ip", ip);
+        newRow.put("status", "Connected");
 
         tableClients.getItems().add(newRow);
     }
