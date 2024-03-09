@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/ClientUI/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Entities/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/GoNatureClient/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/GoNatureServer/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/OCSF/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/ServerUI/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/GoNatureClient/src/Entities" />
-    </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.13" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.13 (2)" level="project" />
+<module classpath="eclipse" classpath-dir="$MODULE_DIR$" type="JAVA_MODULE" version="4">
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="188a2995-186e-42df-8f3e-e9625c82dc56" />
   </component>
 </module>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane id="orderDetailsPageInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrderDetailsPageController">
+    <children>
+        <VBox fx:id="vboxPage" alignment="CENTER" prefHeight="60.0" prefWidth="600.0">
+            <Label fx:id="lblTitle"/>
+        </VBox>
+
+        <Label id="lblOrderId" layoutX="50.0" layoutY="68.0" text="Order ID"/>
+        <Label id="lblNumVisitors" layoutX="50.0" layoutY="104.0" text="Number of visitors"/>
+        <Label id="lblPark" layoutX="50.0" layoutY="140.0" text="Park"/>
+        <Label id="lblEmail" layoutX="50.0" layoutY="176.0" text="Email"/>
+        <TextField id="telephoneNumbertxt" fx:id="txtTelephoneNumber" layoutX="221.0" layoutY="207.0">
+            <effect>
+                <InnerShadow/>
+            </effect>
+        </TextField>
+        <Label id="lblTel" layoutX="50.0" layoutY="211.0" text="Telephone"/>
+        <ComboBox id="cmbParkName" fx:id="cmbParkName" layoutX="221.0" layoutY="136.0" prefWidth="150.0"/>
+        <Label id="lblDate" layoutX="50.0" layoutY="249.0" text="Date"/>
+        <Label id="lblTime" layoutX="50.0" layoutY="288.0" text="Time"/>
+        <Button id="btnSave" fx:id="btnSave" layoutX="350.0" layoutY="355.0" mnemonicParsing="false"
+                onAction="#SaveChange" prefHeight="30.0" prefWidth="80.0" text="Save"/>
+        <Button id="btnBack" fx:id="btnBack" layoutX="50.0" layoutY="355.0" mnemonicParsing="false"
+                onAction="#returnMain" prefHeight="30.0" prefWidth="80.0" text="Back"/>
+        <Label fx:id="lblStatusMsg" layoutX="180.0" layoutY="355.0" prefHeight="61.0" prefWidth="150.0"
+               textAlignment="CENTER"/>
+        <Label fx:id="lblOrderNumber" layoutX="221.0" layoutY="68.0"/>
+        <Label fx:id="lblNumberOfVisitors" layoutX="221.0" layoutY="104.0"/>
+        <Label fx:id="lblEmail" layoutX="221.0" layoutY="176.0"/>
+        <Label fx:id="lblVisitationDate" layoutX="221.0" layoutY="249.0"/>
+        <Label fx:id="lblVisitationTime" layoutX="221.0" layoutY="288.0"/>
+    </children>
+    <effect>
+        <DropShadow/>
+    </effect>
+</AnchorPane>

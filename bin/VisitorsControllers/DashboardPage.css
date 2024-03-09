@@ -1,0 +1,20 @@
+.root {
+    -fx-background-color: #FCFCFC;
+}
+
+#titleText {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #11142D;
+}
+
+#orderByIDbtn, #btnAllOrdersInfo {
+    -fx-background-color: #3CB371;
+    -fx-text-fill: white;
+}
+
+#orderByIDbtn:hover, #btnAllOrdersInfo:hover {
+    -fx-border-color: #4CAF50; /* Light green border color */
+    -fx-text-fill: white; /* Text color */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}

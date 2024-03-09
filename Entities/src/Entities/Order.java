@@ -1,20 +1,23 @@
 package Entities;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
-public class Order {
+public class Order implements Serializable {
     private String ParkName;
     private String OrderNo;
-    private Date VisitationTime;
+    private Timestamp VisitationTime;
     private Integer NumberOfVisitors;
     private String TelephoneNumber;
+    private String EmailAddress;
 
-    public Order(String ParkName, String OrderNo, Date VisitationTime, Integer NumberOfVisitors, String TelephoneNumber) {
+    public Order(String ParkName, String OrderNo, Timestamp VisitationTime, Integer NumberOfVisitors, String TelephoneNumber, String EmailAddress) {
         this.ParkName = ParkName;
         this.OrderNo = OrderNo;
         this.VisitationTime = VisitationTime;
         this.NumberOfVisitors = NumberOfVisitors;
         this.TelephoneNumber = TelephoneNumber;
+        this.EmailAddress = EmailAddress;
     }
 
     public String getParkName() {
@@ -25,7 +28,7 @@ public class Order {
         return this.OrderNo;
     }
 
-    public Date getVisitationTime() {
+    public Timestamp getVisitationTime() {
         return this.VisitationTime;
     }
 
@@ -37,6 +40,10 @@ public class Order {
         return this.TelephoneNumber;
     }
 
+    public String getEmailAddress() {
+        return this.EmailAddress;
+    }
+
     public void setParkName(String ParkName) {
         this.ParkName = ParkName;
     }
@@ -46,6 +53,17 @@ public class Order {
     }
 
     public String toString() {
-        return String.format("%s %s %s %d %s\n", ParkName, OrderNo, VisitationTime, NumberOfVisitors, TelephoneNumber);
+        return String.format("%s %s %s %d %s %s\n", ParkName, OrderNo, VisitationTime, NumberOfVisitors, TelephoneNumber, EmailAddress);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Order) {
+            Order order = (Order) o;
+            return this.ParkName.equals(order.getParkName()) && this.TelephoneNumber.equals(order.getTelephoneNumber());
+        }
+        return false;
+    }
+
+
 }

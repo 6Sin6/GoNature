@@ -1,6 +1,6 @@
 package ServerUIPage;
 
-import Server.GoNatureServer;
+import GoNatureServer.GoNatureServer;
 import ServerUIPageController.ServerPortFrameController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -11,19 +11,15 @@ import java.io.IOException;
 
 public class ServerUI extends Application {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         ServerPortFrameController aFrame = new ServerPortFrameController();
-        primaryStage.setOnCloseRequest(e -> Platform.runLater(()-> {
-            try {
-                GoNatureServer.closeServer();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
+            GoNatureServer.closeServer();
         }));
         aFrame.start(primaryStage);
     }
@@ -39,7 +35,7 @@ public class ServerUI extends Application {
 
         try {
             GoNatureServer sv = GoNatureServer.getInstance(port, guiController);
-
+            sv.initializeDBConnection(guiController); // For reinitializing the DB connection if it was disconnected.
             try {
                 sv.listen();
             } catch (Exception ex) {
@@ -49,6 +45,7 @@ public class ServerUI extends Application {
             guiController.addtolog(e.getMessage());
         }
     }
+
     public static void closeServer() throws IOException {
         GoNatureServer.closeServer();
     }

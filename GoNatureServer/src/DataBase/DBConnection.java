@@ -82,7 +82,7 @@ public class DBConnection {
      */
     private boolean setConnection(String url, String user, String password) {
         try {
-            this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=IST&useSSL=false&allowPublicKeyRetrieval=true", user, password);
+            this.conn = DriverManager.getConnection("jdbc:mysql://" + url + ":3306/test?serverTimezone=Asia/Jerusalem&useSSL=false&allowPublicKeyRetrieval=true", user, password);
             this.serverController.addtolog("SQL connection succeed");
             return true;
         } catch (SQLException ex) {
@@ -108,23 +108,24 @@ public class DBConnection {
         dbConnection = null;
     }
 
-    public void insertRecord(String tableName, String... values) {
-        try {
-            if (!dbController.insertRecord(tableName, values)) {
-                this.serverController.addtolog("Insert into " + tableName + " failed");
-            } else {
-                this.serverController.addtolog("Insert into " + tableName + " succeed");
-                this.serverController.addtolog("Inserted record: " + String.join(", ", values));
-            }
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-        }
-    }
-
     public ArrayList<Order> getOrders() {
         try {
-            ResultSet results = dbController.selectRecords("", "");
-            return new ArrayList<>();
+            String tableName = "prototype.orders";
+            ResultSet results = dbController.selectRecords(tableName, "");
+            this.serverController.addtolog("Select from " + tableName + " succeeded");
+            ArrayList<Order> orders = new ArrayList<>();
+            while (results.next()) {
+                orders.add(new Order(
+                        results.getString("ParkName"),
+                        results.getString("OrderNo"),
+                        results.getTimestamp("VisitationTime"),
+                        results.getInt("NumberOfVisitors"),
+                        results.getString("TelephoneNumber"),
+                        results.getString("EmailAddress")
+                ));
+            }
+
+            return orders;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
@@ -133,17 +134,44 @@ public class DBConnection {
 
     public Order getOrderById(String orderId) {
         try {
-            ResultSet results = dbController.selectRecords("", "");
-            return (Order) results;
+            String tableName = "prototype.orders";
+            String whereClause = "OrderNo=" + orderId;
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            this.serverController.addtolog("Select from " + tableName + " WHERE" + " OrderNo=" + orderId + " succeeded");
+
+            if (results.next()) {
+                Order order = new Order(
+                        results.getString("ParkName"),
+                        results.getString("OrderNo"),
+                        results.getTimestamp("VisitationTime"),
+                        results.getInt("NumberOfVisitors"),
+                        results.getString("TelephoneNumber"),
+                        results.getString("EmailAddress")
+                );
+                return order;
+            }
+
+            return new Order("", "", null, 0, "", "");
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
         }
     }
 
-    public boolean updateOrderById(Order updatedOrder) {
+    public Boolean updateOrderById(Order updatedOrder) {
         try {
-            ResultSet results = dbController.selectRecords("", "");
+            String tableName = "prototype.orders";
+            String setClause = "ParkName = '" + updatedOrder.getParkName() +
+                    "', VisitationTime = '" + updatedOrder.getVisitationTime() +
+                    "', NumberOfVisitors = " + updatedOrder.getNumberOfVisitors() +
+                    ", TelephoneNumber = '" + updatedOrder.getTelephoneNumber() +
+                    "', EmailAddress = '" + updatedOrder.getEmailAddress() + "'";
+            String whereClause = "OrderNo = '" + updatedOrder.getOrderNo() + "'";
+            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+                this.serverController.addtolog("Update in " + tableName + " failed. Update order:" + updatedOrder);
+                return false;
+            }
+            this.serverController.addtolog("Update in " + tableName + " succeeded. Update order:" + updatedOrder);
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
