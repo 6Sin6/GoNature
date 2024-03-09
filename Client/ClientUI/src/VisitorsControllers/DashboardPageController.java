@@ -3,7 +3,7 @@ package VisitorsControllers;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
-import VisitorsUI.ClientUI;
+import CommonClient.ClientUI;
 import client.ClientCommunicator;
 import client.ClientController;
 import javafx.application.Platform;

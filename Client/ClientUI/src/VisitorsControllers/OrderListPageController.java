@@ -2,7 +2,7 @@ package VisitorsControllers;
 
 import CommonClient.Utils;
 import Entities.Order;
-import VisitorsUI.ClientUI;
+import CommonClient.ClientUI;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

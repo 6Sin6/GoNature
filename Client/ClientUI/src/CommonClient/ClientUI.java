@@ -1,4 +1,4 @@
-package VisitorsUI;
+package CommonClient;
 
 import VisitorsControllers.DashboardPageController;
 import client.ClientController;

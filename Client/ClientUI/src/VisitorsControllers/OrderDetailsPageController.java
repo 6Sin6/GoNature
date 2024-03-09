@@ -4,7 +4,7 @@ import CommonClient.Utils;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
-import VisitorsUI.ClientUI;
+import CommonClient.ClientUI;
 import client.ClientCommunicator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
