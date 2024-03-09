@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.AuthenticateWithIDPageController">
+   <children>
+      <Pane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
+         <children>
+            <ImageView fx:id="im1" fitHeight="43.0" fitWidth="42.0" layoutX="1224.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
+            <Separator fx:id="sep" layoutX="256.0" layoutY="58.0" prefHeight="12.0" prefWidth="1019.0" />
+            <VBox fx:id="menu" prefHeight="768.0" prefWidth="250.0" />
+            <Text fx:id="header" layoutX="568.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authenticate With ID" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <Text fx:id="text2" layoutX="295.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To proceed with your process, simply type your ID into the provided form and click submit." textAlignment="CENTER" wrappingWidth="915.5732421875">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <Text fx:id="text1" layoutX="288.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your cooperation is appreciated and will allow us to continue seamlessly." textAlignment="CENTER" wrappingWidth="749.5732421875">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <MFXButton fx:id="SubmitBtn" layoutX="836.0" layoutY="335.0" prefHeight="48.0" prefWidth="120.0" rippleColor="#b1e4be" text="Submit" />
+            <MFXTextField fx:id="IDTextField" floatingText="ID" layoutX="468.0" layoutY="335.0" prefHeight="48.0" prefWidth="358.0" />
+            <Text fx:id="ErrorText" layoutX="342.0" layoutY="505.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="749.5732421875">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</StackPane>
