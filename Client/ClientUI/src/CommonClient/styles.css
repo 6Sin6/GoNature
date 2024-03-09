@@ -1,0 +1,40 @@
+/* CSS for the menu */
+.menu {
+    -fx-background-color: #263238; /* Dark background color */
+}
+
+.menu-label {
+    -fx-text-fill: white; /* White text color */
+}
+
+.menu-item {
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 14px; /* Font size */
+    -fx-padding: 8px 0; /* Padding */
+    -fx-cursor: hand; /* Cursor style */
+}
+
+.menu-item:hover {
+    -fx-background-color: #37474F; /* Darker background color on hover */
+}
+
+.username {
+    -fx-text-fill: #90A4AE; /* Light text color for username */
+    -fx-font-size: 12px; /* Font size */
+}
+
+.user-role {
+    -fx-text-fill: #90A4AE; /* Light text color for user role */
+    -fx-font-size: 12px; /* Font size */
+}
+
+.logout {
+    -fx-text-fill: white; /* White text color for logout */
+    -fx-font-size: 14px; /* Font size */
+    -fx-padding: 8px 0; /* Padding */
+    -fx-cursor: hand; /* Cursor style */
+}
+
+.logout:hover {
+    -fx-background-color: #37474F; /* Darker background color on hover */
+}

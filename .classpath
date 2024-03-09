@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.8 (3)"/>
-	<classpathentry kind="src" path="ClientUI/src"/>
-	<classpathentry kind="src" path="Entities/src"/>
-	<classpathentry kind="src" path="GoNatureClient/src"/>
-	<classpathentry kind="src" path="GoNatureServer/src"/>
-	<classpathentry kind="src" path="OCSF/src"/>
-	<classpathentry kind="src" path="ServerUI/src"/>
-	<classpathentry kind="src" path="Utilities/src"/>
 	<classpathentry kind="src" path="Client/ClientUI/src"/>
 	<classpathentry kind="src" path="Client/GoNatureClient/src"/>
 	<classpathentry kind="src" path="Common/Entities/src"/>
+	<classpathentry kind="src" path="Common/OCSF/src"/>
 	<classpathentry kind="src" path="Common/Resources/src"/>
 	<classpathentry kind="src" path="Server/GoNatureServer/src"/>
 	<classpathentry kind="src" path="Server/ServerUI/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-8.0.13"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-8.0.13"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
