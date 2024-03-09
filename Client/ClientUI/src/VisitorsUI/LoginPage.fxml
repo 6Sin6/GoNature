@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<StackPane fx:id="loginPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.LoginPageController">
+   <children>
+      <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text fx:id="header" layoutX="230.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LogIn " textAlignment="CENTER" wrappingWidth="161.13671875">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <Separator fx:id="sep" layoutX="212.0" layoutY="85.0" prefWidth="200.0" />
+            <Label fx:id="userNameLbl" layoutX="131.0" layoutY="113.0" prefHeight="48.0" prefWidth="94.0" text="User Name :">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <MFXTextField fx:id="userNameText" layoutX="224.0" layoutY="113.0" prefHeight="48.0" prefWidth="173.0" />
+            <Label fx:id="passwordLbl" layoutX="131.0" layoutY="176.0" prefHeight="48.0" prefWidth="82.0" text="Password : ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <MFXPasswordField layoutX="224.0" layoutY="176.0" prefHeight="17.0" prefWidth="173.0" />
+            <MFXButton fx:id="loginBtn" layoutX="300.0" layoutY="259.0" prefHeight="48.0" prefWidth="135.0" text="Connect" />
+         </children>
+      </Pane>
+   </children>
+</StackPane>
