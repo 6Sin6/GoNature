@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
+         <children>
+            <Text layoutX="535.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Support Representative Dashboard" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="43.0" fitWidth="42.0" layoutX="1224.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+            <Separator layoutX="259.0" layoutY="72.0" prefHeight="12.0" prefWidth="1007.0" />
+            <Button layoutX="1188.0" layoutY="720.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="78.0" text="Logout" />
+            <Button layoutX="349.0" layoutY="309.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="110.0" text="Check" />
+            <Text layoutX="259.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Check Current Available Spots In All Parks" wrappingWidth="318.84375">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text layoutX="656.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue a bill for an order">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text layoutX="969.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register a Group Guide">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Button layoutX="676.0" layoutY="309.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="110.0" text="Issue a Bill" />
+            <Button layoutX="996.0" layoutY="309.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="110.0" text="Register a Guide" />
+            <VBox prefHeight="768.0" prefWidth="250.0" />
+         </children>
+      </Pane>
+   </children>
+</StackPane>
