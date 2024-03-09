@@ -1,10 +1,7 @@
 package ServerUIPageController;
 
 import ServerUIPage.ServerUI;
-<<<<<<< HEAD
-import VisitorsControllers.StudentFormController;
-=======
->>>>>>> origin/ronben17-ClientUI
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -137,22 +134,11 @@ public class ServerPortFrameController implements Initializable {
     void stopServer(ActionEvent event) throws Exception {
         ServerUI.closeServer();
     }
-<<<<<<< HEAD
-    @FXML
-    public synchronized void addtolog(String str) {
-        System.out.println(str); // Consider removing or redirecting to a file logger for production
-        Platform.runLater(() -> loggerTextArea.appendText(str + "\n"));
-    }
-
-    @FXML
-=======
 
     public synchronized void addtolog(String str) {
         System.out.println(str);
         Platform.runLater(() -> loggerTextArea.appendText(str + "\n"));
     }
-
->>>>>>> origin/ronben17-ClientUI
     private void setURLComboBox() {
         ArrayList<String> UrlComboList = new ArrayList<>();
         UrlComboList.add("localhost");
@@ -160,21 +146,7 @@ public class ServerPortFrameController implements Initializable {
         list = FXCollections.observableArrayList(UrlComboList);
         URLComboBox.setItems(list);
     }
-<<<<<<< HEAD
-    @FXML
-    public String getURLComboBox() {
-        return (String) URLComboBox.getValue();
-    }
-    @FXML
-    public String getUserName() {
-        return TextfieldUserName.getText();
-    }
-    @FXML
-    public String getPassword() {
-        return TextFieldPassword.getText();
-    }
-    @FXML
-=======
+
 
     public String getURLComboBox() {
         return (String) URLComboBox.getValue();
@@ -188,7 +160,6 @@ public class ServerPortFrameController implements Initializable {
         return TextFieldPassword.getText();
     }
 
->>>>>>> origin/ronben17-ClientUI
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setURLComboBox();
@@ -208,11 +179,7 @@ public class ServerPortFrameController implements Initializable {
             return row;
         });
     }
-<<<<<<< HEAD
-    @FXML
-=======
 
->>>>>>> origin/ronben17-ClientUI
     public void addRow(String name, String ip) {
         Map<String, String> newRow = new HashMap<>();
         newRow.put("name", name);
@@ -221,11 +188,7 @@ public class ServerPortFrameController implements Initializable {
 
         tableClients.getItems().add(newRow);
     }
-<<<<<<< HEAD
-    @FXML
-=======
 
->>>>>>> origin/ronben17-ClientUI
     public void removeRowByIP(String ip) {
         // Use removeIf with a predicate to remove rows matching the condition
         tableClients.getItems().removeIf(row -> ip.equals(row.get("ip")));
