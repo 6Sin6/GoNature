@@ -32,7 +32,7 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private ImageView backButton;
 
     @FXML
-    private Label dashboardLabel;
+    private MFXButton dashboardBtn;
 
     @FXML
     private ImageView exitBtn;
@@ -41,7 +41,7 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private Text headerTxt;
 
     @FXML
-    private Label homePageLabel;
+    private MFXButton homePageBtn;
 
     @FXML
     private Button issueBtn;
@@ -62,7 +62,10 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private VBox menuBox;
 
     @FXML
-    private Label ordersLabel;
+    private MFXButton ordersBtn;
+
+    @FXML
+    private MFXButton manageBtn;
 
     @FXML
     private Pane regpane;
@@ -98,14 +101,6 @@ public class DepartmentManagerDashboardPageController implements Initializable {
         // Set images for back button and app logo
         backButton.setImage(new Image(getClass().getResource("/assets/back_arrow.png").toExternalForm()));
         appLogo.setImage(new Image(getClass().getResource("/assets/GoNatureLogo.png").toExternalForm()));
-
-        // Set text for labels
-        appName.setText("GoNature");
-        usernameLabel.setText("Username: Israel Israeli");
-        userRoleLabel.setText("Visitor");
-        homePageLabel.setText("Home Page");
-        dashboardLabel.setText("Dashboard");
-        ordersLabel.setText("Your orders");
     }
 
 }

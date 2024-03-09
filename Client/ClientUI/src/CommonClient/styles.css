@@ -8,14 +8,19 @@
 }
 
 .menu-item {
-    -fx-text-fill: white; /* White text color */
-    -fx-font-size: 14px; /* Font size */
-    -fx-padding: 8px 0; /* Padding */
-    -fx-cursor: hand; /* Cursor style */
+    -fx-background-color: transparent;
+    -fx-border-color: #3e4462; /* White-ish border color */
+    -fx-border-width: 1px; /* Adjust border width as needed */
+    -fx-border-radius: 5px; /* Optional: rounded corners */
+    -fx-text-fill: #FCFCFC; /* Text color */
+    -fx-font-size: 14px; /* Adjust font size as needed */
+    -fx-padding: 10px 20px; /* Adjust padding as needed */
+    -fx-alignment: center;
 }
 
 .menu-item:hover {
-    -fx-background-color: #37474F; /* Darker background color on hover */
+    -fx-background-color: #3e4462; /* White background color on hover */
+    -fx-text-fill: #FCFCFC; /* Text color on hover */
 }
 
 .username {
@@ -37,4 +42,20 @@
 
 .logout:hover {
     -fx-background-color: #37474F; /* Darker background color on hover */
+}
+
+#logoutBtnMenu {
+    -fx-font-size: 14px; /* Adjust font size as needed */
+    -fx-padding: 10px 20px; /* Adjust padding as needed */
+    -fx-alignment: center;
+    -fx-background-color: #263238; /* White background color */
+    -fx-text-fill: #FF6A69; /* Black text color */
+    -fx-border-color: #FF6A69; /* White border color */
+    -fx-border-width: 1px; /* Border width */
+    -fx-border-radius: 5px; /* Border radius */
+}
+
+#logoutBtnMenu:hover {
+    -fx-background-color: #3e4462; /* Black background color on hover */
+    -fx-text-fill: #FF6A69; /* White text color on hover */
 }

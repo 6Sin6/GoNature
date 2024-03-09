@@ -42,12 +42,13 @@
                      <ImageView fx:id="appLogo" fitHeight="72.0" fitWidth="72.0" layoutX="65.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true" />
                      <Label fx:id="appName" graphicTextGap="15.0" layoutX="147.0" layoutY="118.0" styleClass="menu-label" text="GoNature" />
                      <StackPane fx:id="logoContainer" />
-                     <Label fx:id="usernameLabel" layoutX="81.0" layoutY="181.0" styleClass="username" text="User: Israel Israeli" />
-                     <Label fx:id="userRoleLabel" layoutX="119.0" layoutY="205.0" styleClass="user-role" text="Visitor" />
-                     <Label fx:id="homePageLabel" layoutX="101.0" layoutY="260.0" styleClass="menu-item" text="Home Page" />
-                     <Label fx:id="dashboardLabel" layoutX="103.0" layoutY="322.0" styleClass="menu-item" text="Dashboard" />
-                     <Label fx:id="ordersLabel" layoutX="101.0" layoutY="378.0" styleClass="menu-item" text="Your orders" />
-                     <MFXButton fx:id="logoutBtnMenu" layoutX="81.0" layoutY="693.0" prefHeight="50.0" prefWidth="110.0" />
+                     <Label fx:id="usernameLabel" layoutX="99.0" layoutY="184.0" styleClass="username" text="User: Israel Israeli" />
+                     <Label fx:id="userRoleLabel" layoutX="128.0" layoutY="208.0" styleClass="user-role" text="Visitor" />
+                     <MFXButton fx:id="homePageBtn" layoutX="67.0" layoutY="251.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Home Page" />
+                     <MFXButton fx:id="dashboardBtn" layoutX="69.0" layoutY="351.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Dashboard" />
+                     <MFXButton fx:id="ordersBtn" layoutX="67.0" layoutY="451.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Reports" />
+                     <MFXButton fx:id="manageBtn" layoutX="67.0" layoutY="551.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Manage Requests" />
+                     <MFXButton fx:id="logoutBtnMenu" layoutX="67.0" layoutY="690.0" prefHeight="34.0" prefWidth="175.0" text="Logout" />
                   </children>
                </Pane>
             </VBox>
