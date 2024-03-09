@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module classpath="eclipse" classpath-dir="$MODULE_DIR$" type="JAVA_MODULE" version="4">
-  <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="188a2995-186e-42df-8f3e-e9625c82dc56" />
-  </component>
-</module>
+<module classpath="eclipse" classpath-dir="$MODULE_DIR$" type="JAVA_MODULE" version="4" />
