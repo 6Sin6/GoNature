@@ -3,17 +3,14 @@
 // license found at www.lloseng.com 
 package Server;
 
-import java.io.IOException;
-import java.sql.*;
-
-import DataBase.DBConnection;
-import Entities.Message;
-import Entities.Order;
-import ServerUIPageController.ServerPortFrameController;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
+import DataBase.DBConnection;
+import Entities.Message;
+import ServerUIPageController.ServerPortFrameController;
 
-import Entities.OpCodes;
+import java.io.IOException;
+import java.sql.SQLException;
 
 
 /**
@@ -80,55 +77,51 @@ public class GoNatureServer extends AbstractServer {
     }
 
 
-
     public void handleMessageFromClient
             (Object msg, ConnectionToClient client) throws IOException {
-            Message newmsg= new Message(null,null);
-            if (msg instanceof String){
-                if (msg.equals("quit")) {
-                    this.controller.addtolog("Client " + client+" Disconnected");
-                    client.close();
-                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
-                    return;
-                }
+        Message newmsg = new Message(null, null);
+        if (msg instanceof String) {
+            if (msg.equals("quit")) {
+                this.controller.addtolog("Client " + client + " Disconnected");
+                client.close();
+                controller.removeRowByIP(client.getInetAddress().getHostAddress());
+                return;
             }
-            if (msg instanceof Message){
-                switch (((Message) msg).GetMsgOpcode()){
-                    case GETALLORDERS:
-                        if (((Message) msg).GetMsgData()==null) {
-                            db.getOrders();
-                            newmsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
-                            newmsg.SetMsgData(db.getOrders());
-                            client.sendToClient(newmsg);
-                        }
-                        else{
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    case GETORDERBYID:
-                    if (((Message) msg).GetMsgData() instanceof Integer) {
-                        newmsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
-                        newmsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
-                        client.sendToClient(newmsg);
-                        }
-                        else{
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    case UPDATEORDER:
-                        if (((Message) msg).GetMsgData() instanceof Order) {
-                            newmsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
-                            newmsg.SetMsgData(db.updateOrderById((Order)(((Message) msg).GetMsgData())));
-                            client.sendToClient(newmsg);
-                        }
-                        else{
-                            controller.addtolog("Error Data Type");
-                        }
-                        break;
-                    default:
-                        controller.addtolog("Error Unknown Opcode");
-                }
-            }
+        }
+//        if (msg instanceof Message) {
+//            switch (((Message) msg).GetMsgOpcode()) {
+//                case GETALLORDERS:
+//                    if (((Message) msg).GetMsgData() == null) {
+//                        db.getOrders();
+//                        newmsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
+//                        newmsg.SetMsgData(db.getOrders());
+//                        client.sendToClient(newmsg);
+//                    } else {
+//                        controller.addtolog("Error Data Type");
+//                    }
+//                    break;
+//                case GETORDERBYID:
+//                    if (((Message) msg).GetMsgData() instanceof Integer) {
+//                        newmsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
+//                        newmsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
+//                        client.sendToClient(newmsg);
+//                    } else {
+//                        controller.addtolog("Error Data Type");
+//                    }
+//                    break;
+//                case UPDATEORDER:
+//                    if (((Message) msg).GetMsgData() instanceof Order) {
+//                        newmsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
+//                        //newmsg.SetMsgData(db.updateOrderById((Order)(((Message) msg).GetMsgData())));
+//                        client.sendToClient(newmsg);
+//                    } else {
+//                        controller.addtolog("Error Data Type");
+//                    }
+//                    break;
+//                default:
+//                    controller.addtolog("Error Unknown Opcode");
+//            }
+//        }
     }
 
 

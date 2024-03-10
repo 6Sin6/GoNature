@@ -1,13 +1,10 @@
 package DataBase;
 
-import Entities.Order;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Manages the database connection for the application.
@@ -108,7 +105,8 @@ public class DBConnection {
         this.conn = null;
         dbConnection = null;
     }
-
+}
+/*
     public ArrayList<Order> getOrders() {
         try {
             String tableName = "prototype.orders";
@@ -117,12 +115,12 @@ public class DBConnection {
             ArrayList<Order> orders = new ArrayList<>();
             while (results.next()) {
                 orders.add(new Order(
-                        results.getString("ParkName"),
-                        results.getString("OrderNo"),
-                        results.getTimestamp("VisitationTime"),
-                        results.getInt("NumberOfVisitors"),
-                        results.getString("TelephoneNumber"),
-                        results.getString("EmailAddress")
+                        // results.getString("ParkName"),
+                        // results.getString("OrderNo"),
+                        // results.getTimestamp("VisitationTime"),
+                        // results.getInt("NumberOfVisitors"),
+                        // results.getString("TelephoneNumber"),
+                        // results.getString("EmailAddress")
                 ));
             }
 
@@ -179,4 +177,4 @@ public class DBConnection {
             return false;
         }
     }
-}
+}*/

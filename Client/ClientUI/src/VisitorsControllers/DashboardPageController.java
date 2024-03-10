@@ -1,9 +1,9 @@
 package VisitorsControllers;
 
+import CommonClient.ClientUI;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
-import CommonClient.ClientUI;
 import client.ClientCommunicator;
 import client.ClientController;
 import javafx.application.Platform;
@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class DashboardPageController implements Initializable {
@@ -101,11 +100,11 @@ public class DashboardPageController implements Initializable {
         try {
             Order o1 = (Order) ClientCommunicator.msg.GetMsgData();
 
-            if (Objects.equals(o1.getOrderNo(), "")) {
-                System.out.println("Order was not found");
-                lblStatusMsg.setText("Order " + id + " not found");
-                return;
-            }
+            //if (Objects.equals(o1.getOrderNo(), "")) {
+            //    System.out.println("Order was not found");
+            //    lblStatusMsg.setText("Order " + id + " not found");
+            //    return;
+            //}
 
             System.out.println("Order No. " + id + " found");
 

@@ -1,8 +1,7 @@
 package VisitorsControllers;
 
-import CommonClient.Utils;
-import Entities.Order;
 import CommonClient.ClientUI;
+import Entities.Order;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,9 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -163,18 +160,18 @@ public class OrderListPageController implements Initializable {
         ObservableList<Map<String, String>> tableData = FXCollections.observableArrayList();
         this.list = dataList;
         for (Order item : dataList) {
-            Timestamp orderTimeStamp = item.getVisitationTime();
-            String date = Utils.parseVisitDate(orderTimeStamp);
-            String time = Utils.parseVisitTime(orderTimeStamp);
-            Map<String, String> row = new HashMap<>();
-            row.put("Order Number", item.getOrderNo());
-            row.put("Park Name", item.getParkName());
-            row.put("Number Of Visitors", item.getNumberOfVisitors().toString());
-            row.put("Telephone", item.getTelephoneNumber());
-            row.put("Email", item.getEmailAddress());
-            row.put("Date", date);
-            row.put("Time", time.substring(0, time.length() - 3));
-            tableData.add(row);
+            //Timestamp orderTimeStamp = item.getVisitationTime();
+            //String date = Utils.parseVisitDate(orderTimeStamp);
+            //String time = Utils.parseVisitTime(orderTimeStamp);
+            //Map<String, String> row = new HashMap<>();
+            //row.put("Order Number", item.getOrderNo());
+            //row.put("Park Name", item.getParkName());
+            //row.put("Number Of Visitors", item.getNumberOfVisitors().toString());
+            //row.put("Telephone", item.getTelephoneNumber());
+            //row.put("Email", item.getEmailAddress());
+            //row.put("Date", date);
+            //row.put("Time", time.substring(0, time.length() - 3));
+            //tableData.add(row);
         }
         tableOrders.setItems(tableData);
     }

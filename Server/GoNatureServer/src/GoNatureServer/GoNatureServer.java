@@ -3,13 +3,11 @@
 // license found at www.lloseng.com 
 package GoNatureServer;
 
-import DataBase.DBConnection;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Order;
-import ServerUIPageController.ServerPortFrameController;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
+import DataBase.DBConnection;
+import Entities.Message;
+import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -106,7 +104,7 @@ public class GoNatureServer extends AbstractServer {
                 return;
             }
         }
-
+/*
         if (msg instanceof Message) {
             switch (((Message) msg).GetMsgOpcode()) {
                 case SYNC_HANDSHAKE:
@@ -142,7 +140,7 @@ public class GoNatureServer extends AbstractServer {
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
-        }
+        }*/
     }
 
 

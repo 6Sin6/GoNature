@@ -1,11 +1,7 @@
 package VisitorsControllers;
 
-import CommonClient.Utils;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Order;
 import CommonClient.ClientUI;
-import client.ClientCommunicator;
+import Entities.Order;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,7 +66,7 @@ public class OrderDetailsPageController implements Initializable {
     private ComboBox cmbParkName;
 
 
-    protected void loadOrder(Order o1) {
+    protected void loadOrder(Order o1) {/*
         this.order = o1;
         this.lblOrderNumber.setText((order.getOrderNo()));
         this.txtTelephoneNumber.setText(order.getTelephoneNumber());
@@ -79,7 +75,7 @@ public class OrderDetailsPageController implements Initializable {
         this.cmbParkName.setValue(order.getParkName());
         this.lblNumberOfVisitors.setText(order.getNumberOfVisitors().toString());
         this.lblEmail.setText(order.getEmailAddress());
-        this.lblTitle.setText("Order no. " + order.getOrderNo());
+        this.lblTitle.setText("Order no. " + order.getOrderNo());*/
     }
 
     private void setcmbParkName() {
@@ -92,7 +88,7 @@ public class OrderDetailsPageController implements Initializable {
     }
 
     @FXML
-    void SaveChange(ActionEvent event) throws Exception {
+    void SaveChange(ActionEvent event) throws Exception {/*
         String newTelNo = txtTelephoneNumber.getText();
         String newParkName = (String) cmbParkName.getValue();
 
@@ -125,7 +121,7 @@ public class OrderDetailsPageController implements Initializable {
             }
             return;
         }
-        lblStatusMsg.setText("No changes occurred");
+        lblStatusMsg.setText("No changes occurred");*/
     }
 
     private boolean IsValidPhone(String phoneNumber) {
