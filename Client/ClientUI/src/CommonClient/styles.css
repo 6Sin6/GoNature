@@ -1,0 +1,61 @@
+/* CSS for the menu */
+.menu {
+    -fx-background-color: #263238; /* Dark background color */
+}
+
+.menu-label {
+    -fx-text-fill: white; /* White text color */
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-border-color: #3e4462; /* White-ish border color */
+    -fx-border-width: 1px; /* Adjust border width as needed */
+    -fx-border-radius: 5px; /* Optional: rounded corners */
+    -fx-text-fill: #FCFCFC; /* Text color */
+    -fx-font-size: 14px; /* Adjust font size as needed */
+    -fx-padding: 10px 20px; /* Adjust padding as needed */
+    -fx-alignment: center;
+}
+
+.menu-item:hover {
+    -fx-background-color: #3e4462; /* White background color on hover */
+    -fx-text-fill: #FCFCFC; /* Text color on hover */
+}
+
+.username {
+    -fx-text-fill: #90A4AE; /* Light text color for username */
+    -fx-font-size: 12px; /* Font size */
+}
+
+.user-role {
+    -fx-text-fill: #90A4AE; /* Light text color for user role */
+    -fx-font-size: 12px; /* Font size */
+}
+
+.logout {
+    -fx-text-fill: white; /* White text color for logout */
+    -fx-font-size: 14px; /* Font size */
+    -fx-padding: 8px 0; /* Padding */
+    -fx-cursor: hand; /* Cursor style */
+}
+
+.logout:hover {
+    -fx-background-color: #37474F; /* Darker background color on hover */
+}
+
+#logoutBtnMenu {
+    -fx-font-size: 14px; /* Adjust font size as needed */
+    -fx-padding: 10px 20px; /* Adjust padding as needed */
+    -fx-alignment: center;
+    -fx-background-color: #263238; /* White background color */
+    -fx-text-fill: #FF6A69; /* Black text color */
+    -fx-border-color: #FF6A69; /* White border color */
+    -fx-border-width: 1px; /* Border width */
+    -fx-border-radius: 5px; /* Border radius */
+}
+
+#logoutBtnMenu:hover {
+    -fx-background-color: #3e4462; /* Black background color on hover */
+    -fx-text-fill: #FF6A69; /* White text color on hover */
+}
