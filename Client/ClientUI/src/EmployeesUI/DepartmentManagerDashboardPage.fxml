@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
@@ -20,7 +19,7 @@
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Button fx:id="issueBtn" layoutX="618.0" layoutY="186.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="110.0" text="Issue Reports" />
+            <MFXButton fx:id="issueBtn" styleClass="actButtonGreen" layoutX="618.0" layoutY="186.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="110.0" text="Issue Reports" />
             <Text fx:id="issueTxt" layoutX="522.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prepare and issue your reports">
                <font>
                   <Font name="System Bold" size="20.0" />
@@ -31,9 +30,8 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Text>
-            <Button fx:id="viewRequestsBtn" layoutX="618.0" layoutY="384.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="110.0" text="View Requests" />
+            <MFXButton fx:id="viewRequestsBtn" styleClass="actButtonGreen" layoutX="618.0" layoutY="384.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="110.0" text="View Requests" />
             <ImageView fx:id="exitBtn" fitHeight="43.0" fitWidth="42.0" layoutX="1224.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="logoutBtn" layoutX="1188.0" layoutY="720.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="78.0" text="Logout" />
             <Separator layoutX="262.0" layoutY="58.0" prefHeight="12.0" prefWidth="1013.0" />
             <VBox fx:id="menuBox" layoutX="-30.0" prefHeight="806.0" prefWidth="288.0" styleClass="menu">
                <Pane prefHeight="822.0" prefWidth="272.0" VBox.vgrow="ALWAYS">

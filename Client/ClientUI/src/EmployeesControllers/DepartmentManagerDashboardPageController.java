@@ -44,16 +44,13 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private MFXButton homePageBtn;
 
     @FXML
-    private Button issueBtn;
+    private MFXButton issueBtn;
 
     @FXML
     private Text issueTxt;
 
     @FXML
     private StackPane logoContainer;
-
-    @FXML
-    private Button logoutBtn;
 
     @FXML
     private MFXButton logoutBtnMenu;
@@ -80,7 +77,7 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private Label usernameLabel;
 
     @FXML
-    private Button viewRequestsBtn;
+    private MFXButton viewRequestsBtn;
 
     @FXML
     private Text viewRequestsTxt;

@@ -59,3 +59,13 @@
     -fx-background-color: #3e4462; /* Black background color on hover */
     -fx-text-fill: #FF6A69; /* White text color on hover */
 }
+
+.actButtonGreen {
+    -fx-background-color: #39a569;
+    -fx-text-fill: white;
+}
+
+.actButtonGreen:hover {
+    -fx-border-color: #4CAF50; /* Light green border color */
+    -fx-background-color: #2C8052FF;
+}
