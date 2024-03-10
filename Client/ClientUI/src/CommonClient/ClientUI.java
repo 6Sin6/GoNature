@@ -1,7 +1,7 @@
 package CommonClient;
 
-import EmployeesControllers.DepartmentManagerDashboardPageController;
 import VisitorsControllers.DashboardPageController;
+import VisitorsControllers.VisitorOrderVisitationPageController;
 import client.ClientController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,7 +17,7 @@ public class ClientUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DepartmentManagerDashboardPageController aFrame = new DepartmentManagerDashboardPageController();
+        VisitorOrderVisitationPageController aFrame = new VisitorOrderVisitationPageController();
         primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
             try {
                 client.quit();
