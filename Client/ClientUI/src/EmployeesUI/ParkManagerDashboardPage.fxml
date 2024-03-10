@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -9,36 +8,23 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
          <children>
-            <Text fx:id="txtHeader" layoutX="596.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Manager Dashboard" textAlignment="CENTER">
+            <Text fx:id="txtHeader" layoutX="550.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Manager Dashboard" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <Button fx:id="btnAvailableSpots" layoutX="531.0" layoutY="260.0" mnemonicParsing="false" onAction="#RequestSettingParkParametersButton" prefHeight="68.0" prefWidth="156.0" text="Available Spots">
+            <Text fx:id="txtDescription" layoutX="251.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Park Manager Dashboard!&#10;&#10;As the Park Manager, your role is vital in maintaining and enhancing our park facilities.&#10;Here's what you can do:&#10;&#10;• Easily submit requests to adjust park parameters.&#10;• Generate detailed usage and visitation reports and send them to the Department Manager.&#10;&#10;Efficiently manage park operations and drive continuous improvement with these features.&#10;Enjoy overseeing our parks with confidence and effectiveness!">
                <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Text fx:id="txtParkParameters" layoutX="411.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Changing Park Parameters">
-               <font>
-                  <Font size="24.0" />
+                  <Font size="22.0" />
                </font>
             </Text>
-            <Text fx:id="txtParkReports" layoutX="911.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prepare Park Reports">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Button fx:id="btnPrepareReports" layoutX="946.0" layoutY="260.0" mnemonicParsing="false" onAction="#PrepareReportsButton" prefHeight="68.0" prefWidth="156.0" text="Prepare Reports" />
-            <ImageView fx:id="imgExit" fitHeight="43.0" fitWidth="42.0" layoutX="596.0" layoutY="14.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="btnLogout" layoutX="1167.0" layoutY="714.0" mnemonicParsing="false" onAction="#btnLogoutAction" prefHeight="34.0" prefWidth="78.0" text="Logout" />
+            <ImageView fx:id="imgExit" fitHeight="50.0" fitWidth="50.0" layoutX="1220.0" layoutY="15.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
             <Separator layoutX="250.0" layoutY="63.0" prefHeight="14.0" prefWidth="1030.0" />
-            <VBox prefHeight="768.0" prefWidth="250.0" />
+            <VBox fx:id="vboxMenu" prefHeight="768.0" prefWidth="250.0" />
          </children>
       </Pane>
    </children>

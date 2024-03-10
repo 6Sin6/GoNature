@@ -6,25 +6,42 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="646.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imgBackground" fitHeight="424.0" fitWidth="656.0" layoutX="-3.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" />
-      <Text fx:id="txtHeader" layoutX="219.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
-         <font>
-            <Font name="System Bold" size="21.0" />
-         </font>
-      </Text>
-      <ImageView fx:id="imgMenu" fitHeight="43.0" fitWidth="42.0" layoutX="14.0" layoutY="16.0" onMouseClicked="#OpenMenu" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="btnSubmit" layoutX="295.0" layoutY="349.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" text="Submit" />
-      <ImageView fx:id="imgExit" fitHeight="43.0" fitWidth="42.0" layoutX="596.0" layoutY="14.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="btnLogout" layoutX="578.0" layoutY="361.0" mnemonicParsing="false" onAction="#btnLogoutAction" text="Logout" />
-      <Separator layoutX="4.0" layoutY="63.0" prefHeight="12.0" prefWidth="636.0" />
-      <ImageView fx:id="imgIcon" fitHeight="95.0" fitWidth="118.0" layoutX="253.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true" />
-      <Text layoutX="210.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:" />
-      <TextField fx:id="txtGroupGuideID" layoutX="312.0" layoutY="232.0" />
-      <Label fx:id="lblErrorGroupID" layoutX="362.0" layoutY="206.0" text="errorMsg" textFill="RED" />
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
+         <children>
+            <Text fx:id="txtHeader" layoutX="668.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnSubmit" layoutX="606.0" layoutY="282.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" prefHeight="51.0" prefWidth="117.0" text="Submit" />
+            <ImageView fx:id="imgExit" fitHeight="50.0" fitWidth="50.0" layoutX="1220.0" layoutY="15.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
+            <Separator layoutX="250.0" layoutY="63.0" prefHeight="14.0" prefWidth="1030.0" />
+            <Text layoutX="500.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtGroupGuideID" layoutX="654.0" layoutY="227.0" prefHeight="30.0" prefWidth="175.0" />
+            <Label fx:id="lblErrorGroupID" layoutX="665.0" layoutY="204.0" text="errorMsg" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Text fx:id="txtDescription" layoutX="251.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Easily register a customer as a group guide by entering their ID.&#10;Ensure accuracy by verifying the ID before submitting.">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Text>
+            <VBox fx:id="vboxMenu" prefHeight="768.0" prefWidth="250.0" />
+         </children>
+      </Pane>
    </children>
-</Pane>
+</StackPane>

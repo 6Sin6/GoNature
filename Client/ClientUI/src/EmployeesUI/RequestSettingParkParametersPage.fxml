@@ -6,29 +6,45 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="646.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imgBackground" fitHeight="424.0" fitWidth="656.0" layoutX="-3.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" />
-      <Text fx:id="txtHeader" layoutX="163.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Setting Park Parameters" textAlignment="CENTER">
-         <font>
-            <Font name="System Bold" size="21.0" />
-         </font>
-      </Text>
-      <ImageView fx:id="imgMenu" fitHeight="43.0" fitWidth="42.0" layoutX="14.0" layoutY="16.0" onMouseClicked="#OpenMenu" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="btnSubmit" layoutX="285.0" layoutY="349.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" text="Submit" />
-      <ImageView fx:id="imgExit" fitHeight="43.0" fitWidth="42.0" layoutX="596.0" layoutY="14.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="btnLogout" layoutX="578.0" layoutY="361.0" mnemonicParsing="false" onAction="#btnLogoutAction" text="Logout" />
-      <Separator layoutX="4.0" layoutY="63.0" prefHeight="12.0" prefWidth="636.0" />
-      <ImageView fx:id="imgIcon" fitHeight="95.0" fitWidth="118.0" layoutX="253.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true" />
-      <Text layoutX="41.0" layoutY="231.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difference Between Num Of Order And Max Visitors:" />
-      <TextField fx:id="txtDifferenceNumOfOrderAndMaxVisitors" layoutX="336.0" layoutY="214.0" />
-      <Label fx:id="lblErrorMsg" layoutX="361.0" layoutY="340.0" text="errorMsg" textFill="RED" />
-      <Text layoutX="245.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:" />
-      <Text layoutX="187.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Visitation Longevity:" />
-      <TextField fx:id="txtParkCapacity" layoutX="336.0" layoutY="248.0" />
-      <TextField fx:id="txtMaxVisitationLongevity" layoutX="336.0" layoutY="285.0" />
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
+         <children>
+            <Text fx:id="txtHeader" layoutX="622.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Setting Park Parameters" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnSubmit" layoutX="797.0" layoutY="380.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" prefHeight="51.0" prefWidth="117.0" text="Submit" />
+            <ImageView fx:id="imgExit" fitHeight="50.0" fitWidth="50.0" layoutX="1220.0" layoutY="15.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
+            <Separator layoutX="250.0" layoutY="63.0" prefHeight="14.0" prefWidth="1030.0" />
+            <Text layoutX="387.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difference Between Num Of Order And Max Visitors:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtDifferenceNumOfOrderAndMaxVisitors" layoutX="867.0" layoutY="227.0" prefHeight="30.0" prefWidth="175.0" />
+            <Label fx:id="lblErrorMsg" layoutX="801.0" layoutY="351.0" text="errorMsg" textFill="RED" />
+            <Text layoutX="726.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text layoutX="629.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Visitation Longevity:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtParkCapacity" layoutX="867.0" layoutY="267.0" prefHeight="30.0" prefWidth="175.0" />
+            <TextField fx:id="txtMaxVisitationLongevity" layoutX="867.0" layoutY="307.0" prefHeight="30.0" prefWidth="175.0" />
+            <VBox fx:id="vboxMenu" prefHeight="768.0" prefWidth="250.0" />
+         </children>
+      </Pane>
    </children>
-</Pane>
+</StackPane>
