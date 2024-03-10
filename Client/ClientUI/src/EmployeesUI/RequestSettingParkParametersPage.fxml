@@ -16,9 +16,9 @@
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
          <children>
-            <Text fx:id="txtHeader" layoutX="622.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Setting Park Parameters" textAlignment="CENTER">
+            <Text fx:id="txtHeader" layoutX="470.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Setting Park Parameters" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="21.0" />
+                  <Font name="System Bold" size="36.0" />
                </font>
             </Text>
             <Button fx:id="btnSubmit" layoutX="797.0" layoutY="380.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" prefHeight="51.0" prefWidth="117.0" text="Submit" />

@@ -16,9 +16,9 @@
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
          <children>
-            <Text fx:id="txtHeader" layoutX="668.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
+            <Text fx:id="txtHeader" layoutX="556.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="21.0" />
+                  <Font name="System Bold" size="36.0" />
                </font>
             </Text>
             <Button fx:id="btnSubmit" layoutX="606.0" layoutY="282.0" mnemonicParsing="false" onAction="#OnClickSubmitButton" prefHeight="51.0" prefWidth="117.0" text="Submit" />
