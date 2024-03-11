@@ -59,6 +59,10 @@ public class LoginPageController extends BaseController {
     }
 
     public void onLoginClick() throws CommunicationException {
+        if (getUserName().isEmpty() || getPassword().isEmpty()) {
+            ErrorMsg.setText("Please fill all fields !");
+            return; // Exit the method if any of the fields are empty.
+        }
         User user = new User(getUserName(), getPassword());
         Object msg = new Message(OpCodes.OP_SIGN_IN, getUserName(), user);
 
