@@ -59,6 +59,10 @@ public class LoginPageController extends BaseController {
     }
 
     public void onLoginClick() throws CommunicationException {
+        if (getUserName().isEmpty() || getPassword().isEmpty()) {
+            ErrorMsg.setText("Please fill all fields !");
+            return; // Exit the method if any of the fields are empty.
+        }
         User user = new User(getUserName(), getPassword());
         Object msg = new Message(OpCodes.OP_SIGN_IN, getUserName(), user);
 
@@ -69,12 +73,13 @@ public class LoginPageController extends BaseController {
         if (returnOpCode != OpCodes.OP_SIGN_IN) {
             throw new CommunicationException("Respond not appropriate from server");
         }
+
         user = (User) respondMsg.getMsgData();
-        if (user.getRole() != Role.ROLE_GUEST) {
+        if (respondMsg.getMsgData() != null && user.getRole() != Role.ROLE_GUEST) {
             applicationWindowController.loadDashboardPage(user.getRole());
             applicationWindowController.loadMenu(user);
         } else {
-            ErrorMsg.setText("Wrong username or password ! Please try again !");
+            ErrorMsg.setText("Wrong username or password! Please try again!");
         }
     }
 }

@@ -13,27 +13,24 @@ public class ParkManager extends ParkEmployee implements Serializable {
      *
      * @param username    The username of the manager.
      * @param password    The password of the manager.
-     * @param emailAdress The email address of the manager.
+     * @param emailAddress The email address of the manager.
      * @param park        The park associated with the manager.
      */
-    public ParkManager(String username, String password, String emailAdress, Park park) {
-        super(username, password, emailAdress, park);
+    public ParkManager(String username, String password, String emailAddress, Park park) {
+        super(username, password, emailAddress, park);
         role = Role.ROLE_PARK_MGR;
-
     }
 
     /**
      * Constructs a ParkManager object with the specified parameters.
      *
      * @param user        The user object representing the manager.
-     * @param emailAdress The email address of the manager.
+     * @param emailAddress The email address of the manager.
      * @param park        The park associated with the manager.
      */
-    public ParkManager(User user, String emailAdress, Park park) {
-
-        super(user, emailAdress, park);
+    public ParkManager(User user, String emailAddress, Park park) {
+        super(user, emailAddress, park);
         role = Role.ROLE_PARK_MGR;
-
     }
 }
 

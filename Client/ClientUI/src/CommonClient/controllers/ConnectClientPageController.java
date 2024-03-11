@@ -38,9 +38,9 @@ public class ConnectClientPageController extends BaseController {
     }
 
     private void performHandshake() {
-        Message msg = new Message(OpCodes.OP_SYNC_HADCHECK);
+        Message msg = new Message(OpCodes.OP_SYNC_HANDSHAKE);
         ClientUI.client.accept(msg);
-        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_SYNC_HADCHECK) {
+        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_SYNC_HANDSHAKE) {
             return;
         }
         System.exit(0); // Server is not running

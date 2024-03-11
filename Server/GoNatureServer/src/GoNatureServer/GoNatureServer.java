@@ -110,12 +110,17 @@ public class GoNatureServer extends AbstractServer {
 
         if (msg instanceof Message) {
             switch (((Message) msg).getMsgOpcode()) {
-                case OP_SYNC_HADCHECK:
+                case OP_SYNC_HANDSHAKE:
                     client.sendToClient(msg);
                 case OP_SIGN_IN:
-                    User user = (User) ((Message) msg).getMsgData();
-                    user.setRole(Role.ROLE_PARK_DEPARTMENT_MGR);
-                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, user.getUsername(), user);
+                    User userCredentials = (User) ((Message) msg).getMsgData();
+                    User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
+                    if (authenticatedUser == null) {
+                        Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+                        client.sendToClient(respondMsg);
+                        return;
+                    }
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                 default:
                     controller.addtolog("Error Unknown Opcode");

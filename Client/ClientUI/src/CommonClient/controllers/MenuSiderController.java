@@ -48,7 +48,9 @@ public class MenuSiderController extends BaseController {
 
 
     public void logout() {
-        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
+        applicationWindowController.logout();
+        userRoleLabel.setText("");
+        usernameLabel.setText("");
     }
 
     public void setRole(String role) {
