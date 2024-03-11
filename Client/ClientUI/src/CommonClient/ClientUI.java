@@ -1,7 +1,7 @@
 package CommonClient;
 
-import VisitorsControllers.DashboardPageController;
-import VisitorsControllers.VisitorOrderVisitationPageController;
+
+import CommonClient.controllers.ApplicationWindowController;
 import client.ClientController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,7 +17,7 @@ public class ClientUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        VisitorOrderVisitationPageController aFrame = new VisitorOrderVisitationPageController();
+        ApplicationWindowController aFrame = new ApplicationWindowController();
         primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
             try {
                 client.quit();

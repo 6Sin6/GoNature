@@ -1,23 +1,16 @@
 package EmployeesControllers;
 
+import CommonClient.controllers.ApplicationWindowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class DepartmentManagerDashboardPageController implements Initializable {
@@ -56,7 +49,7 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     private MFXButton logoutBtnMenu;
 
     @FXML
-    private VBox menuBox;
+    private Pane menuBox;
 
     @FXML
     private MFXButton ordersBtn;
@@ -82,22 +75,14 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     @FXML
     private Text viewRequestsTxt;
 
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/EmployeesUI/DepartmentManagerDashboardPage.fxml")));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/CommonClient/styles.css").toExternalForm());
+    private ApplicationWindowController applicationWindowController;
 
-        primaryStage.setTitle("GoNature - Dashboard");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
+    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
+        this.applicationWindowController = applicationWindowController;
     }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        // Set images for back button and app logo
-        backButton.setImage(new Image(getClass().getResource("/assets/back_arrow.png").toExternalForm()));
-        appLogo.setImage(new Image(getClass().getResource("/assets/GoNatureLogo.png").toExternalForm()));
     }
 
 }

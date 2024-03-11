@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    -fx-font-family: Montserrat, sans-serif;
+    -fx-font-weight: 500;
+}
+
 /* CSS for the menu */
 .menu {
     -fx-background-color: #263238; /* Dark background color */
@@ -7,9 +14,13 @@
     -fx-text-fill: white; /* White text color */
 }
 
+.menu-box {
+    -fx-z-index: 1000; /* Z-index */
+}
+
 .menu-item {
     -fx-background-color: transparent;
-    -fx-border-color: #3e4462; /* White-ish border color */
+    -fx-border-color: #39a569; /* White-ish border color */
     -fx-border-width: 1px; /* Adjust border width as needed */
     -fx-border-radius: 5px; /* Optional: rounded corners */
     -fx-text-fill: #FCFCFC; /* Text color */
@@ -25,12 +36,12 @@
 
 .username {
     -fx-text-fill: #90A4AE; /* Light text color for username */
-    -fx-font-size: 12px; /* Font size */
+    -fx-font-size: 14px !important; /* Font size */
 }
 
 .user-role {
     -fx-text-fill: #90A4AE; /* Light text color for user role */
-    -fx-font-size: 12px; /* Font size */
+    -fx-font-size: 14px !important; /* Font size */
 }
 
 .logout {
@@ -58,6 +69,12 @@
 #logoutBtnMenu:hover {
     -fx-background-color: #3e4462; /* Black background color on hover */
     -fx-text-fill: #FF6A69; /* White text color on hover */
+}
+
+#appName {
+    -fx-text-fill: #FCFCFC; /* White text color */
+    -fx-font-size: 20px; /* Font size */
+    -fx-font-weight: 700; /* Font weight */
 }
 
 .actButtonGreen {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.ConnectClientPageController">
+   <children>
+      <Text layoutX="367.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GoNature Client">
+         <font>
+            <Font name="System Bold" size="72.0" />
+         </font>
+      </Text>
+      <Separator layoutX="4.0" layoutY="184.0" prefHeight="11.0" prefWidth="1270.0" />
+      <MFXTextField fx:id="ipTxt" alignment="CENTER" floatingTextGap="0.0" layoutX="463.0" layoutY="384.0" prefHeight="54.0" prefWidth="343.0" promptText="Enter IP Address">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </MFXTextField>
+      <Text layoutX="484.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connect to Server">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
+      <MFXButton fx:id="connectBtn" layoutX="463.0" layoutY="484.0" onAction="#onConnect" prefHeight="48.0" prefWidth="343.0" styleClass="actButtonGreen" text="Connect" />
+   </children>
+</Pane>

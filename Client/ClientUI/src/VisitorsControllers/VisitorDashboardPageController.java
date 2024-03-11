@@ -1,39 +1,53 @@
 package VisitorsControllers;
 
 import CommonClient.controllers.ApplicationWindowController;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class LoginPageController {
+public class VisitorDashboardPageController {
+    @FXML
+    private Pane Pane;
+
+    @FXML
+    private StackPane StackPane;
+
     @FXML
     private Text header;
 
     @FXML
-    private MFXButton loginBtn;
+    private ImageView im1;
 
     @FXML
-    private StackPane loginPage;
-
-    @FXML
-    private Pane pane;
-
-    @FXML
-    private Label passwordLbl;
+    private VBox menu;
 
     @FXML
     private Separator sep;
 
     @FXML
-    private Label userNameLbl;
+    private Text text1;
 
     @FXML
-    private MFXTextField userNameText;
+    private Text text11;
+
+    @FXML
+    private Text text12;
+
+    @FXML
+    private Text text121;
+
+    @FXML
+    private Text text1211;
+
+    @FXML
+    private Text text1212;
+
+    @FXML
+    private Text text2;
 
     private ApplicationWindowController applicationWindowController;
 
@@ -41,8 +55,4 @@ public class LoginPageController {
         this.applicationWindowController = applicationWindowController;
     }
 
-    public void onLoginClick() {
-        applicationWindowController.loadDashboardFactory("Support Representative");
-        applicationWindowController.loadMenu("Eyal123", "Support Representative");
-    }
 }

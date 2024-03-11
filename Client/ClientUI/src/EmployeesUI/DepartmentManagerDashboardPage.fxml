@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -31,25 +28,7 @@
                </font>
             </Text>
             <MFXButton fx:id="viewRequestsBtn" styleClass="actButtonGreen" layoutX="618.0" layoutY="384.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="110.0" text="View Requests" />
-            <ImageView fx:id="exitBtn" fitHeight="43.0" fitWidth="42.0" layoutX="1224.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
             <Separator layoutX="262.0" layoutY="58.0" prefHeight="12.0" prefWidth="1013.0" />
-            <VBox fx:id="menuBox" layoutX="-30.0" prefHeight="806.0" prefWidth="288.0" styleClass="menu">
-               <Pane prefHeight="822.0" prefWidth="272.0" VBox.vgrow="ALWAYS">
-                  <children>
-                     <ImageView fx:id="backButton" fitHeight="48.0" fitWidth="48.0" layoutX="38.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-                     <ImageView fx:id="appLogo" fitHeight="72.0" fitWidth="72.0" layoutX="65.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true" />
-                     <Label fx:id="appName" graphicTextGap="15.0" layoutX="147.0" layoutY="118.0" styleClass="menu-label" text="GoNature" />
-                     <StackPane fx:id="logoContainer" />
-                     <Label fx:id="usernameLabel" layoutX="99.0" layoutY="184.0" styleClass="username" text="User: Israel Israeli" />
-                     <Label fx:id="userRoleLabel" layoutX="128.0" layoutY="208.0" styleClass="user-role" text="Visitor" />
-                     <MFXButton fx:id="homePageBtn" layoutX="67.0" layoutY="251.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Home Page" />
-                     <MFXButton fx:id="dashboardBtn" layoutX="69.0" layoutY="351.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Dashboard" />
-                     <MFXButton fx:id="ordersBtn" layoutX="67.0" layoutY="451.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Reports" />
-                     <MFXButton fx:id="manageBtn" layoutX="67.0" layoutY="551.0" prefHeight="34.0" prefWidth="175.0" styleClass="menu-item" text="Manage Requests" />
-                     <MFXButton fx:id="logoutBtnMenu" layoutX="67.0" layoutY="690.0" prefHeight="34.0" prefWidth="175.0" text="Logout" />
-                  </children>
-               </Pane>
-            </VBox>
          </children>
       </Pane>
    </children>
