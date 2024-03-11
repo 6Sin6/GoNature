@@ -3,6 +3,7 @@ package Entities;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+
 /**
  * Represents an order made by a client.
  */
