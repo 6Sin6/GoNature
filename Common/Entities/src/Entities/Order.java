@@ -17,10 +17,12 @@ public class Order implements Serializable {
     private String OrderID;
     private OrderType OrderType;
     private Integer NumOfVisitors;
+    private String VisitorID;
 
     /**
      * Constructs a new Order object with the specified attributes.
      *
+     * @param VisitorID          The ID of the visitor associated with the order.
      * @param parkID             The ID of the park associated with the order.
      * @param date               The date and time of the order.
      * @param clientEmailAddress The email address of the client who made the order.
@@ -32,7 +34,8 @@ public class Order implements Serializable {
      * @param orderType          The type of the order.
      * @param numOfVisitors      The number of visitors associated with the order.
      */
-    public Order(String parkID, Timestamp date, String clientEmailAddress, String phoneNumber, OrderStatus status, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer numOfVisitors) {
+    public Order(String VisitorID, String parkID, Timestamp date, String clientEmailAddress, String phoneNumber, OrderStatus status, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer numOfVisitors) {
+        this.VisitorID = VisitorID;
         ParkID = parkID;
         Date = date;
         ClientEmailAddress = clientEmailAddress;
@@ -62,8 +65,6 @@ public class Order implements Serializable {
     public void setNumOfVisitors(Integer numOfVisitors) {
         NumOfVisitors = numOfVisitors;
     }
-
-    // Getters and setters for the attributes
 
     /**
      * Retrieves the ID of the park associated with the order.
@@ -225,6 +226,24 @@ public class Order implements Serializable {
      */
     public void setOrderType(OrderType orderType) {
         OrderType = orderType;
+    }
+
+    /**
+     * Retrieves the ID of the visitor associated with the order.
+     *
+     * @return The ID of the visitor.
+     */
+    public String getVisitorID() {
+        return VisitorID;
+    }
+
+    /**
+     * Sets the ID of the visitor associated with the order.
+     *
+     * @param visitorID The ID of the visitor to be set.
+     */
+    public void setVisitorID(String visitorID) {
+        VisitorID = visitorID;
     }
 
     /**
