@@ -23,9 +23,6 @@ public class GroupGuideOrderVisitationPageController {
         private TextField EmailLbl;
 
         @FXML
-        private DatePicker datePicker;
-
-        @FXML
         private Text Header;
 
         @FXML
