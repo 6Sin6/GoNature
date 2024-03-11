@@ -95,6 +95,11 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
+    public void logout() {
+        loadDashboardPage(Role.ROLE_GUEST);
+        menuSider = null;
+    }
+
     public void loadDashboardPage(Role role) {
         Map<Role, String> roleToFxmlPath = new HashMap<>();
         roleToFxmlPath.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
