@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import Entities.Role;
@@ -80,7 +81,9 @@ public class ApplicationWindowController implements Initializable {
         Parent page = loadPage(fxmlPath);
         if (page != null) {
             mainPane.setCenter(page);
-            mainPane.setLeft(menuSider);
+            if (!Objects.equals(fxmlPath, "/VisitorsUI/LoginPage.fxml")) {
+                mainPane.setLeft(menuSider);
+            }
         }
     }
 
