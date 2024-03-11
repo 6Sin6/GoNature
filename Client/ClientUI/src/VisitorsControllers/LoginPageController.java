@@ -1,6 +1,8 @@
 package VisitorsControllers;
 
 import CommonClient.controllers.ApplicationWindowController;
+import CommonClient.controllers.BaseController;
+import Entities.Role;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
@@ -10,7 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class LoginPageController {
+public class LoginPageController extends BaseController {
     @FXML
     private Text header;
 
@@ -35,14 +37,9 @@ public class LoginPageController {
     @FXML
     private MFXTextField userNameText;
 
-    private ApplicationWindowController applicationWindowController;
-
-    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
-        this.applicationWindowController = applicationWindowController;
-    }
 
     public void onLoginClick() {
-        applicationWindowController.loadDashboardFactory("Support Representative");
-        applicationWindowController.loadMenu("Eyal123", "Support Representative");
+        applicationWindowController.loadDashboardPage(Role.ROLE_SINGLE_VISITOR);
+        applicationWindowController.loadMenu("Eyal123", "Visitor");
     }
 }

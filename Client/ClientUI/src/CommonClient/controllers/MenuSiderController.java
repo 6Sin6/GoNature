@@ -1,5 +1,6 @@
 package CommonClient.controllers;
 
+import Entities.Role;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MenuSiderController {
+public class MenuSiderController extends BaseController {
 
     @FXML
     private ImageView appLogo;
@@ -49,14 +50,9 @@ public class MenuSiderController {
     @FXML
     private Label usernameLabel;
 
-    private ApplicationWindowController applicationWindowController;
-
-    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
-        this.applicationWindowController = applicationWindowController;
-    }
 
     public void logout() {
-        applicationWindowController.logout();
+        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
     }
 
     public void setRole(String role) {
@@ -68,11 +64,11 @@ public class MenuSiderController {
     }
 
     public void handleHomePageRoute() {
-        applicationWindowController.loadLoginPage();
+        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
     }
 
     public void handleDashboardRoute() {
-        applicationWindowController.loadDashboardFactory(userRoleLabel.getText());
+        applicationWindowController.loadDashboardPage(Role.stringToRule(userRoleLabel.getText()));
     }
 
     public void buildMenuItems() {

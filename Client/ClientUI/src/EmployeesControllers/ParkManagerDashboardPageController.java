@@ -1,11 +1,12 @@
 package EmployeesControllers;
 
 import CommonClient.controllers.ApplicationWindowController;
+import CommonClient.controllers.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class ParkManagerDashboardPageController {
+public class ParkManagerDashboardPageController extends BaseController {
 
     @FXML
     private Text txtDescription;
@@ -16,10 +17,6 @@ public class ParkManagerDashboardPageController {
     @FXML
     private VBox vboxMenu;
 
-    private ApplicationWindowController applicationWindowController;
 
-    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
-        this.applicationWindowController = applicationWindowController;
-    }
 
 }

@@ -1,6 +1,7 @@
 package VisitorsControllers;
 
 import CommonClient.controllers.ApplicationWindowController;
+import CommonClient.controllers.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -9,7 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class VisitorDashboardPageController {
+public class VisitorDashboardPageController extends BaseController {
     @FXML
     private Pane Pane;
 
@@ -49,10 +50,5 @@ public class VisitorDashboardPageController {
     @FXML
     private Text text2;
 
-    private ApplicationWindowController applicationWindowController;
-
-    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
-        this.applicationWindowController = applicationWindowController;
-    }
 
 }

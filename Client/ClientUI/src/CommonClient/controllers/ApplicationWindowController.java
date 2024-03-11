@@ -1,11 +1,5 @@
 package CommonClient.controllers;
 
-import EmployeesControllers.DepartmentManagerDashboardPageController;
-import EmployeesControllers.ParkEmployeeDashboardPageController;
-import EmployeesControllers.ParkManagerDashboardPageController;
-import EmployeesControllers.SupportRepresentativeDashboardPageController;
-import VisitorsControllers.LoginPageController;
-import VisitorsControllers.VisitorDashboardPageController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,43 +10,64 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-public class ApplicationWindowController implements Initializable
-{
+import Entities.Role;
+
+
+
+public class ApplicationWindowController implements Initializable {
+
     @FXML
     private BorderPane mainPane;
-
-    private Parent connectClientPage;
-
-    private Parent departmentManagerDashboardPage;
-
-    private Parent parkEmployeeDashboardPage;
-
-    private Parent parkManagerDashboardPage;
-
-    private Parent supportRepresentativeDashboardPage;
-
+    private Map<String, Parent> pagesCache = new HashMap<>();
     private Parent menuSider;
 
-    private Parent loginPage;
-
-    private Parent visitorDashboard;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    private Parent loadPage(String fxmlPath) {
+        try {
+            if (!pagesCache.containsKey(fxmlPath)) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent page = loader.load();
+                Object controller = loader.getController();
+                if (controller instanceof BaseController) { // Assuming all your controllers extend a common BaseController that has setApplicationWindowController method.
+                    ((BaseController) controller).setApplicationWindowController(this);
+                }
+                pagesCache.put(fxmlPath, page);
+            }
+            return pagesCache.get(fxmlPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // or load an error page
+        }
+    }
+
     public void loadMenu(String username, String role) {
         try {
             if (menuSider == null) {
-                FXMLLoader menuLoader = new FXMLLoader(getClass().getResource("/CommonClient/gui/MenuSider.fxml"));
-                menuSider = menuLoader.load();
-                MenuSiderController menuController = menuLoader.getController();
-                menuController.setRole(role);
-                menuController.setUsername(username);
-                menuController.buildMenuItems();
-                menuController.setApplicationWindowController(this);
+                // Ensure FXMLLoader is used to load the FXML and retrieve the controller from it
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/CommonClient/gui/MenuSider.fxml"));
+                menuSider = loader.load(); // This loads the FXML and initializes the controller
+
+                // Now retrieve the controller
+                MenuSiderController menuController = loader.getController();
+                if (menuController instanceof BaseController) {
+                    ((BaseController) menuController).setApplicationWindowController(this);
+                }
+                if (menuController != null) { // This check is technically redundant if load() succeeded without exception
+                    menuController.setRole(role);
+                    menuController.setUsername(username);
+                    menuController.buildMenuItems();
+                } else {
+                    // Handle the case where the controller wasn't retrieved successfully
+                    System.out.println("Failed to retrieve MenuSiderController.");
+                }
             }
             mainPane.setLeft(menuSider);
         } catch (Exception e) {
@@ -60,149 +75,34 @@ public class ApplicationWindowController implements Initializable
         }
     }
 
-    public void loadConnectionPage() {
-        try {
-            if (connectClientPage == null) {
-                FXMLLoader connectClientLoader = new FXMLLoader(getClass().getResource("/CommonClient/gui/ConnectClientPage.fxml"));
-                connectClientPage = connectClientLoader.load();
-                ConnectClientPageController connectController = connectClientLoader.getController();
-                connectController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().removeAll();
-            mainPane.setCenter(connectClientPage);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void setCenterPage(String fxmlPath) {
+        mainPane.getChildren().clear(); // Consider if you need to remove all children or just the center.
+        Parent page = loadPage(fxmlPath);
+        if (page != null) {
+            mainPane.setCenter(page);
+            mainPane.setLeft(menuSider);
         }
     }
 
-    public void loadDepartmentManagerDashboardPage() {
-            try {
-                if (departmentManagerDashboardPage == null) {
-                    FXMLLoader depMgrLoader = new FXMLLoader(getClass().getResource("/EmployeesUI/DepartmentManagerDashboardPage.fxml"));
-                    departmentManagerDashboardPage = depMgrLoader.load();
-                    DepartmentManagerDashboardPageController depMgrController = depMgrLoader.getController();
-                    depMgrController.setApplicationWindowController(this);
-                }
-                mainPane.getChildren().removeAll();
-                mainPane.setCenter(departmentManagerDashboardPage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-    }
+    public void loadDashboardPage(Role role) {
+        Map<Role, String> roleToFxmlPath = new HashMap<>();
+        roleToFxmlPath.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
+        roleToFxmlPath.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
+        roleToFxmlPath.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
+        roleToFxmlPath.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
+        roleToFxmlPath.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
 
-    public void loadParkManagerDashboardPage() {
-        try {
-            if (parkManagerDashboardPage == null) {
-                FXMLLoader parkMgrLoader = new FXMLLoader(getClass().getResource("/EmployeesUI/ParkManagerDashboardPage.fxml"));
-                parkManagerDashboardPage = parkMgrLoader.load();
-                ParkManagerDashboardPageController parkMgrController = parkMgrLoader.getController();
-                parkMgrController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().removeAll();
-            mainPane.setCenter(parkManagerDashboardPage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadSupportRepresentativeDashboardPage() {
-        try {
-            if (supportRepresentativeDashboardPage == null) {
-                FXMLLoader suppRepresentativeLoader = new FXMLLoader(getClass().getResource("/EmployeesUI/SupportRepresentativeDashboardPage.fxml"));
-                supportRepresentativeDashboardPage = suppRepresentativeLoader.load();
-                SupportRepresentativeDashboardPageController supportRepresentativeController = suppRepresentativeLoader.getController();
-                supportRepresentativeController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().removeAll();
-            mainPane.setCenter(supportRepresentativeDashboardPage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadParkEmployeeDashboardPage() {
-        try {
-            if (parkEmployeeDashboardPage == null) {
-                FXMLLoader parkEmployeeLoader = new FXMLLoader(getClass().getResource("/EmployeesUI/ParkEmployeeDashboardPage.fxml"));
-                parkEmployeeDashboardPage = parkEmployeeLoader.load();
-                ParkEmployeeDashboardPageController parkEmployeeController = parkEmployeeLoader.getController();
-                parkEmployeeController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().removeAll();
-            mainPane.setCenter(parkEmployeeDashboardPage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadVisitorDashboardPage() {
-        try {
-            if (visitorDashboard == null) {
-                FXMLLoader visitorDashboardLoader = new FXMLLoader(getClass().getResource("/VisitorsUI/VisitorDashboardPage.fxml"));
-                visitorDashboard = visitorDashboardLoader.load();
-                VisitorDashboardPageController visitorDashboardController = visitorDashboardLoader.getController();
-                visitorDashboardController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().removeAll();
-            mainPane.setCenter(visitorDashboard);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadLoginPage() {
-        try {
-            if (loginPage == null) {
-                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/VisitorsUI/LoginPage.fxml"));
-                loginPage = loginLoader.load();
-                LoginPageController loginController = loginLoader.getController();
-                loginController.setApplicationWindowController(this);
-            }
-            mainPane.getChildren().remove(menuSider);
-            mainPane.getChildren().removeAll();
-            menuSider = null;
-            mainPane.setCenter(loginPage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void logout() {
-        try {
-            // Todo: logout logic
-            loadLoginPage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadDashboardFactory(String role) {
-        switch (role) {
-            case "Department Manager":
-                loadDepartmentManagerDashboardPage();
-                break;
-            case "Park Manager":
-                loadParkManagerDashboardPage();
-                break;
-            case "Park Employee":
-                loadParkEmployeeDashboardPage();
-                break;
-            case "Support Representative":
-                loadSupportRepresentativeDashboardPage();
-                break;
-            case "Visitor":
-                loadVisitorDashboardPage();
-                break;
-            default:
-                loadLoginPage();
-                break;
-        }
+        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/VisitorsUI/LoginPage.fxml");
+        setCenterPage(fxmlPath);
     }
 
     public void start(Stage primaryStage) {
         try {
+            // Load the main application window directly here
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/CommonClient/gui/ApplicationWindow.fxml"));
-            Parent root = loader.load();
+            Parent root = loader.load(); // This should initialize mainPane as part of the loading process
+
+            // Now that root is loaded, mainPane should be initialized
             ApplicationWindowController controller = loader.getController();
 
             Scene scene = new Scene(root);
@@ -215,10 +115,10 @@ public class ApplicationWindowController implements Initializable
             primaryStage.setResizable(false);
             primaryStage.show();
 
-            controller.loadConnectionPage();
+            // Now it's safe to manipulate mainPane
+            controller.setCenterPage("/CommonClient/gui/ConnectClientPage.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package EmployeesControllers;
 
 import CommonClient.controllers.ApplicationWindowController;
+import CommonClient.controllers.BaseController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +14,7 @@ import javafx.scene.text.Text;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DepartmentManagerDashboardPageController implements Initializable {
+public class DepartmentManagerDashboardPageController extends BaseController implements Initializable {
 
     @FXML
     private ImageView appLogo;
@@ -75,11 +76,7 @@ public class DepartmentManagerDashboardPageController implements Initializable {
     @FXML
     private Text viewRequestsTxt;
 
-    private ApplicationWindowController applicationWindowController;
 
-    public void setApplicationWindowController(ApplicationWindowController applicationWindowController) {
-        this.applicationWindowController = applicationWindowController;
-    }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
