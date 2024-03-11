@@ -9,10 +9,10 @@ import java.sql.Timestamp;
  */
 public class Order implements Serializable {
     private String ParkID;
-    private Timestamp Date;
+    private Timestamp VisitationDate;
     private String ClientEmailAddress;
     private String PhoneNumber;
-    private OrderStatus Status;
+    private OrderStatus orderStatus;
     private Timestamp EnteredTime;
     private Timestamp ExitedTime;
     private String OrderID;
@@ -25,23 +25,23 @@ public class Order implements Serializable {
      *
      * @param VisitorID          The ID of the visitor associated with the order.
      * @param parkID             The ID of the park associated with the order.
-     * @param date               The date and time of the order.
+     * @param visitationDate     The date and time of the order.
      * @param clientEmailAddress The email address of the client who made the order.
      * @param phoneNumber        The phone number of the client who made the order.
-     * @param status             The status of the order.
+     * @param orderStatus             The status of the order.
      * @param enteredTime        The time the client entered the park.
      * @param exitedTime         The time the client exited the park.
      * @param orderID            The unique ID of the order.
      * @param orderType          The type of the order.
      * @param numOfVisitors      The number of visitors associated with the order.
      */
-    public Order(String VisitorID, String parkID, Timestamp date, String clientEmailAddress, String phoneNumber, OrderStatus status, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer numOfVisitors) {
+    public Order(String VisitorID, String parkID, Timestamp visitationDate, String clientEmailAddress, String phoneNumber, OrderStatus orderStatus, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer numOfVisitors) {
         this.VisitorID = VisitorID;
         ParkID = parkID;
-        Date = date;
+        VisitationDate = visitationDate;
         ClientEmailAddress = clientEmailAddress;
         PhoneNumber = phoneNumber;
-        Status = status;
+        this.orderStatus = orderStatus;
         EnteredTime = enteredTime;
         ExitedTime = exitedTime;
         OrderID = orderID;
@@ -90,17 +90,17 @@ public class Order implements Serializable {
      *
      * @return The date and time of the order.
      */
-    public Timestamp getDate() {
-        return Date;
+    public Timestamp getVisitationDate() {
+        return VisitationDate;
     }
 
     /**
      * Sets the date and time of the order.
      *
-     * @param date The date and time to be set.
+     * @param visitationDate The date and time to be set.
      */
-    public void setDate(Timestamp date) {
-        Date = date;
+    public void setVisitationDate(Timestamp visitationDate) {
+        VisitationDate = visitationDate;
     }
 
     /**
@@ -144,17 +144,17 @@ public class Order implements Serializable {
      *
      * @return The status of the order.
      */
-    public OrderStatus getStatus() {
-        return Status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
     /**
      * Sets the status of the order.
      *
-     * @param status The status to be set.
+     * @param orderStatus The status to be set.
      */
-    public void setStatus(OrderStatus status) {
-        Status = status;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     /**

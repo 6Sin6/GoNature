@@ -15,13 +15,13 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      * Initializes the OrderBank for single orders.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      */
-    public SingleVisitor(User user, String emailAdress, String ID, String firstName, String lastName) {
-        super(user, emailAdress, ID, firstName, lastName);
+    public SingleVisitor(User user, String emailAddress, String ID, String firstName, String lastName) {
+        super(user, emailAddress, ID, firstName, lastName);
         orders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
         role = Role.ROLE_SINGLE_VISITOR;
     }
@@ -31,15 +31,15 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      * Validates if the provided orders are for single type orders.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param orders      The existing orders to be associated with the visitor.
      * @throws IllegalArgumentException if the provided orders are not for single type orders.
      */
-    public SingleVisitor(User user, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
-        super(user, emailAdress, ID, firstName, lastName, orders);
+    public SingleVisitor(User user, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
+        super(user, emailAddress, ID, firstName, lastName, orders);
         if (orders.getOrdersType() != OrderType.ORD_TYPE_SINGLE)
             throw new IllegalArgumentException(ErrorMsg);
         this.orders = orders;
@@ -51,15 +51,15 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      * Validates if the provided order is for a single type order.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param order       The single order associated with the visitor.
      * @throws IllegalArgumentException if the provided order is not for a single type order.
      */
-    public SingleVisitor(User user, String emailAdress, String ID, String firstName, String lastName, Order order) {
-        super(user, emailAdress, ID, firstName, lastName, order);
+    public SingleVisitor(User user, String emailAddress, String ID, String firstName, String lastName, Order order) {
+        super(user, emailAddress, ID, firstName, lastName, order);
         if (order.getOrderType() != OrderType.ORD_TYPE_SINGLE)
             throw new IllegalArgumentException(ErrorMsg);
         orders = new OrderBank(order);
@@ -71,13 +71,13 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      */
-    public SingleVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName) {
-        super(username, password, emailAdress, ID, firstName, lastName);
+    public SingleVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName) {
+        super(username, password, emailAddress, ID, firstName, lastName);
         orders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
         role = Role.ROLE_SINGLE_VISITOR;
     }
@@ -88,15 +88,15 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param orders      The existing orders to be associated with the visitor.
      * @throws IllegalArgumentException if the provided orders are not for single type orders.
      */
-    public SingleVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
-        super(username, password, emailAdress, ID, firstName, lastName, orders);
+    public SingleVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
+        super(username, password, emailAddress, ID, firstName, lastName, orders);
         if (orders.getOrdersType() != OrderType.ORD_TYPE_SINGLE)
             throw new IllegalArgumentException(ErrorMsg);
         this.orders = orders;
@@ -109,15 +109,15 @@ public class SingleVisitor extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param order       The single order associated with the visitor.
      * @throws IllegalArgumentException if the provided order is not for a single type order.
      */
-    public SingleVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName, Order order) {
-        super(username, password, emailAdress, ID, firstName, lastName, order);
+    public SingleVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName, Order order) {
+        super(username, password, emailAddress, ID, firstName, lastName, order);
         if (order.getOrderType() != OrderType.ORD_TYPE_SINGLE)
             throw new IllegalArgumentException(ErrorMsg);
         orders = new OrderBank(order);

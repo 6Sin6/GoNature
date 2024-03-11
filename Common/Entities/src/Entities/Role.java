@@ -38,12 +38,7 @@ public enum Role {
     /**
      * Role representing a park support representative.
      */
-    ROLE_PARK_SUPPORT_REPRESENTATIVE(6),
-
-    /**
-     * Role representing an administrator.
-     */
-    ROLE_ADMINISTRATOR(7);
+    ROLE_PARK_SUPPORT_REPRESENTATIVE(6);
 
     private int role;
 
@@ -78,8 +73,6 @@ public enum Role {
                 return ROLE_PARK_MGR;
             case "Support Representative":
                 return ROLE_PARK_SUPPORT_REPRESENTATIVE;
-            case "ROLE_ADMINISTRATOR":
-                return ROLE_ADMINISTRATOR;
             default:
                 return null;
         }
