@@ -24,10 +24,18 @@ public class ApplicationWindowController implements Initializable {
     private BorderPane mainPane;
     private Map<String, Parent> pagesCache = new HashMap<>();
     private Parent menuSider;
-
+    private User user;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    private void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     private Parent loadPage(String fxmlPath) {
@@ -49,6 +57,7 @@ public class ApplicationWindowController implements Initializable {
     }
 
     public void loadMenu(User user) {
+        setUser(user);
         try {
             if (menuSider == null) {
                 // Ensure FXMLLoader is used to load the FXML and retrieve the controller from it
@@ -80,7 +89,7 @@ public class ApplicationWindowController implements Initializable {
         Parent page = loadPage(fxmlPath);
         if (page != null) {
             mainPane.setCenter(page);
-            if (!Objects.equals(fxmlPath, "/VisitorsUI/LoginPage.fxml")) {
+            if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml")) {
                 mainPane.setLeft(menuSider);
             }
         }

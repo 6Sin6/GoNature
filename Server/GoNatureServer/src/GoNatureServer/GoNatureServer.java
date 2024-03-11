@@ -110,9 +110,11 @@ public class GoNatureServer extends AbstractServer {
 
         if (msg instanceof Message) {
             switch (((Message) msg).getMsgOpcode()) {
+                case OP_SYNC_HADCHECK:
+                    client.sendToClient(msg);
                 case OP_SIGN_IN:
                     User user = (User) ((Message) msg).getMsgData();
-                    user.setRole(Role.ROLE_SINGLE_VISITOR);
+                    user.setRole(Role.ROLE_PARK_DEPARTMENT_MGR);
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, user.getUsername(), user);
                     client.sendToClient(respondMsg);
                 default:
