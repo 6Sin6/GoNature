@@ -38,7 +38,7 @@
                <font>
                   <Font size="16.0" />
                </font></MFXPasswordField>
-            <MFXButton fx:id="loginBtn" layoutX="628.0" layoutY="415.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" text="Sign In" />
+            <MFXButton fx:id="loginBtn" buttonType="RAISED" layoutX="628.0" layoutY="415.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="Sign In" />
          </children>
       </Pane>
    </children>

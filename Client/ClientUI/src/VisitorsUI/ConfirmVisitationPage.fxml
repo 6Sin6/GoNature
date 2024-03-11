@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text fx:id="txtHeader" layoutX="622.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Visitation" textAlignment="CENTER">
          <font>
@@ -24,7 +24,6 @@
          </font>
       </Text>
       <VBox fx:id="vboxMenu" prefHeight="768.0" prefWidth="250.0" />
-      <Button fx:id="btnConfirmVisitation" layoutX="687.0" layoutY="484.0" mnemonicParsing="false" onAction="#OnClickConfirmVisitationButton" prefHeight="51.0" prefWidth="117.0" text="Confirm" />
       <Text layoutX="567.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
          <font>
             <Font size="20.0" />
@@ -90,11 +89,12 @@
             <Font size="20.0" />
          </font>
       </Text>
-      <Label fx:id="lblOrderNumber" layoutX="680.0" layoutY="189.0" text="lblOrderNumber">
+      <Label fx:id="lblOrderNumber" layoutX="680.0" layoutY="187.0" text="lblOrderNumber">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="btnDeclineVisitation" layoutX="550.0" layoutY="483.0" mnemonicParsing="false" onAction="#OnClickDeclineVisitationButton" prefHeight="51.0" prefWidth="117.0" text="Decline" />
+      <MFXButton fx:id="btnDeclineVisitation" layoutX="542.0" layoutY="484.0" onAction="#OnClickDeclineVisitationButton" prefHeight="51.0" prefWidth="117.0" rippleColor="#ff4646" text="Decline" />
+      <MFXButton fx:id="btnConfirmVisitation" buttonType="RAISED" layoutX="694.0" layoutY="484.0" onAction="#OnClickConfirmVisitationButton" prefHeight="51.0" prefWidth="117.0" rippleColor="#adff49" text="Confirm" />
    </children>
 </Pane>
