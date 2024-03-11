@@ -4,6 +4,7 @@ package VisitorsControllers;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -20,6 +21,9 @@ public class GroupGuideOrderVisitationPageController {
 
         @FXML
         private TextField EmailLbl;
+
+        @FXML
+        private DatePicker datePicker;
 
         @FXML
         private Text Header;
@@ -113,4 +117,9 @@ public class GroupGuideOrderVisitationPageController {
 
         @FXML
         private Label usernameLabel;
+
+        @FXML
+        void OnClickCreateOrderButton(ActionEvent event) {
+
+        }
 }

@@ -11,6 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.DatePicker?>
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.GroupGuideOrderVisitationPageController">
     <children>
         <Pane fx:id="pane" prefHeight="768.0" prefWidth="950.0">
@@ -26,11 +27,11 @@
                 <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" layoutX="425.0" layoutY="625.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" text="Create Order" />
             <MFXTextField fx:id="txtFirstName" layoutX="423.0" layoutY="133.0" prefHeight="25.0" prefWidth="200.0" />
             <MFXTextField fx:id="txtLastName" layoutX="423.0" layoutY="188.0" prefHeight="49.0" prefWidth="200.0" />
-            <MFXDatePicker fx:id="datePicker" floatMode="BORDER" layoutX="423.0" layoutY="289.0" prefHeight="38.0">
+            <DatePicker fx:id="datePicker" layoutX="423.0" layoutY="289.0" prefHeight="38.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
-            </MFXDatePicker>
+            </DatePicker>
             <MFXTextField fx:id="txtNumOfVisitors" alignment="CENTER" layoutX="475.0" layoutY="383.0" prefHeight="30.0" prefWidth="152.0" text="1" />
             <MFXTextField fx:id="txtPhone" layoutX="424.0" layoutY="437.0" prefHeight="49.0" prefWidth="200.0" />
             <MFXTextField fx:id="txtEmail" layoutX="424.0" layoutY="493.0" prefHeight="49.0" prefWidth="200.0" />
