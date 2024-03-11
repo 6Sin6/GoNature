@@ -83,7 +83,7 @@ public class OrderBank implements Iterable<Order>, Serializable {
     public OrderBank getOrdersByStatus(OrderStatus status) {
         OrderBank ordersByStatus = new OrderBank(ordersType);
         for (Order order : orders) {
-            if (order.getStatus() == status)
+            if (order.getOrderStatus() == status)
                 ordersByStatus.insertOrder(order);
         }
         return ordersByStatus;
@@ -97,7 +97,7 @@ public class OrderBank implements Iterable<Order>, Serializable {
      */
     public void ChangeExistingOrderStatus(Order order, OrderStatus newStatus) {
         if (orders.contains(order)) {
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         }
     }
 

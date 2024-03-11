@@ -43,16 +43,16 @@
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <ImageView fitHeight="112.0" fitWidth="178.0" layoutX="210.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="/assets/orderReservationIcon.png" />
-                </image>
-            </ImageView>
-            <ImageView fitHeight="112.0" fitWidth="178.0" layoutX="529.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="/assets/viewAllOrders.png" />
-                </image>
-            </ImageView>
+<!--            <ImageView fitHeight="112.0" fitWidth="178.0" layoutX="210.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                <image>-->
+<!--                   <Image url="/assets/orderReservationIcon.png" />-->
+<!--                </image>-->
+<!--            </ImageView>-->
+<!--            <ImageView fitHeight="112.0" fitWidth="178.0" layoutX="529.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                <image>-->
+<!--                    <Image url="/assets/viewAllOrders.png" />-->
+<!--                </image>-->
+<!--            </ImageView>-->
             <Text fx:id="text121" layoutX="210.0" layoutY="483.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order a visit" wrappingWidth="131.57323455810547">
                <font>
                   <Font name="System Bold" size="21.0" />

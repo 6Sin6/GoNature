@@ -71,7 +71,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      */
     public void addGroupOrder(Order order) {
         if (order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
-            if (order.getStatus() == OrderStatus.STATUS_CANCELLED) {
+            if (order.getOrderStatus() == OrderStatus.STATUS_CANCELLED) {
                 GroupOrders.insertOrder(order);
             }
         } else
@@ -86,7 +86,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      */
     public void addSingleOrder(Order order) {
         if (order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {
-            if (order.getStatus() == OrderStatus.STATUS_CANCELLED) {
+            if (order.getOrderStatus() == OrderStatus.STATUS_CANCELLED) {
                 SingleOrders.insertOrder(order);
             }
         } else

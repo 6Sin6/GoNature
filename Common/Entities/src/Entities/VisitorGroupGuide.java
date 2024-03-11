@@ -15,13 +15,13 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Initializes the OrderBank for group orders.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      */
-    public VisitorGroupGuide(User user, String emailAdress, String ID, String firstName, String lastName) {
-        super(user, emailAdress, ID, firstName, lastName);
+    public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName) {
+        super(user, emailAddress, ID, firstName, lastName);
         orders = new OrderBank(OrderType.ORD_TYPE_GROUP);
         role = Role.ROLE_VISITOR_GROUP_GUIDE;
     }
@@ -31,15 +31,15 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Validates if the provided orders are for group type orders.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      * @param orders      The existing orders to be associated with the group guide.
      * @throws IllegalArgumentException if the provided orders are not for group type orders.
      */
-    public VisitorGroupGuide(User user, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
-        super(user, emailAdress, ID, firstName, lastName, orders);
+    public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
+        super(user, emailAddress, ID, firstName, lastName, orders);
         if (orders.getOrdersType() != OrderType.ORD_TYPE_GROUP)
             throw new IllegalArgumentException(ErrorMsg);
         this.orders = orders;
@@ -52,15 +52,15 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Validates if the provided order is for a group type order.
      *
      * @param user        The user information.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      * @param order       The group order associated with the group guide.
      * @throws IllegalArgumentException if the provided order is not for a group type order.
      */
-    public VisitorGroupGuide(User user, String emailAdress, String ID, String firstName, String lastName, Order order) {
-        super(user, emailAdress, ID, firstName, lastName, order);
+    public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName, Order order) {
+        super(user, emailAddress, ID, firstName, lastName, order);
         if (order.getOrderType() != OrderType.ORD_TYPE_GROUP)
             throw new IllegalArgumentException(ErrorMsg);
         orders = new OrderBank(order);
@@ -73,13 +73,13 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the group guide.
      * @param password    The password of the group guide.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      */
-    public VisitorGroupGuide(String username, String password, String emailAdress, String ID, String firstName, String lastName) {
-        super(username, password, emailAdress, ID, firstName, lastName);
+    public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName) {
+        super(username, password, emailAddress, ID, firstName, lastName);
         orders = new OrderBank(OrderType.ORD_TYPE_GROUP);
         role = Role.ROLE_VISITOR_GROUP_GUIDE;
 
@@ -91,15 +91,15 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the group guide.
      * @param password    The password of the group guide.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      * @param orders      The existing orders to be associated with the group guide.
      * @throws IllegalArgumentException if the provided orders are not for group type orders.
      */
-    public VisitorGroupGuide(String username, String password, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
-        super(username, password, emailAdress, ID, firstName, lastName, orders);
+    public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
+        super(username, password, emailAddress, ID, firstName, lastName, orders);
         if (orders.getOrdersType() != OrderType.ORD_TYPE_GROUP)
             throw new IllegalArgumentException(ErrorMsg);
         this.orders = orders;
@@ -113,15 +113,15 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      *
      * @param username    The username of the group guide.
      * @param password    The password of the group guide.
-     * @param emailAdress The email address of the group guide.
+     * @param emailAddress The email address of the group guide.
      * @param ID          The ID of the group guide.
      * @param firstName   The first name of the group guide.
      * @param lastName    The last name of the group guide.
      * @param order       The group order associated with the group guide.
      * @throws IllegalArgumentException if the provided order is not for a group type order.
      */
-    public VisitorGroupGuide(String username, String password, String emailAdress, String ID, String firstName, String lastName, Order order) {
-        super(username, password, emailAdress, ID, firstName, lastName, order);
+    public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName, Order order) {
+        super(username, password, emailAddress, ID, firstName, lastName, order);
         if (order.getOrderType() != OrderType.ORD_TYPE_GROUP)
             throw new IllegalArgumentException(ErrorMsg);
         orders = new OrderBank(order);

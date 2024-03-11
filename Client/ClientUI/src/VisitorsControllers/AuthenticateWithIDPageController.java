@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 
 public class AuthenticateWithIDPageController {
 
@@ -64,4 +65,18 @@ public class AuthenticateWithIDPageController {
 
     }
 
+    @FXML
+    private void checkTheID(ActionEvent event) {
+        String enteredID = IDTextField.getText();
+        // Replace "expectedID" with the actual ID you're expecting
+        String expectedID = "your_expected_id_here";
+
+        if (enteredID.equals(expectedID)) {
+            // ID is correct, do something (e.g., navigate to the next page)
+            System.out.println("ID is correct!");
+        } else {
+            // ID is incorrect, show error message
+            ErrorText.setText("Incorrect ID. Please try again.");
+        }
+    }
 }

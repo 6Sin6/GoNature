@@ -3,14 +3,10 @@ package CommonClient.controllers;
 import Entities.Role;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class MenuSiderController extends BaseController {
 
@@ -68,7 +64,7 @@ public class MenuSiderController extends BaseController {
     }
 
     public void handleDashboardRoute() {
-        applicationWindowController.loadDashboardPage(Role.stringToRule(userRoleLabel.getText()));
+        applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
 
     public void buildMenuItems() {

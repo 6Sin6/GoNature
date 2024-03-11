@@ -1,5 +1,7 @@
 package CommonClient.controllers;
 
+import Entities.Role;
+import Entities.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,9 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
-import Entities.Role;
-
 
 
 public class ApplicationWindowController implements Initializable {
@@ -49,7 +48,7 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
-    public void loadMenu(String username, String role) {
+    public void loadMenu(User user) {
         try {
             if (menuSider == null) {
                 // Ensure FXMLLoader is used to load the FXML and retrieve the controller from it
@@ -62,8 +61,8 @@ public class ApplicationWindowController implements Initializable {
                     ((BaseController) menuController).setApplicationWindowController(this);
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
-                    menuController.setRole(role);
-                    menuController.setUsername(username);
+                    menuController.setRole(Role.roleToString(user.getRole()));
+                    menuController.setUsername(user.getUsername());
                     menuController.buildMenuItems();
                 } else {
                     // Handle the case where the controller wasn't retrieved successfully
@@ -95,7 +94,7 @@ public class ApplicationWindowController implements Initializable {
         roleToFxmlPath.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
         roleToFxmlPath.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
 
-        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/VisitorsUI/LoginPage.fxml");
+        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
 

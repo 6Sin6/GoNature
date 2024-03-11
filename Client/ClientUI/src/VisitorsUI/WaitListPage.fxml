@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0">
          <children>
@@ -22,13 +22,12 @@
             </Text>
             <ImageView fx:id="imgExit" fitHeight="50.0" fitWidth="50.0" layoutX="1220.0" layoutY="15.0" onMouseClicked="#ExitClient" pickOnBounds="true" preserveRatio="true" />
             <Separator layoutX="250.0" layoutY="63.0" prefHeight="14.0" prefWidth="1030.0" />
-            <Text layoutX="575.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full Name:">
+            <Text layoutX="493.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full Name:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <TextField fx:id="txtFullName" layoutX="671.0" layoutY="431.0" prefHeight="30.0" prefWidth="175.0" />
-            <Label fx:id="lblErrorName" layoutX="855.0" layoutY="436.0" text="errorMsgName" textFill="RED">
+            <Label fx:id="lblErrorName" layoutX="904.0" layoutY="436.0" text="errorMsgName" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
@@ -39,30 +38,27 @@
                </font>
             </Text>
             <VBox fx:id="vboxMenu" prefHeight="768.0" prefWidth="250.0" />
-            <Button fx:id="btnSignUp" layoutX="709.0" layoutY="570.0" mnemonicParsing="false" onAction="#OnClickSignUpButton" prefHeight="51.0" prefWidth="117.0" text="Sign-Up Now!" />
-            <Text layoutX="608.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone:">
+            <Text layoutX="493.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <TextField fx:id="txtPhone" layoutX="671.0" layoutY="471.0" prefHeight="30.0" prefWidth="175.0" />
-            <Text layoutX="617.0" layoutY="530.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+            <Text layoutX="495.0" layoutY="581.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <TextField fx:id="txtEmail" layoutX="671.0" layoutY="511.0" prefHeight="30.0" prefWidth="175.0" />
-            <Label fx:id="lblErrorPhone" layoutX="855.0" layoutY="476.0" text="errorMsgPhone" textFill="RED">
+            <Label fx:id="lblErrorPhone" layoutX="902.0" layoutY="502.0" text="errorMsgPhone" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorEmail" layoutX="855.0" layoutY="516.0" text="errorMsgEmail" textFill="RED">
+            <Label fx:id="lblErrorEmail" layoutX="905.0" layoutY="564.0" text="errorMsgEmail" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text layoutX="567.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
+            <Text layoutX="494.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
                <font>
                   <Font size="20.0" />
                </font>
@@ -72,22 +68,22 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="571.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Telephone:">
+            <Text layoutX="495.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Telephone:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="617.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+            <Text layoutX="495.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="623.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:">
+            <Text layoutX="494.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="621.0" layoutY="410.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time:">
+            <Text layoutX="493.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time:">
                <font>
                   <Font size="20.0" />
                </font>
@@ -122,6 +118,14 @@
                   <Font size="20.0" />
                </font>
             </Label>
+            <MFXTextField fx:id="txtFullName" layoutX="677.0" layoutY="421.0" prefWidth="200.0" />
+            <MFXTextField fx:id="txtPhone" layoutX="677.0" layoutY="486.0" prefWidth="200.0" />
+            <MFXTextField fx:id="txtEmail" layoutX="677.0" layoutY="549.0" prefWidth="200.0" />
+            <MFXButton fx:id="btnSignUp" buttonType="RAISED" layoutX="627.0" layoutY="645.0" onAction="#OnClickSignUpButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Sign-Up Now!">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
          </children>
       </Pane>
    </children>

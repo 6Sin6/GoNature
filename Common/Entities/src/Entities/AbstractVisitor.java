@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Represents an abstract visitor.
  */
 public abstract class AbstractVisitor extends User implements Serializable {
-    protected String EmailAdress;
+    protected String EmailAddress;
     protected String ID;
     protected String FirstName;
     protected String LastName;
@@ -16,14 +16,14 @@ public abstract class AbstractVisitor extends User implements Serializable {
      * Constructs a new AbstractVisitor object with the specified attributes.
      *
      * @param user        The user associated with the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      */
-    public AbstractVisitor(User user, String emailAdress, String ID, String firstName, String lastName) {
+    public AbstractVisitor(User user, String emailAddress, String ID, String firstName, String lastName) {
         super(user.getUsername(), user.getPassword());
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;
@@ -33,15 +33,15 @@ public abstract class AbstractVisitor extends User implements Serializable {
      * Constructs a new AbstractVisitor object with the specified attributes and orders.
      *
      * @param user        The user associated with the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param orders      The orders associated with the visitor.
      */
-    public AbstractVisitor(User user, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
+    public AbstractVisitor(User user, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
         super(user.getUsername(), user.getPassword());
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;
@@ -52,15 +52,15 @@ public abstract class AbstractVisitor extends User implements Serializable {
      * Constructs a new AbstractVisitor object with the specified attributes and order.
      *
      * @param user        The user associated with the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param order       The order associated with the visitor.
      */
-    public AbstractVisitor(User user, String emailAdress, String ID, String firstName, String lastName, Order order) {
+    public AbstractVisitor(User user, String emailAddress, String ID, String firstName, String lastName, Order order) {
         super(user.getUsername(), user.getPassword());
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;
@@ -72,14 +72,14 @@ public abstract class AbstractVisitor extends User implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      */
-    public AbstractVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName) {
+    public AbstractVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName) {
         super(username, password);
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;
@@ -90,15 +90,15 @@ public abstract class AbstractVisitor extends User implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param orders      The orders associated with the visitor.
      */
-    public AbstractVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName, OrderBank orders) {
+    public AbstractVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
         super(username, password);
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;
@@ -110,15 +110,15 @@ public abstract class AbstractVisitor extends User implements Serializable {
      *
      * @param username    The username of the visitor.
      * @param password    The password of the visitor.
-     * @param emailAdress The email address of the visitor.
+     * @param emailAddress The email address of the visitor.
      * @param ID          The ID of the visitor.
      * @param firstName   The first name of the visitor.
      * @param lastName    The last name of the visitor.
      * @param order       The order associated with the visitor.
      */
-    public AbstractVisitor(String username, String password, String emailAdress, String ID, String firstName, String lastName, Order order) {
+    public AbstractVisitor(String username, String password, String emailAddress, String ID, String firstName, String lastName, Order order) {
         super(username, password);
-        EmailAdress = emailAdress;
+        EmailAddress = emailAddress;
         this.ID = ID;
         FirstName = firstName;
         LastName = lastName;

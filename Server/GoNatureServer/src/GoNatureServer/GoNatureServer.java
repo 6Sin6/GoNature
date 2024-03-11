@@ -7,6 +7,9 @@ import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
 import Entities.Message;
+import Entities.OpCodes;
+import Entities.Role;
+import Entities.User;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
@@ -94,7 +97,7 @@ public class GoNatureServer extends AbstractServer {
     }
 
     public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
-        Message newMsg = new Message(null,null, null);
+        Message newMsg = new Message(null, null, null);
 
         if (msg instanceof String) {
             if (msg.equals("quit")) {
@@ -104,43 +107,18 @@ public class GoNatureServer extends AbstractServer {
                 return;
             }
         }
-/*
+
         if (msg instanceof Message) {
-            switch (((Message) msg).GetMsgOpcode()) {
-                case SYNC_HANDSHAKE:
-                    newMsg.SetMsgOpcodeValue(OpCodes.SYNC_HANDSHAKE);
-                    client.sendToClient(newMsg);
-                case GETALLORDERS:
-                    if (((Message) msg).GetMsgData() == null) {
-                        newMsg.SetMsgOpcodeValue(OpCodes.GETALLORDERS);
-                        newMsg.SetMsgData(db.getOrders());
-                        client.sendToClient(newMsg);
-                    } else {
-                        controller.addtolog("Error Data Type");
-                    }
-                    break;
-                case GETORDERBYID:
-                    if (((Message) msg).GetMsgData() instanceof String) {
-                        newMsg.SetMsgOpcodeValue(OpCodes.GETORDERBYID);
-                        newMsg.SetMsgData(db.getOrderById((String) (((Message) msg).GetMsgData())));
-                        client.sendToClient(newMsg);
-                    } else {
-                        controller.addtolog("Error Data Type");
-                    }
-                    break;
-                case UPDATEORDER:
-                    if (((Message) msg).GetMsgData() instanceof Order) {
-                        newMsg.SetMsgOpcodeValue(OpCodes.UPDATEORDER);
-                        newMsg.SetMsgData(db.updateOrderById((Order) (((Message) msg).GetMsgData())));
-                        client.sendToClient(newMsg);
-                    } else {
-                        controller.addtolog("Error Data Type");
-                    }
-                    break;
+            switch (((Message) msg).getMsgOpcode()) {
+                case OP_SIGN_IN:
+                    User user = (User) ((Message) msg).getMsgData();
+                    user.setRole(Role.ROLE_SINGLE_VISITOR);
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, user.getUsername(), user);
+                    client.sendToClient(respondMsg);
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
-        }*/
+        }
     }
 
 
