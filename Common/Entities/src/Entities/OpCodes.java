@@ -19,6 +19,7 @@ public enum OpCodes {
     OP_GET_GROUP_VISITATION_BY_ID(14),
 
     OP_GET_PARK_DETAILS_BY_PARK_ID(15),
+    OP_SIGN_IN(16),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

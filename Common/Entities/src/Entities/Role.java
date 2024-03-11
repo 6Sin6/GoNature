@@ -77,4 +77,25 @@ public enum Role {
                 return null;
         }
     }
+
+    public static String roleToString(Role role) {
+        switch (role) {
+            case ROLE_GUEST:
+                return "ROLE_GUEST";
+            case ROLE_SINGLE_VISITOR:
+                return "Visitor";
+            case ROLE_VISITOR_GROUP_GUIDE:
+                return "ROLE_VISITOR_GROUP_GUIDE";
+            case ROLE_PARK_EMPLOYEE:
+                return "Park Employee";
+            case ROLE_PARK_DEPARTMENT_MGR:
+                return "Department Manager";
+            case ROLE_PARK_MGR:
+                return "Park Manager";
+            case ROLE_PARK_SUPPORT_REPRESENTATIVE:
+                return "Support Representative";
+            default:
+                return null;
+        }
+    }
 }
