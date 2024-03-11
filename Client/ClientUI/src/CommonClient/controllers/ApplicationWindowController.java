@@ -94,7 +94,7 @@ public class ApplicationWindowController implements Initializable {
         roleToFxmlPath.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
         roleToFxmlPath.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
 
-        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/VisitorsUI/LoginPage.fxml");
+        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
 
