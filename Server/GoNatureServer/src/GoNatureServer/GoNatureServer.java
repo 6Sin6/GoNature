@@ -12,6 +12,9 @@ import Entities.Role;
 import Entities.User;
 import ServerUIPageController.ServerPortFrameController;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -33,6 +36,8 @@ public class GoNatureServer extends AbstractServer {
     private static GoNatureServer server;
     private ServerPortFrameController controller;
     private DBConnection db;
+
+    private Map<ConnectionToClient, User> authenticatedUsers = new ConcurrentHashMap<>();
 
     private boolean connected = true;
 
@@ -101,6 +106,7 @@ public class GoNatureServer extends AbstractServer {
 
         if (msg instanceof String) {
             if (msg.equals("quit")) {
+                authenticatedUsers.remove(client);
                 this.controller.addtolog("Client " + client + " Disconnected");
                 controller.removeRowByIP(client.getInetAddress().getHostAddress());
                 client.close();
@@ -112,16 +118,20 @@ public class GoNatureServer extends AbstractServer {
             switch (((Message) msg).getMsgOpcode()) {
                 case OP_SYNC_HANDSHAKE:
                     client.sendToClient(msg);
+                    break;
                 case OP_SIGN_IN:
                     User userCredentials = (User) ((Message) msg).getMsgData();
                     User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
+                    //User authenticatedUser= new User("test","123",Role.ROLE_SINGLE_VISITOR);
                     if (authenticatedUser == null) {
                         Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
                         client.sendToClient(respondMsg);
                         return;
                     }
+                    authenticatedUsers.put(client, authenticatedUser);
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
+                    break;
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }

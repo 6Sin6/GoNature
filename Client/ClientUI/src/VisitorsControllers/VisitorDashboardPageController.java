@@ -1,6 +1,7 @@
 package VisitorsControllers;
 
 import CommonClient.controllers.BaseController;
+import CommonUtils.InputTextPopup;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,8 +53,13 @@ public class VisitorDashboardPageController extends BaseController {
 
     @FXML
     void OnClickOrderVisitButton(ActionEvent event) {
+        InputTextPopup inputtextPopup = new InputTextPopup("Enter ID to Authintcate ",(inputText) -> {System.out.println("Input ID: " + inputText);});
+        inputtextPopup.show(StackPane);
+
 
     }
+
+
 
     @FXML
     void OnClickViewOrdersButton(ActionEvent event) {
