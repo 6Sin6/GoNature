@@ -25,8 +25,8 @@ public class GroupOrder extends Order implements Serializable {
      * @param groupSize          The size of the group associated with the order.
      * @param visitorGroupeGuide The visitor or group guide associated with the order.
      */
-    public GroupOrder(String parkID, Timestamp date, String clientEmailAddress, String phoneNumber, OrderStatus status, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer groupSize, VisitorGroupGuide visitorGroupeGuide) {
-        super(parkID, date, clientEmailAddress, phoneNumber, status, enteredTime, exitedTime, orderID, orderType, 1);
+    public GroupOrder(String vistorID, String parkID, Timestamp date, String clientEmailAddress, String phoneNumber, OrderStatus status, Timestamp enteredTime, Timestamp exitedTime, String orderID, OrderType orderType, Integer groupSize, VisitorGroupGuide visitorGroupeGuide) {
+        super(vistorID, parkID, date, clientEmailAddress, phoneNumber, status, enteredTime, exitedTime, orderID, orderType, 1);
         this.groupSize = groupSize;
         this.visitorGroupeGuide = visitorGroupeGuide;
     }

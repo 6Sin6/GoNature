@@ -79,7 +79,7 @@ public class GoNatureServer extends AbstractServer {
 
     public void handleMessageFromClient
             (Object msg, ConnectionToClient client) throws IOException {
-        Message newmsg = new Message(null, null);
+        Message newmsg = new Message(null,null, null);
         if (msg instanceof String) {
             if (msg.equals("quit")) {
                 this.controller.addtolog("Client " + client + " Disconnected");
