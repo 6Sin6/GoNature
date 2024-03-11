@@ -1,4 +1,4 @@
-package VisitorsControllers;
+package CommonClient.controllers;
 
 import CommonClient.controllers.ApplicationWindowController;
 import CommonClient.controllers.BaseController;
