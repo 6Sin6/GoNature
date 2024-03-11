@@ -8,8 +8,10 @@ public class CommonUtils {
      * @param email - the email address to check
      * @return true if the string is a valid email address false otherwise
      */
-    public static Boolean isEmailAddressValid(String email)
+    public static boolean isEmailAddressValid(String email)
     {
+        if (email == null)
+            return false;
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
         Pattern pattern = Pattern.compile(emailRegex);
@@ -19,12 +21,68 @@ public class CommonUtils {
     }
 
     /**
-     * Checks if the given value is a positive number.
-     * @param value - the value to check.
-     * @return true if the value is a positive number false otherwise
+     * Checks if the given order id is valid.
+     * @param orderID - string of the order id.
+     * @return true if the order id is valid (positive integer), false otherwise
      */
-    public static Boolean isPositiveNumber(int value)
+    public static boolean isValidOrderID(String orderID)
     {
-        return value > 0;
+        return (isAllDigits(orderID) && Integer.parseInt(orderID) > 0);
+    }
+
+    /**
+     * Checks if the given id is value (9 digits).
+     * @param id - string of the id to check.
+     * @return true if the id is valid, false otherwise.
+     */
+    public static boolean isValidID(String id)
+    {
+        return (isAllDigits(id) && id.length() == 9);
+    }
+
+    /**
+     * Checks if the given name is valid.
+     * @param name - string of the name to check.
+     * @return true if the name is valid, false otherwise.
+     */
+    public static boolean isValidName(String name)
+    {
+        if (name == null)
+            return false;
+        for (int i = 0; i < name.length(); i++)
+        {
+            if (!Character.isLetter(name.charAt(i)))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the given phone number is valid.
+     * @param phone - string of the phone number to check.
+     * @return true if the phone number is valid, false otherwise.
+     */
+    public static boolean isValidPhone(String phone)
+    {
+        return (isAllDigits(phone) && phone.length() == 10);
+    }
+
+
+
+    /**
+     * Checks if the given string contains only digits.
+     * @param str - string to check.
+     * @return true if the string contains only digits, false otherwise.
+     */
+    private static boolean isAllDigits(String str)
+    {
+        if(str == null)
+            return false;
+        for(int i = 0; i < str.length(); i++)
+        {
+            if(!Character.isDigit(str.charAt(i)))
+                return false;
+        }
+        return true;
     }
 }
