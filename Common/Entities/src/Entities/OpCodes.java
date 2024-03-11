@@ -1,11 +1,25 @@
 package Entities;
 
 public enum OpCodes {
-    SYNC_HANDSHAKE(0), /* Expect Data instanceof null, Returns Data instanceof null */
-    GETALLORDERS(1), /* Expect Data instanceof null, returns ArrayList<Order> */
-    GETORDERBYID(1), /* Expect Data instanceof String, returns Order */
-    UPDATEORDER(2), /* Expect Data instanceof Order, returns Boolean */
-    DBERROR(9999); /* Returns Data instanceof String */
+    OP_SYNC_HADCHECK(0),
+    OP_GET_VISITOR_ORDERS(1),
+    OP_GET_VISITOR_GROUP_GROUP_GUIDE_ORDERS(2),
+    OP_HANDLE_VISITATION_EMAIL_CHANGE(3),
+    OP_HANDLE_VISITATION_CANCEL_ORDER(4),
+    OP_HANDLE_GROUP_VISITATION_EMAIL_CHANGE(5),
+    OP_HANDLE_GROUP_VISITATION_CANCEL_ORDER(6),
+    OP_CREATE_NEW_VISITATION(7),
+    OP_CREATE_NEW_GROUP_VISITATION(8),
+    OP_INSERT_VISITATION_TO_WAITLIST(9),
+    OP_INSERT_GROUP_VISITATION_TO_WAITLIST(10),
+    OP_HANDLE_VISITATION_STATUS(11),
+    OP_HANDLE_GROUP_VISITATION_STATUS(12),
+
+    OP_GET_VISITATION_BY_ID(13),
+    OP_GET_GROUP_VISITATION_BY_ID(14),
+
+    OP_GET_PARK_DETAILS_BY_PARK_ID(15),
+    OP_DB_ERR(999);
 
     private final int opCodeValue;
 
