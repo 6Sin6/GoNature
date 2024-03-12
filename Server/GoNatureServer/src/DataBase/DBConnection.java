@@ -3,10 +3,7 @@ package DataBase;
 import Entities.*;
 import ServerUIPageController.ServerPortFrameController;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -358,6 +355,18 @@ public class DBConnection {
 
     public boolean updateOrderStatusAsCancelled(String orderID) {
         return updateOrderStatus(orderID, OrderStatus.STATUS_CANCELLED);
+    }
+
+    public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
+        try {
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitorID=" + visitorID + " AND ParkID=" + parkID + " AND VisitationDate=" + visitationDate;
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            return results.next();
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
     }
 
     public Park getParkDetails(String parkID) {
