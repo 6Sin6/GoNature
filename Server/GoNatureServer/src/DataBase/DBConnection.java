@@ -221,7 +221,7 @@ public class DBConnection {
         }
     }
 
-    public boolean addOrder(Order order) {
+    public Order addOrder(Order order) {
         try {
             String tableName = this.schemaName + ".orders";
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, OrderStatus, EnteredTime, ExitedTime, OrderID, OrderType, NumOfVisitors";
@@ -233,18 +233,35 @@ public class DBConnection {
                     order.getOrderStatus().ordinal() + ", '" +
                     order.getEnteredTime() + "', '" +
                     order.getExitedTime() + "', '" +
-                    order.getOrderID() + "', " +
                     order.getOrderType().ordinal() + ", " +
                     order.getNumOfVisitors();
             if (!dbController.insertRecord(tableName, columns, values)) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
-                return false;
+                return new Order("", "", null, "", "", null, null, null, "", null, 0);
             }
             this.serverController.addtolog("Insert into " + tableName + " succeeded. Insert order:" + order);
-            return true;
+
+            // Get the order from the DB (extract newly assigned order ID)
+            ResultSet results = dbController.selectRecords(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate() + "'");
+            if (results.next()) {
+                return new Order(
+                        results.getString("VisitorID"),
+                        results.getString("ParkID"),
+                        results.getTimestamp("VisitationDate"),
+                        results.getString("ClientEmailAddress"),
+                        results.getString("PhoneNumber"),
+                        OrderStatus.values()[results.getInt("orderStatus")],
+                        results.getTimestamp("EnteredTime"),
+                        results.getTimestamp("ExitedTime"),
+                        results.getString("OrderID"),
+                        OrderType.values()[results.getInt("OrderType")],
+                        results.getInt("NumOfVisitors")
+                );
+            }
+            return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            return null;
         }
     }
 
