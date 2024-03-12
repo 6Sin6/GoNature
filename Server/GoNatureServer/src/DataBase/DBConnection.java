@@ -232,7 +232,16 @@ public class DBConnection {
                     order.getExitedTime() + "', '" +
                     order.getOrderType().ordinal() + ", " +
                     order.getNumOfVisitors();
-            if (!dbController.insertRecord(tableName, columns, values)) {
+            if (!dbController.insertRecord(tableName, columns,  order.getVisitorID(),
+                                                                order.getParkID(),
+                                                                order.getVisitationDate().toString(),
+                                                                order.getClientEmailAddress(),
+                                                                order.getPhoneNumber(),
+                                                                String.valueOf(order.getOrderStatus().ordinal()),
+                                                                order.getEnteredTime().toString(),
+                                                                order.getExitedTime().toString(),
+                                                                String.valueOf(order.getOrderType().ordinal()),
+                                                                String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
                 return null;
             }
