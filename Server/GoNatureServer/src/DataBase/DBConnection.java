@@ -237,7 +237,7 @@ public class DBConnection {
                     order.getNumOfVisitors();
             if (!dbController.insertRecord(tableName, columns, values)) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
-                return new Order("", "", null, "", "", null, null, null, "", null, 0);
+                return null;
             }
             this.serverController.addtolog("Insert into " + tableName + " succeeded. Insert order:" + order);
 
