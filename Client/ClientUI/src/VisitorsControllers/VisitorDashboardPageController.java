@@ -36,12 +36,22 @@ public class VisitorDashboardPageController extends BaseController {
     @FXML
     private ImageView pngViewOrders;
 
-    @FXML
-    void OnClickOrderVisitButton(ActionEvent event) {
-        InputTextPopup inputtextPopup = new InputTextPopup("Enter ID to Authenticate ",(inputText) -> {System.out.println("Input ID: " + inputText);}, 500, 300, true);
-        inputtextPopup.show(applicationWindowController.getRoot());
+    private InputTextPopup onAuthPopup;
+
+    public void onAuth(String id) {
+        if (!id.equals("123")) {
+            onAuthPopup.setErrorLabel("Invalid ID");
+            return;
+        }
+        onAuthPopup.setErrorLabel("");
     }
 
+    @FXML
+    void OnClickOrderVisitButton(ActionEvent event) {
+        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText), 500, 300, true);
+        onAuthPopup.show(applicationWindowController.getRoot());
+
+    }
 
 
     @FXML
