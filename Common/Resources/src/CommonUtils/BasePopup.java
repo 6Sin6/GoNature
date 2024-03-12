@@ -1,10 +1,8 @@
 package CommonUtils;
 
-import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -61,8 +59,12 @@ public abstract class BasePopup {
         closeTransition.setToY(-1200);
         closeTransition.setOnFinished(event -> {
             modalLayer.setVisible(false);
-            this.root.setCenter(previousPageChild);
+            if (fullScreenMode) {
+                this.root.setCenter(previousPageChild);
+            } else {
+                this.root.setCenter(root.getCenter());
+            }
         });
-        closeTransition.play();
+        // closeTransition.play();
     }
 }

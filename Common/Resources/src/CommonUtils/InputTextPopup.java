@@ -19,7 +19,12 @@ public class InputTextPopup extends BasePopup {
         super(fullScreenMode, width, height);
         Label promptLabel = new Label(prompt);
         promptLabel.setStyle("-fx-text-fill: #FCFCFC; -fx-font-size: 24px; -fx-padding: 10px 10px");
-        errorLabel.setStyle("-fx-text-fill: #FCFCFC; -fx-font-size: 48px; -fx-padding: 10px 10px");
+        errorLabel.setStyle("-fx-text-fill: #B22222; " +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 10px; " +
+                "-fx-border-width: 2px; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-alignment: center;");
         textField.setMaxWidth(320);
 
         confirmButton.getStyleClass().add("menu-item-big");

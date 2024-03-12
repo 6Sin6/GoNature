@@ -1,5 +1,6 @@
 package VisitorsControllers;
 
+import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import CommonUtils.InputTextPopup;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -37,26 +38,35 @@ public class VisitorDashboardPageController extends BaseController {
     private ImageView pngViewOrders;
 
     private InputTextPopup onAuthPopup;
+    private final String orderPage = "/VisitorsUI/VisitorOrderVisitationPage.fxml";
+    private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
-    public void onAuth(String id) {
-        if (!id.equals("123")) {
-            onAuthPopup.setErrorLabel("Invalid ID");
-            return;
+    public void onAuth(String id, String path) {
+        String strToPrint = "";
+        if (!Utils.isIDValid(id)) {
+            strToPrint = "Invalid ID ! Try again";
         }
-        onAuthPopup.setErrorLabel("");
+        if (strToPrint.isEmpty() && !id.equals("316165984")) {
+            strToPrint = "Wrong ID ! Try again";
+        }
+        if (strToPrint.isEmpty()) {
+            applicationWindowController.setCenterPage(path);
+            applicationWindowController.loadMenu(applicationWindowController.getUser());
+        }
+        onAuthPopup.setErrorLabel(strToPrint);
     }
 
     @FXML
     void OnClickOrderVisitButton(ActionEvent event) {
-        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText), 500, 300, true);
+        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, orderPage), 500, 300, true);
         onAuthPopup.show(applicationWindowController.getRoot());
-
     }
 
 
     @FXML
     void OnClickViewOrdersButton(ActionEvent event) {
-
+        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, activeOrdersPage), 500, 300, true);
+        onAuthPopup.show(applicationWindowController.getRoot());
     }
 
 

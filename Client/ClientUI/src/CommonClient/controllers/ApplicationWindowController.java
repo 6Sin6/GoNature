@@ -93,7 +93,7 @@ public class ApplicationWindowController implements Initializable {
     }
 
     public void setCenterPage(String fxmlPath) {
-        mainPane.getChildren().clear(); // Consider if you need to remove all children or just the center.
+        mainPane.getChildren().removeAll(); // Consider if you need to remove all children or just the center.
         Parent page = loadPage(fxmlPath);
         if (page != null) {
             mainPane.setCenter(page);
