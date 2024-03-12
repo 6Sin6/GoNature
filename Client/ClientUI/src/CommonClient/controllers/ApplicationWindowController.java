@@ -48,15 +48,17 @@ public class ApplicationWindowController implements Initializable {
 
     private Parent loadPage(String fxmlPath) {
         try {
+            // If the page we're loading is not cached yet.
             if (!pagesCache.containsKey(fxmlPath)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent page = loader.load();
                 Object controller = loader.getController();
-                if (controller instanceof BaseController) { // Assuming all your controllers extend a common BaseController that has setApplicationWindowController method.
+                if (controller instanceof BaseController) {
                     ((BaseController) controller).setApplicationWindowController(this);
                 }
                 pagesCache.put(fxmlPath, page);
             }
+
             return pagesCache.get(fxmlPath);
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,13 +95,15 @@ public class ApplicationWindowController implements Initializable {
     }
 
     public void setCenterPage(String fxmlPath) {
-        mainPane.getChildren().removeAll(); // Consider if you need to remove all children or just the center.
+        mainPane.getChildren().remove(mainPane.getCenter());
         Parent page = loadPage(fxmlPath);
         if (page != null) {
             mainPane.setCenter(page);
+            Parent newMenu = null;
             if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml")) {
-                mainPane.setLeft(menuSider);
+                newMenu = menuSider;
             }
+            mainPane.setLeft(newMenu);
         }
     }
 

@@ -7,6 +7,7 @@ import java.io.Serializable;
  * This class extends ParkEmployee and inherits basic employee functionality.
  */
 public class ParkManager extends ParkEmployee implements Serializable {
+    private String ParkID;
 
     /**
      * Constructs a ParkManager object with the specified parameters.
@@ -14,10 +15,11 @@ public class ParkManager extends ParkEmployee implements Serializable {
      * @param username    The username of the manager.
      * @param password    The password of the manager.
      * @param emailAddress The email address of the manager.
-     * @param park        The park associated with the manager.
+     * @param ParkID        The parkID associated with the manager.
      */
-    public ParkManager(String username, String password, String emailAddress, Park park) {
-        super(username, password, emailAddress, park);
+    public ParkManager(String username, String password, String emailAddress, String ParkID) {
+        super(username, password, emailAddress, null);
+        this.ParkID = ParkID;
         role = Role.ROLE_PARK_MGR;
     }
 
@@ -26,11 +28,21 @@ public class ParkManager extends ParkEmployee implements Serializable {
      *
      * @param user        The user object representing the manager.
      * @param emailAddress The email address of the manager.
-     * @param park        The park associated with the manager.
+     * @param ParkID        The parkID associated with the manager.
      */
-    public ParkManager(User user, String emailAddress, Park park) {
-        super(user, emailAddress, park);
+    public ParkManager(User user, String emailAddress, String ParkID) {
+        super(user, emailAddress, null);
+        this.ParkID = ParkID;
         role = Role.ROLE_PARK_MGR;
+    }
+
+    /**
+     * Gets the park ID associated with the manager.
+     *
+     * @return The park ID associated with the manager.
+     */
+    public String getParkID() {
+        return ParkID;
     }
 }
 

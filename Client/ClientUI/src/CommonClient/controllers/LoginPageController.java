@@ -58,9 +58,15 @@ public class LoginPageController extends BaseController {
         return passwordText.getText();
     }
 
+    public void resetAllFields() {
+        this.ErrorMsg.setText("");
+        this.userNameText.setText("");
+        this.passwordText.setText("");
+    }
+
     public void onLoginClick() throws CommunicationException {
         if (getUserName().isEmpty() || getPassword().isEmpty()) {
-            ErrorMsg.setText("Please fill all fields !");
+            ErrorMsg.setText("Please fill all fields!");
             return; // Exit the method if any of the fields are empty.
         }
         User user = new User(getUserName(), getPassword());
@@ -86,6 +92,7 @@ public class LoginPageController extends BaseController {
         // Logging user in, unless incorrect user and password.
         user = (User) respondMsg.getMsgData();
         if (respondMsg.getMsgData() != null && user.getRole() != Role.ROLE_GUEST) {
+            resetAllFields();
             applicationWindowController.loadDashboardPage(user.getRole());
             applicationWindowController.loadMenu(user);
         } else {

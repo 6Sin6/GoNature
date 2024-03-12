@@ -114,14 +114,105 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".users";
             String whereClause = "username='" + username + "' AND password='" + password + "'";
-            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            ResultSet userCredentials = dbController.selectRecords(tableName, whereClause);
 
-            if (results.next()) {
-                return new User(
-                        results.getString("username"),
-                        results.getString("password"),
-                        Role.values()[results.getInt("role")]
-                );
+            if (userCredentials.next()) {
+                int userRole = userCredentials.getInt("role");
+                String userTypeTableName = userRole < 3 ? ".visitors" : userRole == 4 ? ".departmentmanagers" : ".parkemployees";
+                ResultSet userGoNatureData = dbController.selectRecords(this.schemaName + userTypeTableName, "username='" + username + "'");
+
+                if (userGoNatureData.next()) {
+                    switch (userRole) {
+                        case 1:
+                            return new SingleVisitor(
+                                    userCredentials.getString("username"),
+                                    userCredentials.getString("password"),
+                                    userGoNatureData.getString("emailAddress"),
+                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("firstName"),
+                                    userGoNatureData.getString("lastName")
+                            );
+                        case 2:
+                            return new VisitorGroupGuide(
+                                    userCredentials.getString("username"),
+                                    userCredentials.getString("password"),
+                                    userGoNatureData.getString("emailAddress"),
+                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("firstName"),
+                                    userGoNatureData.getString("lastName")
+                            );
+                        case 3:
+                            ResultSet parkData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
+                            ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + "AND isParkManager=true");
+                            if (parkData.next() && managerData.next()) {
+                                return new ParkEmployee(
+                                        userCredentials.getString("username"),
+                                        userCredentials.getString("password"),
+                                        userGoNatureData.getString("emailAddress"),
+                                        new Park(
+                                                parkData.getString("ParkID"),
+                                                parkData.getString("ParkName"),
+                                                parkData.getInt("Capacity"),
+                                                parkData.getInt("GapVisitorsCapacity"),
+                                                parkData.getTimestamp("DefaultVisitationTime"),
+                                                parkData.getInt("Department"),
+                                                new ParkManager(
+                                                        managerData.getString("username"),
+                                                        "",
+                                                        managerData.getString("EmailAddress"),
+                                                        parkData.getString("ParkID")
+                                                )
+                                        )
+                                );
+                            }
+                            break;
+                        case 4:
+                            ResultSet parkDepData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
+                            if (parkDepData.next()) {
+                                return new ParkDepartmentManager(
+                                        userCredentials.getString("username"),
+                                        userCredentials.getString("password"),
+                                        userGoNatureData.getString("emailAddress"),
+                                        null,
+                                        null,
+                                        parkDepData.getInt("departmentID")
+                                );
+                            }
+                        case 5:
+                            return new ParkManager(
+                                    userCredentials.getString("username"),
+                                    userCredentials.getString("password"),
+                                    userGoNatureData.getString("EmailAddress"),
+                                    userGoNatureData.getString("ParkID")
+                            );
+                        case 6:
+                            ResultSet parkDataSupport = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
+                            ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + "AND isParkManager=true");
+                            if (parkDataSupport.next() && supportManagerData.next()) {
+                                return new ParkSupportRepresentative(
+                                        userCredentials.getString("username"),
+                                        userCredentials.getString("password"),
+                                        userGoNatureData.getString("emailAddress"),
+                                        new Park(
+                                                parkDataSupport.getString("ParkID"),
+                                                parkDataSupport.getString("ParkName"),
+                                                parkDataSupport.getInt("Capacity"),
+                                                parkDataSupport.getInt("GapVisitorsCapacity"),
+                                                parkDataSupport.getTimestamp("DefaultVisitationTime"),
+                                                parkDataSupport.getInt("departmentID"),
+                                                new ParkManager(
+                                                        supportManagerData.getString("username"),
+                                                        "",
+                                                        supportManagerData.getString("EmailAddress"),
+                                                        parkDataSupport.getString("ParkID")
+                                                )
+                                        )
+                                );
+                            }
+                        default:
+                            break;
+                    }
+                }
             }
             return null;
         } catch (SQLException e) {
@@ -134,18 +225,17 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders";
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, OrderStatus, EnteredTime, ExitedTime, OrderID, OrderType, NumOfVisitors";
-            String values = "'"
-                            + order.getVisitorID() + "', '"
-                            + order.getParkID() + "', '"
-                            + order.getVisitationDate() + "', '"
-                            + order.getClientEmailAddress() + "', '"
-                            + order.getPhoneNumber() + "', "
-                            + order.getOrderStatus().ordinal() + ", '"
-                            + order.getEnteredTime() + "', '"
-                            + order.getExitedTime() + "', '"
-                            + order.getOrderID() + "', "
-                            + order.getOrderType().ordinal() + ", "
-                            + order.getNumOfVisitors();
+            String values = "'" + order.getVisitorID() + "', '" +
+                    order.getParkID() + "', '" +
+                    order.getVisitationDate() + "', '" +
+                    order.getClientEmailAddress() + "', '" +
+                    order.getPhoneNumber() + "', " +
+                    order.getOrderStatus().ordinal() + ", '" +
+                    order.getEnteredTime() + "', '" +
+                    order.getExitedTime() + "', '" +
+                    order.getOrderID() + "', " +
+                    order.getOrderType().ordinal() + ", " +
+                    order.getNumOfVisitors();
             if (!dbController.insertRecord(tableName, columns, values)) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
                 return false;
@@ -207,7 +297,7 @@ public class DBConnection {
                         results.getString("OrderID"),
                         OrderType.values()[results.getInt("OrderType")],
                         results.getInt("NumOfVisitors")
-                        ));
+                ));
             }
 
             return orders;
@@ -273,7 +363,7 @@ public class DBConnection {
                                     managerResults.getString("username"),
                                     "",
                                     managerResults.getString("EmailAddress"),
-                                    null // Todo: fix this two-way dependency shit.
+                                    results.getString("ParkID")
                             )
                     );
                 }
