@@ -25,21 +25,6 @@ public class VisitorDashboardPageController extends BaseController {
     private Text header;
 
     @FXML
-    private Text text2;
-
-    @FXML
-    private Text text1;
-
-    @FXML
-    private Text text11;
-
-    @FXML
-    private Text text12;
-
-    @FXML
-    private Text text1211;
-
-    @FXML
     private MFXButton btnOrderVisit;
 
     @FXML
@@ -53,10 +38,8 @@ public class VisitorDashboardPageController extends BaseController {
 
     @FXML
     void OnClickOrderVisitButton(ActionEvent event) {
-        InputTextPopup inputtextPopup = new InputTextPopup("Enter ID to Authintcate ",(inputText) -> {System.out.println("Input ID: " + inputText);});
-        inputtextPopup.show(StackPane);
-
-
+        InputTextPopup inputtextPopup = new InputTextPopup("Enter ID to Authenticate ",(inputText) -> {System.out.println("Input ID: " + inputText);}, 500, 300, true);
+        inputtextPopup.show(applicationWindowController.getRoot());
     }
 
 

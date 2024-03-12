@@ -8,6 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.image.Image?>
 <StackPane fx:id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.VisitorDashboardPageController">
    <children>
       <Pane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
@@ -18,35 +19,43 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <Text fx:id="text2" layoutX="1.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Go Nature dashboard!" wrappingWidth="915.5732421875">
+            <Text layoutX="1.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Go Nature dashboard!" wrappingWidth="915.5732421875">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text1" layoutX="1.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here, you can easily plan and schedule your next park visitation with just a few clicks." wrappingWidth="915.5732345581055">
+            <Text layoutX="1.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here, you can easily plan and schedule your next park visitation with just a few clicks." wrappingWidth="915.5732345581055">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text11" layoutX="1.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Whether you're looking for a serene nature trail, a family-friendly picnic spot, " wrappingWidth="915.5732345581055">
+            <Text layoutX="1.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Whether you're looking for a serene nature trail, a family-friendly picnic spot, " wrappingWidth="915.5732345581055">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text12" layoutX="1.0" layoutY="288.0" strokeType="OUTSIDE" strokeWidth="0.0" text="or an adventurous hiking trail, we've got you covered." wrappingWidth="915.5732345581055">
+            <Text layoutX="1.0" layoutY="288.0" strokeType="OUTSIDE" strokeWidth="0.0" text="or an adventurous hiking trail, we've got you covered." wrappingWidth="915.5732345581055">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text1211" layoutX="1.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We're dedicated to making your park visitation experience enjoyable and hassle-free. Start exploring and make the most of your outdoor adventures with our park visitation app!" wrappingWidth="915.5732345581055">
+            <Text layoutX="1.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We're dedicated to making your park visitation experience enjoyable and hassle-free. Start exploring and make the most of your outdoor adventures with our park visitation app!" wrappingWidth="915.5732345581055">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
             <MFXButton fx:id="btnOrderVisit" buttonType="RAISED" layoutX="200.0" layoutY="473.0" onAction="#OnClickOrderVisitButton" prefHeight="50.0" prefWidth="100.0" text="Order a visit" />
             <MFXButton fx:id="btnViewOrders" buttonType="RAISED" layoutX="650.0" layoutY="473.0" onAction="#OnClickViewOrdersButton" prefHeight="50.0" prefWidth="100.0" text="View orders" />
-            <ImageView fx:id="pngOrderVisit" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="298.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="pngViewOrders" fitHeight="150.0" fitWidth="200.0" layoutX="600.0" layoutY="293.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="pngOrderVisit" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="298.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="/assets/orderReservationIcon.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="pngViewOrders" fitHeight="150.0" fitWidth="200.0" layoutX="600.0" layoutY="293.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="/assets/viewAllOrders.png" />
+                </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

@@ -7,8 +7,8 @@ public class ConfirmationPopup extends BasePopup {
     private Button yesButton = new Button("Yes");
     private Button noButton = new Button("No");
 
-    public ConfirmationPopup(String question, Runnable onConfirm, Runnable onCancel) {
-        super();
+    public ConfirmationPopup(String question, Runnable onConfirm, Runnable onCancel, int width, int height, boolean fullScreenMode) {
+        super(fullScreenMode, width, height);
         Label questionLabel = new Label(question);
         popup.getChildren().addAll(questionLabel, yesButton, noButton);
 

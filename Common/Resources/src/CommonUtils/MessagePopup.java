@@ -6,8 +6,8 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 public class MessagePopup extends BasePopup {
-    public MessagePopup(String message, Duration duration) {
-        super();
+    public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode) {
+        super(fullScreenMode, width, height);
         Label messageLabel = new Label(message);
         popup.getChildren().add(messageLabel);
 

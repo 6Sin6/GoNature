@@ -39,6 +39,10 @@ public class ApplicationWindowController implements Initializable {
         return user;
     }
 
+    public BorderPane getRoot() {
+        return this.mainPane;
+    }
+
     private Parent loadPage(String fxmlPath) {
         try {
             if (!pagesCache.containsKey(fxmlPath)) {
