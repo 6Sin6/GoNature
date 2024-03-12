@@ -37,7 +37,7 @@ public class GoNatureServer extends AbstractServer {
     private ServerPortFrameController controller;
     private DBConnection db;
 
-    private Map<ConnectionToClient, User> authenticatedUsers = new ConcurrentHashMap<>();
+    private Map<ConnectionToClient, String> authenticatedUsers = new ConcurrentHashMap<>();
 
     private boolean connected = true;
 
@@ -128,7 +128,7 @@ public class GoNatureServer extends AbstractServer {
                         client.sendToClient(respondMsg);
                         return;
                     }
-                    authenticatedUsers.put(client, authenticatedUser);
+                    authenticatedUsers.put(client, authenticatedUser.getUsername());
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
