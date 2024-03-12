@@ -64,7 +64,7 @@ public class CommonUtils {
      */
     public static boolean isValidPhone(String phone)
     {
-        return (isAllDigits(phone) && phone.length() == 10);
+        return (isAllDigits(phone) &&  phone.startsWith("05") && phone.length() == 10);
     }
 
 
