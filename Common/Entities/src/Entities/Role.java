@@ -63,7 +63,7 @@ public enum Role {
                 return ROLE_GUEST;
             case "Visitor":
                 return ROLE_SINGLE_VISITOR;
-            case "ROLE_VISITOR_GROUP_GUIDE":
+            case "Visitor Group Guide":
                 return ROLE_VISITOR_GROUP_GUIDE;
             case "Park Employee":
                 return ROLE_PARK_EMPLOYEE;
@@ -85,7 +85,7 @@ public enum Role {
             case ROLE_SINGLE_VISITOR:
                 return "Visitor";
             case ROLE_VISITOR_GROUP_GUIDE:
-                return "ROLE_VISITOR_GROUP_GUIDE";
+                return "Visitor Group Guide";
             case ROLE_PARK_EMPLOYEE:
                 return "Park Employee";
             case ROLE_PARK_DEPARTMENT_MGR:

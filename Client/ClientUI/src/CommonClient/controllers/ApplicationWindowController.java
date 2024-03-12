@@ -80,7 +80,7 @@ public class ApplicationWindowController implements Initializable {
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
                     menuController.setUsername(user.getUsername());
-                    menuController.buildMenuItems();
+                    menuController.buildMenuItems(this);
                 } else {
                     // Handle the case where the controller wasn't retrieved successfully
                     System.out.println("Failed to retrieve MenuSiderController.");
@@ -117,6 +117,7 @@ public class ApplicationWindowController implements Initializable {
         roleToFxmlPath.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
         roleToFxmlPath.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
         roleToFxmlPath.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
+        roleToFxmlPath.put(Role.ROLE_VISITOR_GROUP_GUIDE, "/VisitorsUI/VisitorGroupGuideDashboardPage.fxml");
 
         String fxmlPath = roleToFxmlPath.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);

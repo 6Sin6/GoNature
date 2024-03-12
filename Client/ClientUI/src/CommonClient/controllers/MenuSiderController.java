@@ -1,14 +1,18 @@
 package CommonClient.controllers;
 
-import Entities.Message;
-import Entities.OpCodes;
 import Entities.Role;
+import VisitorsControllers.VisitorDashboardPageController;
+import VisitorsControllers.VisitorGroupGuideDashboardPageController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+
+import java.io.IOException;
 
 public class MenuSiderController extends BaseController {
 
@@ -70,7 +74,7 @@ public class MenuSiderController extends BaseController {
         applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
 
-    public void buildMenuItems() {
+    public void buildMenuItems(ApplicationWindowController appController) throws IOException {
         switch (userRoleLabel.getText()) {
             case "Park Manager":
                 btnAct1.setText("Prepare Reports");
@@ -99,9 +103,26 @@ public class MenuSiderController extends BaseController {
                 btnAct3.setText("Register a Group Guide");
                 //btnAct3.setOnAction(event -> applicationWindowController.setCenterPage("/EmployeesUI/RegisterGroupGuidePage.fxml"));
                 break;
-            case "Visitor":
+
+            case "Visitor Group Guide":
+                FXMLLoader visitorGroupGuideLoader = new FXMLLoader(getClass().getResource("/VisitorsUI/VisitorGroupGuideDashboardPage.fxml"));
+                Parent visitorGroupGuideRoot = visitorGroupGuideLoader.load();
+                VisitorGroupGuideDashboardPageController visitorGroupGuideController = visitorGroupGuideLoader.getController();
+                visitorGroupGuideController.setApplicationWindowController(appController);
                 btnAct1.setText("View Your Orders");
+                btnAct1.setOnAction(visitorGroupGuideController::OnClickViewOrdersButton);
                 btnAct2.setText("Make an Order");
+                btnAct2.setOnAction(visitorGroupGuideController::OnClickOrderVisitButton);
+                break;
+            case "Visitor":
+                FXMLLoader visitorloader = new FXMLLoader(getClass().getResource("/VisitorsUI/VisitorDashboardPage.fxml"));
+                Parent visitorRoot = visitorloader.load();
+                VisitorDashboardPageController visitorController = visitorloader.getController();
+                visitorController.setApplicationWindowController(appController);
+                btnAct1.setText("View Your Orders");
+                btnAct1.setOnAction(visitorController::OnClickViewOrdersButton);
+                btnAct2.setText("Make an Order");
+                btnAct2.setOnAction(visitorController::OnClickOrderVisitButton);
                 break;
         }
     }

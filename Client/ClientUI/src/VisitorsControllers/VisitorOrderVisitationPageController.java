@@ -1,7 +1,9 @@
 package VisitorsControllers;
 
+import CommonClient.controllers.BaseController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class VisitorOrderVisitationPageController {
+public class VisitorOrderVisitationPageController extends BaseController {
 
     @FXML
     private TextField EmailLbl;
@@ -112,6 +114,10 @@ public class VisitorOrderVisitationPageController {
     @FXML
     private Label usernameLabel;
 
+    @FXML
+    void OnClickCreateOrderButton(ActionEvent event) {
+
+    }
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = (Parent) FXMLLoader.load(this.getClass().getResource("/VisitorsUI/VisitorOrderVisitationPage.fxml"));

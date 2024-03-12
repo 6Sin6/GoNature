@@ -10,10 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class VisitorDashboardPageController extends GeneralVisitorDashboard {
-    public VisitorDashboardPageController() {
-        super();
-    }
+public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDashboard {
 
     @FXML
     private StackPane StackPane;
@@ -28,10 +25,19 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     private Text header;
 
     @FXML
-    private MFXButton btnOrderVisit;
+    private Text text2;
 
     @FXML
-    private MFXButton btnViewOrders;
+    private Text text1;
+
+    @FXML
+    private Text text11;
+
+    @FXML
+    private Text text12;
+
+    @FXML
+    private Text text1211;
 
     @FXML
     private ImageView pngOrderVisit;
@@ -39,7 +45,11 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     @FXML
     private ImageView pngViewOrders;
 
+    @FXML
+    private MFXButton btnOrderVisit;
 
+    @FXML
+    private MFXButton bntViewOrders;
     private final String orderPage = "/VisitorsUI/GroupGuideOrderVisitationPage.fxml";
     private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
@@ -55,6 +65,5 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
         onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, activeOrdersPage), 500, 300, true);
         onAuthPopup.show(applicationWindowController.getRoot());
     }
-
 
 }
