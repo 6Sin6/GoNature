@@ -22,7 +22,7 @@ public class ConnectClientPageController extends BaseController {
         try {
             buildConnection();
             performHandshake();
-            applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
+            applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
         } catch (Exception e) {
             e.printStackTrace();
             // Todo: Set text label to "Something went wrong..."

@@ -12,6 +12,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -49,6 +50,9 @@ public class LoginPageController extends BaseController {
     @FXML
     private Label ErrorMsg;
 
+    @FXML
+    private ImageView backBtn;
+
 
     private String getUserName() {
         return userNameText.getText();
@@ -62,6 +66,10 @@ public class LoginPageController extends BaseController {
         this.ErrorMsg.setText("");
         this.userNameText.setText("");
         this.passwordText.setText("");
+    }
+
+    public void navigateToHomePage() {
+        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }
 
     public void onLoginClick() throws CommunicationException {

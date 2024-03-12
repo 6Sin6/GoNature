@@ -90,3 +90,27 @@
     -fx-border-color: #4CAF50; /* Light green border color */
     -fx-background-color: #2C8052FF;
 }
+
+.signInBtn {
+    -fx-border-color: #39a569;
+    -fx-text-fill: #11142D;
+    -fx-font-size: 16px;
+}
+
+.signInBtn:hover {
+    -fx-border-color: #53c157; /* Light green border color */
+}
+
+.parkImages {
+    -fx-background-color: #263238; /* Dark background color */
+    -fx-background-size: cover; /* Cover background */
+    -fx-background-position: center; /* Center background */
+    -fx-background-repeat: no-repeat; /* No repeat */
+}
+
+#shadow {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 0, 2);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-opacity: 0.8;
+}

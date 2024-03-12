@@ -67,8 +67,7 @@ public class MenuSiderController extends BaseController {
     }
 
     public void handleHomePageRoute() {
-        this.logout();
-//        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
+        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }
 
     public void handleDashboardRoute() {

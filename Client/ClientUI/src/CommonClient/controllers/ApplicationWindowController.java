@@ -100,7 +100,8 @@ public class ApplicationWindowController implements Initializable {
         if (page != null) {
             mainPane.setCenter(page);
             Parent newMenu = null;
-            if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml")) {
+            if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml") &&
+                    !Objects.equals(fxmlPath, "/CommonClient/gui/HomePage.fxml")) {
                 newMenu = menuSider;
             }
             mainPane.setLeft(newMenu);
@@ -133,7 +134,7 @@ public class ApplicationWindowController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/CommonClient/gui/ApplicationWindow.fxml"));
             Parent root = loader.load(); // This should initialize mainPane as part of the loading process
 
-            // Now that root is loaded, mainPane should be initialized
+
             ApplicationWindowController controller = loader.getController();
 
             Scene scene = new Scene(root);
@@ -146,7 +147,6 @@ public class ApplicationWindowController implements Initializable {
             primaryStage.setResizable(false);
             primaryStage.show();
 
-            // Now it's safe to manipulate mainPane
             controller.setCenterPage("/CommonClient/gui/ConnectClientPage.fxml");
         } catch (Exception e) {
             e.printStackTrace();
