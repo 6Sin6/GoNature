@@ -222,25 +222,15 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders";
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
-            String values = "'" + order.getVisitorID() + "', '" +
-                    order.getParkID() + "', '" +
-                    order.getVisitationDate() + "', '" +
-                    order.getClientEmailAddress() + "', '" +
-                    order.getPhoneNumber() + "', " +
-                    order.getOrderStatus().ordinal() + ", '" +
-                    order.getEnteredTime() + "', '" +
-                    order.getExitedTime() + "', '" +
-                    order.getOrderType().ordinal() + ", " +
-                    order.getNumOfVisitors();
             if (!dbController.insertRecord(tableName, columns,  order.getVisitorID(),
                                                                 order.getParkID(),
                                                                 order.getVisitationDate().toString(),
                                                                 order.getClientEmailAddress(),
                                                                 order.getPhoneNumber(),
-                                                                String.valueOf(order.getOrderStatus().ordinal()),
+                                                                String.valueOf(order.getOrderStatus()),
                                                                 order.getEnteredTime().toString(),
                                                                 order.getExitedTime().toString(),
-                                                                String.valueOf(order.getOrderType().ordinal()),
+                                                                String.valueOf(order.getOrderType()),
                                                                 String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
                 return null;
@@ -256,11 +246,11 @@ public class DBConnection {
                         results.getTimestamp("VisitationDate"),
                         results.getString("ClientEmailAddress"),
                         results.getString("PhoneNumber"),
-                        OrderStatus.values()[results.getInt("orderStatus")],
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
                         results.getTimestamp("EnteredTime"),
                         results.getTimestamp("ExitedTime"),
                         results.getString("OrderID"),
-                        OrderType.values()[results.getInt("OrderType")],
+                        OrderType.values()[results.getInt("OrderType") - 1],
                         results.getInt("NumOfVisitors")
                 );
             }
@@ -284,11 +274,11 @@ public class DBConnection {
                         results.getTimestamp("VisitationDate"),
                         results.getString("ClientEmailAddress"),
                         results.getString("PhoneNumber"),
-                        OrderStatus.values()[results.getInt("orderStatus")],
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
                         results.getTimestamp("EnteredTime"),
                         results.getTimestamp("ExitedTime"),
                         results.getString("OrderID"),
-                        OrderType.values()[results.getInt("OrderType")],
+                        OrderType.values()[results.getInt("OrderType") - 1],
                         results.getInt("NumOfVisitors")
                 );
             }
@@ -314,11 +304,11 @@ public class DBConnection {
                         results.getTimestamp("VisitationDate"),
                         results.getString("ClientEmailAddress"),
                         results.getString("PhoneNumber"),
-                        OrderStatus.values()[results.getInt("orderStatus")],
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
                         results.getTimestamp("EnteredTime"),
                         results.getTimestamp("ExitedTime"),
                         results.getString("OrderID"),
-                        OrderType.values()[results.getInt("OrderType")],
+                        OrderType.values()[results.getInt("OrderType") - 1],
                         results.getInt("NumOfVisitors")
                 ));
             }
@@ -333,7 +323,7 @@ public class DBConnection {
     public boolean updateOrderStatus(String orderID, OrderStatus status) {
         try {
             String tableName = this.schemaName + ".orders";
-            String setClause = "OrderStatus=" + status.ordinal();
+            String setClause = "OrderStatus=" + status;
             String whereClause = "OrderID=" + orderID;
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + orderID);
