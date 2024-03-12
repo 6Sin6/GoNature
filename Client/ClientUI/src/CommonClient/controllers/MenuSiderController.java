@@ -63,7 +63,8 @@ public class MenuSiderController extends BaseController {
     }
 
     public void handleHomePageRoute() {
-        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
+        this.logout();
+//        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
     }
 
     public void handleDashboardRoute() {

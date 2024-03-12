@@ -81,7 +81,7 @@ public enum Role {
     public static String roleToString(Role role) {
         switch (role) {
             case ROLE_GUEST:
-                return "ROLE_GUEST";
+                return "Guest";
             case ROLE_SINGLE_VISITOR:
                 return "Visitor";
             case ROLE_VISITOR_GROUP_GUIDE:

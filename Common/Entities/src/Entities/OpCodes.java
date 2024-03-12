@@ -21,6 +21,7 @@ public enum OpCodes {
     OP_SIGN_IN_ALREADY_LOGGED_IN(17), /* Expect: String - username, null. No return (One way from Server) */
     OP_LOGOUT(18), /* Expect: String - username, null. Returns: */
     OP_QUIT(19), /* Expect: */
+    OP_GET_DEPARTMENT_MANAGER_PARKS(20),
     OP_DB_ERR(999);
 
     private final int opCodeValue;
