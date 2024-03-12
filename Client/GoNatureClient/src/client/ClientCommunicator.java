@@ -7,6 +7,7 @@ package client;
 import CommonClient.ocsf.AbstractClient;
 import CommonClient.ChatCommunicatorIF;
 import Entities.Message;
+import Entities.OpCodes;
 
 import java.io.IOException;
 
@@ -97,7 +98,8 @@ public class ClientCommunicator extends AbstractClient {
      */
     public void quit() {
         try {
-            sendToServer("quit");
+            Object msg = new Message(OpCodes.OP_QUIT, null, null);
+            sendToServer(msg);
             closeConnection();
         } catch (IOException e) {
         }

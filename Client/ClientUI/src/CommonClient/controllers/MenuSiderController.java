@@ -1,5 +1,7 @@
 package CommonClient.controllers;
 
+import Entities.Message;
+import Entities.OpCodes;
 import Entities.Role;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -45,7 +47,6 @@ public class MenuSiderController extends BaseController {
 
     @FXML
     private Label usernameLabel;
-
 
     public void logout() {
         applicationWindowController.logout();
@@ -96,7 +97,7 @@ public class MenuSiderController extends BaseController {
 //                btnAct2.setOnAction(event -> applicationWindowController.loadParkAvailabilityPage());
                 btnAct3.setVisible(true);
                 btnAct3.setText("Register a Group Guide");
-//                btnAct3.setOnAction(event -> applicationWindowController.loadRegisterGuidePage());
+                //btnAct3.setOnAction(event -> applicationWindowController.setCenterPage("/EmployeesUI/RegisterGroupGuidePage.fxml"));
                 break;
             case "Visitor":
                 btnAct1.setText("View Your Orders");

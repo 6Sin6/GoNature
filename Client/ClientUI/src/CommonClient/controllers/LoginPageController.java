@@ -70,16 +70,26 @@ public class LoginPageController extends BaseController {
         Message respondMsg = ClientCommunicator.msg;
 
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_SIGN_IN) {
-            throw new CommunicationException("Respond not appropriate from server");
+
+        // Checking if the user is already signed in:
+        if (returnOpCode == OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN)
+        {
+            ErrorMsg.setText(respondMsg.getMsgUserName() + " is already logged in.");
+            return;
         }
 
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_SIGN_IN) {
+            throw new CommunicationException("Response is inappropriate from server");
+        }
+
+        // Logging user in, unless incorrect user and password.
         user = (User) respondMsg.getMsgData();
         if (respondMsg.getMsgData() != null && user.getRole() != Role.ROLE_GUEST) {
             applicationWindowController.loadDashboardPage(user.getRole());
             applicationWindowController.loadMenu(user);
         } else {
-            ErrorMsg.setText("Wrong username or password! Please try again!");
+            ErrorMsg.setText("Wrong username or password, Please try again!");
         }
     }
 }

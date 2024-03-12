@@ -18,6 +18,9 @@ public enum OpCodes {
     OP_GET_GROUP_VISITATION_BY_ID(14), /* Same method as above */
     OP_GET_PARK_DETAILS_BY_PARK_ID(15), /* Expect: String - ParkID, Returns: Park instance with data if park is found. Park with null data if park is not found. Null if exception was thrown */
     OP_SIGN_IN(16), /* Expect: String - username, String - password. Returns: User with data if success. User with null data if failure. Null if exception was thrown */
+    OP_SIGN_IN_ALREADY_LOGGED_IN(17), /* Expect: String - username, null. No return (One way from Server) */
+    OP_LOGOUT(18), /* Expect: String - username, null. Returns: */
+    OP_QUIT(19), /* Expect: */
     OP_DB_ERR(999);
 
     private final int opCodeValue;

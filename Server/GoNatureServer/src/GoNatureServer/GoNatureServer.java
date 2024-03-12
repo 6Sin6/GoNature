@@ -122,39 +122,17 @@ public class GoNatureServer extends AbstractServer {
     public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
         Message newMsg = new Message(null, null, null);
 
-        if (msg instanceof String) {
-            if (msg.equals("quit")) {
-                if(authenticatedUsers.containsValue(client)){
-                    for (Map.Entry< String,ConnectionToClient> entry : authenticatedUsers.entrySet()) {
-                        if (entry.getValue() == client) {
-                            authenticatedUsers.remove(entry.getKey());
-                            break;
-                        }
-                    }
-                }
-                this.controller.addtolog("Client " + client + " Disconnected");
-                controller.removeRowByIP(client.getInetAddress().getHostAddress());
-                client.close();
-                return;
-            }
-            if (msg.equals("logout")) {
-                if(authenticatedUsers.containsValue(client)){
-                    for (Map.Entry< String,ConnectionToClient> entry : authenticatedUsers.entrySet()) {
-                        if (entry.getValue() == client) {
-                            authenticatedUsers.remove(entry.getKey());
-                            break;
-                        }
-                    }
-                }
-                client.sendToClient("logged out successfully");
-            }
-        }
-
         if (msg instanceof Message) {
             switch (((Message) msg).getMsgOpcode()) {
                 case OP_SYNC_HANDSHAKE:
                     client.sendToClient(msg);
                     break;
+
+                case OP_LOGOUT:
+                    authenticatedUsers.remove(((Message) msg).getMsgUserName());
+                    client.sendToClient("logged out successfully");
+                    break;
+
                 case OP_SIGN_IN:
                     User userCredentials = (User) ((Message) msg).getMsgData();
                     if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
@@ -162,7 +140,7 @@ public class GoNatureServer extends AbstractServer {
                             authenticatedUsers.remove(userCredentials.getUsername());
                         }
                         else {
-                            Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+                            Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
                             client.sendToClient(respondMsg);
                             return;
                         }
@@ -178,6 +156,24 @@ public class GoNatureServer extends AbstractServer {
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
+
+                case OP_QUIT:
+                    if (authenticatedUsers.containsValue(client))
+                    {
+                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet())
+                        {
+                            if (entry.getValue() == client)
+                            {
+                                authenticatedUsers.remove(entry.getKey());
+                                break;
+                            }
+                        }
+                    }
+                    this.controller.addtolog("Client " + client + " Disconnected");
+                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
+                    client.close();
+                    break;
+
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
