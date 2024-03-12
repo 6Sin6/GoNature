@@ -1,5 +1,6 @@
 package ServerUIPageController;
 
+import GoNatureServer.GoNatureServer;
 import ServerUIPage.ServerUI;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -78,8 +79,7 @@ public class ServerPortFrameController implements Initializable {
     @FXML
     private TableColumn<Map, String> colStatus;
 
-    @FXML
-    private MFXButton pngClientBtn;
+
 
 
     public String getPort() {
@@ -151,9 +151,7 @@ public class ServerPortFrameController implements Initializable {
         URLComboBox.setItems(list);
     }
 
-    public void onPingAllClients() {
 
-    }
 
 
     public String getURLComboBox() {
@@ -186,6 +184,9 @@ public class ServerPortFrameController implements Initializable {
             });
             return row;
         });
+    }
+    public void resetTableClients() {
+        tableClients.getItems().clear();
     }
 
     public void addRow(String name, String ip) {

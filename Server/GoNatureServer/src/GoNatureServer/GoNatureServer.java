@@ -8,15 +8,13 @@ import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
 import Entities.Message;
 import Entities.OpCodes;
-import Entities.Role;
 import Entities.User;
 import ServerUIPageController.ServerPortFrameController;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -37,7 +35,7 @@ public class GoNatureServer extends AbstractServer {
     private ServerPortFrameController controller;
     private DBConnection db;
 
-    private Map<ConnectionToClient, String> authenticatedUsers = new ConcurrentHashMap<>();
+    private Map<String, ConnectionToClient> authenticatedUsers = new ConcurrentHashMap<>();
 
     private boolean connected = true;
 
@@ -98,19 +96,57 @@ public class GoNatureServer extends AbstractServer {
             }
         }
         this.controller.addtolog("Server listening for connections on port " + getPort());
+        // Start a new thread for running the task every second
+        new Thread(() -> {
+            while (server.isListening()) {
+                Thread[] clientConnections = getClientConnections();
+                System.out.println("Got ClientConnections: ");
+                controller.resetTableClients();
+
+                // Here you can process all the clients as needed
+                for (Thread clientThread : clientConnections) {
+                    ConnectionToClient client = (ConnectionToClient) clientThread;
+                    controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+                }
+                try {
+                    Thread.sleep(1000); // Wait for 1 second before the next iteration
+                } catch (InterruptedException e) {
+                    System.out.println("The client processing thread was interrupted.");
+                }
+            }
+        }, "Client Processing Thread").start();
         server.controller.toggleControllers(true);
     }
+
 
     public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
         Message newMsg = new Message(null, null, null);
 
         if (msg instanceof String) {
             if (msg.equals("quit")) {
-                authenticatedUsers.remove(client);
+                if(authenticatedUsers.containsValue(client)){
+                    for (Map.Entry< String,ConnectionToClient> entry : authenticatedUsers.entrySet()) {
+                        if (entry.getValue() == client) {
+                            authenticatedUsers.remove(entry.getKey());
+                            break;
+                        }
+                    }
+                }
                 this.controller.addtolog("Client " + client + " Disconnected");
                 controller.removeRowByIP(client.getInetAddress().getHostAddress());
                 client.close();
                 return;
+            }
+            if (msg.equals("logout")) {
+                if(authenticatedUsers.containsValue(client)){
+                    for (Map.Entry< String,ConnectionToClient> entry : authenticatedUsers.entrySet()) {
+                        if (entry.getValue() == client) {
+                            authenticatedUsers.remove(entry.getKey());
+                            break;
+                        }
+                    }
+                }
+                client.sendToClient("logged out successfully");
             }
         }
 
@@ -121,6 +157,16 @@ public class GoNatureServer extends AbstractServer {
                     break;
                 case OP_SIGN_IN:
                     User userCredentials = (User) ((Message) msg).getMsgData();
+                    if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
+                        if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress()==null) {
+                            authenticatedUsers.remove(userCredentials.getUsername());
+                        }
+                        else {
+                            Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+                            client.sendToClient(respondMsg);
+                            return;
+                        }
+                    }
                     User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
                     //User authenticatedUser= new User("test","123",Role.ROLE_SINGLE_VISITOR);
                     if (authenticatedUser == null) {
@@ -128,7 +174,7 @@ public class GoNatureServer extends AbstractServer {
                         client.sendToClient(respondMsg);
                         return;
                     }
-                    authenticatedUsers.put(client, authenticatedUser.getUsername());
+                    authenticatedUsers.put(authenticatedUser.getUsername(),client);
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
@@ -175,7 +221,7 @@ public class GoNatureServer extends AbstractServer {
 
     @Override
     protected void clientConnected(ConnectionToClient client) {
-        controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+        //controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
     }
 
 
