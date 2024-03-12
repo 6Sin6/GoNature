@@ -56,8 +56,13 @@ public class ClientCommunicator extends AbstractClient {
      */
     public void handleMessageFromServer(Object msg) {
         System.out.println("--> handleMessageFromServer");
-        ClientCommunicator.msg = (Message) msg;
-        clientUI.respond(msg);
+        if (msg instanceof Message){
+            ClientCommunicator.msg = (Message) msg;
+            clientUI.respond(msg);
+        }
+        if (msg instanceof String){
+            clientUI.respond(msg);
+        }
         awaitResponse = false;
     }
 

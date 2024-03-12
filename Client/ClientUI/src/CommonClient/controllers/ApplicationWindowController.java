@@ -1,5 +1,6 @@
 package CommonClient.controllers;
 
+import CommonClient.ClientUI;
 import Entities.Role;
 import Entities.User;
 import javafx.fxml.FXML;
@@ -101,6 +102,7 @@ public class ApplicationWindowController implements Initializable {
     }
 
     public void logout() {
+        ClientUI.client.accept("logout");
         loadDashboardPage(Role.ROLE_GUEST);
         menuSider = null;
     }

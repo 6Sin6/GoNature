@@ -60,6 +60,6 @@
                 <Font name="System Bold" size="16.0" />
             </font>
         </Label>
-      <MFXButton fx:id="pngClientBtn" onAction="#onPingAllClients" layoutX="40.0" layoutY="505.0" prefHeight="71.0" prefWidth="307.0" text="Ping All Clients" />
+
     </children>
 </Pane>
