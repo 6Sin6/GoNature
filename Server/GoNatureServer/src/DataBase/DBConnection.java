@@ -221,7 +221,7 @@ public class DBConnection {
     public Order addOrder(Order order) {
         try {
             String tableName = this.schemaName + ".orders";
-            String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, OrderStatus, EnteredTime, ExitedTime, OrderID, OrderType, NumOfVisitors";
+            String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
             String values = "'" + order.getVisitorID() + "', '" +
                     order.getParkID() + "', '" +
                     order.getVisitationDate() + "', '" +
