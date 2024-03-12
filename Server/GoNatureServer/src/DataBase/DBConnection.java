@@ -369,6 +369,21 @@ public class DBConnection {
         }
     }
 
+    public String getParkNameByID(String parkID) {
+        try {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID=" + parkID;
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            if (results.next()) {
+                return results.getString("ParkName");
+            }
+            return "";
+        } catch (Exception e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
     public Park getParkDetails(String parkID) {
         try {
             String tableName = this.schemaName + ".parks";
