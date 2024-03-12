@@ -98,21 +98,23 @@ public class GoNatureServer extends AbstractServer {
         this.controller.addtolog("Server listening for connections on port " + getPort());
         // Start a new thread for running the task every second
         new Thread(() -> {
-            while (server.isListening()) {
-                Thread[] clientConnections = getClientConnections();
-                System.out.println("Got ClientConnections: ");
-                controller.resetTableClients();
+            try {
+            while (server != null && server.isListening()) {
+                    Thread[] clientConnections = getClientConnections();
+                    controller.resetTableClients();
+                    // Here you can process all the clients as needed
+                    for (Thread clientThread : clientConnections) {
+                        ConnectionToClient client = (ConnectionToClient) clientThread;
+                        controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+                    }
+                    try {
+                        Thread.sleep(1000); // Wait for 1 second before the next iteration
+                    } catch (InterruptedException e) {
+                        System.out.println("The client processing thread was interrupted.");
+                    }
+            }
+            } catch (NullPointerException e) {
 
-                // Here you can process all the clients as needed
-                for (Thread clientThread : clientConnections) {
-                    ConnectionToClient client = (ConnectionToClient) clientThread;
-                    controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
-                }
-                try {
-                    Thread.sleep(1000); // Wait for 1 second before the next iteration
-                } catch (InterruptedException e) {
-                    System.out.println("The client processing thread was interrupted.");
-                }
             }
         }, "Client Processing Thread").start();
         server.controller.toggleControllers(true);
@@ -136,10 +138,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_SIGN_IN:
                     User userCredentials = (User) ((Message) msg).getMsgData();
                     if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
-                        if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress()==null) {
+                        if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress() == null) {
                             authenticatedUsers.remove(userCredentials.getUsername());
-                        }
-                        else {
+                        } else {
                             Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
                             client.sendToClient(respondMsg);
                             return;
@@ -152,18 +153,15 @@ public class GoNatureServer extends AbstractServer {
                         client.sendToClient(respondMsg);
                         return;
                     }
-                    authenticatedUsers.put(authenticatedUser.getUsername(),client);
+                    authenticatedUsers.put(authenticatedUser.getUsername(), client);
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
 
                 case OP_QUIT:
-                    if (authenticatedUsers.containsValue(client))
-                    {
-                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet())
-                        {
-                            if (entry.getValue() == client)
-                            {
+                    if (authenticatedUsers.containsValue(client)) {
+                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
+                            if (entry.getValue() == client) {
                                 authenticatedUsers.remove(entry.getKey());
                                 break;
                             }
