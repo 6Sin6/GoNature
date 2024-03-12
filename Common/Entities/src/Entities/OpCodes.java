@@ -22,6 +22,7 @@ public enum OpCodes {
     OP_LOGOUT(18), /* Expect: String - username, null. Returns: */
     OP_QUIT(19), /* Expect: */
     OP_GET_DEPARTMENT_MANAGER_PARKS(20),
+    OP_ORDER_ALREADY_EXIST(21),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

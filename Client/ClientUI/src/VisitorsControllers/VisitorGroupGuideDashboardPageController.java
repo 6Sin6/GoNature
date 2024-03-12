@@ -1,6 +1,7 @@
 package VisitorsControllers;
 
 import CommonUtils.InputTextPopup;
+import Entities.VisitorGroupGuide;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,6 +54,11 @@ public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDash
     private final String orderPage = "/VisitorsUI/GroupGuideOrderVisitationPage.fxml";
     private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
+    @Override
+    public String getUserID() {
+        VisitorGroupGuide visitorGroupGuide = (VisitorGroupGuide) applicationWindowController.getUser();
+        return visitorGroupGuide.getID();
+    }
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
