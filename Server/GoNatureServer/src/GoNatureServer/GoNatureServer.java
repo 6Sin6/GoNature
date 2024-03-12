@@ -6,13 +6,12 @@ package GoNatureServer;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.User;
+import Entities.*;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -99,7 +98,7 @@ public class GoNatureServer extends AbstractServer {
         // Start a new thread for running the task every second
         new Thread(() -> {
             try {
-            while (server != null && server.isListening()) {
+                while (server != null && server.isListening()) {
                     Thread[] clientConnections = getClientConnections();
                     controller.resetTableClients();
                     // Here you can process all the clients as needed
@@ -112,7 +111,7 @@ public class GoNatureServer extends AbstractServer {
                     } catch (InterruptedException e) {
                         System.out.println("The client processing thread was interrupted.");
                     }
-            }
+                }
             } catch (NullPointerException e) {
 
             }
@@ -157,7 +156,38 @@ public class GoNatureServer extends AbstractServer {
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
+                case OP_GET_VISITOR_ORDERS:
+                    AbstractVisitor visitor = (AbstractVisitor) ((Message) msg).getMsgData();
 
+                    String visitorID = visitor.getID();
+                    String visitorUserName = visitor.getUsername();
+
+                    ArrayList<Order> requestedOrders = db.getUserOrders(visitorID);
+                    OrderBank orders;
+                    if (visitor instanceof SingleVisitor) {
+                        orders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
+                    } else {
+                        orders = new OrderBank(OrderType.ORD_TYPE_GROUP);
+                    }
+                    if (orders.insertOrderArray(requestedOrders)) {
+                        Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitorUserName, requestedOrders);
+                        client.sendToClient(getVisitorOrdersMsg);
+                    } else {
+                        Message getVisitorOrdersMsg = new Message(OpCodes.OP_DB_ERR);
+                        client.sendToClient(getVisitorOrdersMsg);
+                    }
+                case OP_CREATE_NEW_VISITATION:
+                    Order order = (Order) ((Message) msg).getMsgData();
+                    order.setOrderStatus(OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
+
+                    if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
+                        Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+                        client.sendToClient(createOrderMsg);
+                        return;
+                    }
+                    Order newOrder = db.addOrder(order);
+                    Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, ((Message) msg).getMsgUserName(), newOrder);
+                    client.sendToClient(createOrderMsg);
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
