@@ -140,19 +140,19 @@ public class DBConnection {
                             );
                         case 3:
                             ResultSet parkData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
-                            ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + "AND isParkManager=true");
+                            ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
                                         userCredentials.getString("username"),
                                         userCredentials.getString("password"),
-                                        userGoNatureData.getString("emailAddress"),
+                                        userGoNatureData.getString("EmailAddress"),
                                         new Park(
                                                 parkData.getString("ParkID"),
                                                 parkData.getString("ParkName"),
                                                 parkData.getInt("Capacity"),
                                                 parkData.getInt("GapVisitorsCapacity"),
                                                 parkData.getTimestamp("DefaultVisitationTime"),
-                                                parkData.getInt("Department"),
+                                                parkData.getInt("departmentID"),
                                                 new ParkManager(
                                                         managerData.getString("username"),
                                                         "",
@@ -164,17 +164,14 @@ public class DBConnection {
                             }
                             break;
                         case 4:
-                            ResultSet parkDepData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
-                            if (parkDepData.next()) {
-                                return new ParkDepartmentManager(
-                                        userCredentials.getString("username"),
-                                        userCredentials.getString("password"),
-                                        userGoNatureData.getString("emailAddress"),
-                                        null,
-                                        null,
-                                        parkDepData.getInt("departmentID")
-                                );
-                            }
+                            return new ParkDepartmentManager(
+                                    userCredentials.getString("username"),
+                                    userCredentials.getString("password"),
+                                    userGoNatureData.getString("emailAddress"),
+                                    null,
+                                    null,
+                                    userGoNatureData.getInt("departmentID")
+                            );
                         case 5:
                             return new ParkManager(
                                     userCredentials.getString("username"),
@@ -184,7 +181,7 @@ public class DBConnection {
                             );
                         case 6:
                             ResultSet parkDataSupport = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
-                            ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + "AND isParkManager=true");
+                            ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkDataSupport.next() && supportManagerData.next()) {
                                 return new ParkSupportRepresentative(
                                         userCredentials.getString("username"),

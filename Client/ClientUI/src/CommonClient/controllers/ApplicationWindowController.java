@@ -112,6 +112,7 @@ public class ApplicationWindowController implements Initializable {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
         loadDashboardPage(Role.ROLE_GUEST);
+        this.user = null;
         menuSider = null;
     }
 
