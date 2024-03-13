@@ -71,7 +71,7 @@ public class DBConnection {
     }
 
     /**
-     * Sets up the database connection using the provided URL, user name, and password.
+     * Sets up the database connection using the provided URL, username, and password.
      * Logs the outcome of the connection process.
      *
      * @param url      The URL of the database.
@@ -212,6 +212,30 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
+        }
+    }
+
+    public int registerGroupGuide(String newGroupGuideID)
+    {
+        try
+        {
+            String visitorsTableName = this.schemaName + ".visitors";
+            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "id='" + newGroupGuideID +"'"); //VisitorID
+            if (!resultFromVisitors.next())
+                return 0; // id doesnt exist.
+            String username = resultFromVisitors.getString("username");
+            String usersTableName = this.schemaName + ".users";
+            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'"); // UserID
+            if (resultFromUsers.next())
+                return 1; // user is already a group guide.
+            if (dbController.updateRecord(usersTableName, "role="+ Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username +"'"))
+                return 2; // success
+            return -1; // failure
+        }
+        catch (SQLException e)
+        {
+            this.serverController.addtolog(e.getMessage());
+            return -1; // error
         }
     }
 

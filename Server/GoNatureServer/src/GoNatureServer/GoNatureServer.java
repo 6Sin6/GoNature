@@ -156,6 +156,7 @@ public class GoNatureServer extends AbstractServer {
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
                     client.sendToClient(respondMsg);
                     break;
+
                 case OP_GET_VISITOR_ORDERS:
                     AbstractVisitor visitor = (AbstractVisitor) ((Message) msg).getMsgData();
 
@@ -176,6 +177,8 @@ public class GoNatureServer extends AbstractServer {
                         Message getVisitorOrdersMsg = new Message(OpCodes.OP_DB_ERR);
                         client.sendToClient(getVisitorOrdersMsg);
                     }
+                    break;
+
                 case OP_CREATE_NEW_VISITATION:
                     Order order = (Order) ((Message) msg).getMsgData();
                     order.setOrderStatus(OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
@@ -188,6 +191,8 @@ public class GoNatureServer extends AbstractServer {
                     Order newOrder = db.addOrder(order);
                     Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, ((Message) msg).getMsgUserName(), newOrder);
                     client.sendToClient(createOrderMsg);
+                    break;
+
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
@@ -201,6 +206,32 @@ public class GoNatureServer extends AbstractServer {
                     controller.removeRowByIP(client.getInetAddress().getHostAddress());
                     client.close();
                     break;
+
+                case OP_REGISTER_GROUP_GUIDE:
+                    String newGroupGuideID = (String) ((Message) msg).getMsgData();
+                    int retValue = db.registerGroupGuide(newGroupGuideID);
+                    Message registerGroupGuideMessage;
+                    switch(retValue)
+                    {
+                        case 0:
+                            registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_ID_DOESNT_EXIST);
+                            client.sendToClient(registerGroupGuideMessage);
+                            break;
+                        case 1:
+                            registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_IS_ALREADY_GROUP_GUIDE);
+                            client.sendToClient(registerGroupGuideMessage);
+                            break;
+                        case 2:
+                            registerGroupGuideMessage = new Message(OpCodes.OP_UPDATED_VISITOR_TO_GROUP_GUIDE);
+                            client.sendToClient(registerGroupGuideMessage);
+                            break;
+                        default:
+                            registerGroupGuideMessage = new Message(OpCodes.OP_DB_ERR);
+                            break;
+                    }
+                    client.sendToClient(registerGroupGuideMessage);
+                    break;
+
 
                 default:
                     controller.addtolog("Error Unknown Opcode");
