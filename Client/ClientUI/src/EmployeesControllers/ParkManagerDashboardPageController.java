@@ -14,13 +14,15 @@ public class ParkManagerDashboardPageController extends BaseController {
     private MFXButton btnChangeParkParameters;
 
     @FXML
-    void OnClickChangeParkParametersButton(ActionEvent event) {
-
+    public void OnClickChangeParkParametersButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/RequestSettingParkParametersPage.fxml");
     }
 
     @FXML
-    void OnClickGenerateReportsButton(ActionEvent event) {
-
+    public void OnClickGenerateReportsButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/PrepareReportsPage.fxml");
     }
 
 }

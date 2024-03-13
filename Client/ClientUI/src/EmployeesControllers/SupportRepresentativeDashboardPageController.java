@@ -17,18 +17,20 @@ public class SupportRepresentativeDashboardPageController extends BaseController
     private MFXButton btnRegisterGuide;
 
     @FXML
-    void OnClickCheckParkAvailabilityButton(ActionEvent event) {
-
+    public void OnClickCheckParkAvailabilityButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/CheckAvailableSpotsPage.fxml");
     }
 
     @FXML
-    void OnClickIssueBillButton(ActionEvent event) {
-
+    public void OnClickIssueBillButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/GenerateBillPage.fxml");
     }
 
     @FXML
-    void OnClickRegisterGuideButton(ActionEvent event) {
-
+    public void OnClickRegisterGuideButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/RegisterGroupGuidePage.fxml");
     }
-
 }

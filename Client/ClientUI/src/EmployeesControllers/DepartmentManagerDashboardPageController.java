@@ -14,13 +14,15 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     private MFXButton btnViewRequests;
 
     @FXML
-    void OnClickIssueReportsButton(ActionEvent event) {
-
+    public void OnClickIssueReportsButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/IssueReportsPage.fxml");
     }
 
     @FXML
-    void OnClickViewRequestsButton(ActionEvent event) {
-
+    public void OnClickViewRequestsButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/AuthorizeParksRequestsPage.fxml");
     }
 
 }

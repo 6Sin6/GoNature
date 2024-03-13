@@ -1,5 +1,9 @@
 package CommonClient.controllers;
 
+import EmployeesControllers.DepartmentManagerDashboardPageController;
+import EmployeesControllers.ParkEmployeeDashboardPageController;
+import EmployeesControllers.ParkManagerDashboardPageController;
+import EmployeesControllers.SupportRepresentativeDashboardPageController;
 import Entities.Role;
 import VisitorsControllers.VisitorDashboardPageController;
 import VisitorsControllers.VisitorGroupGuideDashboardPageController;
@@ -74,50 +78,66 @@ public class MenuSiderController extends BaseController {
         applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
 
+    private Object getController(String fxmlPath) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+        return loader.getController();
+    }
+
     public void buildMenuItems(ApplicationWindowController appController) throws IOException {
-        switch (userRoleLabel.getText()) {
+        switch (userRoleLabel.getText())
+        {
             case "Park Manager":
+                ParkManagerDashboardPageController parkManagerController = (ParkManagerDashboardPageController) getController("/EmployeesUI/ParkManagerDashboardPage.fxml");
+                parkManagerController.setApplicationWindowController(appController);
                 btnAct1.setText("Prepare Reports");
-//                btnAct1.setOnAction(event -> applicationWindowController.loadPrepareReportsPage());
+                btnAct1.setOnAction(parkManagerController::OnClickGenerateReportsButton);
                 btnAct2.setText("Set Park Parameters");
-//                btnAct2.setOnAction(event -> applicationWindowController.loadSetParkParametersPage());
+                btnAct2.setOnAction(parkManagerController::OnClickChangeParkParametersButton);
                 break;
+
             case "Department Manager":
+                DepartmentManagerDashboardPageController departmentManagerController = (DepartmentManagerDashboardPageController) getController("/EmployeesUI/DepartmentManagerDashboardPage.fxml");
+                departmentManagerController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Reports");
-//                btnAct1.setOnAction(event -> applicationWindowController.loadIssueReportsPage());
+                btnAct1.setOnAction(departmentManagerController::OnClickIssueReportsButton);
                 btnAct2.setText("Manage Requests");
-//                btnAct2.setOnAction(event -> applicationWindowController.loadManageRequestsPage());
+                btnAct2.setOnAction(departmentManagerController::OnClickViewRequestsButton);
                 break;
+
             case "Park Employee":
+                ParkEmployeeDashboardPageController parkEmployeeController = (ParkEmployeeDashboardPageController) getController("/EmployeesUI/ParkEmployeeDashboardPage.fxml");
+                parkEmployeeController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Order Bill");
-//                btnAct1.setOnAction(event -> applicationWindowController.loadIssueOrderBillPage());
+                btnAct1.setOnAction(parkEmployeeController::OnClickGenerateBillButton);
                 btnAct2.setText("Check Park Availability");
-//                btnAct2.setOnAction(event -> applicationWindowController.loadParkAvailabilityPage());
+                btnAct2.setOnAction(parkEmployeeController::OnClickAvailableSpotButton);
                 break;
+
             case "Support Representative":
+                SupportRepresentativeDashboardPageController supportRepresentativeController = (SupportRepresentativeDashboardPageController) getController("/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
+                supportRepresentativeController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Order Bill");
-//                btnAct1.setOnAction(event -> applicationWindowController.loadIssueOrderBillPage());
+                btnAct1.setOnAction(supportRepresentativeController::OnClickIssueBillButton);
                 btnAct2.setText("Check Park Availability");
-//                btnAct2.setOnAction(event -> applicationWindowController.loadParkAvailabilityPage());
+                btnAct2.setOnAction(supportRepresentativeController::OnClickCheckParkAvailabilityButton);
                 btnAct3.setVisible(true);
                 btnAct3.setText("Register a Group Guide");
-                //btnAct3.setOnAction(event -> applicationWindowController.setCenterPage("/EmployeesUI/RegisterGroupGuidePage.fxml"));
+                btnAct3.setOnAction(supportRepresentativeController::OnClickRegisterGuideButton);
                 break;
 
             case "Visitor Group Guide":
-                FXMLLoader visitorGroupGuideLoader = new FXMLLoader(getClass().getResource("/VisitorsUI/VisitorGroupGuideDashboardPage.fxml"));
-                Parent visitorGroupGuideRoot = visitorGroupGuideLoader.load();
-                VisitorGroupGuideDashboardPageController visitorGroupGuideController = visitorGroupGuideLoader.getController();
+                VisitorGroupGuideDashboardPageController visitorGroupGuideController = (VisitorGroupGuideDashboardPageController) getController("/VisitorsUI/VisitorGroupGuideDashboardPage.fxml");
                 visitorGroupGuideController.setApplicationWindowController(appController);
                 btnAct1.setText("View Your Orders");
                 btnAct1.setOnAction(visitorGroupGuideController::OnClickViewOrdersButton);
                 btnAct2.setText("Make an Order");
                 btnAct2.setOnAction(visitorGroupGuideController::OnClickOrderVisitButton);
                 break;
+
             case "Visitor":
-                FXMLLoader visitorloader = new FXMLLoader(getClass().getResource("/VisitorsUI/VisitorDashboardPage.fxml"));
-                Parent visitorRoot = visitorloader.load();
-                VisitorDashboardPageController visitorController = visitorloader.getController();
+                VisitorDashboardPageController visitorController = (VisitorDashboardPageController) getController("/VisitorsUI/VisitorDashboardPage.fxml");
                 visitorController.setApplicationWindowController(appController);
                 btnAct1.setText("View Your Orders");
                 btnAct1.setOnAction(visitorController::OnClickViewOrdersButton);
