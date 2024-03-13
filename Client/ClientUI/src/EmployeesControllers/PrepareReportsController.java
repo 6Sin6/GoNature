@@ -1,10 +1,11 @@
 package EmployeesControllers;
 
+import CommonClient.controllers.BaseController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-public class PrepareReportsController {
+public class PrepareReportsController extends BaseController {
 
     @FXML
     private MFXButton btnUsageReport;

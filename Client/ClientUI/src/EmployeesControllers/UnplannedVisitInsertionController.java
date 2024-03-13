@@ -1,5 +1,6 @@
 package EmployeesControllers;
 
+import CommonClient.controllers.BaseController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -8,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-public class UnplannedVisitInsertionController {
+public class UnplannedVisitInsertionController extends BaseController {
 
     @FXML
     private MFXButton btnSubmit;
