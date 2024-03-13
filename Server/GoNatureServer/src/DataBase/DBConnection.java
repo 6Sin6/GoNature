@@ -125,7 +125,7 @@ public class DBConnection {
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("VisitorID"),
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
@@ -134,7 +134,7 @@ public class DBConnection {
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("VisitorID"),
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
@@ -215,20 +215,28 @@ public class DBConnection {
         }
     }
 
-    public User getUserByID(String userID) {
+    public Order getUserOrderByUserID(String userID, String orderID) {
         try {
             String tableName = this.schemaName + ".visitors";
-            String whereClause = "id='" + userID + "'";
+            String whereClause = "VisitorID='" + userID + "'";
             ResultSet userGoNatureData = dbController.selectRecords(tableName, whereClause);
             if (userGoNatureData.next()) {
-                return new SingleVisitor(
-                        userGoNatureData.getString("username"),
-                        "",
-                        userGoNatureData.getString("emailAddress"),
-                        userGoNatureData.getString("id"),
-                        userGoNatureData.getString("firstName"),
-                        userGoNatureData.getString("lastName")
-                );
+                ResultSet orderData = dbController.selectRecords(this.schemaName + ".orders", "VisitorID='" + userID + "' AND OrderID=' " + orderID + "'");
+                if (orderData.next()) {
+                    return new Order(
+                            orderData.getString("VisitorID"),
+                            orderData.getString("ParkID"),
+                            orderData.getTimestamp("VisitationDate"),
+                            orderData.getString("ClientEmailAddress"),
+                            orderData.getString("PhoneNumber"),
+                            OrderStatus.values()[orderData.getInt("orderStatus") - 1],
+                            orderData.getTimestamp("EnteredTime"),
+                            orderData.getTimestamp("ExitedTime"),
+                            orderData.getString("OrderID"),
+                            OrderType.values()[orderData.getInt("OrderType") - 1],
+                            orderData.getInt("NumOfVisitors")
+                    );
+                }
             }
             return null;
         } catch (SQLException e) {

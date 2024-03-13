@@ -10,6 +10,7 @@ import Entities.*;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -188,10 +189,10 @@ public class GoNatureServer extends AbstractServer {
                     Order newOrder = db.addOrder(order);
                     Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, ((Message) msg).getMsgUserName(), newOrder);
                     client.sendToClient(createOrderMsg);
-                case OP_GET_USER_BY_ID:
-                    String userID = (String) ((Message) msg).getMsgData();
-                    User user = db.getUserByID(userID);
-                    Message getUserMsg = new Message(OpCodes.OP_GET_USER_BY_ID, ((Message) msg).getMsgUserName(), user);
+                case OP_GET_USER_ORDERS_BY_USERID:
+                    String[] data = (String[]) ((Message) msg).getMsgData();
+                    Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
+                    Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
                     client.sendToClient(getUserMsg);
                     break;
                 case OP_QUIT:

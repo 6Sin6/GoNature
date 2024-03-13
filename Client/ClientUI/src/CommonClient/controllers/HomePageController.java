@@ -5,16 +5,22 @@ import CommonClient.Utils;
 import CommonUtils.InputTextPopup;
 import Entities.Message;
 import Entities.OpCodes;
+import Entities.Order;
 import Entities.User;
+import VisitorsControllers.ConfirmVisitationPageController;
+import VisitorsControllers.HandleOrderDetailsPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
@@ -51,37 +57,55 @@ public class HomePageController extends BaseController implements Initializable 
         applicationWindowController.setCenterPage("/CommonClient/gui/LoginPage.fxml");
     }
 
-    private void onAuth(String id, String path) throws CommunicationException {
+    private void onAuthWithID(String id, String path) throws CommunicationException {
         if (!Utils.isIDValid(id)) {
             onAuthPopup.setErrorLabel("Invalid ID Format! Try again");
             return;
         }
 
-        Message message = new Message(OpCodes.OP_GET_USER_BY_ID, "", id);
+
+        // Todo: change hard-coded orderID value to a dynamic value from the user input.
+        String[] data = {id, "1"};
+        Message message = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", data);
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
 
         // Checking if the response from the server is inappropriate.
-        if (returnOpCode != OpCodes.OP_GET_USER_BY_ID) {
+        if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID) {
             throw new CommunicationException("Response is inappropriate from server");
         }
 
-        User user = (User) response.getMsgData();
-        if (user == null) {
-            onAuthPopup.setErrorLabel("Invalid ID! Try again");
+        Order order = (Order) response.getMsgData();
+        if (order == null) {
+            onAuthPopup.setErrorLabel("Invalid ID or Link! Try again");
             return;
         }
 
         onAuthPopup.setErrorLabel("");
-        applicationWindowController.setCenterPage(path);
-        applicationWindowController.loadMenu(user);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent page = loader.load();
+            Object controller = loader.getController();
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).setApplicationWindowController(applicationWindowController);
+            }
+
+            if (page != null) {
+                applicationWindowController.getRoot().setCenter(page);
+            }
+
+            assert controller instanceof ConfirmVisitationPageController;
+            ((ConfirmVisitationPageController) controller).setOrder(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleExistingOrder() {
         onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> {
             try {
-                this.onAuth(inputText, "/VisitorsUI/ActiveOrdersPage.fxml");
+                this.onAuthWithID(inputText, "/VisitorsUI/ConfirmVisitationPage.fxml");
             } catch (CommunicationException e) {
                 e.printStackTrace();
             }
