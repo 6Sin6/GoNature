@@ -14,13 +14,15 @@ public class IssueReportsController extends BaseController {
     private MFXButton btnVisitationsReports;
 
     @FXML
-    void OnClickCancellationReportsButton(ActionEvent event) {
-
+    void OnClickCancellationReportsButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/IssueCancellationReportPage.fxml");
     }
 
     @FXML
-    void OnClickVisitationsReportsButton(ActionEvent event) {
-
+    void OnClickVisitationsReportsButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/IssueVisitationReportPage.fxml");
     }
 
 }
