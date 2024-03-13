@@ -37,7 +37,8 @@ public class ConfirmationPopup extends BasePopup {
         super(fullScreenMode, width, height);
         yesButton.setText(FirstBtn);
         Label questionLabel = new Label(question);
-        popup.getChildren().addAll(questionLabel, yesButton, noButton);
+        questionLabel.setStyle("-fx-font-size: 20px;,-fx-text-fill: white;");
+        popup.getChildren().addAll(questionLabel, yesButton);
 
         yesButton.setOnAction(e -> {
             onConfirm.run();
