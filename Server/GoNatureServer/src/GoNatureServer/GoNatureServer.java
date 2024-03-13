@@ -188,6 +188,12 @@ public class GoNatureServer extends AbstractServer {
                     Order newOrder = db.addOrder(order);
                     Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, ((Message) msg).getMsgUserName(), newOrder);
                     client.sendToClient(createOrderMsg);
+                case OP_GET_USER_BY_ID:
+                    String userID = (String) ((Message) msg).getMsgData();
+                    User user = db.getUserByID(userID);
+                    Message getUserMsg = new Message(OpCodes.OP_GET_USER_BY_ID, ((Message) msg).getMsgUserName(), user);
+                    client.sendToClient(getUserMsg);
+                    break;
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {

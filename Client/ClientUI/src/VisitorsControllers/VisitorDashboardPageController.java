@@ -52,13 +52,13 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
-        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, orderPage), 500, 300, true);
+        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, orderPage), 500, 300, true, false, true);
         onAuthPopup.show(applicationWindowController.getRoot());
     }
 
     @FXML
     public void OnClickViewOrdersButton(ActionEvent event) {
-        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, activeOrdersPage), 500, 300, true);
+        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> this.onAuth(inputText, activeOrdersPage), 500, 300, true, false, true);
         onAuthPopup.show(applicationWindowController.getRoot());
     }
 

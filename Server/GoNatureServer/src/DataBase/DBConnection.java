@@ -123,7 +123,7 @@ public class DBConnection {
                         case 1:
                             return new SingleVisitor(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
                                     userGoNatureData.getString("id"),
                                     userGoNatureData.getString("firstName"),
@@ -132,7 +132,7 @@ public class DBConnection {
                         case 2:
                             return new VisitorGroupGuide(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
                                     userGoNatureData.getString("id"),
                                     userGoNatureData.getString("firstName"),
@@ -144,7 +144,7 @@ public class DBConnection {
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
                                         userCredentials.getString("username"),
-                                        userCredentials.getString("password"),
+                                        "",
                                         userGoNatureData.getString("EmailAddress"),
                                         new Park(
                                                 parkData.getString("ParkID"),
@@ -166,7 +166,7 @@ public class DBConnection {
                         case 4:
                             return new ParkDepartmentManager(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
                                     null,
                                     null,
@@ -175,7 +175,7 @@ public class DBConnection {
                         case 5:
                             return new ParkManager(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("EmailAddress"),
                                     userGoNatureData.getString("ParkID")
                             );
@@ -185,7 +185,7 @@ public class DBConnection {
                             if (parkDataSupport.next() && supportManagerData.next()) {
                                 return new ParkSupportRepresentative(
                                         userCredentials.getString("username"),
-                                        userCredentials.getString("password"),
+                                        "",
                                         userGoNatureData.getString("emailAddress"),
                                         new Park(
                                                 parkDataSupport.getString("ParkID"),
@@ -207,6 +207,28 @@ public class DBConnection {
                             break;
                     }
                 }
+            }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public User getUserByID(String userID) {
+        try {
+            String tableName = this.schemaName + ".visitors";
+            String whereClause = "id='" + userID + "'";
+            ResultSet userGoNatureData = dbController.selectRecords(tableName, whereClause);
+            if (userGoNatureData.next()) {
+                return new SingleVisitor(
+                        userGoNatureData.getString("username"),
+                        "",
+                        userGoNatureData.getString("emailAddress"),
+                        userGoNatureData.getString("id"),
+                        userGoNatureData.getString("firstName"),
+                        userGoNatureData.getString("lastName")
+                );
             }
             return null;
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package CommonUtils;
 
+import CommonClient.controllers.BaseController;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -7,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+
+import java.util.Objects;
 
 public abstract class BasePopup {
     protected BorderPane root;
@@ -54,17 +57,18 @@ public abstract class BasePopup {
         transition.play();
     }
 
-    protected void closePopup() {
+    public void closePopup(boolean onCloseNavigateToPage) {
         TranslateTransition closeTransition = new TranslateTransition(Duration.seconds(0.3), popup);
         closeTransition.setToY(-1200);
         closeTransition.setOnFinished(event -> {
             modalLayer.setVisible(false);
-            if (fullScreenMode) {
+            if (onCloseNavigateToPage) {
+                return;
+            }
+            if (this.fullScreenMode) {
                 this.root.setCenter(previousPageChild);
-            } else {
-                this.root.setCenter(root.getCenter());
             }
         });
-        // closeTransition.play();
+         closeTransition.play();
     }
 }

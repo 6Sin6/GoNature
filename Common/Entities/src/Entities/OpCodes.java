@@ -23,6 +23,7 @@ public enum OpCodes {
     OP_QUIT(19), /* Expect: */
     OP_GET_DEPARTMENT_MANAGER_PARKS(20),
     OP_ORDER_ALREADY_EXIST(21),
+    OP_GET_USER_BY_ID(22), /* Expect: String - username, String - ID. Returns: User with data if success. User with null data if failure. Null if exception was thrown */
     OP_DB_ERR(999);
 
     private final int opCodeValue;

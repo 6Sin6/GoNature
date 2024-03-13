@@ -38,6 +38,15 @@
     -fx-text-fill: #FCFCFC; /* Text color on hover */
 }
 
+.back-button {
+    -fx-background-image: url('/assets/backButton.png'); /* Back button image */
+    -fx-background-size: 20px; /* Adjust size as needed */
+    -fx-background-repeat: no-repeat; /* No repeat */
+    -fx-background-position: center; /* Center background */
+    -fx-padding: 10px; /* Padding */
+    -fx-cursor: hand; /* Cursor style */
+}
+
 .username {
     -fx-text-fill: #90A4AE; /* Light text color for username */
     -fx-font-size: 14px !important; /* Font size */
@@ -113,4 +122,15 @@
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
     -fx-opacity: 0.8;
+}
+
+.linkText {
+    -fx-underline: true;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.linkText:hover {
+    -fx-text-fill: #11142D;
+    -fx-font-size: 21px;
 }
