@@ -108,26 +108,11 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
 
     @FXML
     void OnClickCreateOrderButton(ActionEvent event) throws CommunicationException {
-        if (isEmptyFields()) {
+        if (!validateFields()) {
             System.out.println("one or more details are empty ");
             return;
         }
-        if (!CommonUtils.isValidPhone(txtPhone.getText())) {
-            System.out.println("The phone number is not valid ");
-            return;
-        }
-        if (!(CommonUtils.containsOnlyLetters(txtFirstName.getText())) || !CommonUtils.containsOnlyLetters(txtLastName.getText())) {
-            System.out.println("First or last name  should contains only letters");
-            return;
-        }
-        if (!CommonUtils.isEmailAddressValid(txtEmail.getText())) {
-            System.out.println("Email addres is not valid");
-            return;
-        }
-        if ((CommonUtils.convertStringToInt(txtNumOfVisitors.getText()) <= 0)) {
-            System.out.println("The number isn't valid");
-            return;
-        }
+
         if (!(applicationWindowController.getUser() instanceof SingleVisitor)) {
             System.out.println("The user isn't visitor");
             return;
@@ -151,8 +136,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 {
                     applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
+                    clearFields();
                 }
-                        , 300, 150, false, "OK", false);
+                        , 600, 300, false, "OK", false);
                 confirmPopup.show(applicationWindowController.getRoot());
             } else {
                 String strForPopup = "The park is Full Do you want to enter for waitlist?";
@@ -161,10 +147,11 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 {
                     applicationWindowController.setCenterPage("/VisitorsUI/WaitListPage");
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    ;
+                    clearFields();
                 }, () -> {
                     applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
+                    clearFields();
                 },
                         300, 150, false, "Yes", "No", false);
                 confirmPopup.show(applicationWindowController.getRoot());
@@ -173,50 +160,42 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         } else {
             System.out.println("The order is not created");
         }
-
-
     }
 
-    private boolean isEmptyFields() {
-        if (txtFirstName.getText().isEmpty() || txtLastName.getText().isEmpty() || isParkEmpty() || !isTextFieldInteger(txtNumOfVisitors)
-                || isDateEmpty() || isTimeEmpty() || txtPhone.getText().isEmpty() || txtEmail.getText().isEmpty()) {
-            System.out.println("One or more details are empty");
-            return true;
+
+    private boolean validateFields() {
+        if (CommonUtils.anyStringEmpty(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtEmail.getText(), txtNumOfVisitors.getText())
+                || parkCmbBox.getValue() == null
+                || datePicker.getValue() == null
+                || timeOfVisitCmbBox.getValue() == null
+                || !CommonUtils.isValidPhone(txtPhone.getText())
+                || !CommonUtils.isValidName(txtFirstName.getText())
+                || !CommonUtils.isValidName(txtLastName.getText())
+                || !CommonUtils.isEmailAddressValid(txtEmail.getText())
+                || CommonUtils.convertStringToInt(txtNumOfVisitors.getText()) <= 0) {
+            System.out.println("Validation failed. Please check your input.");
+            return false;
         }
-        return false;
+        return true;
     }
 
-    private boolean isDateEmpty() {
-        if (datePicker.getValue() == null) {
-            return true;
-        }
-        return false;
-    }
+    private void clearFields() {
+        // Clear text fields
+        txtEmail.clear();
+        txtFirstName.clear();
+        txtLastName.clear();
+        txtPhone.clear();
+        txtNumOfVisitors.clear();
 
-    private boolean isParkEmpty() {
-        if (parkCmbBox.getValue() == null) {
-            return true;
-        }
-        return false;
+        // Reset combo boxes
+        parkCmbBox.getSelectionModel().clearSelection();
+        timeOfVisitCmbBox.getSelectionModel().clearSelection();
+        // Use this if the combo box text does not clear with clearSelection()
+        parkCmbBox.setValue(null);
+        timeOfVisitCmbBox.setValue(null);
 
-    }
-
-    private boolean isTimeEmpty() {
-        if (timeOfVisitCmbBox.getValue() == null) {
-            return true;
-        }
-        return false;
-
-    }
-
-    private boolean isTextFieldInteger(TextField textField) {
-        try {
-            // Try parsing the content of the TextField as an integer
-            Integer.parseInt(textField.getText());
-            return true; // If successful, it's an integer
-        } catch (NumberFormatException e) {
-            return false; // If an exception occurs, it's not an integer
-        }
+        // Reset the date picker
+        datePicker.setValue(null);
     }
 
 
