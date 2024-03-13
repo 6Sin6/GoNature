@@ -41,7 +41,7 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     private ImageView pngViewOrders;
 
 
-    private final String orderPage = "/VisitorsUI/GroupGuideOrderVisitationPage.fxml";
+    private final String orderPage = "/VisitorsUI/VisitorOrderVisitationPage.fxml";
     private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
     @Override

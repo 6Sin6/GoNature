@@ -222,16 +222,16 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders";
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
-            if (!dbController.insertRecord(tableName, columns,  order.getVisitorID(),
-                                                                order.getParkID(),
-                                                                order.getVisitationDate().toString(),
-                                                                order.getClientEmailAddress(),
-                                                                order.getPhoneNumber(),
-                                                                String.valueOf(order.getOrderStatus()),
-                                                                order.getEnteredTime().toString(),
-                                                                order.getExitedTime().toString(),
-                                                                String.valueOf(order.getOrderType()),
-                                                                String.valueOf(order.getNumOfVisitors()))) {
+            if (!dbController.insertRecord(tableName, columns, "'" + order.getVisitorID() + "'",
+                    "'" + order.getParkID() + "'",
+                    "'" + order.getVisitationDate().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getClientEmailAddress() + "'",
+                    "'" + order.getPhoneNumber() + "'",
+                    String.valueOf(order.getOrderStatus().ordinal() + 1),
+                    "'" + order.getEnteredTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getExitedTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    String.valueOf(order.getOrderType().ordinal() + 1),
+                    String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
                 return null;
             }

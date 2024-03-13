@@ -125,43 +125,53 @@ public abstract class AbstractVisitor extends User implements Serializable {
         orders = new OrderBank(order);
     }
 
+    
+    public void setOrders(OrderBank orders) {
+        this.orders = orders;
+    }
+
+    /**
+     * Gets the user's email address.
+     *
+     * @return The user's email address.
+     */
     public String getEmailAddress() {
         return EmailAddress;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        EmailAddress = emailAddress;
-    }
-
+    /**
+     * Gets the user's unique identifier (ID).
+     *
+     * @return The user's unique identifier.
+     */
     public String getID() {
         return ID;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
-    }
-
+    /**
+     * Gets the user's first name.
+     *
+     * @return The user's first name.
+     */
     public String getFirstName() {
         return FirstName;
     }
 
-    public void setFirstName(String firstName) {
-        FirstName = firstName;
-    }
-
+    /**
+     * Gets the user's last name.
+     *
+     * @return The user's last name.
+     */
     public String getLastName() {
         return LastName;
     }
 
-    public void setLastName(String lastName) {
-        LastName = lastName;
-    }
-
+    /**
+     * Gets the order bank associated with the user.
+     *
+     * @return The order bank associated with the user.
+     */
     public OrderBank getOrders() {
         return orders;
-    }
-
-    public void setOrders(OrderBank orders) {
-        this.orders = orders;
     }
 }

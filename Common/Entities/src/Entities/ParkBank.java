@@ -1,12 +1,26 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class ParkBank implements Serializable, Iterable<Park> {
     private ArrayList<Park> parks;
+
+    private static final Map<String, String> ParkMap;
+
+    static {
+        Map<String, String> aMap = new HashMap<>();
+        aMap.put("Green Oasis Park", "1");
+        aMap.put("Golden Gardens", "2");
+        aMap.put("Mountain View Park", "3");
+        aMap.put("Sunset Park", "4");
+        // Additional entries can be added here
+        ParkMap = Collections.unmodifiableMap(aMap);
+    }
+
+    public static Map<String, String> getUnmodifiableMap() {
+        return ParkMap;
+    }
 
     public ParkBank() {
         parks = new ArrayList<>();
@@ -60,5 +74,6 @@ public class ParkBank implements Serializable, Iterable<Park> {
             }
             return parks.get(currentIndex++);
         }
+
     }
 }
