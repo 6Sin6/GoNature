@@ -14,13 +14,14 @@ public class PrepareReportsController extends BaseController {
     private MFXButton btnVisitorsReport;
 
     @FXML
-    void OnClickUsageReportButton(ActionEvent event) {
-
+    void OnClickUsageReportButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/PrepareUsageReportPage.fxml");
     }
 
     @FXML
-    void OnClickVisitorsReportButton(ActionEvent event) {
-
+    void OnClickVisitorsReportButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/PrepareNumberOfVisitorsReportPage.fxml");
     }
-
 }
