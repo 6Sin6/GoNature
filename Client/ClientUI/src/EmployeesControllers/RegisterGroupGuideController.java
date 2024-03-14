@@ -20,10 +20,37 @@ public class RegisterGroupGuideController extends BaseController {
     private MFXButton btnSubmit;
 
     @FXML
-    private Label lblErrorMsg;
+    private Label lblErrorMsgEmail;
 
     @FXML
-    private MFXTextField txtGroupGuideID;
+    private Label lblErrorMsgFirstName;
+
+    @FXML
+    private Label lblErrorMsgGeneral;
+
+    @FXML
+    private Label lblErrorMsgLastName;
+
+    @FXML
+    private Label lblErrorMsgPassword;
+
+    @FXML
+    private Label lblErrorMsgUsername;
+
+    @FXML
+    private MFXTextField txtEmail;
+
+    @FXML
+    private MFXTextField txtFirstName;
+
+    @FXML
+    private MFXTextField txtLastName;
+
+    @FXML
+    private MFXTextField txtPassword;
+
+    @FXML
+    private MFXTextField txtUsername;
 
     @FXML
     void OnClickSubmitButton(ActionEvent event)
