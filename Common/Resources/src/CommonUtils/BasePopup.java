@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public abstract class BasePopup {
     protected BorderPane root;
-    protected VBox popup = new VBox(10);
+    protected VBox popup = new VBox(15);
     protected StackPane modalLayer = new StackPane();
     protected boolean fullScreenMode;
     private Node previousPageChild;

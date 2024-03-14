@@ -57,15 +57,18 @@ public class HomePageController extends BaseController implements Initializable 
         applicationWindowController.setCenterPage("/CommonClient/gui/LoginPage.fxml");
     }
 
-    private void onAuthWithID(String id, String path) throws CommunicationException {
-        if (!Utils.isIDValid(id)) {
+    private void onAuthWithID(String path, String... values) throws CommunicationException {
+        if (!Utils.isIDValid(values[0])) {
             onAuthPopup.setErrorLabel("Invalid ID Format! Try again");
             return;
         }
 
+        if (!Utils.checkContainsDigitsOnly(values[1])) {
+            onAuthPopup.setErrorLabel("Invalid Order ID Format! Try again");
+            return;
+        }
 
-        // Todo: change hard-coded orderID value to a dynamic value from the user input.
-        String[] data = {id, "1"};
+        String[] data = {values[0], values[1]};
         Message message = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", data);
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
@@ -103,9 +106,9 @@ public class HomePageController extends BaseController implements Initializable 
     }
 
     public void handleExistingOrder() {
-        onAuthPopup = new InputTextPopup("Enter ID to Authenticate ", (inputText) -> {
+        onAuthPopup = new InputTextPopup(new String[]{"Enter ID to Authenticate", "Enter Order ID"}, (String[] inputText) -> {
             try {
-                this.onAuthWithID(inputText, "/VisitorsUI/ConfirmVisitationPage.fxml");
+                this.onAuthWithID("/VisitorsUI/ConfirmVisitationPage.fxml", inputText);
             } catch (CommunicationException e) {
                 e.printStackTrace();
             }

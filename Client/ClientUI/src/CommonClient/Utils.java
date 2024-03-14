@@ -31,13 +31,15 @@ public class Utils {
         }
 
         // Check if each character is a digit
-        for (char c : ID.toCharArray()) {
+        return checkContainsDigitsOnly(ID);
+    }
+
+    public static Boolean checkContainsDigitsOnly(String str) {
+        for (char c : str.toCharArray()) {
             if (!Character.isDigit(c)) {
                 return false;
             }
         }
-
-        // If all characters are digits and string length is 9, return true
         return true;
     }
 }

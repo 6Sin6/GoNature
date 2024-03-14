@@ -3,45 +3,64 @@ package CommonUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class InputTextPopup extends BasePopup {
-    private MFXTextField textField = new MFXTextField();
+    private ArrayList<MFXTextField> textFields = new ArrayList<>();
     private MFXButton confirmButton = new MFXButton("Confirm");
-    private MFXButton backButton;
+    private ImageView backButton;
     private Label errorLabel = new Label();
 
     public void setErrorLabel(String msg) {
         errorLabel.setText(msg);
     }
 
-    public InputTextPopup(String prompt, Consumer<String> onConfirm, int width, int height, boolean fullScreenMode, boolean displayBackButton, boolean onCloseNavigateToPage) {
+    public InputTextPopup(String[] prompts,
+                          Consumer<String[]> onConfirm,
+                          int width,
+                          int height,
+                          boolean fullScreenMode,
+                          boolean displayBackButton,
+                          boolean onCloseNavigateToPage) {
         super(fullScreenMode, width, height);
+
         if (displayBackButton) {
-            backButton = new MFXButton("Go Back");
-            backButton.getStyleClass().add("menu-item-big");
-            backButton.setOnAction(e -> closePopup(false));
+            backButton = new ImageView(new Image("/assets/backButtonWhite.png", 50, 50, true, true));
+            backButton.setOnMouseClicked(e -> closePopup(false));
+            backButton.setStyle("-fx-cursor: hand;");
+            popup.getChildren().add(backButton);
         }
-        Label promptLabel = new Label(prompt);
-        promptLabel.setStyle("-fx-text-fill: #FCFCFC; -fx-font-size: 24px; -fx-padding: 10px 10px");
+
+        // For each prompt, create a label and a text field.
+        for (String prompt : prompts) {
+            Label promptLabel = new Label(prompt);
+            promptLabel.setStyle("-fx-text-fill: #FCFCFC; -fx-font-size: 24px; -fx-padding: 10px 10px");
+            popup.getChildren().add(promptLabel);
+
+            MFXTextField textField = new MFXTextField();
+            textField.setMaxWidth(320);
+            popup.getChildren().add(textField);
+            textFields.add(textField);
+        }
+
         errorLabel.setStyle("-fx-text-fill: #B22222; " +
                 "-fx-font-size: 20px; " +
                 "-fx-padding: 10px 10px; " +
                 "-fx-border-width: 2px; " +
                 "-fx-border-radius: 5px; " +
                 "-fx-alignment: center;");
-        textField.setMaxWidth(320);
 
         confirmButton.getStyleClass().add("menu-item-big");
-        if (backButton != null) {
-            popup.getChildren().add(backButton);
-        }
-        popup.getChildren().addAll(promptLabel, textField, confirmButton, errorLabel);
+        confirmButton.setStyle("-fx-padding: 20px 0;");
+        popup.getChildren().addAll(confirmButton, errorLabel);
 
         confirmButton.setOnAction(e -> {
             if (onConfirm != null) {
-                onConfirm.accept(getText());
+                onConfirm.accept(getTexts());
             }
             if (errorLabel.getText().isEmpty()) {
                 closePopup(onCloseNavigateToPage);
@@ -57,7 +76,15 @@ public class InputTextPopup extends BasePopup {
         }
     }
 
-    public String getText() {
-        return textField.getText();
+    public String[] getTexts() {
+        String[] texts = new String[textFields.size()];
+        for (MFXTextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                errorLabel.setText("All fields are required");
+                return null;
+            }
+            texts[textFields.indexOf(textField)] = textField.getText();
+        }
+        return texts;
     }
 }

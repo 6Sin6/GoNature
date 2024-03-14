@@ -37,7 +37,12 @@ public enum OrderStatus {
     /**
      * Represents an unexpected status of an order.
      */
-    STATUS_UNEXPECTED(7);
+    STATUS_UNEXPECTED(7),
+
+    /**
+     * Represents the status of an order being pending confirmation (SMS/Email has been sent regarding the order).
+     */
+    STATUS_PENDING_CONFIRMATION(8);
 
     private int orderStatus;
 
