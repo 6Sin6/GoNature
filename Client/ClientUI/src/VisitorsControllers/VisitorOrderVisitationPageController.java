@@ -17,10 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -31,6 +28,7 @@ import javafx.stage.Stage;
 import javax.naming.CommunicationException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,6 +42,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
 
     @FXML
     private Text Header;
+
+    @FXML
+    private Label errorLbl;
 
     @FXML
     private MFXButton btnCreateOrder;
@@ -81,7 +82,10 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
     @FXML
     private MFXTextField txtPhone;
 
-
+    /**
+     * Populates the park selection combo box with available parks.
+     * The parks are retrieved from a static data source.
+     */
     private void setParkCmbBox() {
         ArrayList<String> al = new ArrayList<String>();
         for (String key : ParkBank.getUnmodifiableMap().keySet()) {
@@ -91,25 +95,66 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         parkCmbBox.setItems(list);
     }
 
+    /**
+     * Populates the time of visit combo box with hourly time slots.
+     * Time slots range from 08:00 to 19:00.
+     */
     private void setTimeOfVisitCmbBox() {
         ArrayList<String> al = new ArrayList<String>();
-        al.add("08:00");
-        al.add("12:00");
-        al.add("16:00");
+        for (int i = 8; i <= 19; i++) {
+            if (i < 10) {
+                al.add("0" + i + ":00");
+            } else {
+                al.add("" + i + ":00");
+            }
+        }
         list = FXCollections.observableArrayList(al);
         timeOfVisitCmbBox.setItems(list);
     }
 
+    /**
+     * Disables date selection for past dates and dates more than one year into the future
+     * in the {@link DatePicker}.
+     */
+    private void setDatePicker() {
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            LocalDate maxDate = LocalDate.now().plusYears(1); // Setting maximum date to one year from now
+
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0 || date.compareTo(maxDate) > 0);
+            }
+        });
+    }
+
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the FXML file has been loaded. It initializes the form components
+     * and sets up any necessary data bindings or event handlers.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if unknown.
+     * @param resources The resources used to localize the root object, or null if not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setParkCmbBox();
         setTimeOfVisitCmbBox();
+        setDatePicker();
+
     }
 
+    /**
+     * Handles the "Create Order" button click event.
+     * Validates form inputs, creates an order based on user input, and sends it to the server.
+     * Displays confirmation or error messages as appropriate.
+     *
+     * @param event The action event triggered by clicking the button.
+     * @throws CommunicationException If there is a communication issue with the server.
+     */
     @FXML
     void OnClickCreateOrderButton(ActionEvent event) throws CommunicationException {
         if (!validateFields()) {
-            System.out.println("one or more details are empty ");
             return;
         }
 
@@ -117,9 +162,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             System.out.println("The user isn't visitor");
             return;
         }
-
+        errorLbl.setText("");
         SingleVisitor visitor = (SingleVisitor) applicationWindowController.getUser();
-        Timestamp timeOfVisit = convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
+        Timestamp timeOfVisit = CommonClient.Utils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
         Order order = new Order(visitor.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_SINGLE, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
         Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, visitor.getUsername(), order);
         ClientUI.client.accept(msg);
@@ -163,29 +208,45 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
     }
 
 
+    /**
+     * Validates the input fields of the form. Checks for empty fields, valid email, phone number,
+     * and the number of visitors.
+     *
+     * @return true if all inputs are valid, false otherwise.
+     */
     private boolean validateFields() {
-        if (CommonUtils.anyStringEmpty(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtEmail.getText(), txtNumOfVisitors.getText())
-                || parkCmbBox.getValue() == null
-                || datePicker.getValue() == null
-                || timeOfVisitCmbBox.getValue() == null
-                || !CommonUtils.isValidPhone(txtPhone.getText())
-                || !CommonUtils.isValidName(txtFirstName.getText())
-                || !CommonUtils.isValidName(txtLastName.getText())
-                || !CommonUtils.isEmailAddressValid(txtEmail.getText())
-                || CommonUtils.convertStringToInt(txtNumOfVisitors.getText()) <= 0) {
-            System.out.println("Validation failed. Please check your input.");
+        if (CommonUtils.anyStringEmpty(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtEmail.getText(), txtNumOfVisitors.getText()) || parkCmbBox.getValue() == null || datePicker.getValue() == null || timeOfVisitCmbBox.getValue() == null) {
+            errorLbl.setText("One or more fileds are empty.");
+            return false;
+        }
+        if (!CommonUtils.isValidPhone(txtPhone.getText())) {
+            errorLbl.setText("Invalid phone. Please check your input.");
+            return false;
+        }
+        if (!CommonUtils.isValidName(txtFirstName.getText()) || !CommonUtils.isValidName(txtLastName.getText()))
+            errorLbl.setText("Validation failed. Please check your input.");
+        if (!CommonUtils.isEmailAddressValid(txtEmail.getText())) {
+            errorLbl.setText("Invalid email. Please check your input.");
+            return false;
+        }
+        if (CommonUtils.convertStringToInt(txtNumOfVisitors.getText()) <= 0) {
+            errorLbl.setText("Invalid number of visitors. Please check your input.");
             return false;
         }
         return true;
     }
 
+    /**
+     * Clears all input fields and resets the form to its initial state.
+     */
     private void clearFields() {
         // Clear text fields
         txtEmail.clear();
         txtFirstName.clear();
         txtLastName.clear();
         txtPhone.clear();
-        txtNumOfVisitors.clear();
+        txtNumOfVisitors.setText("1");
+        errorLbl.setText("");
 
         // Reset combo boxes
         parkCmbBox.getSelectionModel().clearSelection();
@@ -198,20 +259,4 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         datePicker.setValue(null);
     }
 
-
-    private Timestamp convertStringToTimestamp(String date, String time) {
-        // Combine Date and Time Strings
-        String dateTimeString = date + "T" + time;
-
-        // Define the formatter for LocalDateTime
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-        // Parse the String to LocalDateTime
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
-
-        // Convert LocalDateTime to java.sql.Timestamp
-        Timestamp timestamp = Timestamp.valueOf(dateTime);
-
-        return timestamp;
-    }
 }

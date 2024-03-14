@@ -2,6 +2,8 @@ package CommonClient;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Utils {
@@ -42,4 +44,21 @@ public class Utils {
         }
         return true;
     }
+    
+    public static Timestamp convertStringToTimestamp(String date, String time) {
+        // Combine Date and Time Strings
+        String dateTimeString = date + "T" + time;
+
+        // Define the formatter for LocalDateTime
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        // Parse the String to LocalDateTime
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+        // Convert LocalDateTime to java.sql.Timestamp
+        Timestamp timestamp = Timestamp.valueOf(dateTime);
+
+        return timestamp;
+    }
+
 }
