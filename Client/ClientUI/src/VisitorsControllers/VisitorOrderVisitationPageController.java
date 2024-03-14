@@ -223,6 +223,11 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             errorLbl.setText("Invalid phone. Please check your input.");
             return false;
         }
+
+        if (!CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
+            errorLbl.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
+            return false;
+        }
         if (!CommonUtils.isValidName(txtFirstName.getText()) || !CommonUtils.isValidName(txtLastName.getText()))
             errorLbl.setText("Validation failed. Please check your input.");
         if (!CommonUtils.isEmailAddressValid(txtEmail.getText())) {

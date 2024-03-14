@@ -160,7 +160,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         }
 
         VisitorGroupGuide guide = (VisitorGroupGuide) applicationWindowController.getUser();
-        Timestamp timeOfVisit = convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
+        Timestamp timeOfVisit = CommonClient.Utils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
         Order order = new Order(guide.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_GROUP, (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue())));
         Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, guide.getUsername(), order);
         ClientUI.client.accept(msg);
@@ -223,6 +223,10 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             erorrLbl.setText("Invalid email. Please check your input.");
             return false;
         }
+        if (!CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
+            erorrLbl.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
+            return false;
+        }
         if (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue()) <= 0) {
             erorrLbl.setText("Invalid number of visitors. Please check your input.");
             return false;
@@ -253,26 +257,4 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     }
 
 
-    /**
-     * Converts a date and time string to a {@link Timestamp} object.
-     *
-     * @param date The date string in ISO local date format.
-     * @param time The time string in 24-hour format.
-     * @return A {@link Timestamp} representing the combined date and time.
-     */
-    private Timestamp convertStringToTimestamp(String date, String time) {
-        // Combine Date and Time Strings
-        String dateTimeString = date + "T" + time;
-
-        // Define the formatter for LocalDateTime
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-        // Parse the String to LocalDateTime
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
-
-        // Convert LocalDateTime to java.sql.Timestamp
-        Timestamp timestamp = Timestamp.valueOf(dateTime);
-
-        return timestamp;
-    }
 }

@@ -2,6 +2,7 @@ package CommonClient;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -44,7 +45,14 @@ public class Utils {
         }
         return true;
     }
-    
+
+    /**
+     * Converts a date and time string to a {@link Timestamp} object.
+     *
+     * @param date The date string in ISO local date format.
+     * @param time The time string in 24-hour format.
+     * @return A {@link Timestamp} representing the combined date and time.
+     */
     public static Timestamp convertStringToTimestamp(String date, String time) {
         // Combine Date and Time Strings
         String dateTimeString = date + "T" + time;
@@ -59,6 +67,26 @@ public class Utils {
         Timestamp timestamp = Timestamp.valueOf(dateTime);
 
         return timestamp;
+    }
+
+    public static boolean isOrderTimeValid(String date, String time) {
+
+        // Combine Date and Time Strings
+        String dateTimeString = date + "T" + time;
+        // Format of the date-time string
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        // Parse the date-time string
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+        // Get the current date-time
+        LocalDateTime now = LocalDateTime.now();
+
+        // Calculate the duration between the given date-time and now
+        Duration duration = Duration.between(now, dateTime);
+
+        // Check if the duration is more than 24 hours
+        return duration.toMinutes() > 1440;
     }
 
 }
