@@ -14,13 +14,15 @@ public class ParkEmployeeDashboardPageController extends BaseController {
     private MFXButton btnGenerateBill;
 
     @FXML
-    void OnClickAvailableSpotButton(ActionEvent event) {
-
+    public void OnClickAvailableSpotButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/CheckAvailableSpotsPage.fxml");
     }
 
     @FXML
-    void OnClickGenerateBillButton(ActionEvent event) {
-
+    public void OnClickGenerateBillButton(ActionEvent event)
+    {
+        applicationWindowController.setCenterPage("/EmployeesUI/GenerateBillPage.fxml");
     }
 
 }

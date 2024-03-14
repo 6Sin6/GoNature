@@ -225,7 +225,7 @@ public class GoNatureServer extends AbstractServer {
                     }
                     client.sendToClient(registerGroupGuideMessage);
                     break;
-
+                
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
