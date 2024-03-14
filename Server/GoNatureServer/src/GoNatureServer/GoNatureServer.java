@@ -10,6 +10,7 @@ import Entities.*;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -193,18 +194,11 @@ public class GoNatureServer extends AbstractServer {
                     client.sendToClient(createOrderMsg);
                     break;
 
-                case OP_QUIT:
-                    if (authenticatedUsers.containsValue(client)) {
-                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
-                            if (entry.getValue() == client) {
-                                authenticatedUsers.remove(entry.getKey());
-                                break;
-                            }
-                        }
-                    }
-                    this.controller.addtolog("Client " + client + " Disconnected");
-                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
-                    client.close();
+                case OP_GET_USER_ORDERS_BY_USERID:
+                    String[] data = (String[]) ((Message) msg).getMsgData();
+                    Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
+                    Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
+                    client.sendToClient(getUserMsg);
                     break;
 
                 case OP_REGISTER_GROUP_GUIDE:
@@ -231,7 +225,20 @@ public class GoNatureServer extends AbstractServer {
                     }
                     client.sendToClient(registerGroupGuideMessage);
                     break;
-
+                
+                case OP_QUIT:
+                    if (authenticatedUsers.containsValue(client)) {
+                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
+                            if (entry.getValue() == client) {
+                                authenticatedUsers.remove(entry.getKey());
+                                break;
+                            }
+                        }
+                    }
+                    this.controller.addtolog("Client " + client + " Disconnected");
+                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
+                    client.close();
+                    break;
 
                 default:
                     controller.addtolog("Error Unknown Opcode");

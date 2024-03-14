@@ -26,12 +26,21 @@ public class ApplicationWindowController implements Initializable {
     @FXML
     private BorderPane mainPane;
     private Map<String, Parent> pagesCache = new HashMap<>();
+
+    private Map<Role, String> DashBoardMap = new HashMap<>();
+
+    private Map<String, String> VisitorsPagesMap = new HashMap<>();
+
+    private Map<String, String> EmployeesPagesMap = new HashMap<>();
     private Parent menuSider;
     private User user;
     private Object Data;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setDashBoardMap();
+        setVistorsPagesMap();
+        setEmployeesPagesMap();
     }
 
     private void setUser(User user) {
@@ -116,18 +125,61 @@ public class ApplicationWindowController implements Initializable {
         menuSider = null;
     }
 
-    public void loadDashboardPage(Role role) {
-        Map<Role, String> roleToFxmlPath = new HashMap<>();
-        roleToFxmlPath.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
-        roleToFxmlPath.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
-        roleToFxmlPath.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
-        roleToFxmlPath.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
-        roleToFxmlPath.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
-        roleToFxmlPath.put(Role.ROLE_VISITOR_GROUP_GUIDE, "/VisitorsUI/VisitorGroupGuideDashboardPage.fxml");
+    private void setDashBoardMap(){
+        DashBoardMap.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
+        DashBoardMap.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
+        DashBoardMap.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
+        DashBoardMap.put(Role.ROLE_PARK_SUPPORT_REPRESENTATIVE, "/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
+        DashBoardMap.put(Role.ROLE_SINGLE_VISITOR, "/VisitorsUI/VisitorDashboardPage.fxml");
+        DashBoardMap.put(Role.ROLE_VISITOR_GROUP_GUIDE, "/VisitorsUI/VisitorGroupGuideDashboardPage.fxml");
+    }
 
-        String fxmlPath = roleToFxmlPath.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
+    public void loadDashboardPage(Role role) {
+        String fxmlPath = DashBoardMap.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
+    private void setEmployeesPagesMap() {
+        EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
+        EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
+        EmployeesPagesMap.put("GenerateBillPage", "/EmployeesUI/GenerateBillPage.fxml");
+        EmployeesPagesMap.put("IssueCancellationReportPage", "/EmployeesUI/IssueCancellationReportPage.fxml");
+        EmployeesPagesMap.put("IssueReportsPage", "/EmployeesUI/IssueReportsPage.fxml");
+        EmployeesPagesMap.put("IssueVisitationReportPage", "/EmployeesUI/IssueVisitationReportPage.fxml");
+        EmployeesPagesMap.put("PrepareNumberOfVisitorsReportPage", "/EmployeesUI/PrepareNumberOfVisitorsReportPage.fxml");
+        EmployeesPagesMap.put("PrepareReportsPage", "/EmployeesUI/PrepareReportsPage.fxml");
+        EmployeesPagesMap.put("PrepareUsageReportPage", "/EmployeesUI/PrepareUsageReportPage.fxml");
+        EmployeesPagesMap.put("RegisterGroupGuidePage", "/EmployeesUI/RegisterGroupGuidePage.fxml");
+        EmployeesPagesMap.put("RequestSettingParkParametersPage", "/EmployeesUI/RequestSettingParkParametersPage.fxml");
+        EmployeesPagesMap.put("UnplannedVisitInsertionPage", "/EmployeesUI/UnplannedVisitInsertionPage.fxml");
+    }
+
+    public void loadEmployeesPage(String NameOfFxml) {
+
+        String fxmlPath = EmployeesPagesMap.getOrDefault(NameOfFxml, "");
+        if (!fxmlPath.isEmpty()) {
+            setCenterPage(fxmlPath);
+        } else {
+            System.out.println("Error");
+        }
+    }
+    private void setVistorsPagesMap() {
+        VisitorsPagesMap.put("ActiveOrdersPage", "/VisitorsUI/ActiveOrdersPage.fxml");
+        VisitorsPagesMap.put("AuthenticateWithIDPage", "/VisitorsUI/AuthenticateWithIDPage.fxml");
+        VisitorsPagesMap.put("ConfirmVisitationPage", "/VisitorsUI/ConfirmVisitationPage.fxml");
+        VisitorsPagesMap.put("GroupGuideOrderVisitationPage", "/VisitorsUI/GroupGuideOrderVisitationPage.fxml");
+        VisitorsPagesMap.put("HandleOrderDetailsPage", "/VisitorsUI/HandleOrderDetailsPage.fxml");
+        VisitorsPagesMap.put("VisitorOrderVisitationPage", "/VisitorsUI/VisitorOrderVisitationPage.fxml");
+        VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
+    }
+    public void loadVistorsPage(String NameOfFxml) {
+        String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");
+        if (!fxmlPath.isEmpty()) {
+            setCenterPage(fxmlPath);
+        } else {
+            System.out.println("Error");
+        }
+    }
+
 
     public void start(Stage primaryStage) {
         try {

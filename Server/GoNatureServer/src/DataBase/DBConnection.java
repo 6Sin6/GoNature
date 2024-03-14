@@ -123,18 +123,18 @@ public class DBConnection {
                         case 1:
                             return new SingleVisitor(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("VisitorID"),
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
                         case 2:
                             return new VisitorGroupGuide(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("id"),
+                                    userGoNatureData.getString("VisitorID"),
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
@@ -144,7 +144,7 @@ public class DBConnection {
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
                                         userCredentials.getString("username"),
-                                        userCredentials.getString("password"),
+                                        "",
                                         userGoNatureData.getString("EmailAddress"),
                                         new Park(
                                                 parkData.getString("ParkID"),
@@ -166,7 +166,7 @@ public class DBConnection {
                         case 4:
                             return new ParkDepartmentManager(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("emailAddress"),
                                     null,
                                     null,
@@ -175,7 +175,7 @@ public class DBConnection {
                         case 5:
                             return new ParkManager(
                                     userCredentials.getString("username"),
-                                    userCredentials.getString("password"),
+                                    "",
                                     userGoNatureData.getString("EmailAddress"),
                                     userGoNatureData.getString("ParkID")
                             );
@@ -185,7 +185,7 @@ public class DBConnection {
                             if (parkDataSupport.next() && supportManagerData.next()) {
                                 return new ParkSupportRepresentative(
                                         userCredentials.getString("username"),
-                                        userCredentials.getString("password"),
+                                        "",
                                         userGoNatureData.getString("emailAddress"),
                                         new Park(
                                                 parkDataSupport.getString("ParkID"),
@@ -220,12 +220,12 @@ public class DBConnection {
         try
         {
             String visitorsTableName = this.schemaName + ".visitors";
-            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "id='" + newGroupGuideID +"'"); //VisitorID
+            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID +"'");
             if (!resultFromVisitors.next())
                 return 0; // id doesnt exist.
             String username = resultFromVisitors.getString("username");
             String usersTableName = this.schemaName + ".users";
-            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'"); // UserID
+            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
             if (resultFromUsers.next())
                 return 1; // user is already a group guide.
             if (dbController.updateRecord(usersTableName, "role="+ Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username +"'"))
@@ -239,6 +239,36 @@ public class DBConnection {
         }
     }
 
+    public Order getUserOrderByUserID(String userID, String orderID) {
+        try {
+            String tableName = this.schemaName + ".visitors";
+            String whereClause = "VisitorID='" + userID + "'";
+            ResultSet userGoNatureData = dbController.selectRecords(tableName, whereClause);
+            if (userGoNatureData.next()) {
+                ResultSet orderData = dbController.selectRecords(this.schemaName + ".orders", "VisitorID='" + userID + "' AND OrderID=' " + orderID + "'");
+                if (orderData.next()) {
+                    return new Order(
+                            orderData.getString("VisitorID"),
+                            orderData.getString("ParkID"),
+                            orderData.getTimestamp("VisitationDate"),
+                            orderData.getString("ClientEmailAddress"),
+                            orderData.getString("PhoneNumber"),
+                            OrderStatus.values()[orderData.getInt("orderStatus") - 1],
+                            orderData.getTimestamp("EnteredTime"),
+                            orderData.getTimestamp("ExitedTime"),
+                            orderData.getString("OrderID"),
+                            OrderType.values()[orderData.getInt("OrderType") - 1],
+                            orderData.getInt("NumOfVisitors")
+                    );
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+  
     public Order addOrder(Order order) {
         try {
             String tableName = this.schemaName + ".orders";

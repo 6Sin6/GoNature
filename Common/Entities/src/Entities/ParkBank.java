@@ -18,6 +18,16 @@ public class ParkBank implements Serializable, Iterable<Park> {
         ParkMap = Collections.unmodifiableMap(aMap);
     }
 
+    public static String getParkNameByID(String value) {
+        for (Map.Entry<String, String> entry : ParkMap.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        // If the value is not found, return null or throw an exception as needed
+        return null;
+    }
+
     public static Map<String, String> getUnmodifiableMap() {
         return ParkMap;
     }

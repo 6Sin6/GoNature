@@ -17,17 +17,17 @@ public class ConfirmationPopup extends BasePopup {
 
         yesButton.setOnAction(e -> {
             onConfirm.run();
-            closePopup();
+            closePopup(false);
         });
 
         noButton.setOnAction(e -> {
             if (onCancel != null) onCancel.run();
-            closePopup();
+            closePopup(false);
         });
         if (exitOnOut) {
             modalLayer.setOnMouseClicked(e -> {
                 if (!popup.getBoundsInParent().contains(e.getSceneX(), e.getSceneY())) {
-                    closePopup();
+                    closePopup(false);
                 }
             });
         }
@@ -36,17 +36,19 @@ public class ConfirmationPopup extends BasePopup {
     public ConfirmationPopup(String question, Runnable onConfirm, int width, int height, boolean fullScreenMode, String FirstBtn, boolean exitOnOut) {
         super(fullScreenMode, width, height);
         yesButton.setText(FirstBtn);
+        yesButton.getStyleClass().add("menu-item-big");
         Label questionLabel = new Label(question);
-        popup.getChildren().addAll(questionLabel, yesButton, noButton);
+        questionLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white;");
+        popup.getChildren().addAll(questionLabel, yesButton);
 
         yesButton.setOnAction(e -> {
             onConfirm.run();
-            closePopup();
+            closePopup(false);
         });
         if (exitOnOut) {
             modalLayer.setOnMouseClicked(e -> {
                 if (!popup.getBoundsInParent().contains(e.getSceneX(), e.getSceneY())) {
-                    closePopup();
+                    closePopup(false);
                 }
             });
         }

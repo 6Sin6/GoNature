@@ -97,8 +97,18 @@ public class CommonUtils {
         return true;
     }
 
-    public static boolean containsOnlyLetters(String str) {
-        // Use a regular expression to check if the string contains only letters
-        return Pattern.matches("^[a-zA-Z]*$", str);
+    /**
+     * Checks if any of the provided strings are empty.
+     *
+     * @param strings Varargs parameter to accept multiple string arguments.
+     * @return true if any string is empty, false otherwise.
+     */
+    public static boolean anyStringEmpty(String... strings) {
+        for (String str : strings) {
+            if (str == null || str.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
