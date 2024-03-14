@@ -24,6 +24,10 @@ public enum OpCodes {
     OP_GET_DEPARTMENT_MANAGER_PARKS(20),
     OP_ORDER_ALREADY_EXIST(21),
     OP_GET_USER_ORDERS_BY_USERID(22), /* Expect: String[] - userID 0, orderID 1. Returns: Order */
+    OP_REGISTER_GROUP_GUIDE(23),
+    OP_VISITOR_ID_DOESNT_EXIST(24),
+    OP_VISITOR_IS_ALREADY_GROUP_GUIDE(25),
+    OP_UPDATED_VISITOR_TO_GROUP_GUIDE(26),
     OP_DB_ERR(999);
 
     private final int opCodeValue;
