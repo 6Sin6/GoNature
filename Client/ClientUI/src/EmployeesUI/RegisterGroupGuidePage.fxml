@@ -19,12 +19,12 @@
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="346.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
+            <Text layoutX="345.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgUsername" layoutX="451.0" layoutY="170.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgUsername" layoutX="450.0" layoutY="170.0" text="errorMsg" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
@@ -34,57 +34,68 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXTextField fx:id="txtUsername" layoutX="451.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="420.0" layoutY="550.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
-            <Text layoutX="346.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
+            <MFXTextField fx:id="txtUsername" layoutX="450.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
+            <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="420.0" layoutY="610.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
+            <Text layoutX="345.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgPassword" layoutX="451.0" layoutY="240.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgPassword" layoutX="450.0" layoutY="240.0" text="errorMsg" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXTextField fx:id="txtPassword" layoutX="451.0" layoutY="260.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="346.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+            <MFXTextField fx:id="txtPassword" layoutX="450.0" layoutY="260.0" prefHeight="30.0" prefWidth="200.0" />
+            <Text layoutX="345.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgEmail" layoutX="451.0" layoutY="310.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgEmail" layoutX="450.0" layoutY="310.0" text="errorMsg" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXTextField fx:id="txtEmail" layoutX="451.0" layoutY="330.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="346.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:">
+            <MFXTextField fx:id="txtEmail" layoutX="450.0" layoutY="330.0" prefHeight="30.0" prefWidth="200.0" />
+            <Text layoutX="345.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgFirstName" layoutX="451.0" layoutY="380.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgFirstName" layoutX="450.0" layoutY="380.0" text="errorMsg" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXTextField fx:id="txtFirstName" layoutX="451.0" layoutY="400.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="346.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:">
+            <MFXTextField fx:id="txtFirstName" layoutX="450.0" layoutY="400.0" prefHeight="30.0" prefWidth="200.0" />
+            <Text layoutX="345.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgLastName" layoutX="451.0" layoutY="450.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgLastName" layoutX="450.0" layoutY="450.0" text="errorMsg" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXTextField fx:id="txtLastName" layoutX="451.0" layoutY="470.0" prefHeight="30.0" prefWidth="200.0" />
-            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="616.0" text="Label" textFill="RED">
+            <MFXTextField fx:id="txtLastName" layoutX="450.0" layoutY="470.0" prefHeight="30.0" prefWidth="200.0" />
+            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="665.0" text="Label" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
+            <Text layoutX="345.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guide ID:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Label fx:id="lblErrorMsgID" layoutX="450.0" layoutY="520.0" text="errorMsg" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <MFXTextField fx:id="txtGuideID" layoutX="450.0" layoutY="540.0" prefHeight="30.0" prefWidth="200.0" />
          </children>
       </Pane>
    </children>

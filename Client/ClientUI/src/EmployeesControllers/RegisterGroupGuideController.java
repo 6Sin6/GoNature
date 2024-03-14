@@ -29,6 +29,9 @@ public class RegisterGroupGuideController extends BaseController {
     private Label lblErrorMsgGeneral;
 
     @FXML
+    private Label lblErrorMsgID;
+
+    @FXML
     private Label lblErrorMsgLastName;
 
     @FXML
@@ -44,6 +47,9 @@ public class RegisterGroupGuideController extends BaseController {
     private MFXTextField txtFirstName;
 
     @FXML
+    private MFXTextField txtGuideID;
+
+    @FXML
     private MFXTextField txtLastName;
 
     @FXML
@@ -51,6 +57,64 @@ public class RegisterGroupGuideController extends BaseController {
 
     @FXML
     private MFXTextField txtUsername;
+
+    private String getUserName()
+    {
+        return txtUsername.getText();
+    }
+
+    private String getPassword()
+    {
+        return txtPassword.getText();
+    }
+
+    private String getEmail()
+    {
+        return txtEmail.getText();
+    }
+
+    private String getFirstName()
+    {
+        return txtFirstName.getText();
+    }
+
+    private String getLastName()
+    {
+        return txtLastName.getText();
+    }
+
+    private boolean isDetailsValid(String username, String email, String firstName, String lastName)
+    {
+        boolean retValue = true;
+        // check if username exists with db - missing. Adir working here.
+        if (!CommonUtils.isEmailAddressValid(email))
+        {
+            if (email.isEmpty())
+                lblErrorMsgEmail.setText("Email is required");
+            else lblErrorMsgEmail.setText("Email is invalid");
+            retValue = false;
+        }
+        else lblErrorMsgEmail.setText("");
+
+        if(!CommonUtils.isValidName(firstName))
+        {
+            if(firstName.isEmpty())
+                lblErrorMsgFirstName.setText("First name is required");
+            else lblErrorMsgFirstName.setText("First name is invalid, only letters allowed");
+            retValue = false;
+        }
+        else lblErrorMsgFirstName.setText("");
+
+        if (!CommonUtils.isValidName(lastName))
+        {
+            if (lastName.isEmpty())
+                lblErrorMsgLastName.setText("Last name is required");
+            else lblErrorMsgLastName.setText("Last name is invalid, only letters allowed");
+            retValue = false;
+        }
+
+        return retValue;
+    }
 
     @FXML
     void OnClickSubmitButton(ActionEvent event)
