@@ -3,10 +3,7 @@ package CommonClient.controllers;
 import CommonClient.ClientUI;
 import CommonClient.Utils;
 import CommonUtils.InputTextPopup;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Order;
-import Entities.User;
+import Entities.*;
 import VisitorsControllers.ConfirmVisitationPageController;
 import VisitorsControllers.HandleOrderDetailsPageController;
 import client.ClientCommunicator;
@@ -57,7 +54,7 @@ public class HomePageController extends BaseController implements Initializable 
         applicationWindowController.setCenterPage("/CommonClient/gui/LoginPage.fxml");
     }
 
-    private void onAuthWithID(String path, String... values) throws CommunicationException {
+    private void onAuthWithID(String... values) throws CommunicationException {
         if (!Utils.isIDValid(values[0])) {
             onAuthPopup.setErrorLabel("Invalid ID Format! Try again");
             return;
@@ -87,7 +84,8 @@ public class HomePageController extends BaseController implements Initializable 
 
         onAuthPopup.setErrorLabel("");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/HandleOrderDetailsPage.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathToPage));
             Parent page = loader.load();
             Object controller = loader.getController();
             if (controller instanceof BaseController) {
@@ -98,8 +96,11 @@ public class HomePageController extends BaseController implements Initializable 
                 applicationWindowController.getRoot().setCenter(page);
             }
 
-            assert controller instanceof ConfirmVisitationPageController;
-            ((ConfirmVisitationPageController) controller).setOrder(order);
+            if (controller instanceof ConfirmVisitationPageController) {
+                ((ConfirmVisitationPageController) controller).setOrder(order);
+            } else if (controller instanceof HandleOrderDetailsPageController) {
+                ((HandleOrderDetailsPageController) controller).setOrder(order);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,7 +109,7 @@ public class HomePageController extends BaseController implements Initializable 
     public void handleExistingOrder() {
         onAuthPopup = new InputTextPopup(new String[]{"Enter ID to Authenticate", "Enter Order ID"}, (String[] inputText) -> {
             try {
-                this.onAuthWithID("/VisitorsUI/ConfirmVisitationPage.fxml", inputText);
+                this.onAuthWithID(inputText);
             } catch (CommunicationException e) {
                 e.printStackTrace();
             }
