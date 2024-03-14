@@ -96,6 +96,15 @@ public class DBController {
      * @param whereClause The WHERE clause to specify which records to select.
      * @return A ResultSet containing the selected records, or null if an error occurs.
      */
+    public ResultSet selectRecordsFields(String tableName, String whereClause, String... fields) throws SQLException {
+        String sql = "SELECT " + String.join(",", fields) + " FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
+        }
+    }
     public ResultSet selectRecords(String tableName, String whereClause) throws SQLException {
         String sql = "SELECT * FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
         try {
@@ -105,4 +114,5 @@ public class DBController {
             throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
         }
     }
+
 }

@@ -54,4 +54,13 @@ public enum OrderStatus {
     OrderStatus(int orderStatus) {
         this.orderStatus = orderStatus;
     }
+
+    /**
+     * Returns the order status value associated with the enum constant.
+     *
+     * @return The order status value.
+     */
+    public int getOrderStatus() {
+        return this.orderStatus;
+    }
 }

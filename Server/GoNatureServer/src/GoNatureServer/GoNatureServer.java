@@ -10,7 +10,6 @@ import Entities.*;
 import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -96,27 +95,9 @@ public class GoNatureServer extends AbstractServer {
             }
         }
         this.controller.addtolog("Server listening for connections on port " + getPort());
-        // Start a new thread for running the task every second
-        new Thread(() -> {
-            try {
-                while (server != null && server.isListening()) {
-                    Thread[] clientConnections = getClientConnections();
-                    controller.resetTableClients();
-                    // Here you can process all the clients as needed
-                    for (Thread clientThread : clientConnections) {
-                        ConnectionToClient client = (ConnectionToClient) clientThread;
-                        controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
-                    }
-                    try {
-                        Thread.sleep(1000); // Wait for 1 second before the next iteration
-                    } catch (InterruptedException e) {
-                        System.out.println("The client processing thread was interrupted.");
-                    }
-                }
-            } catch (NullPointerException e) {
-
-            }
-        }, "Client Processing Thread").start();
+        Workers.startClientProcessingThread(controller, this);
+        Workers.SendReminderDayBeforeWorker(db, controller);
+        Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
         server.controller.toggleControllers(true);
     }
 
@@ -205,8 +186,7 @@ public class GoNatureServer extends AbstractServer {
                     String newGroupGuideID = (String) ((Message) msg).getMsgData();
                     int retValue = db.registerGroupGuide(newGroupGuideID);
                     Message registerGroupGuideMessage;
-                    switch(retValue)
-                    {
+                    switch (retValue) {
                         case 0:
                             registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_ID_DOESNT_EXIST);
                             client.sendToClient(registerGroupGuideMessage);
@@ -225,7 +205,7 @@ public class GoNatureServer extends AbstractServer {
                     }
                     client.sendToClient(registerGroupGuideMessage);
                     break;
-                
+
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
@@ -254,6 +234,7 @@ public class GoNatureServer extends AbstractServer {
     @Override
     protected void serverStopped() {
         this.controller.addtolog("Server has stopped listening for connections.");
+        Workers.shutdownExecutors();
     }
 
     @Override
@@ -263,6 +244,7 @@ public class GoNatureServer extends AbstractServer {
         if (db != null) {
             db.closeConnection();
         }
+        Workers.shutdownExecutors();
     }
 
     public static void closeServer() {

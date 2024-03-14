@@ -215,12 +215,10 @@ public class DBConnection {
         }
     }
 
-    public int registerGroupGuide(String newGroupGuideID)
-    {
-        try
-        {
+    public int registerGroupGuide(String newGroupGuideID) {
+        try {
             String visitorsTableName = this.schemaName + ".visitors";
-            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID +"'");
+            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID + "'");
             if (!resultFromVisitors.next())
                 return 0; // id doesnt exist.
             String username = resultFromVisitors.getString("username");
@@ -228,12 +226,10 @@ public class DBConnection {
             ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
             if (resultFromUsers.next())
                 return 1; // user is already a group guide.
-            if (dbController.updateRecord(usersTableName, "role="+ Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username +"'"))
+            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
                 return 2; // success
             return -1; // failure
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return -1; // error
         }
@@ -268,7 +264,7 @@ public class DBConnection {
             return null;
         }
     }
-  
+
     public Order addOrder(Order order) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -374,7 +370,7 @@ public class DBConnection {
     public boolean updateOrderStatus(String orderID, OrderStatus status) {
         try {
             String tableName = this.schemaName + ".orders";
-            String setClause = "OrderStatus=" + status;
+            String setClause = "orderStatus=" + status.getOrderStatus();
             String whereClause = "OrderID=" + orderID;
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + orderID);
@@ -463,6 +459,78 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
+        }
+    }
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           WORKER EXCLUSIVE METHODS                                              //
+    //                                                                                                                 //
+    //=================================================================================================================//
+    public void updateOrderStatusForUpcomingVisits() {
+        try {
+            ArrayList<ArrayList<String>> Orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 23 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 24 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_ACCEPTED.ordinal() + 1);
+            try {
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress");
+                while (rs.next()) {
+                    Orders.add(new ArrayList<>());
+                    Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                }
+            } catch (SQLException e) {
+                serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+                return;
+            }
+
+            // Update the status of selected orders to 8
+            if (!Orders.isEmpty()) {
+                System.out.println("Found orders!!!");
+                for (ArrayList<String> order : Orders) {
+                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) { // Assuming status 8 is at index 7 in the OrderStatus enum
+                        serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
+                    }
+                    else {
+                        serverController.addtolog("Send to Email Address: " + order.get(1)+" Cancelled");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+        }
+    }
+
+    public void ChangeLatePendingConfirmationToCancelled() {
+        try {
+            ArrayList<ArrayList<String>> Orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79260 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
+            try {
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress");
+                while (rs.next()) {
+                    Orders.add(new ArrayList<>());
+                    Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                }
+            } catch (SQLException e) {
+                serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+                return;
+            }
+
+            // Update the status of selected orders to 8
+            if (!Orders.isEmpty()) {
+                for (ArrayList<String> order : Orders) {
+                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
+                        serverController.addtolog("Failed to cancel order status for OrderID: " + order.get(0));
+                    }
+                    else {
+                        serverController.addtolog("Send to Email Address: " + order.get(1)+" Confirm notification");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
         }
     }
 }
