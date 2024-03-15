@@ -9,6 +9,7 @@ public class MessagePopup extends BasePopup {
     public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode) {
         super(fullScreenMode, width, height);
         Label messageLabel = new Label(message);
+        messageLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white;");
         popup.getChildren().add(messageLabel);
 
         // Close the popup after the specified duration

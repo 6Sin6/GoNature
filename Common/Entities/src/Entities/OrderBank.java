@@ -39,13 +39,13 @@ public class OrderBank implements Iterable<Order>, Serializable {
      * @param order The order to be inserted.
      * @return True if the order was successfully inserted, false otherwise.
      */
-    public Boolean insertOrder(Order order) {
+    public boolean insertOrder(Order order) {
         if (order.getOrderType() == ordersType)
             return orders.add(order);
         return false;
     }
 
-    public Boolean insertOrderArray(ArrayList<Order> orders) {
+    public boolean insertOrderArray(ArrayList<Order> orders) {
         ArrayList<Order> newOrders = new ArrayList<>();
         for (Order order : orders) {
             if (order.getOrderType() == ordersType)
@@ -54,7 +54,11 @@ public class OrderBank implements Iterable<Order>, Serializable {
                 return false;
         }
         this.orders = newOrders;
-        return false;
+        return true;
+    }
+
+    public ArrayList<Order> getOrders() {
+        return orders;
     }
 
     /**
@@ -72,8 +76,7 @@ public class OrderBank implements Iterable<Order>, Serializable {
      * @param order The order to be deleted.
      */
     public void deleteOrder(Order order) {
-        if (orders.contains(order))
-            orders.remove(order);
+        orders.remove(order);
     }
 
     /**
@@ -82,7 +85,7 @@ public class OrderBank implements Iterable<Order>, Serializable {
      * @param order The order to be checked.
      * @return True if the order exists in the OrderBank, false otherwise.
      */
-    public Boolean isExists(Order order) {
+    public boolean isExists(Order order) {
         return orders.contains(order);
     }
 

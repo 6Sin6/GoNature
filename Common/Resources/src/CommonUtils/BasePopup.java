@@ -61,7 +61,7 @@ public abstract class BasePopup {
         TranslateTransition closeTransition = new TranslateTransition(Duration.seconds(0.3), popup);
         closeTransition.setToY(-1200);
         closeTransition.setOnFinished(event -> {
-            modalLayer.setVisible(false);
+            modalLayer.setVisible(true);
             if (onCloseNavigateToPage) {
                 return;
             }

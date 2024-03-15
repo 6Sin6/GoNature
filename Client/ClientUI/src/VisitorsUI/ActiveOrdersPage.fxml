@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -11,7 +12,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
     <children>
-        <Pane fx:id="bntHandleOrder" onDragDetected="#OnClickHandleOrderButton" prefHeight="768.0" prefWidth="950.0">
+        <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
             <children>
                 <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
                 <Text fx:id="txtHeader" layoutX="366.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
@@ -19,18 +20,19 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <TableView fx:id="tableOrders" layoutX="10.0" layoutY="100.0" prefHeight="500.0" prefWidth="930.0">
+                <TableView fx:id="tableOrders" layoutY="82.0" prefHeight="538.0" prefWidth="950.0">
                     <columns>
-                        <TableColumn prefWidth="127.99996662139893" text="Order Number" />
-                        <TableColumn prefWidth="109.60000610351562" text="Park Name" />
-                        <TableColumn prefWidth="113.59996032714844" text="Number of Visitors" />
-                        <TableColumn prefWidth="140.0" text="Telephone" />
-                        <TableColumn prefWidth="212.800048828125" text="Email" />
-                        <TableColumn prefWidth="104.00006103515625" text="Date" />
-                        <TableColumn prefWidth="120.0" text="Time" />
+                        <TableColumn fx:id="colOrderNumber" prefWidth="118.0" text="Order Number" />
+                        <TableColumn fx:id="colParkName" prefWidth="112.0" text="Park Name" />
+                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="126.0" text="Number Of Visitors" />
+                        <TableColumn fx:id="colTelephone" prefWidth="143.0" text="Telephone" />
+                        <TableColumn fx:id="colEmail" prefWidth="143.0" text="Email" />
+                        <TableColumn fx:id="colDate" prefWidth="130.0" text="Date" />
+                        <TableColumn fx:id="colTime" prefWidth="177.0" text="Time" />
                     </columns>
                 </TableView>
-                <MFXButton layoutX="425.0" layoutY="625.0" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
+                <MFXButton fx:id="handleOrderbtn" layoutX="425.0" layoutY="625.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
+            <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0" />
             </children>
         </Pane>
     </children>
