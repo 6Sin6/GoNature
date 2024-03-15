@@ -21,8 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static CommonClient.Utils.convertStringToTimestamp;
-import static CommonClient.Utils.setComboBoxHours;
+import static CommonClient.Utils.*;
 import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
@@ -44,9 +43,36 @@ public class RequestSettingParkParametersController extends BaseController imple
     @FXML
     private MFXTextField txtParkCapacity;
 
+    private Park park;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         txtMaxVisitation.setItems(setComboBoxHours(1, 16));
+    }
+
+    public void getParkParameters() {
+        ParkManager user = (ParkManager) applicationWindowController.getUser();
+        Message msg, response;
+
+        // Populate Park for the department ID, in order to create a request for the department.
+        String ParkID = user.getParkID();
+        msg = new Message(OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID, applicationWindowController.getUser().getUsername(), ParkID);
+
+        ClientUI.client.accept(msg);
+
+        response = ClientCommunicator.msg;
+        if (response.getMsgOpcode() != OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID) {
+            lblErrorMsg.setText("Something went wrong... Try again later");
+            return;
+        }
+
+        park = (Park) response.getMsgData();
+        // Might as well set the park to the user.
+        user.setPark(park);
+
+        txtMaxVisitation.setValue(parseVisitTime(park.getDefaultVisitationTime()));
+        txtParkCapacity.setText(String.valueOf(park.getCapacity()));
+        txtDifferenceOrdersVisitors.setText(String.valueOf(park.getGapVisitorsCapacity()));
     }
 
     @FXML
@@ -78,34 +104,22 @@ public class RequestSettingParkParametersController extends BaseController imple
             return;
         }
 
-        ParkManager user = (ParkManager) applicationWindowController.getUser();
-        Message msg, response;
-
-        // Populate Park for the department ID, in order to create a request for the department.
-        String ParkID = user.getParkID();
-        msg = new Message(OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID, applicationWindowController.getUser().getUsername(), ParkID);
-
-        ClientUI.client.accept(msg);
-
-        response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID) {
-            lblErrorMsg.setText("Something went wrong... Try again later");
+        if (!gapOrdersAndVisitors.isEmpty() && Integer.parseInt(gapOrdersAndVisitors) <= Integer.parseInt(parkCapacity)) {
+            lblErrorMsg.setText("Difference between the number of orders and visitors capacity must be greater than the park capacity.");
             return;
         }
 
-        Park park = (Park) response.getMsgData();
-        // Might as well set the park to the user.
-        user.setPark(park);
 
+        Message msg, response;
         // Create a map of the requests to be submitted to the department.
         Map<ParkParameters, RequestChangingParkParameters> requestMap = new HashMap<>();
-        if (!gapOrdersAndVisitors.isEmpty()) {
+        if (!gapOrdersAndVisitors.isEmpty() && park.getGapVisitorsCapacity() != Double.parseDouble(gapOrdersAndVisitors)) {
             requestMap.put(ParkParameters.PARK_GAP_VISITORS_CAPACITY, new RequestChangingParkParameters(park, ParkParameters.PARK_GAP_VISITORS_CAPACITY, Double.parseDouble(gapOrdersAndVisitors)));
         }
-        if (maxVisitRequest) {
+        if (maxVisitRequest && !convertTimestampToMinutes(maxVisitationLongevity).equals(convertTimestampToMinutes(park.getDefaultVisitationTime()))) {
             requestMap.put(ParkParameters.PARK_DEFAULT_MAX_VISITATION_LONGEVITY, new RequestChangingParkParameters(park, ParkParameters.PARK_DEFAULT_MAX_VISITATION_LONGEVITY, Double.parseDouble(convertTimestampToMinutes(maxVisitationLongevity).toString())));
         }
-        if (!parkCapacity.isEmpty()) {
+        if (!parkCapacity.isEmpty() && park.getCapacity() != Double.parseDouble(parkCapacity)) {
             requestMap.put(ParkParameters.PARK_CAPACITY, new RequestChangingParkParameters(park, ParkParameters.PARK_CAPACITY, Double.parseDouble(parkCapacity)));
         }
 
@@ -118,6 +132,7 @@ public class RequestSettingParkParametersController extends BaseController imple
             return;
         }
 
+        lblErrorMsg.setText("");
         lblSuccessMsg.setText("Your requests have been submitted successfully!");
     }
 }

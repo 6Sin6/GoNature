@@ -65,6 +65,14 @@ public class AuthorizeParksRequestsController extends BaseController {
         OpCodes opCode = event.getSource() == authBtn ? OpCodes.OP_AUTHORIZE_PARK_REQUEST : OpCodes.OP_DECLINE_PARK_REQUEST;
 
         RequestChangingParkParameters request = requests.get(rowIndex);
+
+        if (opCode == OpCodes.OP_AUTHORIZE_PARK_REQUEST &&
+                request.getParameter() == ParkParameters.PARK_GAP_VISITORS_CAPACITY &&
+                request.getRequestedValue() < request.getPark().getCapacity()) {
+            errorTxt.setText("The new value is lower than the current max visitors value.");
+            return;
+        }
+
         request.setStatus(RequestStatus.REQUEST_ACCEPTED);
         Object msg = new Message(opCode, applicationWindowController.getUser().getUsername(), request);
         ClientUI.client.accept(msg);
@@ -75,11 +83,10 @@ public class AuthorizeParksRequestsController extends BaseController {
             return;
         }
 
-        if (event.getSource() == authBtn)
-            requests.remove(rowIndex);
-        else
+        if (event.getSource() != authBtn) {
             requests.get(rowIndex).setStatus(RequestStatus.REQUEST_DECLINED);
-
+        }
+        requests.remove(rowIndex);
         setupTable();
     }
 
@@ -107,8 +114,6 @@ public class AuthorizeParksRequestsController extends BaseController {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                     RequestChangingParkParameters clickedRowData = row.getItem();
                     rowIndex = row.getIndex();
-                    // Handle the clicked row data, e.g., display it
-                    System.out.println("Selected row data: " + clickedRowData);
                 }
             });
             return row;
