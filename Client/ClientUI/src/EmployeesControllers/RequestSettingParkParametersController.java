@@ -46,7 +46,7 @@ public class RequestSettingParkParametersController extends BaseController imple
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        txtMaxVisitation.setItems(setComboBoxHours(0, 24));
+        txtMaxVisitation.setItems(setComboBoxHours(1, 16));
     }
 
     @FXML
