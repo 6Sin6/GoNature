@@ -25,7 +25,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsg" layoutX="64.0" layoutY="469.0" prefHeight="34.0" prefWidth="255.0" styleClass="error-text" />
+            <Label fx:id="lblErrorMsg" layoutX="64.0" layoutY="469.0" prefHeight="34.0" prefWidth="371.0" styleClass="error-text" />
             <Text layoutX="81.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:">
                <font>
                   <Font size="20.0" />
@@ -40,7 +40,7 @@
             <MFXTextField fx:id="txtParkCapacity" layoutX="81.0" layoutY="198.0" prefHeight="30.0" prefWidth="200.0" />
             <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="131.0" layoutY="510.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
             <MFXLegacyComboBox fx:id="txtMaxVisitation" layoutX="81.0" layoutY="414.0" prefHeight="48.0" prefWidth="200.0" value="" />
-            <Label fx:id="lblSuccessMsg" alignment="CENTER" layoutX="198.0" layoutY="623.0" prefHeight="59.0" prefWidth="555.0">
+            <Label fx:id="lblSuccessMsg" alignment="CENTER" layoutX="198.0" layoutY="623.0" prefHeight="59.0" prefWidth="655.0">
                <font>
                   <Font size="24.0" />
                </font>

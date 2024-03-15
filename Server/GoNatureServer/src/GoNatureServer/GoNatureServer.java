@@ -141,6 +141,9 @@ public class GoNatureServer extends AbstractServer {
             case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
                 handleSubmitRequestsToDepartment(message, client);
                 break;
+            case OP_GET_PARK_DETAILS_BY_PARK_ID:
+                handleGetParkDetailsByParkID(message, client);
+                break;
             case OP_QUIT:
                 handleQuit(client);
                 break;
@@ -265,6 +268,14 @@ public class GoNatureServer extends AbstractServer {
         Message submitRequestMsg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, message.getMsgUserName(), isSubmitted);
         client.sendToClient(submitRequestMsg);
     }
+
+    private void handleGetParkDetailsByParkID(Message message, ConnectionToClient client) throws IOException {
+        String ParkID = (String) message.getMsgData();
+        Park park = db.getParkDetails(ParkID);
+        Message submitRequestMsg = new Message(OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID, message.getMsgUserName(), park);
+        client.sendToClient(submitRequestMsg);
+    }
+
     private void handleQuit(ConnectionToClient client) throws IOException {
         authenticatedUsers.values().removeIf(value -> value == client);
         controller.addtolog("Client " + client + " Disconnected");

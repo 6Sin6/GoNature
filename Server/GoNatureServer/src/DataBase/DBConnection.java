@@ -433,7 +433,7 @@ public class DBConnection {
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             if (results.next()) {
                 String pManagerId = results.getString("ParkManagerID");
-                ResultSet managerResults = dbController.selectRecords(this.schemaName + ".parkemployees", "id=" + pManagerId);
+                ResultSet managerResults = dbController.selectRecordsFields(this.schemaName + ".parkemployees", "id=" + pManagerId, "username", "EmailAddress");
                 if (managerResults.next()) {
                     return new Park(
                             results.getString("ParkID"),
@@ -441,7 +441,7 @@ public class DBConnection {
                             results.getInt("Capacity"),
                             results.getInt("GapVisitorsCapacity"),
                             convertMinutesToTimestamp(results.getInt("DefaultVisitationTime")),
-                            results.getInt("Department"),
+                            results.getInt("departmentID"),
                             new ParkManager(
                                     managerResults.getString("username"),
                                     "",
