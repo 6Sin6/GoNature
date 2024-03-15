@@ -103,156 +103,177 @@ public class GoNatureServer extends AbstractServer {
 
 
     public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
-        Message newMsg = new Message(null, null, null);
-
-        if (msg instanceof Message) {
-            switch (((Message) msg).getMsgOpcode()) {
-                case OP_SYNC_HANDSHAKE:
-                    client.sendToClient(msg);
-                    break;
-
-                case OP_LOGOUT:
-                    authenticatedUsers.remove(((Message) msg).getMsgUserName());
-                    client.sendToClient("logged out successfully");
-                    break;
-
-                case OP_SIGN_IN:
-                    User userCredentials = (User) ((Message) msg).getMsgData();
-                    if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
-                        if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress() == null) {
-                            authenticatedUsers.remove(userCredentials.getUsername());
-                        } else {
-                            Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
-                            client.sendToClient(respondMsg);
-                            return;
-                        }
-                    }
-                    User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
-                    //User authenticatedUser= new User("test","123",Role.ROLE_SINGLE_VISITOR);
-                    if (authenticatedUser == null) {
-                        Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
-                        client.sendToClient(respondMsg);
-                        return;
-                    }
-                    authenticatedUsers.put(authenticatedUser.getUsername(), client);
-                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
-                    client.sendToClient(respondMsg);
-                    break;
-
-                case OP_GET_VISITOR_ORDERS:
-                    AbstractVisitor visitor = (AbstractVisitor) ((Message) msg).getMsgData();
-
-                    String visitorID = visitor.getID();
-                    String visitorUserName = visitor.getUsername();
-
-                    ArrayList<Order> requestedOrders = db.getUserOrders(visitorID);
-                    OrderBank orders;
-                    if (visitor instanceof SingleVisitor) {
-                        orders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
-                    } else {
-                        orders = new OrderBank(OrderType.ORD_TYPE_GROUP);
-                    }
-                    if (orders.insertOrderArray(requestedOrders)) {
-                        Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitorUserName, requestedOrders);
-                        client.sendToClient(getVisitorOrdersMsg);
-                    } else {
-                        Message getVisitorOrdersMsg = new Message(OpCodes.OP_DB_ERR);
-                        client.sendToClient(getVisitorOrdersMsg);
-                    }
-                    break;
-
-                case OP_CREATE_NEW_VISITATION:
-                    Order order = (Order) ((Message) msg).getMsgData();
-                    order.setOrderStatus(OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
-
-                    if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
-                        Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
-                        client.sendToClient(createOrderMsg);
-                        return;
-                    }
-                    Order newOrder = db.addOrder(order);
-                    Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, ((Message) msg).getMsgUserName(), newOrder);
-                    client.sendToClient(createOrderMsg);
-                    break;
-
-                case OP_GET_USER_ORDERS_BY_USERID:
-                    String[] data = (String[]) ((Message) msg).getMsgData();
-                    Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
-                    Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
-                    client.sendToClient(getUserMsg);
-                    break;
-
-                case OP_REGISTER_GROUP_GUIDE:
-                    String newGroupGuideID = (String) ((Message) msg).getMsgData();
-                    int retValue = db.registerGroupGuide(newGroupGuideID);
-                    Message registerGroupGuideMessage;
-                    switch (retValue) {
-                        case 0:
-                            registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_ID_DOESNT_EXIST);
-                            client.sendToClient(registerGroupGuideMessage);
-                            break;
-                        case 1:
-                            registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_IS_ALREADY_GROUP_GUIDE);
-                            client.sendToClient(registerGroupGuideMessage);
-                            break;
-                        case 2:
-                            registerGroupGuideMessage = new Message(OpCodes.OP_UPDATED_VISITOR_TO_GROUP_GUIDE);
-                            client.sendToClient(registerGroupGuideMessage);
-                            break;
-                        default:
-                            registerGroupGuideMessage = new Message(OpCodes.OP_DB_ERR);
-                            break;
-                    }
-                    client.sendToClient(registerGroupGuideMessage);
-                    break;
-
-                case OP_GET_REQUESTS_FROM_PARK_MANAGER:
-                    Integer departmentID = (Integer) ((Message) msg).getMsgData();
-                    ArrayList<RequestChangingParkParameters> requests = db.getRequestsFromParkManager(departmentID);
-                    Message retrieveRequestsMsg = new Message(OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER, ((Message) msg).getMsgUserName(), requests);
-                    client.sendToClient(retrieveRequestsMsg);
-                    break;
-
-                case OP_AUTHORIZE_PARK_REQUEST:
-                    RequestChangingParkParameters authRequest = (RequestChangingParkParameters) ((Message) msg).getMsgData();
-                    boolean isAuthorized = db.authorizeParkRequest(authRequest);
-                    Message authorizeRequestMsg = new Message(OpCodes.OP_AUTHORIZE_PARK_REQUEST, ((Message) msg).getMsgUserName(), isAuthorized);
-                    client.sendToClient(authorizeRequestMsg);
-                    break;
-
-                case OP_DECLINE_PARK_REQUEST:
-                    RequestChangingParkParameters unauthRequest = (RequestChangingParkParameters) ((Message) msg).getMsgData();
-                    boolean isUnauthorized = db.unauthorizeParkRequest(unauthRequest);
-                    Message unauthorizeRequestMsg = new Message(OpCodes.OP_DECLINE_PARK_REQUEST, ((Message) msg).getMsgUserName(), isUnauthorized);
-                    client.sendToClient(unauthorizeRequestMsg);
-                    break;
-
-                case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
-                    Map<ParkParameters, RequestChangingParkParameters> requestMap = (Map<ParkParameters, RequestChangingParkParameters>) ((Message) msg).getMsgData();
-                    boolean isSubmitted = db.submitRequestsToDepartment(requestMap);
-                    Message submitRequestMsg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, ((Message) msg).getMsgUserName(), isSubmitted);
-                    client.sendToClient(submitRequestMsg);
-                    break;
-
-                case OP_QUIT:
-                    if (authenticatedUsers.containsValue(client)) {
-                        for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {
-                            if (entry.getValue() == client) {
-                                authenticatedUsers.remove(entry.getKey());
-                                break;
-                            }
-                        }
-                    }
-                    this.controller.addtolog("Client " + client + " Disconnected");
-                    controller.removeRowByIP(client.getInetAddress().getHostAddress());
-                    client.close();
-                    break;
-
-                default:
-                    controller.addtolog("Error Unknown Opcode");
-            }
+        if (!(msg instanceof Message)) {
+            return;
+        }
+        Message message = (Message) msg;
+        switch (message.getMsgOpcode()) {
+            case OP_SYNC_HANDSHAKE:
+                handleSyncHandshake(message, client);
+                break;
+            case OP_LOGOUT:
+                handleLogout(message, client);
+                break;
+            case OP_SIGN_IN:
+                handleSignIn(message, client);
+                break;
+            case OP_GET_VISITOR_ORDERS:
+                handleGetVisitorOrders(message, client);
+                break;
+            case OP_CREATE_NEW_VISITATION:
+                handleCreateNewVisitation(message, client);
+                break;
+            case OP_GET_USER_ORDERS_BY_USERID:
+                handleGetUserOrdersByUserID(message, client);
+                break;
+            case OP_REGISTER_GROUP_GUIDE:
+                handleRegisterGroupGuide(message, client);
+                break;
+            case OP_GET_REQUESTS_FROM_PARK_MANAGER:
+                handleGetRequestsFromParkManager(message, client);
+                break;
+            case OP_AUTHORIZE_PARK_REQUEST:
+                handleAuthorizeParkRequest(message, client);
+                break;
+            case OP_DECLINE_PARK_REQUEST:
+                handleDeclineParkRequest(message, client);
+                break;
+            case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
+                handleSubmitRequestsToDepartment(message, client);
+                break;
+            case OP_QUIT:
+                handleQuit(client);
+                break;
+            default:
+                controller.addtolog("Error Unknown Opcode");
         }
     }
+
+    private void handleSyncHandshake(Message message, ConnectionToClient client) throws IOException {
+        client.sendToClient(message);
+    }
+
+    private void handleLogout(Message message, ConnectionToClient client) throws IOException {
+        authenticatedUsers.remove(message.getMsgUserName());
+        client.sendToClient("logged out successfully");
+    }
+
+    private void handleSignIn(Message message, ConnectionToClient client) throws IOException {
+        User userCredentials = (User) message.getMsgData();
+        if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
+            if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress() == null) {
+                authenticatedUsers.remove(userCredentials.getUsername());
+            } else {
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
+                client.sendToClient(respondMsg);
+                return;
+            }
+        }
+        User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
+        if (authenticatedUser == null) {
+            Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+            client.sendToClient(respondMsg);
+            return;
+        }
+        authenticatedUsers.put(authenticatedUser.getUsername(), client);
+        Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws IOException {
+        AbstractVisitor visitor = (AbstractVisitor) message.getMsgData();
+        ArrayList<Order> requestedOrders = db.getUserOrders(visitor.getID());
+        OrderBank orders = visitor instanceof SingleVisitor ?
+                new OrderBank(OrderType.ORD_TYPE_SINGLE) :
+                new OrderBank(OrderType.ORD_TYPE_GROUP);
+
+        if (orders.insertOrderArray(requestedOrders)) {
+            Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitor.getUsername(), requestedOrders);
+            client.sendToClient(getVisitorOrdersMsg);
+        } else {
+            Message getVisitorOrdersMsg = new Message(OpCodes.OP_DB_ERR);
+            client.sendToClient(getVisitorOrdersMsg);
+        }
+    }
+
+    private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        order.setOrderStatus(OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
+
+        if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
+            Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+            client.sendToClient(createOrderMsg);
+            return;
+        }
+        Order newOrder = db.addOrder(order);
+        Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
+        client.sendToClient(createOrderMsg);
+    }
+
+    private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
+        String[] data = (String[]) message.getMsgData();
+        Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
+        Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
+        client.sendToClient(getUserMsg);
+    }
+
+    private void handleRegisterGroupGuide(Message message, ConnectionToClient client) throws IOException {
+        String newGroupGuideID = (String) message.getMsgData();
+        int retValue = db.registerGroupGuide(newGroupGuideID);
+        Message registerGroupGuideMessage;
+        switch (retValue) {
+            case 0:
+                registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_ID_DOESNT_EXIST);
+                break;
+            case 1:
+                registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_IS_ALREADY_GROUP_GUIDE);
+                break;
+            case 2:
+                registerGroupGuideMessage = new Message(OpCodes.OP_UPDATED_VISITOR_TO_GROUP_GUIDE);
+                break;
+            default:
+                registerGroupGuideMessage = new Message(OpCodes.OP_DB_ERR);
+                break;
+        }
+        client.sendToClient(registerGroupGuideMessage);
+    }
+
+    private void handleGetRequestsFromParkManager(Message message, ConnectionToClient client) throws IOException {
+        Integer departmentID = (Integer) message.getMsgData();
+        ArrayList<RequestChangingParkParameters> requests = db.getRequestsFromParkManager(departmentID);
+        Message retrieveRequestsMsg = new Message(OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER, message.getMsgUserName(), requests);
+        client.sendToClient(retrieveRequestsMsg);
+    }
+
+    private void handleAuthorizeParkRequest(Message message, ConnectionToClient client) throws IOException {
+        RequestChangingParkParameters authRequest = (RequestChangingParkParameters) message.getMsgData();
+        boolean isAuthorized = db.authorizeParkRequest(authRequest);
+        Message authorizeRequestMsg = new Message(OpCodes.OP_AUTHORIZE_PARK_REQUEST, message.getMsgUserName(), isAuthorized);
+        client.sendToClient(authorizeRequestMsg);
+    }
+
+    private void handleDeclineParkRequest(Message message, ConnectionToClient client) throws IOException {
+        RequestChangingParkParameters unauthRequest = (RequestChangingParkParameters) message.getMsgData();
+        boolean isUnauthorized = db.unauthorizeParkRequest(unauthRequest);
+        Message unauthorizeRequestMsg = new Message(OpCodes.OP_DECLINE_PARK_REQUEST, message.getMsgUserName(), isUnauthorized);
+        client.sendToClient(unauthorizeRequestMsg);
+    }
+
+    private void handleSubmitRequestsToDepartment(Message message, ConnectionToClient client) throws IOException {
+        Map<ParkParameters, RequestChangingParkParameters> requestMap = (Map<ParkParameters, RequestChangingParkParameters>) message.getMsgData();
+        boolean isSubmitted = db.submitRequestsToDepartment(requestMap);
+        Message submitRequestMsg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, message.getMsgUserName(), isSubmitted);
+        client.sendToClient(submitRequestMsg);
+    }
+    private void handleQuit(ConnectionToClient client) throws IOException {
+        authenticatedUsers.values().removeIf(value -> value == client);
+        controller.addtolog("Client " + client + " Disconnected");
+        controller.removeRowByIP(client.getInetAddress().getHostAddress());
+        client.close();
+    }
+
+
+
 
 
     /**
@@ -290,12 +311,5 @@ public class GoNatureServer extends AbstractServer {
             server.controller.addtolog("Server isn't initialized");
         }
     }
-
-    @Override
-    protected void clientConnected(ConnectionToClient client) {
-        //controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
-    }
-
-
 }
-//End of EchoServer class
+//End of GpNatureServer class
