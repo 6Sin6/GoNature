@@ -51,7 +51,7 @@ public class HomePageController extends BaseController implements Initializable 
             applicationWindowController.logout();
             return;
         }
-        applicationWindowController.setCenterPage("/CommonClient/gui/LoginPage.fxml");
+        applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
     }
 
     private void onAuthWithID(String... values) throws CommunicationException {
@@ -102,6 +102,9 @@ public class HomePageController extends BaseController implements Initializable 
     }
 
     public void handleExistingOrder() {
+        if (applicationWindowController.getUser() != null) {
+            applicationWindowController.logout();
+        }
         onAuthPopup = new InputTextPopup(new String[]{"Enter ID to Authenticate", "Enter Order ID"}, (String[] inputText) -> {
             try {
                 this.onAuthWithID(inputText);
