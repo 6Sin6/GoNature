@@ -312,4 +312,4 @@ public class GoNatureServer extends AbstractServer {
         }
     }
 }
-//End of GpNatureServer class
+//End of GoNatureServer class
