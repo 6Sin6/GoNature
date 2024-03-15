@@ -78,6 +78,10 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             lblStatusMsg.setText("You must select an order");
             return;
         }
+        Order o1 = list.get(rowIndex);
+        applicationWindowController.loadVistorsPage("HandleOrderDetailsPage");
+
+
 //        try {
 //            System.out.println("Order Number has been found");
 //            Order o1 = list.get(rowIndex);
