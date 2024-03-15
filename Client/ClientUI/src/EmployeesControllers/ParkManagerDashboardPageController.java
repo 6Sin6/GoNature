@@ -17,6 +17,9 @@ public class ParkManagerDashboardPageController extends BaseController {
     public void OnClickChangeParkParametersButton(ActionEvent event)
     {
         applicationWindowController.setCenterPage("/EmployeesUI/RequestSettingParkParametersPage.fxml");
+        if (applicationWindowController.currentActiveController instanceof RequestSettingParkParametersController) {
+            ((RequestSettingParkParametersController) applicationWindowController.currentActiveController).getParkParameters();
+        }
     }
 
     @FXML

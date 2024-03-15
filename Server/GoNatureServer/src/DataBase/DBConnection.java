@@ -466,7 +466,7 @@ public class DBConnection {
     public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) {
         try {
             String tableName = this.schemaName + ".requeststodepmanager";
-            String whereClause = "DepartmentID=" + departmentID;
+            String whereClause = "DepartmentID=" + departmentID + " AND status=" + RequestStatus.REQUEST_PENDING.getRequestStatus();
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             ArrayList<RequestChangingParkParameters> requests = new ArrayList<>();
             while (results.next()) {
