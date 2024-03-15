@@ -227,6 +227,13 @@ public class GoNatureServer extends AbstractServer {
                     client.sendToClient(unauthorizeRequestMsg);
                     break;
 
+                case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
+                    Map<ParkParameters, RequestChangingParkParameters> requestMap = (Map<ParkParameters, RequestChangingParkParameters>) ((Message) msg).getMsgData();
+                    boolean isSubmitted = db.submitRequestsToDepartment(requestMap);
+                    Message submitRequestMsg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, ((Message) msg).getMsgUserName(), isSubmitted);
+                    client.sendToClient(submitRequestMsg);
+                    break;
+
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {

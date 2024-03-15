@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RequestSettingParkParametersController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RequestSettingParkParametersController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -19,26 +20,31 @@
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="330.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difference Between Num Of Order And Max Visitors:">
+            <Text layoutX="81.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difference Between Number Of Orders And Visitors Capacity:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsg" layoutX="330.0" layoutY="471.0" text="errorMsg" styleClass="error-text" />
-            <Text layoutX="330.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:">
+            <Label fx:id="lblErrorMsg" layoutX="64.0" layoutY="469.0" prefHeight="34.0" prefWidth="255.0" styleClass="error-text" />
+            <Text layoutX="81.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="330.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Visitation Longevity:">
+            <Text layoutX="81.0" layoutY="397.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Visitation Longevity:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <MFXTextField fx:id="txtMaxVisitationLongevity" layoutX="330.0" layoutY="405.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXTextField fx:id="txtParkCapacity" layoutX="330.0" layoutY="305.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXTextField fx:id="txtDifferenceBetweenNumOfOrderAndMaxVisitors" layoutX="330.0" layoutY="205.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="330.0" layoutY="491.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
+            <MFXTextField fx:id="txtDifferenceOrdersVisitors" layoutX="81.0" layoutY="304.0" prefHeight="30.0" prefWidth="200.0" />
+            <MFXTextField fx:id="txtParkCapacity" layoutX="81.0" layoutY="198.0" prefHeight="30.0" prefWidth="200.0" />
+            <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="131.0" layoutY="510.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
+            <MFXLegacyComboBox fx:id="txtMaxVisitation" layoutX="81.0" layoutY="414.0" prefHeight="48.0" prefWidth="200.0" value="" />
+            <Label fx:id="lblSuccessMsg" alignment="CENTER" layoutX="198.0" layoutY="623.0" prefHeight="59.0" prefWidth="555.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

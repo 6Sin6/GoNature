@@ -22,13 +22,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import javax.naming.CommunicationException;
-import javax.xml.soap.Text;
 import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -223,7 +220,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             erorrLbl.setText("Invalid email. Please check your input.");
             return false;
         }
-        if (!CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
+        if (CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
             erorrLbl.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
             return false;
         }
