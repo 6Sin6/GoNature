@@ -35,9 +35,9 @@ public enum OrderStatus {
     STATUS_CANCELLED(6),
 
     /**
-     * Represents an unexpected status of an order.
+     * Represents a spontaneous status of an order.
      */
-    STATUS_UNEXPECTED(7),
+    STATUS_SPONTANEOUS_ORDER(7),
 
     /**
      * Represents the status of an order being pending confirmation (SMS/Email has been sent regarding the order).

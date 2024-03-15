@@ -24,7 +24,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsg" layoutX="400.0" layoutY="210.0" prefHeight="17.0" prefWidth="229.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsg" layoutX="400.0" layoutY="210.0" prefHeight="17.0" prefWidth="229.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font></Label>

@@ -22,7 +22,7 @@
                     </font>
                 </Text>
                 <Separator fx:id="sepOrder" layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Label fx:id="errorLbl" layoutX="323.0" layoutY="82.0" prefHeight="38.0" prefWidth="296.0" textFill="#ff0707">
+                <Label fx:id="errorLbl" layoutX="323.0" layoutY="82.0" prefHeight="38.0" prefWidth="296.0" styleClass="error-text">
                     <font>
                         <Font size="16.0" />
                     </font>

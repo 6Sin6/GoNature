@@ -85,15 +85,10 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.setErrorLabel("");
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/HandleOrderDetailsPage.fxml";
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathToPage));
-            Parent page = loader.load();
-            Object controller = loader.getController();
+            applicationWindowController.setCenterPage(pathToPage);
+            Object controller = applicationWindowController.currentActiveController;
             if (controller instanceof BaseController) {
                 ((BaseController) controller).setApplicationWindowController(applicationWindowController);
-            }
-
-            if (page != null) {
-                applicationWindowController.getRoot().setCenter(page);
             }
 
             if (controller instanceof ConfirmVisitationPageController) {

@@ -216,7 +216,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
      */
     private boolean validateFields() {
         if (CommonUtils.anyStringEmpty(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtEmail.getText(), txtNumOfVisitors.getText()) || parkCmbBox.getValue() == null || datePicker.getValue() == null || timeOfVisitCmbBox.getValue() == null) {
-            errorLbl.setText("One or more fileds are empty.");
+            errorLbl.setText("One or more fields are empty.");
             return false;
         }
         if (!CommonUtils.isValidPhone(txtPhone.getText())) {

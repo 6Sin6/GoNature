@@ -30,4 +30,31 @@ public enum RequestStatus {
     RequestStatus(int RequestStatus) {
         this.RequestStatus = RequestStatus;
     }
+
+    /**
+     * Retrieves the integer value associated with the status.
+     *
+     * @return The integer value associated with the status.
+     */
+    public int getRequestStatus() {
+        return RequestStatus;
+    }
+
+    /**
+     * Retrieves the String representation value associated with the status.
+     *
+     * @return The String representation value associated with the status.
+     */
+    public static String statusToString(RequestStatus status) {
+        switch (status) {
+            case REQUEST_PENDING:
+                return "Pending Authorization";
+            case REQUEST_ACCEPTED:
+                return "Authorized";
+            case REQUEST_DECLINED:
+                return "Unauthorized";
+            default:
+                return null;
+        }
+    }
 }

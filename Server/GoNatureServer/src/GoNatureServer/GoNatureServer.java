@@ -206,6 +206,27 @@ public class GoNatureServer extends AbstractServer {
                     client.sendToClient(registerGroupGuideMessage);
                     break;
 
+                case OP_GET_REQUESTS_FROM_PARK_MANAGER:
+                    Integer departmentID = (Integer) ((Message) msg).getMsgData();
+                    ArrayList<RequestChangingParkParameters> requests = db.getRequestsFromParkManager(departmentID);
+                    Message retrieveRequestsMsg = new Message(OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER, ((Message) msg).getMsgUserName(), requests);
+                    client.sendToClient(retrieveRequestsMsg);
+                    break;
+
+                case OP_AUTHORIZE_PARK_REQUEST:
+                    RequestChangingParkParameters authRequest = (RequestChangingParkParameters) ((Message) msg).getMsgData();
+                    boolean isAuthorized = db.authorizeParkRequest(authRequest);
+                    Message authorizeRequestMsg = new Message(OpCodes.OP_AUTHORIZE_PARK_REQUEST, ((Message) msg).getMsgUserName(), isAuthorized);
+                    client.sendToClient(authorizeRequestMsg);
+                    break;
+
+                case OP_DECLINE_PARK_REQUEST:
+                    RequestChangingParkParameters unauthRequest = (RequestChangingParkParameters) ((Message) msg).getMsgData();
+                    boolean isUnauthorized = db.unauthorizeParkRequest(unauthRequest);
+                    Message unauthorizeRequestMsg = new Message(OpCodes.OP_DECLINE_PARK_REQUEST, ((Message) msg).getMsgUserName(), isUnauthorized);
+                    client.sendToClient(unauthorizeRequestMsg);
+                    break;
+
                 case OP_QUIT:
                     if (authenticatedUsers.containsValue(client)) {
                         for (Map.Entry<String, ConnectionToClient> entry : authenticatedUsers.entrySet()) {

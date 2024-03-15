@@ -17,7 +17,7 @@ public class ClientUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ApplicationWindowController aFrame = new ApplicationWindowController();
+        ApplicationWindowController appFrame = new ApplicationWindowController();
         primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
             try {
                 client.quit();
@@ -25,6 +25,6 @@ public class ClientUI extends Application {
                 System.out.println("Server didnt initialized");
             }
         }));
-        aFrame.start(primaryStage);
+        appFrame.start(primaryStage);
     }
 }

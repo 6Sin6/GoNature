@@ -38,7 +38,7 @@
                            prefHeight="48.0" prefWidth="120.0" rippleColor="#adff49" text="Submit"/>
                 <MFXTextField fx:id="IDTextField" floatingText="ID" layoutX="385.0" layoutY="230.0" prefHeight="50.0"
                               prefWidth="200.0"/>
-                <Text fx:id="ErrorText" layoutX="342.0" layoutY="505.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                <Text fx:id="ErrorText" styleClass="error-text" layoutX="342.0" layoutY="505.0" strokeType="OUTSIDE" strokeWidth="0.0"
                       textAlignment="CENTER" wrappingWidth="749.5732421875">
                     <font>
                         <Font name="System Bold" size="21.0"/>

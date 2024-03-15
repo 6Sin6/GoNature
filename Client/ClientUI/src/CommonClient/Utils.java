@@ -88,5 +88,4 @@ public class Utils {
         // Check if the duration is more than 24 hours
         return duration.toMinutes() > 1440;
     }
-
 }

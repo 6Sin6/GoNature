@@ -70,7 +70,7 @@
                   <Font size="16.0" />
                </font>
             </Text>
-            <Label fx:id="errorLbl" layoutX="336.0" layoutY="75.0" prefHeight="40.0" prefWidth="326.0" textFill="#f51f07">
+            <Label fx:id="errorLbl" layoutX="336.0" layoutY="75.0" prefHeight="40.0" prefWidth="326.0" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>

@@ -1,5 +1,8 @@
 package CommonUtils;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -110,5 +113,34 @@ public class CommonUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Converts a timestamp string to minutes.
+     *
+     * @param timestamp - the timestamp to convert.
+     * @return the timestamp in minutes.
+     */
+    public static int convertTimestampToMinutes(Timestamp timestamp) {
+        String[] time = timestamp.toString().split(":");
+        return Integer.parseInt(time[0]) * 60 + Integer.parseInt(time[1]);
+    }
+
+    /**
+     * Converts minutes to a timestamp.
+     *
+     * @param minutes - the minutes to convert.
+     * @return the timestamp.
+     */
+    public static Timestamp convertMinutesToTimestamp(int minutes) {
+        int hours = minutes / 60;
+        int mins = minutes % 60;
+
+        Date date = new Date();
+
+        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        return Timestamp.valueOf(dateFormat.format(date) + " " + hours + ":" + mins + ":00");
     }
 }

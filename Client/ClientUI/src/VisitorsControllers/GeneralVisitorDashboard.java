@@ -15,7 +15,7 @@ public abstract class GeneralVisitorDashboard extends BaseController {
             strToPrint = "Invalid ID! Try again";
         }
         if (strToPrint.isEmpty() && !id.equals(getUserID())) {
-            strToPrint = "Wrong ID! Try again";
+            strToPrint = "Invalid ID Format! Try again";
         }
         if (strToPrint.isEmpty()) {
             onAuthPopup.setErrorLabel(strToPrint);

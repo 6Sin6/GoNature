@@ -1,9 +1,11 @@
 package Entities;
 
+import java.io.Serializable;
+
 /**
  * Represents a request to change park parameters.
  */
-public class RequestChangingParkParameters {
+public class RequestChangingParkParameters implements Serializable {
 
     private Park park; // The park associated with the request
     private ParkParameters parameter; // The parameter being requested to change
@@ -110,5 +112,24 @@ public class RequestChangingParkParameters {
         this.parameter = parameter;
         this.requestedValue = requestedValue;
         this.status = RequestStatus.REQUEST_PENDING;
+    }
+
+    /**
+     * Constructs a String in a format that represents the request to change park parameter,
+     * Used in table view, for the requests table column.
+     * @return A string that represents the request to change park parameter.
+     */
+    @Override
+    public String toString() {
+        return "Change " + parameter + " to " + requestedValue + " in " + park.getParkName() + " - Status: " + status;
+    }
+
+    /**
+     * Retrieves the park manager's username associated with the request.
+     *
+     * @return The park manager's username associated with the request.
+     */
+    public String getRequesterName() {
+        return park.getParkManager().getUsername();
     }
 }

@@ -24,7 +24,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorName" layoutX="656.0" layoutY="428.0" text="errorMsgName" textFill="RED">
+            <Label fx:id="lblErrorName" layoutX="656.0" layoutY="428.0" text="errorMsgName" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
@@ -44,12 +44,12 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorPhone" layoutX="654.0" layoutY="494.0" text="errorMsgPhone" textFill="RED">
+            <Label fx:id="lblErrorPhone" layoutX="654.0" layoutY="494.0" text="errorMsgPhone" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorEmail" layoutX="657.0" layoutY="556.0" text="errorMsgEmail" textFill="RED">
+            <Label fx:id="lblErrorEmail" layoutX="657.0" layoutY="556.0" text="errorMsgEmail" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>

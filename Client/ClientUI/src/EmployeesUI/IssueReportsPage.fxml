@@ -22,8 +22,8 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnCancellationReports" layoutX="275.0" layoutY="475.0" onAction="#OnClickCancellationReportsButton" prefHeight="50.0" prefWidth="100.0" text="Cancellation&#10;Reports" textAlignment="CENTER" textOverrun="CLIP" />
-            <MFXButton fx:id="btnVisitationsReports" layoutX="625.0" layoutY="475.0" onAction="#OnClickVisitationsReportsButton" prefHeight="50.0" prefWidth="100.0" text="Visitations&#10;Reports" textAlignment="CENTER" />
+            <MFXButton fx:id="btnCancellationReports" styleClass="actButtonGreen" layoutX="275.0" layoutY="475.0" onAction="#OnClickCancellationReportsButton" prefHeight="50.0" prefWidth="100.0" text="Cancellation&#10;Reports" textAlignment="CENTER" textOverrun="CLIP" />
+            <MFXButton fx:id="btnVisitationsReports" styleClass="actButtonGreen" layoutX="625.0" layoutY="475.0" onAction="#OnClickVisitationsReportsButton" prefHeight="50.0" prefWidth="100.0" text="Visitations&#10;Reports" textAlignment="CENTER" />
          </children>
       </Pane>
    </children>

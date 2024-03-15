@@ -75,6 +75,11 @@
     -fx-text-fill: #FF6A69; /* White text color on hover */
 }
 
+.error-text {
+    -fx-text-fill: #FF6A69; /* Red text color */
+    -fx-font-size: 14px; /* Font size */
+}
+
 #appName {
     -fx-text-fill: #FCFCFC; /* White text color */
     -fx-font-size: 20px; /* Font size */

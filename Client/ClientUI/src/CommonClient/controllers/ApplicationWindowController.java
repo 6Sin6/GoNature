@@ -36,6 +36,8 @@ public class ApplicationWindowController implements Initializable {
     private User user;
     private Object Data;
 
+    public Object currentActiveController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setDashBoardMap();
@@ -65,6 +67,7 @@ public class ApplicationWindowController implements Initializable {
                 if (controller instanceof BaseController) {
                     ((BaseController) controller).setApplicationWindowController(this);
                 }
+                currentActiveController = controller;
                 pagesCache.put(fxmlPath, page);
             }
 
@@ -85,7 +88,7 @@ public class ApplicationWindowController implements Initializable {
 
                 // Now retrieve the controller
                 MenuSiderController menuController = loader.getController();
-                if (menuController instanceof BaseController) {
+                if (menuController != null) {
                     ((BaseController) menuController).setApplicationWindowController(this);
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception

@@ -28,6 +28,9 @@ public enum OpCodes {
     OP_VISITOR_ID_DOESNT_EXIST(24),
     OP_VISITOR_IS_ALREADY_GROUP_GUIDE(25),
     OP_UPDATED_VISITOR_TO_GROUP_GUIDE(26),
+    OP_GET_REQUESTS_FROM_PARK_MANAGER(27), /* Expect: String - DepartmentID. Returns: ArrayList<RequestChangingParkParameters> */
+    OP_AUTHORIZE_PARK_REQUEST(28), /* Expect: RequestChangingParkParameters. Returns: boolean indicator */
+    OP_DECLINE_PARK_REQUEST(29), /* Same method as above */
     OP_DB_ERR(999);
 
     private final int opCodeValue;

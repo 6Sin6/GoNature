@@ -30,4 +30,49 @@ public enum ParkParameters {
     ParkParameters(int ParkParameters) {
         this.ParkParameters = ParkParameters;
     }
+
+    /**
+     * Retrieves the integer value associated with the parameter.
+     *
+     * @return The integer value associated with the parameter.
+     */
+    public int getParameterVal() {
+        return ParkParameters;
+    }
+
+    /**
+     * Retrieves the String representation value associated with the parameter in MYSQL table parks.
+     *
+     * @return The String representation value associated with the parameter in MYSQL table parks.
+     */
+    public String getColumnName() {
+        switch (this) {
+            case PARK_CAPACITY:
+                return "Capacity";
+            case PARK_DEFAULT_MAX_VISITATION_LONGEVITY:
+                return "DefaultVisitationTime";
+            case PARK_GAP_VISITORS_CAPACITY:
+                return "GapVisitorsCapacity";
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Retrieves the String representation value associated with the parameter.
+     *
+     * @return The String representation value associated with the parameter.
+     */
+    public static String parameterToString(ParkParameters parameter) {
+        switch (parameter) {
+            case PARK_CAPACITY:
+                return "Park Capacity";
+            case PARK_DEFAULT_MAX_VISITATION_LONGEVITY:
+                return "Park Max Visitation Longevity";
+            case PARK_GAP_VISITORS_CAPACITY:
+                return "Park Difference Between Current Visitors and Capacity";
+            default:
+                return null;
+        }
+    }
 }

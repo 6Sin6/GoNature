@@ -24,7 +24,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgUsername" layoutX="450.0" layoutY="170.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgUsername" layoutX="450.0" layoutY="170.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
@@ -41,7 +41,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgPassword" layoutX="450.0" layoutY="240.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgPassword" layoutX="450.0" layoutY="240.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
@@ -52,7 +52,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgEmail" layoutX="450.0" layoutY="310.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgEmail" layoutX="450.0" layoutY="310.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
@@ -63,7 +63,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgFirstName" layoutX="450.0" layoutY="380.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgFirstName" layoutX="450.0" layoutY="380.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
@@ -74,13 +74,13 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgLastName" layoutX="450.0" layoutY="450.0" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgLastName" layoutX="450.0" layoutY="450.0" text="errorMsg" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <MFXTextField fx:id="txtLastName" layoutX="450.0" layoutY="470.0" prefHeight="30.0" prefWidth="200.0" />
-            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="665.0" text="Label" textFill="RED">
+            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="665.0" text="Label" styleClass="error-text">
                <font>
                   <Font size="14.0" />
                </font>

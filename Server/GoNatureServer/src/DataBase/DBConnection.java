@@ -6,6 +6,9 @@ import ServerUIPageController.ServerPortFrameController;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.convertTimestampToMinutes;
+
 /**
  * Manages the database connection for the application.
  * This class is responsible for initializing the JDBC driver,
@@ -107,6 +110,12 @@ public class DBConnection {
         dbConnection = null;
     }
 
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           CLIENT EXCLUSIVE METHODS                                              //
+    //                                                                                                                 //
+    //=================================================================================================================//
     public User login(String username, String password) {
         try {
             String tableName = this.schemaName + ".users";
@@ -116,7 +125,8 @@ public class DBConnection {
             if (userCredentials.next()) {
                 int userRole = userCredentials.getInt("role");
                 String userTypeTableName = userRole < 3 ? ".visitors" : userRole == 4 ? ".departmentmanagers" : ".parkemployees";
-                ResultSet userGoNatureData = dbController.selectRecords(this.schemaName + userTypeTableName, "username='" + username + "'");
+                ResultSet userGoNatureData =
+                        dbController.selectRecords(this.schemaName + userTypeTableName, "username='" + username + "'");
 
                 if (userGoNatureData.next()) {
                     switch (userRole) {
@@ -151,7 +161,7 @@ public class DBConnection {
                                                 parkData.getString("ParkName"),
                                                 parkData.getInt("Capacity"),
                                                 parkData.getInt("GapVisitorsCapacity"),
-                                                parkData.getTimestamp("DefaultVisitationTime"),
+                                                convertMinutesToTimestamp(parkData.getInt("DefaultVisitationTime")),
                                                 parkData.getInt("departmentID"),
                                                 new ParkManager(
                                                         managerData.getString("username"),
@@ -192,7 +202,7 @@ public class DBConnection {
                                                 parkDataSupport.getString("ParkName"),
                                                 parkDataSupport.getInt("Capacity"),
                                                 parkDataSupport.getInt("GapVisitorsCapacity"),
-                                                parkDataSupport.getTimestamp("DefaultVisitationTime"),
+                                                convertMinutesToTimestamp(parkDataSupport.getInt("DefaultVisitationTime")),
                                                 parkDataSupport.getInt("departmentID"),
                                                 new ParkManager(
                                                         supportManagerData.getString("username"),
@@ -444,7 +454,7 @@ public class DBConnection {
                             results.getString("ParkName"),
                             results.getInt("Capacity"),
                             results.getInt("GapVisitorsCapacity"),
-                            results.getTimestamp("DefaultVisitationTime"),
+                            convertMinutesToTimestamp(results.getInt("DefaultVisitationTime")),
                             results.getInt("Department"),
                             new ParkManager(
                                     managerResults.getString("username"),
@@ -459,6 +469,86 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
+        }
+    }
+
+    public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) {
+        try {
+            String tableName = this.schemaName + ".requeststodepmanager";
+            String whereClause = "DepartmentID=" + departmentID;
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            ArrayList<RequestChangingParkParameters> requests = new ArrayList<>();
+            while (results.next()) {
+                ResultSet parkResults = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + results.getString("ParkID"));
+                if (parkResults.next()) {
+                    ResultSet parkManagerResults = dbController.selectRecords(this.schemaName + ".parkemployees", "id=" + parkResults.getString("ParkManagerID") + " AND isParkManager=true");
+                    if (parkManagerResults.next()) {
+                        requests.add(new RequestChangingParkParameters(
+                                new Park(
+                                        parkResults.getString("ParkID"),
+                                        parkResults.getString("ParkName"),
+                                        parkResults.getInt("Capacity"),
+                                        parkResults.getInt("GapVisitorsCapacity"),
+                                        convertMinutesToTimestamp(parkResults.getInt("DefaultVisitationTime")),
+                                        parkResults.getInt("DepartmentID"),
+                                        new ParkManager(
+                                                parkManagerResults.getString("username"),
+                                                "",
+                                                parkManagerResults.getString("EmailAddress"),
+                                                parkManagerResults.getString("ParkID")
+                                        )
+                                ),
+                                ParkParameters.values()[results.getInt("Parameter") - 1],
+                                results.getDouble("RequestedValue"),
+                                RequestStatus.values()[results.getInt("Status") - 1]
+                        ));
+                    }
+                }
+            }
+            return requests;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean authorizeParkRequest(RequestChangingParkParameters req) {
+        try {
+            String tableName = this.schemaName + ".requeststodepmanager";
+            String setClause = "Status=" + RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
+            String whereClause = "ParkID=" + req.getPark().getParkID() + " AND parameter=" + req.getParameter().getParameterVal() + " AND requestedValue=" + req.getRequestedValue();
+            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+                this.serverController.addtolog("Update in " + tableName + " failed. Authorize park request:" + req);
+                return false;
+            }
+
+            String tableName2 = this.schemaName + ".parks";
+            String setClause2 = req.getParameter().getColumnName() + "=" + req.getRequestedValue();
+            String whereClause2 = "ParkID=" + req.getPark().getParkID();
+            if (!dbController.updateRecord(tableName2, setClause2, whereClause2)) {
+                this.serverController.addtolog("Update in " + tableName2 + " failed. Authorize park request:" + req);
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean unauthorizeParkRequest(RequestChangingParkParameters req) {
+        try {
+            String tableName = this.schemaName + ".requeststodepmanager";
+            String setClause = "Status=" + RequestStatus.REQUEST_DECLINED.getRequestStatus();
+            String whereClause = "ParkID=" + req.getPark().getParkID() + " AND parameter=" + req.getParameter().getParameterVal() + " AND requestedValue=" + req.getRequestedValue();
+            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+                this.serverController.addtolog("Update in " + tableName + " failed. Authorize park request:" + req);
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
         }
     }
 
@@ -484,15 +574,14 @@ public class DBConnection {
                 return;
             }
 
-            // Update the status of selected orders to 8
+            // Update the status of selected orders to pending confirmation
             if (!Orders.isEmpty()) {
-                System.out.println("Found orders!!!");
                 for (ArrayList<String> order : Orders) {
-                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) { // Assuming status 8 is at index 7 in the OrderStatus enum
+                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
                     }
                     else {
-                        serverController.addtolog("Send to Email Address: " + order.get(1)+" Cancelled");
+                        serverController.addtolog("Send to Email Address: " + order.get(1) + " Cancelled");
                     }
                 }
             }
@@ -518,14 +607,14 @@ public class DBConnection {
                 return;
             }
 
-            // Update the status of selected orders to 8
+            // Update the status of selected orders to cancelled
             if (!Orders.isEmpty()) {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
                         serverController.addtolog("Failed to cancel order status for OrderID: " + order.get(0));
                     }
                     else {
-                        serverController.addtolog("Send to Email Address: " + order.get(1)+" Confirm notification");
+                        serverController.addtolog("Send to Email Address: " + order.get(1) + " Confirm notification");
                     }
                 }
             }
