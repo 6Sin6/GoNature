@@ -1,6 +1,7 @@
 package EmployeesControllers;
 
 import CommonClient.ClientUI;
+import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
@@ -16,7 +17,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import static CommonClient.Utils.parseVisitTime;
+import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 
 public class AuthorizeParksRequestsController extends BaseController {
     @FXML
@@ -85,7 +90,15 @@ public class AuthorizeParksRequestsController extends BaseController {
         parkNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPark().getParkName()));
         paramCol.setCellValueFactory(cellData -> new SimpleStringProperty(ParkParameters.parameterToString(cellData.getValue().getParameter())));
         statusVal.setCellValueFactory(cellData -> new SimpleStringProperty(RequestStatus.statusToString(cellData.getValue().getStatus())));
-        newValCol.setCellValueFactory(cellData -> new SimpleStringProperty(((Integer) cellData.getValue().getRequestedValue().intValue()).toString()));
+        newValCol.setCellValueFactory(cellData -> {
+            String formattedValue = ((Integer) cellData.getValue().getRequestedValue().intValue()).toString();
+            if (cellData.getValue().getParameter() == ParkParameters.PARK_DEFAULT_MAX_VISITATION_LONGEVITY) {
+                Timestamp time = convertMinutesToTimestamp(cellData.getValue().getRequestedValue().intValue());
+                formattedValue = parseVisitTime(time);
+            }
+
+            return new SimpleStringProperty(formattedValue);
+        });
 
         // Set row factory to handle clicks on rows
         tableRequests.setRowFactory(tv -> {

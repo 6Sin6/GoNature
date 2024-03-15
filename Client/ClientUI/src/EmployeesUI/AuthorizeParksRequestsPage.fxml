@@ -15,11 +15,11 @@
          <children>
             <TableView fx:id="tableRequests" layoutX="10.0" layoutY="134.0" prefHeight="500.0" prefWidth="930.0">
                <columns>
-                  <TableColumn fx:id="parkMgrCol" prefWidth="208.0" text="Park Manager" />
-                  <TableColumn fx:id="parkNameCol" prefWidth="230.0" text="Park Name" />
-                  <TableColumn fx:id="statusVal" prefWidth="155.0" text="Request Status" />
-                  <TableColumn fx:id="paramCol" prefWidth="172.0" text="Parameter" />
-                  <TableColumn fx:id="newValCol" prefWidth="164.0" text="Proposed New Value" />
+                  <TableColumn fx:id="parkMgrCol" prefWidth="149.0" text="Park Manager" />
+                  <TableColumn fx:id="parkNameCol" prefWidth="184.0" text="Park Name" />
+                  <TableColumn fx:id="statusVal" prefWidth="191.0" text="Request Status" />
+                  <TableColumn fx:id="paramCol" prefWidth="261.0" text="Parameter" />
+                  <TableColumn fx:id="newValCol" prefWidth="144.0" text="Proposed New Value" />
                </columns>
             </TableView>
             <Text layoutX="234.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Requests From Park Managers" textAlignment="CENTER">
