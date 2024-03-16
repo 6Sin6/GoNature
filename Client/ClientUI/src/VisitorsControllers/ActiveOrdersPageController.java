@@ -130,7 +130,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
     @FXML
     public void populateTable(ArrayList<Order> dataList) {
         if (dataList.isEmpty()){
-            MessagePopup popup = new MessagePopup("No active orders", Duration.seconds(5), 300, 150, false);
+            MessagePopup popup = new MessagePopup("No active orders", Duration.seconds(5), 300, 150, false, false);
             popup.show(applicationWindowController.getRoot());
         }
         rowIndex = -1;

@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 public class MessagePopup extends BasePopup {
-    public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode) {
+    public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode, boolean onCloseNavigate) {
         super(fullScreenMode, width, height);
         Label messageLabel = new Label(message);
         messageLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white;");
