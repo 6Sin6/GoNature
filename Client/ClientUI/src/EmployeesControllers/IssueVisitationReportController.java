@@ -21,6 +21,12 @@ public class IssueVisitationReportController extends BaseController {
     @FXML
     private Text txtNoReport;
 
+    public void cleanup() {
+        txtDate.setText("");
+        txtNoReport.setVisible(false);
+        chartVisitationStatistics.getData().clear();
+    }
+
     @FXML
     void OnClickDownloadCSVButton(ActionEvent event) {
 

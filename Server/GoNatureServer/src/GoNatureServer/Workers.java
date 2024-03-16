@@ -48,7 +48,7 @@ public class Workers {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            controller.addtolog("Sending Reminders for Orders in  "+ calendar.getTime());
+            controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
             db.updateOrderStatusForUpcomingVisits();
         };
 
@@ -68,7 +68,7 @@ public class Workers {
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            controller.addtolog("Checking Confirmation for Orders in  "+ calendar.getTime());
+            controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
             db.ChangeLatePendingConfirmationToCancelled();
         };
 

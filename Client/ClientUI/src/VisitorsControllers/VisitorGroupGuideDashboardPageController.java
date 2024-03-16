@@ -12,7 +12,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDashboard {
-
     @FXML
     private StackPane StackPane;
 
@@ -53,6 +52,10 @@ public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDash
     private MFXButton bntViewOrders;
     private final String orderPage = "/VisitorsUI/GroupGuideOrderVisitationPage.fxml";
     private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
+
+    public void cleanup() {
+        // Nothing to clean up
+    }
 
     @Override
     public String getUserID() {

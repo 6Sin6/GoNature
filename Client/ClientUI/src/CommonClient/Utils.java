@@ -1,10 +1,14 @@
 package CommonClient;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Utils {
@@ -86,6 +90,24 @@ public class Utils {
         Duration duration = Duration.between(now, dateTime);
 
         // Check if the duration is more than 24 hours
-        return duration.toMinutes() > 1440;
+        return duration.toMinutes() <= 1440;
+    }
+
+    /**
+     * Generates a list of time slots for the time selection combo box.
+     * Time slots range from the provided start and end parameters.
+     * @param start The start time of the time slots.
+     * @param end The time slots will start from this time.
+     */
+    public static ObservableList<String> setComboBoxHours(int start, int end) {
+        ArrayList<String> al = new ArrayList<String>();
+        for (int i = start; i <= end; i++) {
+            if (i < 10) {
+                al.add("0" + i + ":00");
+            } else {
+                al.add("" + i + ":00");
+            }
+        }
+        return FXCollections.observableArrayList(al);
     }
 }

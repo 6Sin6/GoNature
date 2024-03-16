@@ -13,6 +13,10 @@ public class IssueReportsController extends BaseController {
     @FXML
     private MFXButton btnVisitationsReports;
 
+    public void cleanup() {
+        // No cleanup required
+    }
+
     @FXML
     void OnClickCancellationReportsButton(ActionEvent event)
     {

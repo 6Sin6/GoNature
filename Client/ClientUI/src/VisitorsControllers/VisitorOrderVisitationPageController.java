@@ -13,27 +13,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
+
+import static CommonClient.Utils.setComboBoxHours;
 
 
 public class VisitorOrderVisitationPageController extends BaseController implements Initializable {
@@ -82,6 +75,10 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
     @FXML
     private MFXTextField txtPhone;
 
+    public void cleanup() {
+        clearFields();
+    }
+
     /**
      * Populates the park selection combo box with available parks.
      * The parks are retrieved from a static data source.
@@ -93,23 +90,6 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         }
         list = FXCollections.observableArrayList(al);
         parkCmbBox.setItems(list);
-    }
-
-    /**
-     * Populates the time of visit combo box with hourly time slots.
-     * Time slots range from 08:00 to 19:00.
-     */
-    private void setTimeOfVisitCmbBox() {
-        ArrayList<String> al = new ArrayList<String>();
-        for (int i = 8; i <= 19; i++) {
-            if (i < 10) {
-                al.add("0" + i + ":00");
-            } else {
-                al.add("" + i + ":00");
-            }
-        }
-        list = FXCollections.observableArrayList(al);
-        timeOfVisitCmbBox.setItems(list);
     }
 
     /**
@@ -139,9 +119,8 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setParkCmbBox();
-        setTimeOfVisitCmbBox();
+        timeOfVisitCmbBox.setItems(setComboBoxHours(8, 20));
         setDatePicker();
-
     }
 
     /**
@@ -224,7 +203,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             return false;
         }
 
-        if (!CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
+        if (CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
             errorLbl.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
             return false;
         }

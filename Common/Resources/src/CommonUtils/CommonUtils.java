@@ -121,8 +121,8 @@ public class CommonUtils {
      * @param timestamp - the timestamp to convert.
      * @return the timestamp in minutes.
      */
-    public static int convertTimestampToMinutes(Timestamp timestamp) {
-        String[] time = timestamp.toString().split(":");
+    public static Integer convertTimestampToMinutes(Timestamp timestamp) {
+        String[] time = timestamp.toString().split(" ")[1].split(":");
         return Integer.parseInt(time[0]) * 60 + Integer.parseInt(time[1]);
     }
 

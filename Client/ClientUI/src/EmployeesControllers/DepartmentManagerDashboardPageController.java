@@ -19,6 +19,10 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     @FXML
     private Text errorTxt;
 
+    public void cleanup() {
+        errorTxt.setText("");
+    }
+
     @FXML
     public void OnClickIssueReportsButton(ActionEvent event)
     {
@@ -29,8 +33,8 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     public void OnClickViewRequestsButton(ActionEvent event) {
         try {
             applicationWindowController.setCenterPage("/EmployeesUI/AuthorizeParksRequestsPage.fxml");
-            if (applicationWindowController.currentActiveController instanceof AuthorizeParksRequestsController) {
-                AuthorizeParksRequestsController controller = (AuthorizeParksRequestsController) applicationWindowController.currentActiveController;
+            if (applicationWindowController.getCurrentActiveController() instanceof AuthorizeParksRequestsController) {
+                AuthorizeParksRequestsController controller = (AuthorizeParksRequestsController) applicationWindowController.getCurrentActiveController();
                 controller.start();
             }
         } catch (Exception e) {

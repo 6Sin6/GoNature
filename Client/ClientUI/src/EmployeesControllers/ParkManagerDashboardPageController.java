@@ -13,10 +13,17 @@ public class ParkManagerDashboardPageController extends BaseController {
     @FXML
     private MFXButton btnChangeParkParameters;
 
+    public void cleanup() {
+        // No cleanup required
+    }
+
     @FXML
     public void OnClickChangeParkParametersButton(ActionEvent event)
     {
         applicationWindowController.setCenterPage("/EmployeesUI/RequestSettingParkParametersPage.fxml");
+        if (applicationWindowController.getCurrentActiveController() instanceof RequestSettingParkParametersController) {
+            ((RequestSettingParkParametersController) applicationWindowController.getCurrentActiveController()).getParkParameters();
+        }
     }
 
     @FXML

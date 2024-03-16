@@ -13,6 +13,10 @@ public class PrepareReportsController extends BaseController {
     @FXML
     private MFXButton btnVisitorsReport;
 
+    public void cleanup() {
+
+    }
+
     @FXML
     void OnClickUsageReportButton(ActionEvent event)
     {

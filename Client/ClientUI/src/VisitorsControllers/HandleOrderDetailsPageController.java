@@ -34,6 +34,11 @@ public class HandleOrderDetailsPageController extends BaseController {
 
     private Order order;
 
+    public void cleanup() {
+        order = null;
+        txtEmail.setText("");
+    }
+
     public void setOrder(Order order) {
         this.order = order;
 

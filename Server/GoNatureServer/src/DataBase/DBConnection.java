@@ -5,6 +5,7 @@ import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 import static CommonUtils.CommonUtils.convertTimestampToMinutes;
@@ -113,7 +114,7 @@ public class DBConnection {
 
     //=================================================================================================================//
     //                                                                                                                 //
-    //                                           CLIENT EXCLUSIVE METHODS                                              //
+    //                                           VISITOR & USERS METHODS                                               //
     //                                                                                                                 //
     //=================================================================================================================//
     public User login(String username, String password) {
@@ -425,21 +426,6 @@ public class DBConnection {
         }
     }
 
-    public String getParkNameByID(String parkID) {
-        try {
-            String tableName = this.schemaName + ".parks";
-            String whereClause = "ParkID=" + parkID;
-            ResultSet results = dbController.selectRecords(tableName, whereClause);
-            if (results.next()) {
-                return results.getString("ParkName");
-            }
-            return "";
-        } catch (Exception e) {
-            this.serverController.addtolog(e.getMessage());
-            return null;
-        }
-    }
-
     public Park getParkDetails(String parkID) {
         try {
             String tableName = this.schemaName + ".parks";
@@ -447,7 +433,7 @@ public class DBConnection {
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             if (results.next()) {
                 String pManagerId = results.getString("ParkManagerID");
-                ResultSet managerResults = dbController.selectRecords(this.schemaName + ".parkemployees", "id=" + pManagerId);
+                ResultSet managerResults = dbController.selectRecordsFields(this.schemaName + ".parkemployees", "id=" + pManagerId, "username", "EmailAddress");
                 if (managerResults.next()) {
                     return new Park(
                             results.getString("ParkID"),
@@ -455,7 +441,7 @@ public class DBConnection {
                             results.getInt("Capacity"),
                             results.getInt("GapVisitorsCapacity"),
                             convertMinutesToTimestamp(results.getInt("DefaultVisitationTime")),
-                            results.getInt("Department"),
+                            results.getInt("departmentID"),
                             new ParkManager(
                                     managerResults.getString("username"),
                                     "",
@@ -472,10 +458,15 @@ public class DBConnection {
         }
     }
 
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           MANAGERS EXCLUSIVE METHODS                                            //
+    //                                                                                                                 //
+    //=================================================================================================================//
     public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) {
         try {
             String tableName = this.schemaName + ".requeststodepmanager";
-            String whereClause = "DepartmentID=" + departmentID;
+            String whereClause = "DepartmentID=" + departmentID + " AND status=" + RequestStatus.REQUEST_PENDING.getRequestStatus();
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             ArrayList<RequestChangingParkParameters> requests = new ArrayList<>();
             while (results.next()) {
@@ -544,6 +535,27 @@ public class DBConnection {
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Authorize park request:" + req);
                 return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean submitRequestsToDepartment(Map<ParkParameters, RequestChangingParkParameters> requests) {
+        try {
+            String tableName = this.schemaName + ".requeststodepmanager";
+            for (RequestChangingParkParameters req : requests.values()) {
+                String columns = "ParkID, DepartmentID, parameter, requestedValue, status";
+                if (!dbController.insertRecord(tableName, columns, "'" + req.getPark().getParkID() + "'",
+                        String.valueOf(req.getPark().getDepartment()),
+                        String.valueOf(req.getParameter().getParameterVal()),
+                        String.valueOf(req.getRequestedValue()),
+                        String.valueOf(req.getStatus().getRequestStatus()))) {
+                    this.serverController.addtolog("Insert into " + tableName + " failed. Insert request:" + req);
+                    return false;
+                }
             }
             return true;
         } catch (SQLException e) {
