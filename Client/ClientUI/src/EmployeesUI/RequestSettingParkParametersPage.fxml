@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RequestSettingParkParametersController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RequestSettingParkParametersController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -38,7 +38,7 @@
             </Text>
             <MFXTextField fx:id="txtDifferenceOrdersVisitors" layoutX="81.0" layoutY="304.0" prefHeight="30.0" prefWidth="200.0" />
             <MFXTextField fx:id="txtParkCapacity" layoutX="81.0" layoutY="198.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" layoutX="131.0" layoutY="510.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
+            <MFXButton fx:id="btnSubmit" buttonType="RAISED" defaultButton="true" layoutX="131.0" layoutY="510.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
             <MFXLegacyComboBox fx:id="txtMaxVisitation" layoutX="81.0" layoutY="414.0" prefHeight="48.0" prefWidth="200.0" value="" />
             <Label fx:id="lblSuccessMsg" alignment="CENTER" layoutX="198.0" layoutY="623.0" prefHeight="59.0" prefWidth="655.0">
                <font>
