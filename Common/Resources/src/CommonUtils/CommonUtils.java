@@ -90,7 +90,7 @@ public class CommonUtils {
      * @param str - string to check.
      * @return true if the string contains only digits, false otherwise.
      */
-    private static boolean isAllDigits(String str) {
+    public static boolean isAllDigits(String str) {
         if (str == null)
             return false;
         for (int i = 0; i < str.length(); i++) {
