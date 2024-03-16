@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.VisitorOrderVisitationPageController">
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.VisitorOrderVisitationPageController">
    <children>
       <Pane fx:id="pane" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -23,7 +23,7 @@
             <Separator fx:id="sepOrder" layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
             <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="439.0" layoutY="234.0" prefHeight="30.0" prefWidth="200.0" />
             <MFXLegacyComboBox fx:id="timeOfVisitCmbBox" layoutX="439.0" layoutY="323.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" layoutX="423.0" layoutY="548.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Create Order" />
+            <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" defaultButton="true" layoutX="423.0" layoutY="548.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Create Order" />
             <MFXTextField fx:id="txtFirstName" layoutX="439.0" layoutY="123.0" prefHeight="30.0" prefWidth="200.0" />
             <MFXTextField fx:id="txtLastName" layoutX="439.0" layoutY="178.0" prefWidth="200.0" />
             <DatePicker fx:id="datePicker" layoutX="439.0" layoutY="278.0" prefHeight="30.0" prefWidth="200.0" />
