@@ -21,12 +21,7 @@
                         <Font name="System Bold" size="35.0" />
                     </font>
                 </Text>
-                <Separator fx:id="sepOrder" layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Label fx:id="errorLbl" layoutX="323.0" layoutY="82.0" prefHeight="38.0" prefWidth="296.0" styleClass="error-text">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
+                <Separator fx:id="sepOrder" layoutY="70.0" prefHeight="14.0" prefWidth="950.0" />
                 <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="424.0" layoutY="243.0" prefHeight="30.0" prefWidth="200.0" />
                 <MFXLegacyComboBox fx:id="timeOfVisitCmbBox" layoutX="423.0" layoutY="347.0" prefHeight="24.0" prefWidth="200.0" />
                 <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" layoutX="425.0" layoutY="625.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" text="Create Order" />
@@ -80,6 +75,7 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
+                <Label fx:id="label" layoutX="417.0" layoutY="94.0" prefHeight="24.0" prefWidth="213.0" styleClass="error-text" />
             </children>
             <cursor>
                 <Cursor fx:constant="DEFAULT" />

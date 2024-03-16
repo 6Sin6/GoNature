@@ -135,7 +135,7 @@ public class ApplicationWindowController implements Initializable {
         menuSider = null;
     }
 
-    private void setDashBoardMap(){
+    private void setDashBoardMap() {
         DashBoardMap.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
@@ -148,6 +148,7 @@ public class ApplicationWindowController implements Initializable {
         String fxmlPath = DashBoardMap.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
+
     private void setEmployeesPagesMap() {
         EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
         EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
@@ -179,9 +180,11 @@ public class ApplicationWindowController implements Initializable {
         VisitorsPagesMap.put("GroupGuideOrderVisitationPage", "/VisitorsUI/GroupGuideOrderVisitationPage.fxml");
         VisitorsPagesMap.put("HandleOrderDetailsPage", "/VisitorsUI/HandleOrderDetailsPage.fxml");
         VisitorsPagesMap.put("VisitorOrderVisitationPage", "/VisitorsUI/VisitorOrderVisitationPage.fxml");
-        VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
         VisitorsPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
+        VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
+        VisitorsPagesMap.put("UpdateOrderDetailsPage", "/VisitorsUI/UpdateOrderDetailsPage.fxml");
     }
+
     public void loadVistorsPage(String NameOfFxml) {
         String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {

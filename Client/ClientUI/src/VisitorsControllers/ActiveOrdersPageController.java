@@ -88,35 +88,12 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return;
         }
         Order o1 = list.get(rowIndex);
-        applicationWindowController.loadVistorsPage("HandleOrderDetailsPage");
+        applicationWindowController.loadVistorsPage("UpdateOrderDetailsPage");
+        Object controller = applicationWindowController.getCurrentActiveController();
+        if (controller instanceof UpdateOrderDetailsPageController) {
+            ((UpdateOrderDetailsPageController) controller).setFields(o1);
+        }
 
-
-//        try {
-//            System.out.println("Order Number has been found");
-//            Order o1 = list.get(rowIndex);
-//            ((Node) event.getSource()).getScene().getWindow().hide(); //hiding primary window
-//            Stage primaryStage = new Stage();
-//            AnchorPane root = loader.load(getClass().getResource("/VisitorsControllers/OrderDetailsPage.fxml").openStream());
-//
-//            OrderDetailsPageController orderDetailsPageController = loader.getController();
-//            orderDetailsPageController.loadOrder(o1);
-//
-//            Scene scene = new Scene(root);
-//            scene.getStylesheets().add(getClass().getResource("/VisitorsControllers/OrderDetailsPage.css").toExternalForm());
-//
-//            primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
-//                ClientUI.client.quit();
-//            }));
-//
-//            Image windowImage = new Image("/assets/GoNatureLogo.png");
-//            primaryStage.getIcons().add(windowImage);
-//
-//            primaryStage.setTitle("GoNature - Order Details");
-//            primaryStage.setScene(scene);
-//            primaryStage.show();
-//        } catch (Exception e) {
-//            System.out.println("error with open stream");
-//        }
     }
 
     @Override
@@ -141,7 +118,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     @FXML
     public void populateTable(ArrayList<Order> dataList) {
-        if (dataList.isEmpty()){
+        if (dataList.isEmpty()) {
             MessagePopup popup = new MessagePopup("No active orders", Duration.seconds(5), 300, 150, false);
             popup.show(applicationWindowController.getRoot());
         }

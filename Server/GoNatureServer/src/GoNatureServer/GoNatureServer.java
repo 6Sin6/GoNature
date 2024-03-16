@@ -299,6 +299,10 @@ public class GoNatureServer extends AbstractServer {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
         boolean isCanceled = db.updateOrderStatusAsCancelled(orderID);
+        if (!isCanceled) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
+            client.sendToClient(respondMsg);
+        }
         Message respondMsg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, message.getMsgUserName(), isCanceled);
         client.sendToClient(respondMsg);
     }

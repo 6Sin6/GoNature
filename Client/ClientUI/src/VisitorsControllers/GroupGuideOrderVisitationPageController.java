@@ -17,11 +17,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import javax.naming.CommunicationException;
+import javax.xml.soap.Text;
 import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -69,7 +71,8 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
 
     @FXML
     private MFXTextField txtPhone;
-
+    @FXML
+    private Label label;
     public void cleanup() {
         txtEmail.clear();
         txtFirstName.clear();
@@ -161,14 +164,13 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     @FXML
     void OnClickCreateOrderButton(ActionEvent event) throws CommunicationException {
         if (!validateFields()) {
-            System.out.println("one or more details are empty ");
             return;
         }
         if (!(applicationWindowController.getUser() instanceof VisitorGroupGuide)) {
             System.out.println("The user isn't visitor");
             return;
         }
-
+        label.setText("");
         VisitorGroupGuide guide = (VisitorGroupGuide) applicationWindowController.getUser();
         Timestamp timeOfVisit = CommonClient.Utils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
         Order order = new Order(guide.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_GROUP, (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue())));
@@ -177,7 +179,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
         if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION) {
-            throw new CommunicationException("Response from server is not appropriate");
+            throw new CommunicationException("Respond not appropriate from server");
         }
         if (respondMsg.getMsgData() instanceof Order) {
             if (((Order) respondMsg.getMsgData()).getOrderID() != null) {
@@ -192,11 +194,11 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
                         , 600, 300, false, "OK", false);
                 confirmPopup.show(applicationWindowController.getRoot());
             } else {
-                String strForPopup = "The park is at full capacity. Do you want to sign up to the waitlist?";
+                String strForPopup = "The park is Full Do you want to enter for waitlist?";
                 ConfirmationPopup confirmPopup;
                 confirmPopup = new ConfirmationPopup(strForPopup, () ->
                 {
-                    applicationWindowController.loadVistorsPage("WaitListPage");
+                    applicationWindowController.setCenterPage("/VisitorsUI/WaitListPage");
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
                     clearFields();
                 }, () -> {
@@ -207,6 +209,8 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
                         300, 150, false, "Yes", "No", false);
                 confirmPopup.show(applicationWindowController.getRoot());
             }
+        } else {
+            label.setText("The order is not created");
         }
     }
 
@@ -218,25 +222,27 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
      */
     private boolean validateFields() {
         if (CommonUtils.anyStringEmpty(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtEmail.getText(), numOfVisitorsCmbBox.getValue()) || parkCmbBox.getValue() == null || datePicker.getValue() == null || timeOfVisitCmbBox.getValue() == null) {
-            erorrLbl.setText("One or more fields are empty.");
+            label.setText("One or more fileds are empty.");
             return false;
         }
         if (!CommonUtils.isValidPhone(txtPhone.getText())) {
-            erorrLbl.setText("Invalid phone. Please check your input.");
+            label.setText("Invalid phone. Please check your input.");
             return false;
         }
-        if (!CommonUtils.isValidName(txtFirstName.getText()) || !CommonUtils.isValidName(txtLastName.getText()))
-            erorrLbl.setText("Please enter a valid first and last name.");
+        if (!CommonUtils.isValidName(txtFirstName.getText()) || !CommonUtils.isValidName(txtLastName.getText())) {
+            label.setText("Validation failed. Please check your input.");
+            return false;
+        }
         if (!CommonUtils.isEmailAddressValid(txtEmail.getText())) {
-            erorrLbl.setText("Invalid email. Please check your input.");
+            label.setText("Invalid email. Please check your input.");
             return false;
         }
         if (CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
-            erorrLbl.setText("Invalid visitation date. You cannot book an order less than 24 hours of the chosen visitation date.");
+            label.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
             return false;
         }
         if (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue()) <= 0) {
-            erorrLbl.setText("Invalid number of visitors. Please check your input.");
+            label.setText("Invalid number of visitors. Please check your input.");
             return false;
         }
         return true;
