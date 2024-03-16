@@ -67,13 +67,13 @@ public class HomePageController extends BaseController implements Initializable 
         }
 
         String[] data = {values[0], values[1]};
-        Message message = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", data);
+        Message message = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", data);
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
 
         // Checking if the response from the server is inappropriate.
-        if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID) {
+        if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
             throw new CommunicationException("Response is inappropriate from server");
         }
 
