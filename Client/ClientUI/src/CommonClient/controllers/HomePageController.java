@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
