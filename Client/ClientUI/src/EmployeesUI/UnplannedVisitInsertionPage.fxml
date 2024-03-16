@@ -29,7 +29,7 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Text fx:id="txtResult" layoutX="399.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Result From Insertion">
+            <Text fx:id="txtResult" layoutX="399.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0">
                <font>
                   <Font size="16.0" />
                </font>

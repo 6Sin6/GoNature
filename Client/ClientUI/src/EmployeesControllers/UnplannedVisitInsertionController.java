@@ -27,6 +27,12 @@ public class UnplannedVisitInsertionController extends BaseController {
     @FXML
     private Text txtResult;
 
+    public void cleanup() {
+        txtNumOfVisitors.clear();
+        cbGroupOrder.setSelected(false);
+        lblErrorMsg.setText("");
+        txtResult.setText("");
+    }
 
     @FXML
     void OnClickSubmitButton(ActionEvent event)
@@ -37,7 +43,6 @@ public class UnplannedVisitInsertionController extends BaseController {
         boolean cbSelection = GetCheckBoxSelection();
 
 
-        clearAndSetResult("");
     }
 
     private boolean GetCheckBoxSelection()
@@ -80,13 +85,5 @@ public class UnplannedVisitInsertionController extends BaseController {
 
         lblErrorMsg.setText("");
         return true;
-    }
-
-    private void clearAndSetResult(String resultText)
-    {
-        txtNumOfVisitors.clear();
-        cbGroupOrder.setSelected(false);
-        lblErrorMsg.setText("");
-        txtResult.setText(resultText);
     }
 }
