@@ -42,7 +42,12 @@ public enum OrderStatus {
     /**
      * Represents the status of an order being pending confirmation (SMS/Email has been sent regarding the order).
      */
-    STATUS_PENDING_CONFIRMATION(8);
+    STATUS_PENDING_CONFIRMATION(8),
+
+    /**
+     * Represents order that has been fulfilled
+     */
+    STATUS_FULFILLED(9);
 
     private int orderStatus;
 

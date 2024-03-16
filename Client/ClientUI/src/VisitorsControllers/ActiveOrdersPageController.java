@@ -3,10 +3,7 @@ package VisitorsControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.MessagePopup;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Order;
-import Entities.ParkBank;
+import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.collections.FXCollections;
@@ -126,6 +123,13 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         ObservableList<Map<String, String>> tableData = FXCollections.observableArrayList();
         this.list = dataList;
         for (Order item : dataList) {
+            if (item.getOrderStatus() == OrderStatus.STATUS_CANCELLED ||
+                    item.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER ||
+                    item.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_AND_ABSENT ||
+                    item.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID ||
+                    item.getOrderStatus() == OrderStatus.STATUS_FULFILLED) {
+                continue;
+            }
             Timestamp orderTimeStamp = item.getVisitationDate();
             String date = CommonClient.Utils.parseVisitDate(orderTimeStamp);
             String time = CommonClient.Utils.parseVisitTime(orderTimeStamp);
