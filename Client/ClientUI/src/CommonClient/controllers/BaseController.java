@@ -16,5 +16,5 @@ public abstract class BaseController {
      * This abstract method is called by all controllers when the user loads another page.
      * It is used to clean up the current page fields such as text fields, combo boxes, etc.
      */
-    public abstract void cleanup();
+    public void cleanup() {}
 }
