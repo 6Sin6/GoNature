@@ -231,7 +231,7 @@ public class GoNatureServer extends AbstractServer {
     private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
         String[] data = (String[]) message.getMsgData();
         Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
-        Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
+        Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", userOrder);
         client.sendToClient(getUserMsg);
     }
 
