@@ -27,19 +27,17 @@ public class UnplannedVisitInsertionController extends BaseController {
     @FXML
     private Text txtResult;
 
-    public void cleanup() {
-        txtNumOfVisitors.clear();
-        cbGroupOrder.setSelected(false);
-        lblErrorMsg.setText("");
-        txtResult.setText("");
-    }
 
     @FXML
     void OnClickSubmitButton(ActionEvent event)
     {
         if (!CheckValidInput())
             return;
+        int numOfVisitors = GetNumOfVisitors();
+        boolean cbSelection = GetCheckBoxSelection();
 
+
+        clearAndSetResult("");
     }
 
     private boolean GetCheckBoxSelection()
@@ -59,18 +57,36 @@ public class UnplannedVisitInsertionController extends BaseController {
             lblErrorMsg.setText("Invalid number of visitors, not a number!");
             return false;
         }
-        lblErrorMsg.setText("");
 
         int numOfVisitors = GetNumOfVisitors();
-        if (numOfVisitors <= 0)
+        if (numOfVisitors <= 0) // case: less than 1.
         {
-            lblErrorMsg.setText("Invalid number of visitors, ");
+            lblErrorMsg.setText("Invalid number of visitors, at least one visitors.");
             return false;
         }
-        else lblErrorMsg.setText("");
-        boolean cbSelection = GetCheckBoxSelection();
 
+        boolean cbSelection = GetCheckBoxSelection();
+        if (cbSelection && numOfVisitors > 15) // case: group order, max 15 visitors.
+        {
+            lblErrorMsg.setText("Invalid number of visitors, max 15 visitors for group order.");
+            return false;
+        }
+
+        if (!cbSelection && numOfVisitors > 9) // case: not group, max 9 visitors
+        {
+            lblErrorMsg.setText("Invalid number of visitors, max 9 visitors for non-group order.");
+            return false;
+        }
+
+        lblErrorMsg.setText("");
         return true;
     }
 
+    private void clearAndSetResult(String resultText)
+    {
+        txtNumOfVisitors.clear();
+        cbGroupOrder.setSelected(false);
+        lblErrorMsg.setText("");
+        txtResult.setText(resultText);
+    }
 }
