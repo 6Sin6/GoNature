@@ -34,8 +34,8 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnEntry" layoutX="760.0" layoutY="520.0" onAction="#OnClickEntryButton" prefHeight="50.0" prefWidth="100.0" text="Submit&#10;Entry/Exit" textAlignment="CENTER" />
-            <Text layoutX="717.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Update Entry or Exit">
+            <MFXButton fx:id="btnExit" layoutX="760.0" layoutY="520.0" onAction="#OnClickExitButton" prefHeight="50.0" prefWidth="100.0" text="Submit&#10;Exit" textAlignment="CENTER" />
+            <Text layoutX="714.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark Park Order Exit">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

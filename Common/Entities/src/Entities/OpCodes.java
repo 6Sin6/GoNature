@@ -32,6 +32,8 @@ public enum OpCodes {
     OP_AUTHORIZE_PARK_REQUEST(28), /* Expect: RequestChangingParkParameters. Returns: boolean indicator */
     OP_DECLINE_PARK_REQUEST(29), /* Same method as above */
     OP_SUBMIT_REQUESTS_TO_DEPARTMENT(30), /* Expect: Map<ParkParameters, RequestChangingParkParameters>. Returns: boolean indicator */
+    OP_UPDATE_EXIT_TIME_OF_ORDER(31), /* Expect: String OrderID. Returns: In case of success - null. In case of failure - String of error relevant to failure. */
+
     OP_DB_ERR(999);
 
     private final int opCodeValue;

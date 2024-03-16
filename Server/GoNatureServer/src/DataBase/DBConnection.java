@@ -226,26 +226,6 @@ public class DBConnection {
         }
     }
 
-    public int registerGroupGuide(String newGroupGuideID) {
-        try {
-            String visitorsTableName = this.schemaName + ".visitors";
-            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID + "'");
-            if (!resultFromVisitors.next())
-                return 0; // id doesnt exist.
-            String username = resultFromVisitors.getString("username");
-            String usersTableName = this.schemaName + ".users";
-            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
-            if (resultFromUsers.next())
-                return 1; // user is already a group guide.
-            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
-                return 2; // success
-            return -1; // failure
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return -1; // error
-        }
-    }
-
     public Order getUserOrderByUserID(String userID, String orderID) {
         try {
             String tableName = this.schemaName + ".visitors";
@@ -318,7 +298,6 @@ public class DBConnection {
             return null;
         }
     }
-
 
     public Order getOrderById(String OrderID) {
         try {
@@ -506,7 +485,7 @@ public class DBConnection {
     public boolean authorizeParkRequest(RequestChangingParkParameters req) {
         try {
             String tableName = this.schemaName + ".requeststodepmanager";
-            String setClause = "Status=" + RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
+            String setClause = "handleDate = CURRENT_TIMESTAMP(), status=" + RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
             String whereClause = "ParkID=" + req.getPark().getParkID() + " AND parameter=" + req.getParameter().getParameterVal() + " AND requestedValue=" + req.getRequestedValue();
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Authorize park request:" + req);
@@ -632,6 +611,52 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+        }
+    }
+
+    public int registerGroupGuide(String newGroupGuideID) {
+        try {
+            String visitorsTableName = this.schemaName + ".visitors";
+            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID + "'");
+            if (!resultFromVisitors.next())
+                return 0; // id doesnt exist.
+            String username = resultFromVisitors.getString("username");
+            String usersTableName = this.schemaName + ".users";
+            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
+            if (resultFromUsers.next())
+                return 1; // user is already a group guide.
+            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
+                return 2; // success
+            return -1; // failure
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return -1; // error
+        }
+    }
+
+    /**
+     * Sets the exit time of an order to now.
+     *
+     * @param orderID the order ID.
+     * @return a message indicating the result of the operation, null if successful.
+     */
+    public String setExitTimeOfOrder(String orderID)
+    {
+        try {
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "OrderID='" + orderID + "'";
+            ResultSet resultSet = dbController.selectRecords(tableName, whereClause);
+            if (!resultSet.next())
+                return "Order id doesn`t exist.";
+            if (resultSet.getTimestamp("ExitedTime") != null)
+                return  "Order has already exited.";
+
+            if (!dbController.updateRecord(tableName, "exitTime=CURRENT_TIMESTAMP()", whereClause))
+                return "failed exiting, please try again.";
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Exiting failed to unknown reason, please try again later.";
         }
     }
 }

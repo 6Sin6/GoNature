@@ -144,6 +144,9 @@ public class GoNatureServer extends AbstractServer {
             case OP_GET_PARK_DETAILS_BY_PARK_ID:
                 handleGetParkDetailsByParkID(message, client);
                 break;
+            case OP_UPDATE_EXIT_TIME_OF_ORDER:
+                handleUpdateExitTimeOfOrder(message, client);
+                break;
             case OP_QUIT:
                 handleQuit(client);
                 break;
@@ -151,6 +154,8 @@ public class GoNatureServer extends AbstractServer {
                 controller.addtolog("Error Unknown Opcode");
         }
     }
+
+
 
     private void handleSyncHandshake(Message message, ConnectionToClient client) throws IOException {
         client.sendToClient(message);
@@ -283,7 +288,13 @@ public class GoNatureServer extends AbstractServer {
         client.close();
     }
 
-
+    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException
+    {
+        String orderID = message.getMsgData().toString();
+        String answer = db.setExitTimeOfOrder(orderID);
+        Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, null, answer);
+        client.sendToClient(respondMsg);
+    }
 
 
 
