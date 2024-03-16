@@ -13,6 +13,10 @@ public class ParkEmployeeDashboardPageController extends BaseController {
     @FXML
     private MFXButton btnGenerateBill;
 
+    public void cleanup() {
+        // No cleanup required
+    }
+
     @FXML
     public void OnClickAvailableSpotButton(ActionEvent event)
     {

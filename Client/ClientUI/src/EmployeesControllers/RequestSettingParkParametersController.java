@@ -1,7 +1,6 @@
 package EmployeesControllers;
 
 import CommonClient.ClientUI;
-import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
@@ -48,6 +47,14 @@ public class RequestSettingParkParametersController extends BaseController imple
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         txtMaxVisitation.setItems(setComboBoxHours(1, 16));
+    }
+
+    public void cleanup() {
+        lblErrorMsg.setText("");
+        lblSuccessMsg.setText("");
+        txtDifferenceOrdersVisitors.setText("");
+        txtMaxVisitation.setValue("");
+        txtParkCapacity.setText("");
     }
 
     public void getParkParameters() {
@@ -104,8 +111,8 @@ public class RequestSettingParkParametersController extends BaseController imple
             return;
         }
 
-        if (!gapOrdersAndVisitors.isEmpty() && Integer.parseInt(gapOrdersAndVisitors) <= Integer.parseInt(parkCapacity)) {
-            lblErrorMsg.setText("Difference between the number of orders and visitors capacity must be greater than the park capacity.");
+        if (!gapOrdersAndVisitors.isEmpty() && Integer.parseInt(gapOrdersAndVisitors) > Integer.parseInt(parkCapacity)) {
+            lblErrorMsg.setText("Difference between the number of orders and visitors capacity must be lesser than the park capacity.");
             return;
         }
 
@@ -121,6 +128,10 @@ public class RequestSettingParkParametersController extends BaseController imple
         }
         if (!parkCapacity.isEmpty() && park.getCapacity() != Double.parseDouble(parkCapacity)) {
             requestMap.put(ParkParameters.PARK_CAPACITY, new RequestChangingParkParameters(park, ParkParameters.PARK_CAPACITY, Double.parseDouble(parkCapacity)));
+        }
+
+        if (requestMap.isEmpty()) {
+            return;
         }
 
         msg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, applicationWindowController.getUser().getUsername(), requestMap);

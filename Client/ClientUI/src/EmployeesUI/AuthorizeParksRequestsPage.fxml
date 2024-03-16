@@ -28,7 +28,7 @@
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text fx:id="errorTxt" layoutX="358.0" layoutY="670.0" styleClass="error-text" wrappingWidth="281.0">
+            <Text fx:id="errorTxt" layoutX="263.0" layoutY="667.0" styleClass="error-text" wrappingWidth="660.0">
                <font>
                   <Font size="16.0" />
                </font>

@@ -44,6 +44,10 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     private final String orderPage = "/VisitorsUI/VisitorOrderVisitationPage.fxml";
     private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
+    public void cleanup() {
+        // Nothing to clean up
+    }
+
     @Override
     public String getUserID() {
         SingleVisitor visitor = (SingleVisitor) applicationWindowController.getUser();

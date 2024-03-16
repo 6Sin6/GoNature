@@ -58,6 +58,22 @@ public class RegisterGroupGuideController extends BaseController {
     @FXML
     private MFXTextField txtUsername;
 
+    public void cleanup() {
+        txtEmail.clear();
+        txtFirstName.clear();
+        txtGuideID.clear();
+        txtLastName.clear();
+        txtPassword.clear();
+        txtUsername.clear();
+        lblErrorMsgEmail.setText("");
+        lblErrorMsgFirstName.setText("");
+        lblErrorMsgGeneral.setText("");
+        lblErrorMsgID.setText("");
+        lblErrorMsgLastName.setText("");
+        lblErrorMsgPassword.setText("");
+        lblErrorMsgUsername.setText("");
+    }
+
     private String getUserName()
     {
         return txtUsername.getText();

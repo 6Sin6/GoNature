@@ -71,6 +71,11 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private ArrayList<Order> list;
 
+    public void cleanup() {
+        rowIndex = -1;
+        lblStatusMsg.setText("");
+    }
+
     @FXML
     void OnClickHandleOrderButton(ActionEvent event) {
         if (rowIndex == -1) {

@@ -9,15 +9,12 @@ import VisitorsControllers.HandleOrderDetailsPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
@@ -44,6 +41,10 @@ public class HomePageController extends BaseController implements Initializable 
         centerImg.setEffect(new DropShadow());
         img1.setEffect(new DropShadow());
         img2.setEffect(new DropShadow());
+    }
+
+    public void cleanup() {
+        // Nothing to clean up
     }
 
     public void onButtonClicked() {
@@ -86,7 +87,7 @@ public class HomePageController extends BaseController implements Initializable 
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/HandleOrderDetailsPage.fxml";
             applicationWindowController.setCenterPage(pathToPage);
-            Object controller = applicationWindowController.currentActiveController;
+            Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof BaseController) {
                 ((BaseController) controller).setApplicationWindowController(applicationWindowController);
             }

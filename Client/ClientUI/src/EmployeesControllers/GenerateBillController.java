@@ -18,6 +18,11 @@ public class GenerateBillController extends BaseController {
     @FXML
     private MFXTextField txtOrderID;
 
+    public void cleanup() {
+        txtOrderID.clear();
+        lblErrorMsg.setText("");
+    }
+
     @FXML
     void OnClickGenerateBillButton(ActionEvent event) {
 

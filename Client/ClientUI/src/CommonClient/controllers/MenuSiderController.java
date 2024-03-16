@@ -62,6 +62,10 @@ public class MenuSiderController extends BaseController {
         usernameLabel.setText("");
     }
 
+    public void cleanup() {
+        // Nothing to clean up in the menu.
+    }
+
     public void setRole(String role) {
         userRoleLabel.setText(role);
     }

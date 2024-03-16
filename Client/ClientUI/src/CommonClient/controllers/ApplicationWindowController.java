@@ -36,13 +36,17 @@ public class ApplicationWindowController implements Initializable {
     private User user;
     private Object Data;
 
-    public Object currentActiveController;
+    private Object currentActiveController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setDashBoardMap();
         setVistorsPagesMap();
         setEmployeesPagesMap();
+    }
+
+    public Object getCurrentActiveController() {
+        return currentActiveController;
     }
 
     private void setUser(User user) {
@@ -67,6 +71,13 @@ public class ApplicationWindowController implements Initializable {
                 if (controller instanceof BaseController) {
                     ((BaseController) controller).setApplicationWindowController(this);
                 }
+
+                // Cleanup previous controller.
+                if (currentActiveController != null && currentActiveController instanceof BaseController) {
+                    ((BaseController) currentActiveController).cleanup();
+                }
+
+                // Set new controller as the current active controller.
                 currentActiveController = controller;
                 pagesCache.put(fxmlPath, page);
             }
@@ -115,6 +126,8 @@ public class ApplicationWindowController implements Initializable {
             if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml") &&
                     !Objects.equals(fxmlPath, "/CommonClient/gui/HomePage.fxml")) {
                 newMenu = menuSider;
+            } else {
+                ((BaseController) currentActiveController).cleanup();
             }
             mainPane.setLeft(newMenu);
         }

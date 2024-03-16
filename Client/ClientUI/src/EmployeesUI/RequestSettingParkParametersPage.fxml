@@ -25,7 +25,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsg" layoutX="64.0" layoutY="469.0" prefHeight="34.0" prefWidth="371.0" styleClass="error-text" />
+            <Label fx:id="lblErrorMsg" layoutX="64.0" layoutY="469.0" prefHeight="34.0" prefWidth="725.0" styleClass="error-text" />
             <Text layoutX="81.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Capacity:">
                <font>
                   <Font size="20.0" />

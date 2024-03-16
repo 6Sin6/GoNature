@@ -14,6 +14,10 @@ public class CheckAvailableSpotsController extends BaseController {
     @FXML
     private TableView<?> tableParkAvailability;
 
+    public void cleanup() {
+
+    }
+
     @FXML
     void OnClickInsertButton(ActionEvent event) {
 

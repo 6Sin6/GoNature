@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GroupGuideOrderVisitationPageController extends BaseController implements Initializable {
-
     ObservableList<String> list;
     @FXML
     private Label erorrLbl;
@@ -70,6 +69,20 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
 
     @FXML
     private MFXTextField txtPhone;
+
+    public void cleanup() {
+        txtEmail.clear();
+        txtFirstName.clear();
+        txtLastName.clear();
+        txtPhone.clear();
+        numOfVisitorsCmbBox.getSelectionModel().clearSelection();
+        parkCmbBox.getSelectionModel().clearSelection();
+        timeOfVisitCmbBox.getSelectionModel().clearSelection();
+        numOfVisitorsCmbBox.setValue(null);
+        parkCmbBox.setValue(null);
+        timeOfVisitCmbBox.setValue(null);
+        datePicker.setValue(null);
+    }
 
 
     /**

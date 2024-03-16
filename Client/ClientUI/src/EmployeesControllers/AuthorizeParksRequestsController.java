@@ -54,6 +54,13 @@ public class AuthorizeParksRequestsController extends BaseController {
     private ArrayList<RequestChangingParkParameters> requests;
     private int rowIndex = -1;
 
+    public void cleanup() {
+        errorTxt.setText("");
+        rowIndex = -1;
+        requests = new ArrayList<>();
+        tableRequests.getItems().clear();
+    }
+
 
     @FXML
     void handleRequest(ActionEvent event) {
@@ -68,8 +75,8 @@ public class AuthorizeParksRequestsController extends BaseController {
 
         if (opCode == OpCodes.OP_AUTHORIZE_PARK_REQUEST &&
                 request.getParameter() == ParkParameters.PARK_GAP_VISITORS_CAPACITY &&
-                request.getRequestedValue() < request.getPark().getCapacity()) {
-            errorTxt.setText("The new value is lower than the current max visitors value.");
+                request.getRequestedValue() > request.getPark().getCapacity()) {
+            errorTxt.setText("The new requested value is higher than the park's capacity. The request cannot be authorized.");
             return;
         }
 
