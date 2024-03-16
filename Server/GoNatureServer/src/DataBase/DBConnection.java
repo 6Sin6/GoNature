@@ -651,7 +651,7 @@ public class DBConnection {
             if (resultSet.getTimestamp("ExitedTime") != null)
                 return  "Order has already exited.";
 
-            if (!dbController.updateRecord(tableName, "exitTime=CURRENT_TIMESTAMP()", whereClause))
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
                 return "failed exiting, please try again.";
             return null;
         } catch (SQLException e) {

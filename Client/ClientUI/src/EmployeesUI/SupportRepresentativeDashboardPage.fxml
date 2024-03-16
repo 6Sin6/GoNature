@@ -40,7 +40,7 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnEntry" layoutX="697.0" layoutY="620.0" onAction="#OnClickExitButton" prefHeight="50.0" prefWidth="100.0" text="Submit&#10;Exit" textAlignment="CENTER" />
+            <MFXButton fx:id="btnEntry" styleClass="actButtonGreen" layoutX="697.0" layoutY="620.0" onAction="#OnClickExitButton" prefHeight="50.0" prefWidth="100.0" text="Submit&#10;Exit" textAlignment="CENTER" />
             <Text layoutX="650.0" layoutY="600.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark Park Order Exit">
                <font>
                   <Font name="System Bold" size="20.0" />

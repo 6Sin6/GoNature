@@ -40,7 +40,7 @@
                <font>
                   <Font size="16.0" />
                </font></MFXPasswordField>
-            <MFXButton fx:id="loginBtn" buttonType="RAISED" layoutX="628.0" layoutY="415.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="Sign In" />
+            <MFXButton fx:id="loginBtn" defaultButton="true" buttonType="RAISED" layoutX="628.0" layoutY="415.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="Sign In" />
             <Label fx:id="ErrorMsg" layoutX="371.0" layoutY="500.0" prefHeight="71.0" prefWidth="566.0" />
             <ImageView onMouseClicked="#navigateToHomePage" fx:id="backBtn" fitHeight="77.0" fitWidth="94.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                 <image>

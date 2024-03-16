@@ -24,12 +24,12 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsg" layoutX="400.0" layoutY="210.0" prefHeight="17.0" prefWidth="229.0" text="errorMsg" styleClass="error-text">
+            <Label fx:id="lblErrorMsg" layoutX="400.0" layoutY="210.0" prefHeight="17.0" prefWidth="229.0" styleClass="error-text" text="errorMsg">
                <font>
                   <Font size="14.0" />
                </font></Label>
             <MFXTextField fx:id="txtOrderID" layoutX="400.0" layoutY="230.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnGenerateBill" layoutX="400.0" layoutY="300.0" onAction="#OnClickGenerateBillButton" prefHeight="50.0" prefWidth="100.0" text="Generate Bill" />
+            <MFXButton fx:id="btnGenerateBill" defaultButton="true" layoutX="400.0" layoutY="300.0" onAction="#OnClickGenerateBillButton" prefHeight="50.0" prefWidth="100.0" text="Generate Bill" />
          </children>
       </Pane>
    </children>
