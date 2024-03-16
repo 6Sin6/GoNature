@@ -13,6 +13,6 @@ public class MessagePopup extends BasePopup {
         popup.getChildren().add(messageLabel);
 
         // Close the popup after the specified duration
-        new Timeline(new KeyFrame(duration, ae -> closePopup(false))).play();
+        new Timeline(new KeyFrame(duration, ae -> closePopup(onCloseNavigate))).play();
     }
 }
