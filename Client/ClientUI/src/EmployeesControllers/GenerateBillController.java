@@ -87,6 +87,11 @@ public class GenerateBillController extends BaseController {
         }
 
         mostRecentOrder = (Order) response.getMsgData();
+        if (Objects.equals(mostRecentOrder.getOrderID(), "")) {
+            lblErrorMsg.setText("Order not found");
+            successMsg.setText("");
+            return;
+        }
         lblErrorMsg.setText("");
         successMsg.setText("Bill generated successfully");
         handleBillPresentation(mostRecentOrder);
