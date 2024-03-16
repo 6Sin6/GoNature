@@ -400,7 +400,7 @@ public class DBConnection {
             String setClause = "ClientEmailAddress=" + emailAddress;
             String whereClause = "OrderID=" + orderID;
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
-                this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + orderID);
+                this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + details[0]);
                 return false;
             }
             return true;
@@ -591,8 +591,7 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    }
-                    else {
+                    } else {
                         serverController.addtolog("Send to Email Address: " + order.get(1) + " Cancelled");
                     }
                 }
@@ -624,8 +623,7 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
                         serverController.addtolog("Failed to cancel order status for OrderID: " + order.get(0));
-                    }
-                    else {
+                    } else {
                         serverController.addtolog("Send to Email Address: " + order.get(1) + " Confirm notification");
                     }
                 }

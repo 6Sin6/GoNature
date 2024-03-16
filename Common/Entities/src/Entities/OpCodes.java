@@ -4,9 +4,9 @@ public enum OpCodes {
     OP_SYNC_HANDSHAKE(0),
     OP_GET_VISITOR_ORDERS(1), /* Expect: String - VisitorID, Return: ArrayList<Order> */
     OP_GET_VISITOR_GROUP_GROUP_GUIDE_ORDERS(2), /* Same method as above */
-    OP_HANDLE_VISITATION_EMAIL_CHANGE(3), /* Expect: String - OrderID, String - emailAddress. Returns: boolean indicator*/
+    OP_UPDATE_ORDER_DETAILS_BY_ORDERID(3), /* Expect: String[] - F. Returns: boolean indicator*/
     OP_HANDLE_VISITATION_CANCEL_ORDER(4), /* Expect: String - OrderID. Returns: boolean indicator */
-    OP_HANDLE_GROUP_VISITATION_EMAIL_CHANGE(5), /* Same as HANDLE_VISITATION_EMAIL_CHANGE */
+    OP_UPDATE_GROUP_ORDER_DETAILS_BY_ORDERID(5), /* Same as HANDLE_VISITATION_EMAIL_CHANGE */
     OP_HANDLE_GROUP_VISITATION_CANCEL_ORDER(6), /* Same as HANDLE_VISITATION_CANCEL_ORDER */
     OP_CREATE_NEW_VISITATION(7), /* Expect: Order, Returns: boolean indicator */
     OP_CREATE_NEW_GROUP_VISITATION(8), /* Same method as above - Perform an upcast to Order!!! Rework group size + group guide ID... */
@@ -23,7 +23,7 @@ public enum OpCodes {
     OP_QUIT(19), /* Expect: */
     OP_GET_DEPARTMENT_MANAGER_PARKS(20),
     OP_ORDER_ALREADY_EXIST(21),
-    OP_GET_USER_ORDERS_BY_USERID(22), /* Expect: String[] - userID 0, orderID 1. Returns: Order */
+    OP_GET_USER_ORDERS_BY_USERID_ORDERID(22), /* Expect: String[] - userID 0, orderID 1. Returns: Order */
     OP_REGISTER_GROUP_GUIDE(23),
     OP_VISITOR_ID_DOESNT_EXIST(24),
     OP_VISITOR_IS_ALREADY_GROUP_GUIDE(25),
@@ -33,6 +33,7 @@ public enum OpCodes {
     OP_DECLINE_PARK_REQUEST(29), /* Same method as above */
     OP_SUBMIT_REQUESTS_TO_DEPARTMENT(30), /* Expect: Map<ParkParameters, RequestChangingParkParameters>. Returns: boolean indicator */
     OP_DB_ERR(999);
+
 
     private final int opCodeValue;
 

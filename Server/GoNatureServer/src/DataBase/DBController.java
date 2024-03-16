@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Provides methods for performing actions on the database, with integration
@@ -32,7 +33,7 @@ public class DBController {
         if (values.length == 0) {
             throw new SQLException("No values provided");
         }
-        String sql = "INSERT INTO " + tableName + "(" + columns + ")" +" VALUES (" + String.join(", ", values) + ")";
+        String sql = "INSERT INTO " + tableName + "(" + columns + ")" + " VALUES (" + String.join(", ", values) + ")";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -56,8 +57,10 @@ public class DBController {
         if (tableName.isEmpty()) {
             throw new SQLException("Table name cannot be empty");
         }
+        if (Objects.equals(whereClause, "")) {
+            throw new SQLException("Where clause is empty. Update without where-clause is not allowed.");
+        }
         String sql = "UPDATE " + tableName + " SET " + setClause + " WHERE " + whereClause;
-        System.out.println("Running Query: " + sql);
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -105,6 +108,7 @@ public class DBController {
             throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
         }
     }
+
     public ResultSet selectRecords(String tableName, String whereClause) throws SQLException {
         String sql = "SELECT * FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
         try {
