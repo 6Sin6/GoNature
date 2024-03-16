@@ -14,6 +14,10 @@ public class PrepareNumberOfVisitorsReportController extends BaseController {
     @FXML
     private TableView<?> tableReportDetails;
 
+    public void cleanup() {
+
+    }
+
     @FXML
     void OnClickSubmitButton(ActionEvent event) {
 

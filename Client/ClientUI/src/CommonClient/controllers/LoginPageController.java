@@ -68,6 +68,10 @@ public class LoginPageController extends BaseController {
         this.passwordText.setText("");
     }
 
+    public void cleanup() {
+        resetAllFields();
+    }
+
     public void navigateToHomePage() {
         applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }

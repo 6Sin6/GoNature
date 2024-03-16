@@ -13,4 +13,8 @@ public class PrepareUsageReportController extends BaseController {
     @FXML
     private TableView<?> tableReportDetails;
 
+    public void cleanup() {
+
+    }
+
 }

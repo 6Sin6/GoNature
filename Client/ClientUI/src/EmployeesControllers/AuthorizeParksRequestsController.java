@@ -54,6 +54,13 @@ public class AuthorizeParksRequestsController extends BaseController {
     private ArrayList<RequestChangingParkParameters> requests;
     private int rowIndex = -1;
 
+    public void cleanup() {
+        errorTxt.setText("");
+        rowIndex = -1;
+        requests = new ArrayList<>();
+        tableRequests.getItems().clear();
+    }
+
 
     @FXML
     void handleRequest(ActionEvent event) {

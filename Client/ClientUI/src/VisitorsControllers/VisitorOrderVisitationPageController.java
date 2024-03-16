@@ -75,6 +75,10 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
     @FXML
     private MFXTextField txtPhone;
 
+    public void cleanup() {
+        clearFields();
+    }
+
     /**
      * Populates the park selection combo box with available parks.
      * The parks are retrieved from a static data source.

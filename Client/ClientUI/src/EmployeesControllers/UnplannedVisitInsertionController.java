@@ -26,6 +26,13 @@ public class UnplannedVisitInsertionController extends BaseController {
     @FXML
     private Text txtResult;
 
+    public void cleanup() {
+        txtNumOfVisitors.clear();
+        cbGroupOrder.setSelected(false);
+        lblErrorMsg.setText("");
+        txtResult.setText("");
+    }
+
     @FXML
     void OnClickSubmitButton(ActionEvent event) {
 

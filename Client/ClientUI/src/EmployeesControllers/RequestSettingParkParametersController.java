@@ -1,7 +1,6 @@
 package EmployeesControllers;
 
 import CommonClient.ClientUI;
-import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
@@ -48,6 +47,14 @@ public class RequestSettingParkParametersController extends BaseController imple
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         txtMaxVisitation.setItems(setComboBoxHours(1, 16));
+    }
+
+    public void cleanup() {
+        lblErrorMsg.setText("");
+        lblSuccessMsg.setText("");
+        txtDifferenceOrdersVisitors.setText("");
+        txtMaxVisitation.setValue("");
+        txtParkCapacity.setText("");
     }
 
     public void getParkParameters() {

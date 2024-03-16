@@ -29,6 +29,10 @@ public class ConnectClientPageController extends BaseController {
         }
     }
 
+    public void cleanup() {
+        ipTxt.clear();
+    }
+
     private void buildConnection() {
         if (ClientUI.client == null) {
             System.out.println("Connecting to " + ipTxt.getText() + " on port 5555...");

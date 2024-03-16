@@ -13,7 +13,6 @@ import static CommonClient.Utils.parseVisitDate;
 import static CommonClient.Utils.parseVisitTime;
 
 public class ConfirmVisitationPageController extends BaseController {
-
     @FXML
     private Text txtHeader;
 
@@ -48,6 +47,10 @@ public class ConfirmVisitationPageController extends BaseController {
     private MFXButton btnConfirmVisitation;
 
     private Order order;
+
+    public void cleanup() {
+        order = null;
+    }
 
     public void setOrder(Order order) {
         this.order = order;

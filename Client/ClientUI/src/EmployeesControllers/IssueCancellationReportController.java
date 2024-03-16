@@ -21,6 +21,12 @@ public class IssueCancellationReportController extends BaseController {
     @FXML
     private Text txtNoReport;
 
+    public void cleanup() {
+        txtDate.setText("");
+        txtNoReport.setText("");
+        chartCancellationStatistics.getData().clear();
+    }
+
     @FXML
     void OnClickDownloadCSVButton(ActionEvent event) {
 

@@ -16,6 +16,10 @@ public class SupportRepresentativeDashboardPageController extends BaseController
     @FXML
     private MFXButton btnRegisterGuide;
 
+    public void cleanup() {
+        // No cleanup required
+    }
+
     @FXML
     public void OnClickCheckParkAvailabilityButton(ActionEvent event)
     {
