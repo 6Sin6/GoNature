@@ -120,8 +120,11 @@ public class GoNatureServer extends AbstractServer {
             case OP_GET_VISITOR_ORDERS:
                 handleGetVisitorOrders(message, client);
                 break;
+            case OP_GET_ORDER_BY_ID:
+                handleGetOrderByID(message, client);
+                break;
             case OP_UPDATE_ORDER_DETAILS_BY_ORDERID:
-                handleUpdateOrderDatailsByOrderId(message, client);
+                handleUpdateOrderDetailsByOrderId(message, client);
                 break;
             case OP_CREATE_NEW_VISITATION:
                 handleCreateNewVisitation(message, client);
@@ -149,6 +152,9 @@ public class GoNatureServer extends AbstractServer {
                 break;
             case OP_GET_PARK_DETAILS_BY_PARK_ID:
                 handleGetParkDetailsByParkID(message, client);
+                break;
+            case OP_MARK_ORDER_AS_PAID:
+                handleMarkOrderAsPaid(message, client);
                 break;
             case OP_QUIT:
                 handleQuit(client);
@@ -297,7 +303,14 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleUpdateOrderDatailsByOrderId(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetOrderByID(Message message, ConnectionToClient client) throws IOException {
+        String orderID = (String) message.getMsgData();
+        Order order = db.getOrderById(orderID);
+        Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleUpdateOrderDetailsByOrderId(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
         String[] details = new String[3];
         details[0] = order.getOrderID();
@@ -305,6 +318,13 @@ public class GoNatureServer extends AbstractServer {
         details[2] = order.getClientEmailAddress();
         boolean isCanceled = db.updateOrderDetails(details);
         Message respondMsg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, message.getMsgUserName(), isCanceled);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleMarkOrderAsPaid(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        boolean isMarkedAsPaid = db.markOrderAsPaid(order);
+        Message respondMsg = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, message.getMsgUserName(), isMarkedAsPaid);
         client.sendToClient(respondMsg);
     }
 

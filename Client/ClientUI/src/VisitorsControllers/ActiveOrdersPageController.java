@@ -1,9 +1,13 @@
 package VisitorsControllers;
 
+import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.MessagePopup;
+import Entities.Message;
+import Entities.OpCodes;
 import Entities.Order;
 import Entities.ParkBank;
+import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,6 +129,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         colDate.setCellValueFactory(new MapValueFactory<>("Date"));
         colTime.setCellValueFactory(new MapValueFactory<>("Time"));
         makeRowClickable();
+    }
+
+    public void start() {
+        Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
+        ClientUI.client.accept(send);
+        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
+            populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
+        }
     }
 
     @FXML

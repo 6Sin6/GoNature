@@ -150,7 +150,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
         if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION) {
-            throw new CommunicationException("Respond not appropriate from server");
+            throw new CommunicationException("Response from server is not appropriate");
         }
         if (respondMsg.getMsgData() instanceof Order) {
             if (((Order) respondMsg.getMsgData()).getOrderID() != null) {
@@ -165,11 +165,11 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                         , 600, 300, false, "OK", false);
                 confirmPopup.show(applicationWindowController.getRoot());
             } else {
-                String strForPopup = "The park is Full Do you want to enter for waitlist?";
+                String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
                 ConfirmationPopup confirmPopup;
                 confirmPopup = new ConfirmationPopup(strForPopup, () ->
                 {
-                    applicationWindowController.setCenterPage("/VisitorsUI/WaitListPage");
+                    applicationWindowController.loadVistorsPage("WaitListPage");
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
                     clearFields();
                 }, () -> {
@@ -181,8 +181,6 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 confirmPopup.show(applicationWindowController.getRoot());
                 return;
             }
-        } else {
-            System.out.println("The order is not created");
         }
     }
 
@@ -204,11 +202,11 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         }
 
         if (CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
-            errorLbl.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
+            errorLbl.setText("Invalid visitation date. You cannot book an order less than 24 hours of the chosen visitation time.");
             return false;
         }
         if (!CommonUtils.isValidName(txtFirstName.getText()) || !CommonUtils.isValidName(txtLastName.getText()))
-            errorLbl.setText("Validation failed. Please check your input.");
+            errorLbl.setText("Please enter a valid first and last name.");
         if (!CommonUtils.isEmailAddressValid(txtEmail.getText())) {
             errorLbl.setText("Invalid email. Please check your input.");
             return false;

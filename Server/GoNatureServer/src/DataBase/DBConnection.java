@@ -5,6 +5,7 @@ import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
@@ -340,7 +341,6 @@ public class DBConnection {
                         results.getInt("NumOfVisitors")
                 );
             }
-
             return new Order("", "", null, "", "", null, null, null, "", null, 0);
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
@@ -418,7 +418,7 @@ public class DBConnection {
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "VisitorID=" + visitorID + " AND ParkID=" + parkID + " AND VisitationDate=" + visitationDate;
+            String whereClause = "VisitorID=" + visitorID + " AND ParkID=" + parkID + " AND VisitationDate= '" + visitationDate + "'";
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             return results.next();
         } catch (SQLException e) {
@@ -427,6 +427,17 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Retrieves the details of a specific park from the database.
+     * The method takes a park ID as a parameter and fetches the corresponding park details.
+     * It also fetches the details of the park manager associated with the park.
+     *
+     * @param parkID The ID of the park for which to fetch the details.
+     * @return A Park object containing the details of the park and its manager.
+     *         Returns a new Park object with default values if no matching park is found.
+     *         Returns null if a SQLException is thrown.
+     * @throws SQLException If there is an error while fetching the park details.
+     */
     public Park getParkDetails(String parkID) {
         try {
             String tableName = this.schemaName + ".parks";
@@ -456,6 +467,37 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
+        }
+    }
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           PARK EMPLOYEES EXCLUSIVE METHODS                                      //
+    //                                                                                                                 //
+    //=================================================================================================================//
+
+    public boolean markOrderAsPaid(Order order) {
+        try {
+            String orderID = order.getOrderID();
+            String tableName = this.schemaName + ".orders";
+            String setClause = "orderStatus=" + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus();
+            String whereClause = "OrderID=" + orderID;
+            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+                this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
+                return false;
+            }
+
+            String tableName2 = this.schemaName + ".payments";
+            String columns = "OrderID, hasPaid, price";
+
+            if (!dbController.insertRecord(tableName2, columns, orderID, "true", String.valueOf(order.getNumOfVisitors() * Order.pricePerVisitor))) {
+                this.serverController.addtolog("Insert into " + this.schemaName + ".payments failed. Mark order as paid:" + orderID);
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
         }
     }
 
@@ -565,7 +607,7 @@ public class DBConnection {
         }
     }
 
-    //=================================================================================================================//
+    // =================================================================================================================//
     //                                                                                                                 //
     //                                           WORKER EXCLUSIVE METHODS                                              //
     //                                                                                                                 //

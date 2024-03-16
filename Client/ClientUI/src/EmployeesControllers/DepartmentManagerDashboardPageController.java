@@ -26,13 +26,13 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     @FXML
     public void OnClickIssueReportsButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/IssueReportsPage.fxml");
+        applicationWindowController.loadEmployeesPage("IssueReportsPage");
     }
 
     @FXML
     public void OnClickViewRequestsButton(ActionEvent event) {
         try {
-            applicationWindowController.setCenterPage("/EmployeesUI/AuthorizeParksRequestsPage.fxml");
+            applicationWindowController.loadEmployeesPage("AuthorizeParksRequestsPage");
             if (applicationWindowController.getCurrentActiveController() instanceof AuthorizeParksRequestsController) {
                 AuthorizeParksRequestsController controller = (AuthorizeParksRequestsController) applicationWindowController.getCurrentActiveController();
                 controller.start();

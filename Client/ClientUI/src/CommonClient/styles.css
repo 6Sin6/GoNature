@@ -130,3 +130,7 @@
     -fx-text-fill: #11142D;
     -fx-font-size: 21px;
 }
+
+#billPane Text, #rootBillPane Text {
+    -fx-fill: #FCFCFC;
+}

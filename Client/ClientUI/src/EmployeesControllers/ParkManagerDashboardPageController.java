@@ -20,7 +20,7 @@ public class ParkManagerDashboardPageController extends BaseController {
     @FXML
     public void OnClickChangeParkParametersButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/RequestSettingParkParametersPage.fxml");
+        applicationWindowController.loadEmployeesPage("RequestSettingParkParametersPage");
         if (applicationWindowController.getCurrentActiveController() instanceof RequestSettingParkParametersController) {
             ((RequestSettingParkParametersController) applicationWindowController.getCurrentActiveController()).getParkParameters();
         }
@@ -29,7 +29,7 @@ public class ParkManagerDashboardPageController extends BaseController {
     @FXML
     public void OnClickGenerateReportsButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/PrepareReportsPage.fxml");
+        applicationWindowController.loadEmployeesPage("PrepareReportsPage");
     }
 
 }

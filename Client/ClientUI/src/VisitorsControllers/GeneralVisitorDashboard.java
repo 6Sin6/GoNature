@@ -28,13 +28,9 @@ public abstract class GeneralVisitorDashboard extends BaseController {
                 applicationWindowController.setCenterPage(path);
                 applicationWindowController.loadMenu(applicationWindowController.getUser());
                 if (Objects.equals(path, "/VisitorsUI/ActiveOrdersPage.fxml")) {
-                    Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
-                    ClientUI.client.accept(send);
-                    if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
-                            Object controller = applicationWindowController.getCurrentActiveController();
-                            if (controller instanceof ActiveOrdersPageController)
-                                ((ActiveOrdersPageController) controller).populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
-
+                    Object controller = applicationWindowController.getCurrentActiveController();
+                    if (controller instanceof ActiveOrdersPageController) {
+                        ((ActiveOrdersPageController) controller).start();
                     }
                 }
             }

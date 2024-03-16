@@ -23,18 +23,18 @@ public class SupportRepresentativeDashboardPageController extends BaseController
     @FXML
     public void OnClickCheckParkAvailabilityButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/CheckAvailableSpotsPage.fxml");
+        applicationWindowController.loadEmployeesPage("CheckAvailableSpotsPage");
     }
 
     @FXML
     public void OnClickIssueBillButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/GenerateBillPage.fxml");
+        applicationWindowController.loadEmployeesPage("GenerateBillPage");
     }
 
     @FXML
     public void OnClickRegisterGuideButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/RegisterGroupGuidePage.fxml");
+        applicationWindowController.loadEmployeesPage("RegisterGroupGuidePage");
     }
 }

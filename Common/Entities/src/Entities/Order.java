@@ -20,6 +20,8 @@ public class Order implements Serializable {
     private Integer NumOfVisitors;
     private String VisitorID;
 
+    public static final Double pricePerVisitor = 60.0;
+
     /**
      * Constructs a new Order object with the specified attributes.
      *

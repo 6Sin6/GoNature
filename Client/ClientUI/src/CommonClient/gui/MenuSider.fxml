@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.image.Image?>
 
-<Pane fx:id="menuBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="300.0" styleClass="menu" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.MenuSiderController">
+<Pane fx:id="menuBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="300.0" styleClass="menu" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.MenuSiderController">
     <children>
         <ImageView fx:id="appLogo" fitHeight="63.0" fitWidth="75.0" layoutX="59.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true">
             <image>

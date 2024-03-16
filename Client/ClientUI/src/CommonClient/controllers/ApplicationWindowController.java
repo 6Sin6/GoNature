@@ -13,24 +13,18 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class ApplicationWindowController implements Initializable {
-
     @FXML
     private BorderPane mainPane;
-    private Map<String, Parent> pagesCache = new HashMap<>();
-
+    private Map<String, Pair<Parent, Object>> pagesCache = new HashMap<>();
     private Map<Role, String> DashBoardMap = new HashMap<>();
-
     private Map<String, String> VisitorsPagesMap = new HashMap<>();
-
     private Map<String, String> EmployeesPagesMap = new HashMap<>();
     private Parent menuSider;
     private User user;
@@ -41,7 +35,7 @@ public class ApplicationWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setDashBoardMap();
-        setVistorsPagesMap();
+        setVisitorsPagesMap();
         setEmployeesPagesMap();
     }
 
@@ -72,17 +66,13 @@ public class ApplicationWindowController implements Initializable {
                     ((BaseController) controller).setApplicationWindowController(this);
                 }
 
-                // Cleanup previous controller.
-                if (currentActiveController != null && currentActiveController instanceof BaseController) {
-                    ((BaseController) currentActiveController).cleanup();
-                }
-
                 // Set new controller as the current active controller.
                 currentActiveController = controller;
-                pagesCache.put(fxmlPath, page);
+                pagesCache.put(fxmlPath, new Pair<>(page, controller));
             }
 
-            return pagesCache.get(fxmlPath);
+            currentActiveController = pagesCache.get(fxmlPath).getValue();
+            return pagesCache.get(fxmlPath).getKey();
         } catch (Exception e) {
             e.printStackTrace();
             return null; // or load an error page
@@ -119,6 +109,10 @@ public class ApplicationWindowController implements Initializable {
 
     public void setCenterPage(String fxmlPath) {
         mainPane.getChildren().remove(mainPane.getCenter());
+        // Cleanup previous controller.
+        if (currentActiveController != null && currentActiveController instanceof BaseController) {
+            ((BaseController) currentActiveController).cleanup();
+        }
         Parent page = loadPage(fxmlPath);
         if (page != null) {
             mainPane.setCenter(page);
@@ -167,10 +161,10 @@ public class ApplicationWindowController implements Initializable {
         EmployeesPagesMap.put("RegisterGroupGuidePage", "/EmployeesUI/RegisterGroupGuidePage.fxml");
         EmployeesPagesMap.put("RequestSettingParkParametersPage", "/EmployeesUI/RequestSettingParkParametersPage.fxml");
         EmployeesPagesMap.put("UnplannedVisitInsertionPage", "/EmployeesUI/UnplannedVisitInsertionPage.fxml");
+        EmployeesPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
     }
 
     public void loadEmployeesPage(String NameOfFxml) {
-
         String fxmlPath = EmployeesPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {
             setCenterPage(fxmlPath);
@@ -178,14 +172,15 @@ public class ApplicationWindowController implements Initializable {
             System.out.println("Error");
         }
     }
-    private void setVistorsPagesMap() {
+
+    private void setVisitorsPagesMap() {
         VisitorsPagesMap.put("ActiveOrdersPage", "/VisitorsUI/ActiveOrdersPage.fxml");
-        VisitorsPagesMap.put("AuthenticateWithIDPage", "/VisitorsUI/AuthenticateWithIDPage.fxml");
         VisitorsPagesMap.put("ConfirmVisitationPage", "/VisitorsUI/ConfirmVisitationPage.fxml");
         VisitorsPagesMap.put("GroupGuideOrderVisitationPage", "/VisitorsUI/GroupGuideOrderVisitationPage.fxml");
         VisitorsPagesMap.put("HandleOrderDetailsPage", "/VisitorsUI/HandleOrderDetailsPage.fxml");
         VisitorsPagesMap.put("VisitorOrderVisitationPage", "/VisitorsUI/VisitorOrderVisitationPage.fxml");
         VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
+        VisitorsPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
     }
     public void loadVistorsPage(String NameOfFxml) {
         String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");

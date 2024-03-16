@@ -20,12 +20,12 @@ public class PrepareReportsController extends BaseController {
     @FXML
     void OnClickUsageReportButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/PrepareUsageReportPage.fxml");
+        applicationWindowController.loadEmployeesPage("PrepareUsageReportPage");
     }
 
     @FXML
     void OnClickVisitorsReportButton(ActionEvent event)
     {
-        applicationWindowController.setCenterPage("/EmployeesUI/PrepareNumberOfVisitorsReportPage.fxml");
+        applicationWindowController.loadEmployeesPage("PrepareNumberOfVisitorsReportPage");
     }
 }

@@ -1,11 +1,16 @@
 package CommonUtils;
 
+import CommonClient.controllers.BaseController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 public class MessagePopup extends BasePopup {
+    public Object controller;
+
     public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode) {
         super(fullScreenMode, width, height);
         Label messageLabel = new Label(message);
@@ -14,5 +19,24 @@ public class MessagePopup extends BasePopup {
 
         // Close the popup after the specified duration
         new Timeline(new KeyFrame(duration, ae -> closePopup(false))).play();
+    }
+
+    public MessagePopup(String pathToFXML, int width, int height, boolean fullScreenMode, boolean onCloseNavigate) {
+        super(fullScreenMode, width, height);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathToFXML));
+            Parent page = loader.load();
+            controller = loader.getController();
+            popup.getChildren().add(page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        modalLayer.setOnMouseClicked(e -> {
+            if (!popup.getBoundsInParent().contains(e.getSceneX(), e.getSceneY())) {
+                closePopup(onCloseNavigate);
+            }
+        });
     }
 }
