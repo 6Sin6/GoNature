@@ -120,14 +120,20 @@ public class GoNatureServer extends AbstractServer {
             case OP_GET_VISITOR_ORDERS:
                 handleGetVisitorOrders(message, client);
                 break;
+            case OP_UPDATE_ORDER_DETAILS_BY_ORDERID:
+                handleUpdateOrderDatailsByOrderId(message, client);
+                break;
             case OP_CREATE_NEW_VISITATION:
                 handleCreateNewVisitation(message, client);
                 break;
-            case OP_GET_USER_ORDERS_BY_USERID:
+            case OP_GET_USER_ORDERS_BY_USERID_ORDERID:
                 handleGetUserOrdersByUserID(message, client);
                 break;
             case OP_REGISTER_GROUP_GUIDE:
                 handleRegisterGroupGuide(message, client);
+                break;
+            case OP_HANDLE_VISITATION_CANCEL_ORDER:
+                handleCancelOrderVisitation(message, client);
                 break;
             case OP_GET_REQUESTS_FROM_PARK_MANAGER:
                 handleGetRequestsFromParkManager(message, client);
@@ -216,7 +222,7 @@ public class GoNatureServer extends AbstractServer {
     private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
         String[] data = (String[]) message.getMsgData();
         Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
-        Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID, "", userOrder);
+        Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", userOrder);
         client.sendToClient(getUserMsg);
     }
 
@@ -283,8 +289,24 @@ public class GoNatureServer extends AbstractServer {
         client.close();
     }
 
+    private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        String orderID = order.getOrderID();
+        boolean isCanceled = db.updateOrderStatusAsCancelled(orderID);
+        Message respondMsg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, message.getMsgUserName(), isCanceled);
+        client.sendToClient(respondMsg);
+    }
 
-
+    private void handleUpdateOrderDatailsByOrderId(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        String[] details = new String[3];
+        details[0] = order.getOrderID();
+        details[1] = order.getPhoneNumber();
+        details[2] = order.getClientEmailAddress();
+        boolean isCanceled = db.updateOrderDetails(details);
+        Message respondMsg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, message.getMsgUserName(), isCanceled);
+        client.sendToClient(respondMsg);
+    }
 
 
     /**
