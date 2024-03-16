@@ -4,7 +4,7 @@ public enum OpCodes {
     OP_SYNC_HANDSHAKE(0),
     OP_GET_VISITOR_ORDERS(1), /* Expect: String - VisitorID, Return: ArrayList<Order> */
     OP_GET_VISITOR_GROUP_GROUP_GUIDE_ORDERS(2), /* Same method as above */
-    OP_UPDATE_ORDER_DETAILS_BY_ORDERID(3), /* Expect: String[] - F. Returns: boolean indicator*/
+    OP_UPDATE_ORDER_DETAILS_BY_ORDERID(3), /* Expect: String - OrderID, String - emailAddress. Returns: boolean indicator*/
     OP_HANDLE_VISITATION_CANCEL_ORDER(4), /* Expect: String - OrderID. Returns: boolean indicator */
     OP_UPDATE_GROUP_ORDER_DETAILS_BY_ORDERID(5), /* Same as HANDLE_VISITATION_EMAIL_CHANGE */
     OP_HANDLE_GROUP_VISITATION_CANCEL_ORDER(6), /* Same as HANDLE_VISITATION_CANCEL_ORDER */
@@ -32,9 +32,9 @@ public enum OpCodes {
     OP_AUTHORIZE_PARK_REQUEST(28), /* Expect: RequestChangingParkParameters. Returns: boolean indicator */
     OP_DECLINE_PARK_REQUEST(29), /* Same method as above */
     OP_SUBMIT_REQUESTS_TO_DEPARTMENT(30), /* Expect: Map<ParkParameters, RequestChangingParkParameters>. Returns: boolean indicator */
-    OP_MARK_ORDER_AS_PAID(31), /* Expect: Order - order. Returns: boolean indicator */
+    OP_UPDATE_EXIT_TIME_OF_ORDER(31), /* Expect: String OrderID. Returns: In case of success - null. In case of failure - String of error relevant to failure. */
+    OP_MARK_ORDER_AS_PAID(32), /* Expect: Order - order. Returns: boolean indicator */
     OP_DB_ERR(999);
-
 
     private final int opCodeValue;
 

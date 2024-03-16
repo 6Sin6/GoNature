@@ -156,6 +156,9 @@ public class GoNatureServer extends AbstractServer {
             case OP_MARK_ORDER_AS_PAID:
                 handleMarkOrderAsPaid(message, client);
                 break;
+            case OP_UPDATE_EXIT_TIME_OF_ORDER:
+                handleUpdateExitTimeOfOrder(message, client);
+                break;
             case OP_QUIT:
                 handleQuit(client);
                 break;
@@ -311,6 +314,13 @@ public class GoNatureServer extends AbstractServer {
         String orderID = (String) message.getMsgData();
         Order order = db.getOrderById(orderID);
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
+        client.sendToClient(respondMsg);
+    }
+    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException
+    {
+        String orderID = message.getMsgData().toString();
+        String answer = db.setExitTimeOfOrder(orderID);
+        Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, null, answer);
         client.sendToClient(respondMsg);
     }
 
