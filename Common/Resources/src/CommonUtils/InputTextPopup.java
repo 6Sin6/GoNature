@@ -19,6 +19,16 @@ public class InputTextPopup extends BasePopup {
         errorLabel.setText(msg);
     }
 
+    public void setLabelColor(String color)
+    {
+        errorLabel.setStyle("-fx-text-fill: " + color + ";" +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 10px; " +
+                "-fx-border-width: 2px; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-alignment: center;");
+    }
+
     public InputTextPopup(String[] prompts,
                           Consumer<String[]> onConfirm,
                           int width,
