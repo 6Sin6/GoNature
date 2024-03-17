@@ -70,7 +70,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private int rowIndex;
 
-    private ArrayList<Order> list;
+    private ArrayList<Order> list= new ArrayList<>();;
 
     public void cleanup() {
         rowIndex = -1;
@@ -119,13 +119,13 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     @FXML
     public void populateTable(ArrayList<Order> dataList) {
+        list.clear();
         if (dataList.isEmpty()) {
             MessagePopup popup = new MessagePopup("No active orders", Duration.seconds(5), 300, 150, false);
             popup.show(applicationWindowController.getRoot());
         }
         rowIndex = -1;
         ObservableList<Map<String, String>> tableData = FXCollections.observableArrayList();
-        this.list = dataList;
         for (Order item : dataList) {
             if (item.getOrderStatus() == OrderStatus.STATUS_CANCELLED ||
                     item.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER ||
@@ -134,6 +134,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
                     item.getOrderStatus() == OrderStatus.STATUS_FULFILLED) {
                 continue;
             }
+            list.add(item);
             Timestamp orderTimeStamp = item.getVisitationDate();
             String date = CommonClient.Utils.parseVisitDate(orderTimeStamp);
             String time = CommonClient.Utils.parseVisitTime(orderTimeStamp);
