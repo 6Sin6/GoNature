@@ -111,6 +111,10 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
             populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
         }
+        else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR){
+            MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
+            popup.show(applicationWindowController.getRoot());
+        }
     }
 
     @FXML
