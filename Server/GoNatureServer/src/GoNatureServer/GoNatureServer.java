@@ -316,8 +316,7 @@ public class GoNatureServer extends AbstractServer {
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }
-    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException
-    {
+    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException {
         String orderID = message.getMsgData().toString();
         String answer = db.setExitTimeOfOrder(orderID);
         Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, null, answer);
@@ -325,13 +324,9 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleUpdateOrderDetailsByOrderId(Message message, ConnectionToClient client) throws IOException {
-        Order order = (Order) message.getMsgData();
-        String[] details = new String[3];
-        details[0] = order.getOrderID();
-        details[1] = order.getPhoneNumber();
-        details[2] = order.getClientEmailAddress();
-        boolean isCanceled = db.updateOrderDetails(details);
-        Message respondMsg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, message.getMsgUserName(), isCanceled);
+        String[] details = (String[]) message.getMsgData();
+        boolean isUpdated = db.updateOrderDetails(details);
+        Message respondMsg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, message.getMsgUserName(), isUpdated);
         client.sendToClient(respondMsg);
     }
 

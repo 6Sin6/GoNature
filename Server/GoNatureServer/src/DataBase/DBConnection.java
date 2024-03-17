@@ -376,16 +376,16 @@ public class DBConnection {
     public boolean updateOrderDetails(String[] details) {
         try {
             String tableName = this.schemaName + ".orders";
-            String setClause = "ClientEmailAddress=" + details[2] + " AND PhoneNumber=" + details[1];
-            String whereClause = "OrderID=" + details[0];
+            String setClause = "ClientEmailAddress='" + details[2] + "' , PhoneNumber='" + details[1]+"'";
+            String whereClause = "OrderID='" + details[0]+"'";
             if (!this.dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + details[0]);
                 return false;
             } else {
                 return true;
             }
-        } catch (SQLException var5) {
-            this.serverController.addtolog(var5.getMessage());
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
             return false;
         }
     }
