@@ -56,6 +56,10 @@ public class HomePageController extends BaseController implements Initializable 
     }
 
     private void onAuthWithID(String... values) throws CommunicationException {
+        if (values == null) {
+            onAuthPopup.setErrorLabel("Invalid Inputs! Try again");
+            return;
+        }
         if (!Utils.isIDValid(values[0])) {
             onAuthPopup.setErrorLabel("Invalid ID Format! Try again");
             return;

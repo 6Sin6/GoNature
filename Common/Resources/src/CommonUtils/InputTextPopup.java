@@ -2,9 +2,12 @@ package CommonUtils;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -42,7 +45,9 @@ public class InputTextPopup extends BasePopup {
             backButton = new ImageView(new Image("/assets/backButtonWhite.png", 50, 50, true, true));
             backButton.setOnMouseClicked(e -> closePopup(false));
             backButton.setStyle("-fx-cursor: hand;");
-            popup.getChildren().add(backButton);
+            modalLayer.getChildren().add(backButton);
+            StackPane.setAlignment(backButton, Pos.TOP_LEFT);
+            StackPane.setMargin(backButton, new Insets(15));
         }
 
         // For each prompt, create a label and a text field.
