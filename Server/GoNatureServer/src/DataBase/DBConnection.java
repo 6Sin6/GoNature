@@ -143,7 +143,7 @@ public class DBConnection {
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
-                        case 2:
+                        case 3:
                             ResultSet parkData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
                             ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
@@ -170,7 +170,7 @@ public class DBConnection {
                                 );
                             }
                             break;
-                        case 3:
+                        case 4:
                             return new ParkDepartmentManager(
                                     userCredentials.getString("username"),
                                     "",
@@ -179,14 +179,14 @@ public class DBConnection {
                                     null,
                                     userGoNatureData.getInt("departmentID")
                             );
-                        case 4:
+                        case 5:
                             return new ParkManager(
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("EmailAddress"),
                                     userGoNatureData.getString("ParkID")
                             );
-                        case 5:
+                        case 6:
                             ResultSet parkDataSupport = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
                             ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkDataSupport.next() && supportManagerData.next()) {
