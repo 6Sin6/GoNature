@@ -22,8 +22,7 @@ public class InputTextPopup extends BasePopup {
         errorLabel.setText(msg);
     }
 
-    public void setLabelColor(String color)
-    {
+    public void setLabelColor(String color) {
         errorLabel.setStyle("-fx-text-fill: " + color + ";" +
                 "-fx-font-size: 20px; " +
                 "-fx-padding: 10px 10px; " +
@@ -96,7 +95,7 @@ public class InputTextPopup extends BasePopup {
         for (MFXTextField textField : textFields) {
             if (textField.getText().isEmpty()) {
                 errorLabel.setText("All fields are required");
-                return null;
+                return texts;
             }
             texts[textFields.indexOf(textField)] = textField.getText();
         }

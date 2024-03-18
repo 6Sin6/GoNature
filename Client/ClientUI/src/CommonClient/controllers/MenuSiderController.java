@@ -71,7 +71,7 @@ public class MenuSiderController extends BaseController {
     }
 
     public void setUsername(String username) {
-        usernameLabel.setText("User: " + username);
+        usernameLabel.setText(username);
     }
 
     public void handleHomePageRoute() {
@@ -82,16 +82,14 @@ public class MenuSiderController extends BaseController {
         applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
 
-    private Object getController(String fxmlPath) throws IOException
-    {
+    private Object getController(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
         return loader.getController();
     }
 
     public void buildMenuItems(ApplicationWindowController appController) throws IOException {
-        switch (userRoleLabel.getText())
-        {
+        switch (userRoleLabel.getText()) {
             case "Park Manager":
                 ParkManagerDashboardPageController parkManagerController = (ParkManagerDashboardPageController) getController("/EmployeesUI/ParkManagerDashboardPage.fxml");
                 parkManagerController.setApplicationWindowController(appController);

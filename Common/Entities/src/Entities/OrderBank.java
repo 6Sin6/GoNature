@@ -89,6 +89,10 @@ public class OrderBank implements Iterable<Order>, Serializable {
         return orders.contains(order);
     }
 
+    public boolean isEmpty() {
+        return orders.isEmpty();
+    }
+
     /**
      * Retrieves orders with a specific status from the OrderBank.
      *

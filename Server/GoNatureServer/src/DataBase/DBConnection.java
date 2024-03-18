@@ -5,11 +5,9 @@ import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
-import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 /**
  * Manages the database connection for the application.
@@ -134,12 +132,7 @@ public class DBConnection {
                     switch (userRole) {
                         case 1:
                             return new SingleVisitor(
-                                    userCredentials.getString("username"),
-                                    "",
-                                    userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("VisitorID"),
-                                    userGoNatureData.getString("firstName"),
-                                    userGoNatureData.getString("lastName")
+                                    userGoNatureData.getString("VisitorID")
                             );
                         case 2:
                             return new VisitorGroupGuide(
@@ -376,8 +369,8 @@ public class DBConnection {
     public boolean updateOrderDetails(String[] details) {
         try {
             String tableName = this.schemaName + ".orders";
-            String setClause = "ClientEmailAddress='" + details[2] + "' , PhoneNumber='" + details[1]+"'";
-            String whereClause = "OrderID='" + details[0]+"'";
+            String setClause = "ClientEmailAddress='" + details[2] + "' , PhoneNumber='" + details[1] + "'";
+            String whereClause = "OrderID='" + details[0] + "'";
             if (!this.dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Update order status:" + details[0]);
                 return false;
@@ -413,8 +406,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     *         Returns a new Park object with default values if no matching park is found.
-     *         Returns null if a SQLException is thrown.
+     * Returns a new Park object with default values if no matching park is found.
+     * Returns null if a SQLException is thrown.
      * @throws SQLException If there is an error while fetching the park details.
      */
     public Park getParkDetails(String parkID) {
@@ -681,8 +674,7 @@ public class DBConnection {
      * @param orderID the order ID.
      * @return a message indicating the result of the operation, null if successful.
      */
-    public String setExitTimeOfOrder(String orderID)
-    {
+    public String setExitTimeOfOrder(String orderID) {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "OrderID='" + orderID + "'";
@@ -690,7 +682,7 @@ public class DBConnection {
             if (!resultSet.next())
                 return "Order id doesn`t exist.";
             if (resultSet.getTimestamp("ExitedTime") != null)
-                return  "Order has already exited.";
+                return "Order has already exited.";
 
             if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
                 return "failed exiting, please try again.";

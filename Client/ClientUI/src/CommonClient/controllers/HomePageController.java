@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
@@ -120,11 +121,39 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.show(applicationWindowController.getRoot());
     }
 
-    public void onBookButtonClicked() {
-        if (applicationWindowController.getUser() == null) {
-            applicationWindowController.setCenterPage("/CommonClient/gui/LoginPage.fxml");
-            return;
+    protected void onAuth(String inputID) {
+        String strToPrint = "";
+        if (!Utils.isIDValid(inputID)) {
+            strToPrint = "Invalid ID! Try again";
         }
-        applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
+        if (strToPrint.isEmpty()) {
+            onAuthPopup.setErrorLabel(strToPrint);
+            Message signInReq = new Message(OpCodes.OP_SIGN_IN, inputID, inputID);
+            ClientUI.client.accept(signInReq);
+            Message respondToSignIn = ClientCommunicator.msg;
+            if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+                onAuthPopup.setErrorLabel("Already Signed In !");
+                return;
+            }
+            SingleVisitor visitor = new SingleVisitor(inputID);
+            Message message = new Message(OpCodes.OP_GET_VISITOR_ORDERS, inputID, visitor);
+            ClientUI.client.accept(message);
+            Message respondMsg = ClientCommunicator.msg;
+            ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
+            if (orders.isEmpty()) {
+                applicationWindowController.setCenterPage("/VisitorsUI/VisitorOrderVisitationPage.fxml");
+            } else {
+                applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
+                applicationWindowController.loadMenu(new SingleVisitor(inputID));
+            }
+
+        } else {
+            onAuthPopup.setErrorLabel(strToPrint);
+        }
+    }
+
+    public void onBookButtonClicked() {
+        onAuthPopup = new InputTextPopup(new String[]{"Enter Your ID Please : "}, (inputText) -> this.onAuth(inputText[0]), 500, 300, true, false, true);
+        onAuthPopup.show(applicationWindowController.getRoot());
     }
 }

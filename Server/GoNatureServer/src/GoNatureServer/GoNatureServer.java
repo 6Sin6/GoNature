@@ -199,19 +199,18 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws IOException {
-        AbstractVisitor visitor = (AbstractVisitor) message.getMsgData();
-        ArrayList<Order> requestedOrders = db.getUserOrders(visitor.getID());
-        OrderBank orders = visitor instanceof SingleVisitor ?
-                new OrderBank(OrderType.ORD_TYPE_SINGLE) :
-                new OrderBank(OrderType.ORD_TYPE_GROUP);
-
-        if (orders.insertOrderArray(requestedOrders)) {
-            Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitor.getUsername(), requestedOrders);
-            client.sendToClient(getVisitorOrdersMsg);
+        User visitor = (User) message.getMsgData();
+        ArrayList<Order> requestedOrders;
+        if (visitor instanceof AbstractVisitor) {
+            requestedOrders = db.getUserOrders(((AbstractVisitor) visitor).getID());
         } else {
-            Message getVisitorOrdersMsg = new Message(OpCodes.OP_DB_ERR);
-            client.sendToClient(getVisitorOrdersMsg);
+            requestedOrders = db.getUserOrders(((SingleVisitor) visitor).getID());
+
         }
+
+
+        Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitor.getUsername(), requestedOrders);
+        client.sendToClient(getVisitorOrdersMsg);
     }
 
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws IOException {
@@ -316,6 +315,7 @@ public class GoNatureServer extends AbstractServer {
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }
+
     private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException {
         String orderID = message.getMsgData().toString();
         String answer = db.setExitTimeOfOrder(orderID);

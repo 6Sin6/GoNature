@@ -1,10 +1,7 @@
 package CommonClient.controllers;
 
 import CommonClient.ClientUI;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Role;
-import Entities.User;
+import Entities.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,7 +13,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 
 public class ApplicationWindowController implements Initializable {
@@ -94,7 +94,8 @@ public class ApplicationWindowController implements Initializable {
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
-                    menuController.setUsername(user.getUsername());
+                    String prefix = user instanceof SingleVisitor ? "Visitor ID : " : "User : ";
+                    menuController.setUsername(prefix + user.getUsername());
                     menuController.buildMenuItems(this);
                 } else {
                     // Handle the case where the controller wasn't retrieved successfully

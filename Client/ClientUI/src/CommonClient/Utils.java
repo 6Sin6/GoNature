@@ -33,6 +33,9 @@ public class Utils {
 
     public static Boolean isIDValid(String ID) {
         // Check if the string length is exactly 9 characters
+        if (ID == null) {
+            return false;
+        }
         if (ID.length() != 9) {
             return false;
         }
@@ -96,8 +99,9 @@ public class Utils {
     /**
      * Generates a list of time slots for the time selection combo box.
      * Time slots range from the provided start and end parameters.
+     *
      * @param start The start time of the time slots.
-     * @param end The time slots will start from this time.
+     * @param end   The time slots will start from this time.
      */
     public static ObservableList<String> setComboBoxHours(int start, int end) {
         ArrayList<String> al = new ArrayList<String>();
