@@ -198,6 +198,22 @@ public class GoNatureServer extends AbstractServer {
             Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
             client.sendToClient(respondMsg);
         }
+        if (message.getMsgData() instanceof String) {
+            String username = (String) message.getMsgData();
+            if (signedInInstances.containsKey(username)) {
+                if (signedInInstances.get(username).getInetAddress() == null) {
+                    // remove crashed client from the map and add it again with the new client.
+                    signedInInstances.remove(username);
+                    signedInInstances.put(username, client);
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, username, username);
+                    client.sendToClient(respondMsg);
+                } else {
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, username, null);
+                    client.sendToClient(respondMsg);
+                    return;
+                }
+            }
+        }
 
     }
 
