@@ -130,7 +130,6 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             if (item.getOrderStatus() == OrderStatus.STATUS_CANCELLED ||
                     item.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER ||
                     item.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_AND_ABSENT ||
-                    item.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID ||
                     item.getOrderStatus() == OrderStatus.STATUS_FULFILLED) {
                 continue;
             }

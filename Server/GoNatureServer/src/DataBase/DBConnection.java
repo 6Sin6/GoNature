@@ -5,9 +5,11 @@ import ServerUIPageController.ServerPortFrameController;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 /**
  * Manages the database connection for the application.
@@ -116,6 +118,14 @@ public class DBConnection {
     //                                           VISITOR & USERS METHODS                                               //
     //                                                                                                                 //
     //=================================================================================================================//
+
+    /**
+     * Logs in a user with the provided username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return A User object representing the logged-in user, or null if login fails or there is an error.
+     */
     public User login(String username, String password) {
         try {
             String tableName = this.schemaName + ".users";
@@ -124,28 +134,24 @@ public class DBConnection {
 
             if (userCredentials.next()) {
                 int userRole = userCredentials.getInt("role");
-                String userTypeTableName = userRole < 3 ? ".visitors" : userRole == 4 ? ".departmentmanagers" : ".parkemployees";
+                String userTypeTableName = userRole < 2 ? ".group_guides" : userRole == 3 ? ".department_managers" : ".park_employees";
                 ResultSet userGoNatureData =
                         dbController.selectRecords(this.schemaName + userTypeTableName, "username='" + username + "'");
 
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
-                            return new SingleVisitor(
-                                    userGoNatureData.getString("VisitorID")
-                            );
-                        case 2:
                             return new VisitorGroupGuide(
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("emailAddress"),
-                                    userGoNatureData.getString("VisitorID"),
+                                    userGoNatureData.getString("ID"),
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
-                        case 3:
+                        case 2:
                             ResultSet parkData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
-                            ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
+                            ResultSet managerData = dbController.selectRecords(this.schemaName + ".park_employees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
                                         userCredentials.getString("firstname"),
@@ -164,32 +170,38 @@ public class DBConnection {
                                                         managerData.getString("username"),
                                                         "",
                                                         managerData.getString("EmailAddress"),
-                                                        parkData.getString("ParkID")
+                                                        parkData.getString("ParkID"),
+                                                        managerData.getString("firstName"),
+                                                        managerData.getString("lastName")
                                                 )
                                         )
                                 );
                             }
                             break;
-                        case 4:
+                        case 3:
                             return new ParkDepartmentManager(
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("emailAddress"),
                                     null,
                                     null,
-                                    userGoNatureData.getInt("departmentID")
+                                    userGoNatureData.getInt("departmentID"),
+                                    userGoNatureData.getString("firstName"),
+                                    userGoNatureData.getString("lastName")
                             );
-                        case 5:
+                        case 4:
                             return new ParkManager(
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("EmailAddress"),
-                                    userGoNatureData.getString("ParkID")
+                                    userGoNatureData.getString("ParkID"),
+                                    userGoNatureData.getString("firstName"),
+                                    userGoNatureData.getString("lastName")
                             );
-                        case 6:
+                        case 5:
                             ResultSet parkDataSupport = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
-                            ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
-                            if (parkDataSupport.next() && supportManagerData.next()) {
+                            ResultSet parkManagerData = dbController.selectRecords(this.schemaName + ".park_employees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
+                            if (parkDataSupport.next() && parkManagerData.next()) {
                                 return new ParkSupportRepresentative(
                                         userCredentials.getString("username"),
                                         "",
@@ -202,12 +214,17 @@ public class DBConnection {
                                                 convertMinutesToTimestamp(parkDataSupport.getInt("DefaultVisitationTime")),
                                                 parkDataSupport.getInt("departmentID"),
                                                 new ParkManager(
-                                                        supportManagerData.getString("username"),
+                                                        parkManagerData.getString("username"),
                                                         "",
-                                                        supportManagerData.getString("EmailAddress"),
-                                                        parkDataSupport.getString("ParkID")
+                                                        parkManagerData.getString("EmailAddress"),
+                                                        parkDataSupport.getString("ParkID"),
+                                                        parkManagerData.getString("firstName"),
+                                                        parkManagerData.getString("lastName")
+
                                                 )
-                                        )
+                                        ),
+                                        userCredentials.getString("firstName"),
+                                        userCredentials.getString("lastName")
                                 );
                             }
                         default:
@@ -222,28 +239,30 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Retrieves an order by user ID and order ID.
+     *
+     * @param userID  The ID of the user.
+     * @param orderID The ID of the order.
+     * @return The order associated with the specified user ID and order ID, or null if not found or there is an error.
+     */
     public Order getUserOrderByUserID(String userID, String orderID) {
         try {
-            String tableName = this.schemaName + ".visitors";
-            String whereClause = "VisitorID='" + userID + "'";
-            ResultSet userGoNatureData = dbController.selectRecords(tableName, whereClause);
-            if (userGoNatureData.next()) {
-                ResultSet orderData = dbController.selectRecords(this.schemaName + ".orders", "VisitorID='" + userID + "' AND OrderID=' " + orderID + "'");
-                if (orderData.next()) {
-                    return new Order(
-                            orderData.getString("VisitorID"),
-                            orderData.getString("ParkID"),
-                            orderData.getTimestamp("VisitationDate"),
-                            orderData.getString("ClientEmailAddress"),
-                            orderData.getString("PhoneNumber"),
-                            OrderStatus.values()[orderData.getInt("orderStatus") - 1],
-                            orderData.getTimestamp("EnteredTime"),
-                            orderData.getTimestamp("ExitedTime"),
-                            orderData.getString("OrderID"),
-                            OrderType.values()[orderData.getInt("OrderType") - 1],
-                            orderData.getInt("NumOfVisitors")
-                    );
-                }
+            ResultSet orderData = dbController.selectRecords(this.schemaName + ".orders", "VisitorID='" + userID + "' AND OrderID=' " + orderID + "'");
+            if (orderData.next()) {
+                return new Order(
+                        orderData.getString("VisitorID"),
+                        orderData.getString("ParkID"),
+                        orderData.getTimestamp("VisitationDate"),
+                        orderData.getString("ClientEmailAddress"),
+                        orderData.getString("PhoneNumber"),
+                        OrderStatus.values()[orderData.getInt("orderStatus") - 1],
+                        orderData.getTimestamp("EnteredTime"),
+                        orderData.getTimestamp("ExitedTime"),
+                        orderData.getString("OrderID"),
+                        OrderType.values()[orderData.getInt("OrderType") - 1],
+                        orderData.getInt("NumOfVisitors")
+                );
             }
             return null;
         } catch (SQLException e) {
@@ -252,6 +271,12 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Adds an order to the database.
+     *
+     * @param order The order to be added.
+     * @return The added order with the assigned order ID, or null if the insertion fails or there is an error.
+     */
     public Order addOrder(Order order) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -272,21 +297,10 @@ public class DBConnection {
             this.serverController.addtolog("Insert into " + tableName + " succeeded. Insert order:" + order);
 
             // Get the order from the DB (extract newly assigned order ID)
-            ResultSet results = dbController.selectRecords(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate() + "'");
+            ResultSet results = dbController.selectRecordsFields(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate() + "'", "OrderID");
             if (results.next()) {
-                return new Order(
-                        results.getString("VisitorID"),
-                        results.getString("ParkID"),
-                        results.getTimestamp("VisitationDate"),
-                        results.getString("ClientEmailAddress"),
-                        results.getString("PhoneNumber"),
-                        OrderStatus.values()[results.getInt("orderStatus") - 1],
-                        results.getTimestamp("EnteredTime"),
-                        results.getTimestamp("ExitedTime"),
-                        results.getString("OrderID"),
-                        OrderType.values()[results.getInt("OrderType") - 1],
-                        results.getInt("NumOfVisitors")
-                );
+                order.setOrderID(results.getString("OrderID"));
+                return order;
             }
             return null;
         } catch (SQLException e) {
@@ -295,6 +309,12 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Retrieves an order by its ID.
+     *
+     * @param OrderID The ID of the order to retrieve.
+     * @return The order with the specified ID, or null if the order is not found or there is an error.
+     */
     public Order getOrderById(String OrderID) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -322,6 +342,12 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Retrieves all orders associated with a specific visitor.
+     *
+     * @param visitorID The ID of the visitor.
+     * @return An ArrayList containing orders associated with the specified visitor, or null if there is an error.
+     */
     public ArrayList<Order> getUserOrders(String visitorID) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -351,6 +377,13 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Updates the status of an order.
+     *
+     * @param orderID The ID of the order to be updated.
+     * @param status  The new status of the order.
+     * @return True if the order status is successfully updated, false otherwise.
+     */
     public boolean updateOrderStatus(String orderID, OrderStatus status) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -367,6 +400,12 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Updates the details of an order.
+     *
+     * @param details An array containing the order details in the following format: [orderID, phoneNumber, clientEmailAddress].
+     * @return True if the order details are successfully updated, false otherwise.
+     */
     public boolean updateOrderDetails(String[] details) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -384,10 +423,24 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Updates the status of an order to "cancelled".
+     *
+     * @param orderID The ID of the order to be updated.
+     * @return True if the order status is successfully updated to "cancelled", false otherwise.
+     */
     public boolean updateOrderStatusAsCancelled(String orderID) {
         return updateOrderStatus(orderID, OrderStatus.STATUS_CANCELLED);
     }
 
+    /**
+     * Checks if an order exists for a specific visitor, park, and visitation date.
+     *
+     * @param visitorID       The ID of the visitor.
+     * @param parkID          The ID of the park.
+     * @param visitationDate  The visitation date.
+     * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
+     */
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
         try {
             String tableName = this.schemaName + ".orders";
@@ -407,9 +460,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     * Returns a new Park object with default values if no matching park is found.
-     * Returns null if a SQLException is thrown.
-     * @throws SQLException If there is an error while fetching the park details.
+     *         Returns a new Park object with default values if no matching park is found.
+     *         Returns null if a SQLException is thrown.
      */
     public Park getParkDetails(String parkID) {
         try {
@@ -418,7 +470,7 @@ public class DBConnection {
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             if (results.next()) {
                 String pManagerId = results.getString("ParkManagerID");
-                ResultSet managerResults = dbController.selectRecordsFields(this.schemaName + ".parkemployees", "id=" + pManagerId, "username", "EmailAddress");
+                ResultSet managerResults = dbController.selectRecords(this.schemaName + ".park_employees", "id=" + pManagerId);
                 if (managerResults.next()) {
                     return new Park(
                             results.getString("ParkID"),
@@ -431,7 +483,9 @@ public class DBConnection {
                                     managerResults.getString("username"),
                                     "",
                                     managerResults.getString("EmailAddress"),
-                                    results.getString("ParkID")
+                                    results.getString("ParkID"),
+                                    managerResults.getString("firstName"),
+                                    managerResults.getString("lastName")
                             )
                     );
                 }
@@ -449,6 +503,12 @@ public class DBConnection {
     //                                                                                                                 //
     //=================================================================================================================//
 
+    /**
+     * Marks an order as paid by inserting a record into the payments table and updating the order status.
+     *
+     * @param order The order to be marked as paid.
+     * @return True if the order is successfully marked as paid, false otherwise.
+     */
     public boolean markOrderAsPaid(Order order) {
         try {
             String orderID = order.getOrderID();
@@ -461,7 +521,7 @@ public class DBConnection {
             }
 
             String tableName2 = this.schemaName + ".payments";
-            String columns = "OrderID, hasPaid, price";
+            String columns = "OrderID, paid, price";
 
             if (!dbController.insertRecord(tableName2, columns, orderID, "true", String.valueOf(order.getNumOfVisitors() * Order.pricePerVisitor))) {
                 this.serverController.addtolog("Insert into " + this.schemaName + ".payments failed. Mark order as paid:" + orderID);
@@ -479,16 +539,23 @@ public class DBConnection {
     //                                           MANAGERS EXCLUSIVE METHODS                                            //
     //                                                                                                                 //
     //=================================================================================================================//
+
+    /**
+     * Retrieves requests from a park manager for a specific department.
+     *
+     * @param departmentID The ID of the department.
+     * @return An ArrayList of requests from the park manager, or null if there is an error.
+     */
     public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) {
         try {
-            String tableName = this.schemaName + ".requeststodepmanager";
+            String tableName = this.schemaName + ".park_parameters_requests";
             String whereClause = "DepartmentID=" + departmentID + " AND status=" + RequestStatus.REQUEST_PENDING.getRequestStatus();
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             ArrayList<RequestChangingParkParameters> requests = new ArrayList<>();
             while (results.next()) {
                 ResultSet parkResults = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + results.getString("ParkID"));
                 if (parkResults.next()) {
-                    ResultSet parkManagerResults = dbController.selectRecords(this.schemaName + ".parkemployees", "id=" + parkResults.getString("ParkManagerID") + " AND isParkManager=true");
+                    ResultSet parkManagerResults = dbController.selectRecords(this.schemaName + ".park_employees", "id=" + parkResults.getString("ParkManagerID") + " AND isParkManager=true");
                     if (parkManagerResults.next()) {
                         requests.add(new RequestChangingParkParameters(
                                 new Park(
@@ -502,7 +569,9 @@ public class DBConnection {
                                                 parkManagerResults.getString("username"),
                                                 "",
                                                 parkManagerResults.getString("EmailAddress"),
-                                                parkManagerResults.getString("ParkID")
+                                                parkManagerResults.getString("ParkID"),
+                                                parkManagerResults.getString("firstName"),
+                                                parkManagerResults.getString("lastName")
                                         )
                                 ),
                                 ParkParameters.values()[results.getInt("Parameter") - 1],
@@ -519,9 +588,15 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Authorizes a park request, updating the park parameters and request status in the database.
+     *
+     * @param req The request to authorize, containing details about the park, parameter, and requested value.
+     * @return {@code true} if the authorization process succeeds, {@code false} otherwise.
+     */
     public boolean authorizeParkRequest(RequestChangingParkParameters req) {
         try {
-            String tableName = this.schemaName + ".requeststodepmanager";
+            String tableName = this.schemaName + ".park_parameters_requests";
             String setClause = "handleDate = CURRENT_TIMESTAMP(), status=" + RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
             String whereClause = "ParkID=" + req.getPark().getParkID() + " AND parameter=" + req.getParameter().getParameterVal() + " AND requestedValue=" + req.getRequestedValue();
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
@@ -543,10 +618,16 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Unauthorizes a park parameter change request.
+     *
+     * @param req The request to be unauthorized.
+     * @return {@code true} if the request is successfully unauthorized, {@code false} otherwise.
+     */
     public boolean unauthorizeParkRequest(RequestChangingParkParameters req) {
         try {
-            String tableName = this.schemaName + ".requeststodepmanager";
-            String setClause = "Status=" + RequestStatus.REQUEST_DECLINED.getRequestStatus();
+            String tableName = this.schemaName + ".park_parameters_requests";
+            String setClause = "Status=" + RequestStatus.REQUEST_DECLINED.getRequestStatus() + ", handleDate=CURRENT_TIMESTAMP()";
             String whereClause = "ParkID=" + req.getPark().getParkID() + " AND parameter=" + req.getParameter().getParameterVal() + " AND requestedValue=" + req.getRequestedValue();
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Authorize park request:" + req);
@@ -559,9 +640,15 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Submits requests to the department for changing park parameters.
+     *
+     * @param requests A map containing the park parameters to be changed and their corresponding request objects.
+     * @return {@code true} if all requests were successfully submitted, {@code false} otherwise.
+     */
     public boolean submitRequestsToDepartment(Map<ParkParameters, RequestChangingParkParameters> requests) {
         try {
-            String tableName = this.schemaName + ".requeststodepmanager";
+            String tableName = this.schemaName + ".park_parameters_requests";
             for (RequestChangingParkParameters req : requests.values()) {
                 String columns = "ParkID, DepartmentID, parameter, requestedValue, status";
                 if (!dbController.insertRecord(tableName, columns, "'" + req.getPark().getParkID() + "'",
@@ -577,6 +664,59 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Registers a user as a group guide.
+     *
+     * @param newGroupGuideID The ID of the user to be registered as a group guide.
+     * @return 0 if the provided ID doesn't exist, 1 if the user is already a group guide,
+     *         2 if the registration is successful, -1 if an error occurs.
+     */
+    public int registerGroupGuide(String newGroupGuideID) {
+        try {
+            String guidesTableName = this.schemaName + ".group_guides";
+            ResultSet resultFromGuides = dbController.selectRecordsFields(guidesTableName, "ID='" + newGroupGuideID + "'", "username");
+            if (!resultFromGuides.next())
+                return 0; // id doesnt exist.
+            String username = resultFromGuides.getString("username");
+            String usersTableName = this.schemaName + ".users";
+            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
+            if (resultFromUsers.next())
+                return 1; // user is already a group guide.
+            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
+                return 2; // success
+            return -1; // failure
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return -1; // error
+        }
+    }
+
+    /**
+     * Sets the exit time of an order to now.
+     *
+     * @param orderID the order ID.
+     * @return a message indicating the result of the operation, null if successful.
+     */
+    public String setExitTimeOfOrder(String orderID)
+    {
+        try {
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "OrderID='" + orderID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime");
+            if (!resultSet.next())
+                return "Order id doesn`t exist.";
+            if (resultSet.getTimestamp("ExitedTime") != null)
+                return  "Order has already exited.";
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
+                return "failed exiting, please try again.";
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Exiting failed to unknown reason, please try again later.";
         }
     }
 
@@ -646,51 +786,6 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
-        }
-    }
-
-    public int registerGroupGuide(String newGroupGuideID) {
-        try {
-            String visitorsTableName = this.schemaName + ".visitors";
-            ResultSet resultFromVisitors = dbController.selectRecords(visitorsTableName, "VisitorID='" + newGroupGuideID + "'");
-            if (!resultFromVisitors.next())
-                return 0; // id doesnt exist.
-            String username = resultFromVisitors.getString("username");
-            String usersTableName = this.schemaName + ".users";
-            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
-            if (resultFromUsers.next())
-                return 1; // user is already a group guide.
-            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
-                return 2; // success
-            return -1; // failure
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return -1; // error
-        }
-    }
-
-    /**
-     * Sets the exit time of an order to now.
-     *
-     * @param orderID the order ID.
-     * @return a message indicating the result of the operation, null if successful.
-     */
-    public String setExitTimeOfOrder(String orderID) {
-        try {
-            String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "'";
-            ResultSet resultSet = dbController.selectRecords(tableName, whereClause);
-            if (!resultSet.next())
-                return "Order id doesn`t exist.";
-            if (resultSet.getTimestamp("ExitedTime") != null)
-                return "Order has already exited.";
-
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
-                return "failed exiting, please try again.";
-            return null;
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return "Exiting failed to unknown reason, please try again later.";
         }
     }
 }

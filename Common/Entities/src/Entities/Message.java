@@ -80,7 +80,7 @@ public class Message implements Serializable {
     /**
      * Sets the username associated with the message.
      *
-     * @param username The username to be set.
+     * @param identifier The username to be set.
      */
     public void setMsgUserName(String identifier) {
         this.identifier = identifier;

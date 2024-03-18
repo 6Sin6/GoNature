@@ -12,7 +12,8 @@ public class ParkDepartmentManager extends ParkEmployee implements Serializable 
 
     /**
      * Constructs a ParkDepartmentManager object with the specified parameters.
-     *
+     * @param firstName    The first name of the department manager.
+     * @param lastName     The last name of the department manager.
      * @param username     The username of the department manager.
      * @param password     The password of the department manager.
      * @param emailAddress  The email address of the department manager.
@@ -20,8 +21,8 @@ public class ParkDepartmentManager extends ParkEmployee implements Serializable 
      * @param parks        The ParkBank object containing park access information.
      * @param departmentID The ID of the department managed by the department manager.
      */
-    public ParkDepartmentManager(String username, String password, String emailAddress, Park park, ParkBank parks, Integer departmentID) {
-        super(username, password, emailAddress, park);
+    public ParkDepartmentManager(String username, String password, String emailAddress, Park park, ParkBank parks, Integer departmentID, String firstName, String lastName) {
+        super(firstName, lastName, username, password, emailAddress, park);
         this.parks = parks;
         DepartmentID = departmentID;
         role = Role.ROLE_PARK_DEPARTMENT_MGR;
@@ -36,9 +37,11 @@ public class ParkDepartmentManager extends ParkEmployee implements Serializable 
      * @param park         The park associated with the department manager.
      * @param parks        The ParkBank object containing park access information.
      * @param departmentID The ID of the department managed by the department manager.
+     * @param firstName    The first name of the department manager.
+     * @param lastName     The last name of the department manager.
      */
-    public ParkDepartmentManager(User user, String emailAddress, Park park, ParkBank parks, Integer departmentID) {
-        super(user, emailAddress, park);
+    public ParkDepartmentManager(User user, String emailAddress, Park park, ParkBank parks, Integer departmentID, String firstName, String lastName) {
+        super(user, emailAddress, park, firstName, lastName);
         this.parks = parks;
         DepartmentID = departmentID;
         role = Role.ROLE_PARK_DEPARTMENT_MGR;

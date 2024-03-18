@@ -11,14 +11,15 @@ public class ParkSupportRepresentative extends ParkEmployee implements Serializa
 
     /**
      * Constructs a ParkSupportRepresentative object with the specified parameters.
-     *
+     * @param firstName   The first name of the support representative.
+     * @param lastName   The last name of the support representative.
      * @param username    The username of the support representative.
      * @param password    The password of the support representative.
      * @param emailAddress The email address of the support representative.
      * @param park        The park associated with the support representative.
      */
-    public ParkSupportRepresentative(String username, String password, String emailAddress, Park park) {
-        super(username, password, emailAddress, park);
+    public ParkSupportRepresentative(String username, String password, String emailAddress, Park park, String firstName, String lastName) {
+        super(firstName, lastName, username, password, emailAddress, park);
         AccessParks = new ParkBank(park);
         role = Role.ROLE_PARK_SUPPORT_REPRESENTATIVE;
 
@@ -30,9 +31,11 @@ public class ParkSupportRepresentative extends ParkEmployee implements Serializa
      * @param user        The user object representing the support representative.
      * @param emailAddress The email address of the support representative.
      * @param park        The park associated with the support representative.
+     * @param firstName   The first name of the support representative.
+     * @param lastName   The last name of the support representative.
      */
-    public ParkSupportRepresentative(User user, String emailAddress, Park park) {
-        super(user, emailAddress, park);
+    public ParkSupportRepresentative(User user, String emailAddress, Park park, String firstName, String lastName) {
+        super(user, emailAddress, park, firstName, lastName);
         AccessParks = new ParkBank(park);
         role = Role.ROLE_PARK_SUPPORT_REPRESENTATIVE;
 
@@ -40,15 +43,16 @@ public class ParkSupportRepresentative extends ParkEmployee implements Serializa
 
     /**
      * Constructs a ParkSupportRepresentative object with the specified parameters.
-     *
+     * @param firstName   The first name of the support representative.
+     * @param lastName   The last name of the support representative.
      * @param username    The username of the support representative.
      * @param password    The password of the support representative.
      * @param emailAddress The email address of the support representative.
      * @param park        The park associated with the support representative.
      * @param parks       The ParkBank object containing park access information.
      */
-    public ParkSupportRepresentative(String username, String password, String emailAddress, Park park, ParkBank parks) {
-        super(username, password, emailAddress, park);
+    public ParkSupportRepresentative(String username, String password, String emailAddress, Park park, ParkBank parks, String firstName, String lastName) {
+        super(firstName, lastName, username, password, emailAddress, park);
         AccessParks = parks;
         role = Role.ROLE_PARK_SUPPORT_REPRESENTATIVE;
 
@@ -61,9 +65,11 @@ public class ParkSupportRepresentative extends ParkEmployee implements Serializa
      * @param emailAddress The email address of the support representative.
      * @param park        The park associated with the support representative.
      * @param parks       The ParkBank object containing park access information.
+     * @param firstName   The first name of the support representative.
+     * @param lastName   The last name of the support representative.
      */
-    public ParkSupportRepresentative(User user, String emailAddress, Park park, ParkBank parks) {
-        super(user, emailAddress, park);
+    public ParkSupportRepresentative(User user, String emailAddress, Park park, ParkBank parks, String firstName, String lastName) {
+        super(user, emailAddress, park, firstName, lastName);
         AccessParks = parks;
         role = Role.ROLE_PARK_SUPPORT_REPRESENTATIVE;
 
