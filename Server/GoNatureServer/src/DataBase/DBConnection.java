@@ -143,11 +143,13 @@ public class DBConnection {
                                     userGoNatureData.getString("firstName"),
                                     userGoNatureData.getString("lastName")
                             );
-                        case 3:
+                        case 2:
                             ResultSet parkData = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
                             ResultSet managerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
+                                        userCredentials.getString("firstname"),
+                                        userCredentials.getString("lastname"),
                                         userCredentials.getString("username"),
                                         "",
                                         userGoNatureData.getString("EmailAddress"),
@@ -168,7 +170,7 @@ public class DBConnection {
                                 );
                             }
                             break;
-                        case 4:
+                        case 3:
                             return new ParkDepartmentManager(
                                     userCredentials.getString("username"),
                                     "",
@@ -177,14 +179,14 @@ public class DBConnection {
                                     null,
                                     userGoNatureData.getInt("departmentID")
                             );
-                        case 5:
+                        case 4:
                             return new ParkManager(
                                     userCredentials.getString("username"),
                                     "",
                                     userGoNatureData.getString("EmailAddress"),
                                     userGoNatureData.getString("ParkID")
                             );
-                        case 6:
+                        case 5:
                             ResultSet parkDataSupport = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + userGoNatureData.getString("ParkID"));
                             ResultSet supportManagerData = dbController.selectRecords(this.schemaName + ".parkemployees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkDataSupport.next() && supportManagerData.next()) {
@@ -342,7 +344,6 @@ public class DBConnection {
                         results.getInt("NumOfVisitors")
                 ));
             }
-
             return orders;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());

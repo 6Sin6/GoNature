@@ -7,18 +7,18 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
     private OpCodes opcode;
-    private String username;
+    private String identifier;
     private Object data;
 
     /**
      * Constructs a new Message object with the specified opcode, username, and data.
      *
      * @param opcode   The operation code indicating the type of message.
-     * @param username The username associated with the message.
+     * @param identifier The username associated with the message.
      * @param data     The data contained within the message.
      */
-    public Message(OpCodes opcode, String username, Object data) {
-        this.username = username;
+    public Message(OpCodes opcode, String identifier, Object data) {
+        this.identifier = identifier;
         this.opcode = opcode;
         this.data = data;
     }
@@ -56,7 +56,7 @@ public class Message implements Serializable {
      * @return The username of the message.
      */
     public String getMsgUserName() {
-        return this.username;
+        return this.identifier;
     }
 
     /**
@@ -82,7 +82,7 @@ public class Message implements Serializable {
      *
      * @param username The username to be set.
      */
-    public void setMsgUserName(String username) {
-        this.username = username;
+    public void setMsgUserName(String identifier) {
+        this.identifier = identifier;
     }
 }
