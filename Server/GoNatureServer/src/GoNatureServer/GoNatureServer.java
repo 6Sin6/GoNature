@@ -34,7 +34,7 @@ public class GoNatureServer extends AbstractServer {
     private ServerPortFrameController controller;
     private DBConnection db;
 
-    private Map<String, ConnectionToClient> authenticatedUsers = new ConcurrentHashMap<>();
+    private Map<String, ConnectionToClient> signedInInstances = new ConcurrentHashMap<>();
 
     private boolean connected = true;
 
@@ -172,30 +172,33 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleLogout(Message message, ConnectionToClient client) throws IOException {
-        authenticatedUsers.remove(message.getMsgUserName());
+        signedInInstances.remove(message.getMsgUserName());
         client.sendToClient("logged out successfully");
     }
 
     private void handleSignIn(Message message, ConnectionToClient client) throws IOException {
-        User userCredentials = (User) message.getMsgData();
-        if (authenticatedUsers.containsKey(userCredentials.getUsername())) {
-            if (authenticatedUsers.get(userCredentials.getUsername()).getInetAddress() == null) {
-                authenticatedUsers.remove(userCredentials.getUsername());
-            } else {
-                Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
+        if (message.getMsgData() instanceof User) {
+            User userCredentials = (User) message.getMsgData();
+            if (signedInInstances.containsKey(userCredentials.getUsername())) {
+                if (signedInInstances.get(userCredentials.getUsername()).getInetAddress() == null) {
+                    signedInInstances.remove(userCredentials.getUsername());
+                } else {
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, userCredentials.getUsername(), null);
+                    client.sendToClient(respondMsg);
+                    return;
+                }
+            }
+            User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
+            if (authenticatedUser == null) {
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
                 client.sendToClient(respondMsg);
                 return;
             }
-        }
-        User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
-        if (authenticatedUser == null) {
-            Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+            signedInInstances.put(authenticatedUser.getUsername(), client);
+            Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
             client.sendToClient(respondMsg);
-            return;
         }
-        authenticatedUsers.put(authenticatedUser.getUsername(), client);
-        Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
-        client.sendToClient(respondMsg);
+
     }
 
     private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws IOException {
@@ -292,7 +295,7 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleQuit(ConnectionToClient client) throws IOException {
-        authenticatedUsers.values().removeIf(value -> value == client);
+        signedInInstances.values().removeIf(value -> value == client);
         controller.addtolog("Client " + client + " Disconnected");
         controller.removeRowByIP(client.getInetAddress().getHostAddress());
         client.close();
@@ -316,6 +319,7 @@ public class GoNatureServer extends AbstractServer {
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }
+
     private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException {
         String orderID = message.getMsgData().toString();
         String answer = db.setExitTimeOfOrder(orderID);

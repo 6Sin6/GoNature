@@ -9,7 +9,11 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 public class MessagePopup extends BasePopup {
-    public Object controller;
+    private Object controller;
+
+    public Object getController() {
+        return controller;
+    }
 
     public MessagePopup(String message, Duration duration, int width, int height, boolean fullScreenMode) {
         super(fullScreenMode, width, height);

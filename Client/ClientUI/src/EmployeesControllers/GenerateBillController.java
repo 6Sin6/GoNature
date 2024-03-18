@@ -100,7 +100,7 @@ public class GenerateBillController extends BaseController {
     private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true,  false);
-            OrderBillPageController controller = (OrderBillPageController) msg.controller;
+            OrderBillPageController controller = (OrderBillPageController) msg.getController();
             controller.setApplicationWindowController(applicationWindowController);
             msg.show(applicationWindowController.getRoot());
 

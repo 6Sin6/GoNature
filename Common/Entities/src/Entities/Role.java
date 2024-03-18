@@ -11,34 +11,34 @@ public enum Role {
     ROLE_GUEST(0),
 
     /**
-     * Role representing a single visitor.
-     */
-    ROLE_SINGLE_VISITOR(1),
-
-    /**
      * Role representing a visitor group guide.
      */
-    ROLE_VISITOR_GROUP_GUIDE(2),
+    ROLE_VISITOR_GROUP_GUIDE(1),
 
     /**
      * Role representing a park employee.
      */
-    ROLE_PARK_EMPLOYEE(3),
+    ROLE_PARK_EMPLOYEE(2),
 
     /**
      * Role representing a park department manager.
      */
-    ROLE_PARK_DEPARTMENT_MGR(4),
+    ROLE_PARK_DEPARTMENT_MGR(3),
 
     /**
      * Role representing a park manager.
      */
-    ROLE_PARK_MGR(5),
+    ROLE_PARK_MGR(4),
 
     /**
      * Role representing a park support representative.
      */
-    ROLE_PARK_SUPPORT_REPRESENTATIVE(6);
+    ROLE_PARK_SUPPORT_REPRESENTATIVE(5),
+
+    /**
+     * Role representing a single visitor.
+     */
+    ROLE_SINGLE_VISITOR(6);
 
     private int role;
 
