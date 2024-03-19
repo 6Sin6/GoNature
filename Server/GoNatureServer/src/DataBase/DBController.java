@@ -93,10 +93,11 @@ public class DBController {
     }
 
     /**
-     * Selects records from the specified table and logs the action.
+     * Selects records with specified fields from the specified table and logs the action.
      *
      * @param tableName   The name of the table from which to select records.
      * @param whereClause The WHERE clause to specify which records to select.
+     * @param fields      The fields to select from the table.
      * @return A ResultSet containing the selected records, or null if an error occurs.
      */
     public ResultSet selectRecordsFields(String tableName, String whereClause, String... fields) throws SQLException {
@@ -109,6 +110,13 @@ public class DBController {
         }
     }
 
+    /**
+     * Selects records from the specified table and logs the action.
+     *
+     * @param tableName   The name of the table from which to select records.
+     * @param whereClause The WHERE clause to specify which records to select.
+     * @return A ResultSet containing the selected records, or null if an error occurs.
+     */
     public ResultSet selectRecords(String tableName, String whereClause) throws SQLException {
         String sql = "SELECT * FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
         try {
@@ -118,5 +126,4 @@ public class DBController {
             throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
         }
     }
-
 }
