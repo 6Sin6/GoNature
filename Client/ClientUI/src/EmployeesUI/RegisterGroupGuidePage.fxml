@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RegisterGroupGuideController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RegisterGroupGuideController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -19,83 +19,28 @@
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="345.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
+            <Text layoutX="300.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgUsername" layoutX="450.0" layoutY="170.0" styleClass="error-text" text="errorMsg" textFill="RED">
+            <Label fx:id="lblErrorMsgID" layoutX="450.0" layoutY="170.0" styleClass="error-text" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Easily register a customer as a group guide by entering their details:&#10;user, password, email, first name, and last name.&#10;Ensure accuracy by verifying the details with the customer before submitting.">
+            <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Easily register a customer as a group guide by entering his ID&#10;Ensure accuracy by verifying the ID with the customer before submitting.">
                <font>
                   <Font size="22.0" />
                </font>
             </Text>
             <MFXTextField fx:id="txtUsername" layoutX="450.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" defaultButton="true" layoutX="420.0" layoutY="610.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
-            <Text layoutX="345.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label fx:id="lblErrorMsgPassword" layoutX="450.0" layoutY="240.0" styleClass="error-text" text="errorMsg" textFill="RED">
+            <MFXButton fx:id="btnSubmit" buttonType="RAISED" defaultButton="true" layoutX="420.0" layoutY="260.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
+            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="315.0" styleClass="error-text" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXTextField fx:id="txtPassword" layoutX="450.0" layoutY="260.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="345.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label fx:id="lblErrorMsgEmail" layoutX="450.0" layoutY="310.0" styleClass="error-text" text="errorMsg" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <MFXTextField fx:id="txtEmail" layoutX="450.0" layoutY="330.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="345.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label fx:id="lblErrorMsgFirstName" layoutX="450.0" layoutY="380.0" styleClass="error-text" text="errorMsg" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <MFXTextField fx:id="txtFirstName" layoutX="450.0" layoutY="400.0" prefHeight="30.0" prefWidth="200.0" />
-            <Text layoutX="345.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label fx:id="lblErrorMsgLastName" layoutX="450.0" layoutY="450.0" styleClass="error-text" text="errorMsg" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <MFXTextField fx:id="txtLastName" layoutX="450.0" layoutY="470.0" prefHeight="30.0" prefWidth="200.0" />
-            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="665.0" styleClass="error-text" text="Label" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Text layoutX="345.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guide ID:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label fx:id="lblErrorMsgID" layoutX="450.0" layoutY="520.0" text="errorMsg" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <MFXTextField fx:id="txtGuideID" layoutX="450.0" layoutY="540.0" prefHeight="30.0" prefWidth="200.0" />
          </children>
       </Pane>
    </children>

@@ -132,8 +132,8 @@ public class GoNatureServer extends AbstractServer {
             case OP_GET_USER_ORDERS_BY_USERID_ORDERID:
                 handleGetUserOrdersByUserID(message, client);
                 break;
-            case OP_REGISTER_GROUP_GUIDE:
-                handleRegisterGroupGuide(message, client);
+            case OP_ACTIVATE_GROUP_GUIDE:
+                handleActivateGroupGuide(message, client);
                 break;
             case OP_HANDLE_VISITATION_CANCEL_ORDER:
                 handleCancelOrderVisitation(message, client);
@@ -253,24 +253,10 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(getUserMsg);
     }
 
-    private void handleRegisterGroupGuide(Message message, ConnectionToClient client) throws IOException {
-        String newGroupGuideID = (String) message.getMsgData();
-        int retValue = db.registerGroupGuide(newGroupGuideID);
-        Message registerGroupGuideMessage;
-        switch (retValue) {
-            case 0:
-                registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_ID_DOESNT_EXIST);
-                break;
-            case 1:
-                registerGroupGuideMessage = new Message(OpCodes.OP_VISITOR_IS_ALREADY_GROUP_GUIDE);
-                break;
-            case 2:
-                registerGroupGuideMessage = new Message(OpCodes.OP_UPDATED_VISITOR_TO_GROUP_GUIDE);
-                break;
-            default:
-                registerGroupGuideMessage = new Message(OpCodes.OP_DB_ERR);
-                break;
-        }
+    private void handleActivateGroupGuide(Message message, ConnectionToClient client) throws IOException {
+        String groupGuideID = (String) message.getMsgData();
+        String retVal = db.activateGroupGuide(groupGuideID);
+        Message registerGroupGuideMessage = new Message(OpCodes.OP_ACTIVATE_GROUP_GUIDE, null, retVal);
         client.sendToClient(registerGroupGuideMessage);
     }
 

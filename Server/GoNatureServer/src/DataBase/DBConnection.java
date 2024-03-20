@@ -667,59 +667,6 @@ public class DBConnection {
         }
     }
 
-    /**
-     * Registers a user as a group guide.
-     *
-     * @param newGroupGuideID The ID of the user to be registered as a group guide.
-     * @return 0 if the provided ID doesn't exist, 1 if the user is already a group guide,
-     *         2 if the registration is successful, -1 if an error occurs.
-     */
-    public int registerGroupGuide(String newGroupGuideID) {
-        try {
-            String guidesTableName = this.schemaName + ".group_guides";
-            ResultSet resultFromGuides = dbController.selectRecordsFields(guidesTableName, "ID='" + newGroupGuideID + "'", "username");
-            if (!resultFromGuides.next())
-                return 0; // id doesnt exist.
-            String username = resultFromGuides.getString("username");
-            String usersTableName = this.schemaName + ".users";
-            ResultSet resultFromUsers = dbController.selectRecords(usersTableName, "username='" + username + "' AND role='" + Role.ROLE_VISITOR_GROUP_GUIDE + "'");
-            if (resultFromUsers.next())
-                return 1; // user is already a group guide.
-            if (dbController.updateRecord(usersTableName, "role=" + Role.ROLE_VISITOR_GROUP_GUIDE, "username='" + username + "'"))
-                return 2; // success
-            return -1; // failure
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return -1; // error
-        }
-    }
-
-    /**
-     * Sets the exit time of an order to now.
-     *
-     * @param orderID the order ID.
-     * @return a message indicating the result of the operation, null if successful.
-     */
-    public String setExitTimeOfOrder(String orderID)
-    {
-        try {
-            String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "'";
-            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime");
-            if (!resultSet.next())
-                return "Order id doesn`t exist.";
-            if (resultSet.getTimestamp("ExitedTime") != null)
-                return  "Order has already exited.";
-
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
-                return "failed exiting, please try again.";
-            return null;
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return "Exiting failed to unknown reason, please try again later.";
-        }
-    }
-
     // =================================================================================================================//
     //                                                                                                                 //
     //                                           WORKER EXCLUSIVE METHODS                                              //
@@ -786,6 +733,52 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sets the exit time of an order to now.
+     *
+     * @param orderID the order ID.
+     * @return a message indicating the result of the operation, null if successful.
+     */
+    public String setExitTimeOfOrder(String orderID)
+    {
+        try {
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "OrderID='" + orderID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime");
+            if (!resultSet.next())
+                return "Order id doesn`t exist.";
+            if (resultSet.getTimestamp("ExitedTime") != null)
+                return  "Order has already exited.";
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
+                return "failed exiting, please try again.";
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Exiting failed to unknown reason, please try again later.";
+        }
+    }
+
+    public String activateGroupGuide(String groupGuideID)
+    {
+        try {
+            String tableName = this.schemaName + ".group-guides";
+            String whereClause = "ID='" + groupGuideID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "Active");
+            if (!resultSet.next())
+                return "Group guide id doesn`t exist.";
+            if (!resultSet.getBoolean("pending"))
+                return  "Group guide is already active.";
+
+            if (!dbController.updateRecord(tableName, "pending=false", whereClause))
+                return "failed activating, please try again.";
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Activating failed to unknown reason, please try again later.";
         }
     }
 }

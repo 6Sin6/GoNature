@@ -20,122 +20,60 @@ public class RegisterGroupGuideController extends BaseController {
     private MFXButton btnSubmit;
 
     @FXML
-    private Label lblErrorMsgEmail;
-
-    @FXML
-    private Label lblErrorMsgFirstName;
-
-    @FXML
     private Label lblErrorMsgGeneral;
 
     @FXML
     private Label lblErrorMsgID;
 
     @FXML
-    private Label lblErrorMsgLastName;
-
-    @FXML
-    private Label lblErrorMsgPassword;
-
-    @FXML
-    private Label lblErrorMsgUsername;
-
-    @FXML
-    private MFXTextField txtEmail;
-
-    @FXML
-    private MFXTextField txtFirstName;
-
-    @FXML
-    private MFXTextField txtGuideID;
-
-    @FXML
-    private MFXTextField txtLastName;
-
-    @FXML
-    private MFXTextField txtPassword;
-
-    @FXML
-    private MFXTextField txtUsername;
+    private MFXTextField txtID;
 
     public void cleanup() {
-        txtEmail.clear();
-        txtFirstName.clear();
-        txtGuideID.clear();
-        txtLastName.clear();
-        txtPassword.clear();
-        txtUsername.clear();
-        lblErrorMsgEmail.setText("");
-        lblErrorMsgFirstName.setText("");
+        txtID.setText("");
         lblErrorMsgGeneral.setText("");
         lblErrorMsgID.setText("");
-        lblErrorMsgLastName.setText("");
-        lblErrorMsgPassword.setText("");
-        lblErrorMsgUsername.setText("");
     }
 
-    private String getUserName()
+    private boolean isDetailsValid(String id)
     {
-        return txtUsername.getText();
+        return (CommonUtils.isValidID(id));
     }
 
-    private String getPassword()
+    private String getID()
     {
-        return txtPassword.getText();
-    }
-
-    private String getEmail()
-    {
-        return txtEmail.getText();
-    }
-
-    private String getFirstName()
-    {
-        return txtFirstName.getText();
-    }
-
-    private String getLastName()
-    {
-        return txtLastName.getText();
-    }
-
-    private boolean isDetailsValid(String username, String email, String firstName, String lastName)
-    {
-        boolean retValue = true;
-        // check if username exists with db - missing. Adir working here.
-        if (!CommonUtils.isEmailAddressValid(email))
-        {
-            if (email.isEmpty())
-                lblErrorMsgEmail.setText("Email is required");
-            else lblErrorMsgEmail.setText("Email is invalid");
-            retValue = false;
-        }
-        else lblErrorMsgEmail.setText("");
-
-        if(!CommonUtils.isValidName(firstName))
-        {
-            if(firstName.isEmpty())
-                lblErrorMsgFirstName.setText("First name is required");
-            else lblErrorMsgFirstName.setText("First name is invalid, only letters allowed");
-            retValue = false;
-        }
-        else lblErrorMsgFirstName.setText("");
-
-        if (!CommonUtils.isValidName(lastName))
-        {
-            if (lastName.isEmpty())
-                lblErrorMsgLastName.setText("Last name is required");
-            else lblErrorMsgLastName.setText("Last name is invalid, only letters allowed");
-            retValue = false;
-        }
-
-        return retValue;
+        return txtID.getText();
     }
 
     @FXML
     void OnClickSubmitButton(ActionEvent event)
     {
+        if (!isDetailsValid(getID()))
+        {
+            lblErrorMsgID.setText("Invalid ID");
+            return;
+        }
+        lblErrorMsgID.setText("");
+        Object msg = new Message(OpCodes.OP_ACTIVATE_GROUP_GUIDE, this.applicationWindowController.getUser().getUsername(), getID());
+        ClientUI.client.accept(msg);
 
+        Message response = ClientCommunicator.msg;
+        String msgAnswer = (String) response.getMsgData();
+
+        if (msgAnswer == null)
+            updateMsg("Group guide has successfully registered!", "#008000");
+        else
+            updateMsg(msgAnswer, "#FF0000");
+    }
+
+    private void updateMsg(String msg, String colorCode)
+    {
+        lblErrorMsgGeneral.setText(msg);
+        lblErrorMsgGeneral.setStyle("-fx-text-fill: " + colorCode + ";" +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 10px; " +
+                "-fx-border-width: 2px; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-alignment: center;");
     }
 
 }
