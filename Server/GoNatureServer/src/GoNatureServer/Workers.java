@@ -55,7 +55,7 @@ public class Workers {
         long initialDelay = calculateInitialDelay();
         scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.HOURS.toMillis(1), TimeUnit.MILLISECONDS);
 //        long initialDelay = 5000;
-//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
+//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(1), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
 
@@ -94,19 +94,15 @@ public class Workers {
 
     public static void shutdownExecutors() {
         executors.forEach(executor -> {
-            executor.shutdown(); // Disable new tasks from being submitted
+            executor.shutdown();
             try {
-                // Wait a while for existing tasks to terminate
                 if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
-                    executor.shutdownNow(); // Cancel currently executing tasks
-                    // Wait a while for tasks to respond to being cancelled
+                    executor.shutdownNow();
                     if (!executor.awaitTermination(60, TimeUnit.SECONDS))
                         System.err.println("Executor service did not terminate");
                 }
             } catch (InterruptedException ie) {
-                // (Re-)Cancel if current thread also interrupted
                 executor.shutdownNow();
-                // Preserve interrupt status
                 Thread.currentThread().interrupt();
             }
         });
