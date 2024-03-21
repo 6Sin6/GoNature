@@ -57,9 +57,12 @@ public class ParkEmployeeDashboardPageController extends BaseController {
         }
         Object message = new Message(OP_UPDATE_EXIT_TIME_OF_ORDER, null, orderID);
         ClientUI.client.accept(message);
-        Object answer = ClientCommunicator.msg.getMsgData();
+        String answer = ClientCommunicator.msg.getMsgData().toString();
         if (answer != null)
-            popup.setErrorLabel(answer.toString());
+        {
+            popup.setLabelColor("#FF0000");
+            popup.setErrorLabel(answer);
+        }
         else {
             popup.setLabelColor("#00FF00");
             popup.setErrorLabel("Order Exited Successfully!");

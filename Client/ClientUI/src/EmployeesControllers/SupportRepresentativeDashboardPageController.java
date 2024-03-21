@@ -65,8 +65,8 @@ public class SupportRepresentativeDashboardPageController extends BaseController
         }
         else
         {
-            popup.setLabelColor("#008000");
-            popup.setErrorLabel("Order has exited successfully!");
+            popup.setLabelColor("#00FF00");
+            popup.setErrorLabel("Order Exited Successfully!");
         }
     }
 
