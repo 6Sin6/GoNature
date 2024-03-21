@@ -8,6 +8,7 @@ import ServerUIPageController.ServerPortFrameController;
 
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -156,8 +157,8 @@ public class DBConnection {
                             ResultSet managerData = dbController.selectRecords(this.schemaName + ".park_employees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
-                                        userCredentials.getString("firstname"),
-                                        userCredentials.getString("lastname"),
+                                        userGoNatureData.getString("firstname"),
+                                        userGoNatureData.getString("lastname"),
                                         userCredentials.getString("username"),
                                         "",
                                         userGoNatureData.getString("EmailAddress"),
@@ -225,8 +226,8 @@ public class DBConnection {
 
                                                 )
                                         ),
-                                        userCredentials.getString("firstName"),
-                                        userCredentials.getString("lastName")
+                                        userGoNatureData.getString("firstName"),
+                                        userGoNatureData.getString("lastName")
                                 );
                             }
                         default:
@@ -777,18 +778,38 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "OrderID='" + orderID + "'";
-            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime");
-            if (!resultSet.next())
-                return "Order id doesn`t exist.";
-            if (resultSet.getTimestamp("ExitedTime") != null)
-                return  "Order has already exited.";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
+            if (!results.next()) {
+                return "Order ID does not exist.";
+            }
 
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
-                return "failed exiting, please try again.";
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp exitTime = results.getTimestamp("ExitedTime");
+            // Extract year and month components from the current time
+            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
+            int currentYear = currentDate.getYear();
+            int currentMonth = currentDate.getMonthValue();
+
+            // Extract year and month components from the exit time
+            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
+            int exitYear = exitDate.getYear();
+            int exitMonth = exitDate.getMonthValue();
+            if (currentYear != exitYear || currentMonth != exitMonth) {
+                return "Order is not for today.";
+            }
+
+            if (currentTime.compareTo(exitTime) > 0) {
+                return "Order has already been fulfilled.";
+            }
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause)) {
+                return "Update failed. Please try again.";
+            }
+
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return "Exiting failed to unknown reason, please try again later.";
+            return "Something went wrong... please try again later.";
         }
     }
 

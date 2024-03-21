@@ -121,8 +121,6 @@ public class ApplicationWindowController implements Initializable {
             if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml") &&
                     !Objects.equals(fxmlPath, "/CommonClient/gui/HomePage.fxml")) {
                 newMenu = menuSider;
-            } else {
-                ((BaseController) currentActiveController).cleanup();
             }
             mainPane.setLeft(newMenu);
         }
