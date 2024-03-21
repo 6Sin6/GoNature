@@ -10,33 +10,11 @@ import VisitorsControllers.VisitorGroupGuideDashboardPageController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
 public class MenuSiderController extends BaseController {
-
-    @FXML
-    private ImageView appLogo;
-
-    @FXML
-    private Label appName;
-
-    @FXML
-    private MFXButton dashboardBtn;
-
-    @FXML
-    private MFXButton homePageBtn;
-
-    @FXML
-    private StackPane logoContainer;
-
-    @FXML
-    private MFXButton logoutBtnMenu;
 
     @FXML
     private MFXButton btnAct1;
@@ -46,9 +24,6 @@ public class MenuSiderController extends BaseController {
 
     @FXML
     private MFXButton btnAct3;
-
-    @FXML
-    private Pane menuBox;
 
     @FXML
     private Label userRoleLabel;
@@ -84,7 +59,7 @@ public class MenuSiderController extends BaseController {
 
     private Object getController(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent root = loader.load();
+        /*Parent root = */loader.load();
         return loader.getController();
     }
 
