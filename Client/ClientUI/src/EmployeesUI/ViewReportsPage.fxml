@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ViewReportsPageController">
+   <children>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+         <children>
+            <Text layoutX="363.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Text>
+            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
+            <Text layoutX="14.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can view various vital reports:&#10;&#10;• Cancellation Reports: Review last month's cancellation details.&#10;Understanding cancellations helps optimize operations and improve customer satisfaction.&#10;&#10;• Visitation Reports: Explore visitation data, including visitor numbers and demographics from the previous month.&#10;&#10;• Reports prepared by your parks' managers: Maintain oversight over the parks in your department." wrappingWidth="855.159912109375">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Text>
+            <Label layoutX="181.0" layoutY="437.0" text="Report Type" />
+            <ComboBox fx:id="reportCmb" layoutX="140.0" layoutY="464.0" prefHeight="39.0" prefWidth="146.0" />
+            <ComboBox fx:id="parkCmb" layoutX="323.0" layoutY="464.0" prefHeight="39.0" prefWidth="146.0" />
+            <Label fx:id="viewResultMsg" layoutX="314.0" layoutY="604.0" prefHeight="17.0" prefWidth="468.0" />
+            <Label layoutX="385.0" layoutY="437.0" text="Park" />
+            <Label fx:id="errMsg" layoutX="304.0" layoutY="514.0" prefHeight="17.0" prefWidth="520.0" styleClass="error-text" />
+            <ComboBox fx:id="yearCmb" layoutX="669.0" layoutY="463.0" prefHeight="39.0" prefWidth="139.0" />
+            <Label layoutX="727.0" layoutY="436.0" text="Year" />
+            <Label layoutX="554.0" layoutY="436.0" text="Month" />
+            <ComboBox fx:id="monthCmb" layoutX="499.0" layoutY="464.0" prefHeight="39.0" prefWidth="146.0" />
+            <MFXButton fx:id="btnViewReport" layoutX="138.0" layoutY="542.0" onAction="#onClickViewReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="View Report" />
+         </children>
+      </Pane>
+   </children>
+</StackPane>

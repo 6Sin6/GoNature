@@ -159,6 +159,12 @@ public class GoNatureServer extends AbstractServer {
             case OP_UPDATE_EXIT_TIME_OF_ORDER:
                 handleUpdateExitTimeOfOrder(message, client);
                 break;
+            case OP_VIEW_REPORT_BLOB:
+                handleViewReportBlob(message, client);
+                break;
+            case OP_GENERATE_REPORT_BLOB:
+                handleGenerateReportBlob(message, client);
+                break;
             case OP_QUIT:
                 handleQuit(client);
                 break;
@@ -353,6 +359,19 @@ public class GoNatureServer extends AbstractServer {
         Order order = (Order) message.getMsgData();
         boolean isMarkedAsPaid = db.markOrderAsPaid(order);
         Message respondMsg = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, message.getMsgUserName(), isMarkedAsPaid);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleViewReportBlob(Message message, ConnectionToClient client) throws IOException {
+        String[] params = (String[]) message.getMsgData();
+        byte[] pdfBlob = db.getReportBlob(Boolean.parseBoolean(params[0]), params[1], params[2], params[3], params[4]);
+        Message respondMsg = new Message(OpCodes.OP_VIEW_REPORT_BLOB, message.getMsgUserName(), pdfBlob);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws IOException {
+//        String[] params = (String[]) message.getMsgData();
+        Message respondMsg = new Message(OpCodes.OP_GENERATE_REPORT_BLOB, message.getMsgUserName(), false);
         client.sendToClient(respondMsg);
     }
 

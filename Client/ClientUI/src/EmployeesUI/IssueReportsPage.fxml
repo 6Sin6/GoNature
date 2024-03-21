@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueReportsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueReportsController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
-            <Text layoutX="269.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Department Reports" textAlignment="CENTER">
+            <Text layoutX="333.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports Issuance" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can access vital reports:&#10;&#10;• Cancellation Reports: Review last month's cancellation details.&#10;Understanding cancellations helps optimize operations and improve customer satisfaction.&#10;&#10;• Visitation Reports: Explore visitation data, including visitor numbers and demographics from the previous month.&#10;Utilize these insights to make informed decisions and enhance visitor experiences.&#10;&#10;Efficiently monitor department performance and drive continuous improvement with these essential reports." wrappingWidth="855.159912109375">
+            <Text layoutX="14.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can issue vital reports:&#10;&#10;• Cancellation Reports: Review last month's cancellation details.&#10;Understanding cancellations helps optimize operations and improve customer satisfaction.&#10;&#10;• Visitation Reports: Explore visitation data, including visitor numbers and demographics from the previous month.&#10;&#10;Utilize these insights to make informed decisions and enhance visitor experiences." wrappingWidth="855.159912109375">
                <font>
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnCancellationReports" styleClass="actButtonGreen" layoutX="275.0" layoutY="475.0" onAction="#OnClickCancellationReportsButton" prefHeight="50.0" prefWidth="100.0" text="Cancellation&#10;Reports" textAlignment="CENTER" textOverrun="CLIP" />
-            <MFXButton fx:id="btnVisitationsReports" styleClass="actButtonGreen" layoutX="625.0" layoutY="475.0" onAction="#OnClickVisitationsReportsButton" prefHeight="50.0" prefWidth="100.0" text="Visitations&#10;Reports" textAlignment="CENTER" />
+            <Label layoutX="443.0" layoutY="436.0" text="Report Type" />
+            <ComboBox fx:id="reportCmb" layoutX="336.0" layoutY="460.0" prefHeight="39.0" prefWidth="278.0" />
+            <Label fx:id="generateResultMsg" layoutX="415.0" layoutY="590.0" prefHeight="17.0" prefWidth="347.0" />
+            <Label fx:id="errMsg" layoutX="374.0" layoutY="506.0" prefHeight="17.0" prefWidth="305.0" styleClass="error-text" />
+            <MFXButton fx:id="btnGenerateReport" layoutX="145.0" layoutY="529.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="Generate Report" />
          </children>
       </Pane>
    </children>

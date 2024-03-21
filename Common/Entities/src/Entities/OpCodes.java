@@ -34,6 +34,8 @@ public enum OpCodes {
     OP_SUBMIT_REQUESTS_TO_DEPARTMENT(30), /* Expect: Map<ParkParameters, RequestChangingParkParameters>. Returns: boolean indicator */
     OP_UPDATE_EXIT_TIME_OF_ORDER(31), /* Expect: String OrderID. Returns: In case of success - null. In case of failure - String of error relevant to failure. */
     OP_MARK_ORDER_AS_PAID(32), /* Expect: Order - order. Returns: boolean indicator */
+    OP_VIEW_REPORT_BLOB(33), /* Expect: String[] - 0: isDepartmentReport boolean, 1: reportType ["visitations", "cancellations"], 2: month, 3: year, 3: ParkID or DepartmentID. Returns: byte[] - PDF Blob */
+    OP_GENERATE_REPORT_BLOB(34), /* Expect: String - reportType ["visitations", "cancellations"]. Returns: boolean indicator */
     OP_DB_ERR(999);
 
     private final int opCodeValue;

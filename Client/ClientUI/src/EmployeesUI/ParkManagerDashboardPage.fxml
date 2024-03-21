@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkManagerDashboardPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkManagerDashboardPageController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -16,24 +16,30 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnChangeParkParameters" layoutX="210.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickChangeParkParametersButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Change Park&#10;Parameters" textAlignment="CENTER" />
-            <Text layoutX="92.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request to Change Park Parameters">
+            <MFXButton fx:id="btnChangeParkParameters" layoutX="123.0" layoutY="545.0" mnemonicParsing="false" onAction="#OnClickChangeParkParametersButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="Change Parameters&#10;" textAlignment="CENTER" />
+            <Text layoutX="46.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request to Change Park Parameters" wrappingWidth="310.462890625">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text layoutX="488.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Generate Usage &amp; Visitation Reports">
+            <Text layoutX="430.0" layoutY="523.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Reports">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnAvailableSpot" layoutX="610.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickGenerateReportsButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Generate&#10;Reports" textAlignment="CENTER" />
+            <MFXButton fx:id="btnIssueReports" layoutX="421.0" layoutY="545.0" mnemonicParsing="false" onAction="#OnClickIssueReportsButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="Issue" textAlignment="CENTER" />
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Park Manager Dashboard!&#10;&#10;As the Park Manager, your role is vital in maintaining and enhancing our park facilities.&#10;Here's what you can do:&#10;&#10;• Easily submit requests to adjust park parameters.&#10;• Generate detailed usage and visitation reports and,&#10;send them to the Department Manager.&#10;&#10;Efficiently manage park operations and drive continuous&#10;improvement with these features.&#10;Enjoy overseeing our parks with confidence and effectiveness!" wrappingWidth="871.9940795898438">
+            <Text layoutX="25.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Park Manager Dashboard!&#10;&#10;As the Park Manager, your role is vital in maintaining and enhancing our park facilities.&#10;Here's what you can do:&#10;&#10;• Easily submit requests to adjust park parameters.&#10;• Generate detailed usage and visitation reports and,&#10;send them to the Department Manager.&#10;&#10;Efficiently manage park operations and drive continuous&#10;improvement with these features.&#10;Enjoy overseeing our parks with confidence and effectiveness!" wrappingWidth="871.9940795898438">
                <font>
                   <Font size="22.0" />
                </font>
             </Text>
+            <Text layoutX="729.0" layoutY="523.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <MFXButton fx:id="btnViewReports" layoutX="720.0" layoutY="541.0" mnemonicParsing="false" onAction="#OnClickViewReportsButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="View" textAlignment="CENTER" />
          </children>
       </Pane>
    </children>

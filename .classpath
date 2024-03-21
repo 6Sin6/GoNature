@@ -14,5 +14,7 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/adapter-0.2.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/adapter-0.2.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/virtualizedfx-11.2.6.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Java EE 6-Java EE 6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.mail"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
