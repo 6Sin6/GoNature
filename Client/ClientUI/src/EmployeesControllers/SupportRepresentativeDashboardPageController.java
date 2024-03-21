@@ -11,34 +11,16 @@ import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
-public class SupportRepresentativeDashboardPageController extends BaseController {
+public class SupportRepresentativeDashboardPageController extends GeneralEmployeeDashboard {
 
     @FXML
-    private MFXButton btnCheckParkAvailability;
-
-    @FXML
-    private MFXButton btnEntry;
-
-    @FXML
-    private MFXButton btnIssueBill;
-
-    @FXML
-    private MFXButton btnRegisterGuide;
-
-    private InputTextPopup popup;
-
-    public void cleanup() {
-        // No cleanup required
-    }
-
-    @FXML
-    public void OnClickCheckParkAvailabilityButton(ActionEvent event)
+    public void OnClickAvailableSpotButton(ActionEvent event)
     {
         applicationWindowController.loadEmployeesPage("CheckAvailableSpotsPage");
     }
 
     @FXML
-    public void OnClickIssueBillButton(ActionEvent event)
+    public void OnClickGenerateBillButton(ActionEvent event)
     {
         applicationWindowController.loadEmployeesPage("GenerateBillPage");
     }
@@ -47,27 +29,6 @@ public class SupportRepresentativeDashboardPageController extends BaseController
     public void OnClickRegisterGuideButton(ActionEvent event)
     {
         applicationWindowController.loadEmployeesPage("RegisterGroupGuidePage");
-    }
-
-    private void onSubmit(String[] inputs) {
-        String orderID = inputs[0];
-        if (!CommonUtils.CommonUtils.isValidOrderID(orderID)) {
-            popup.setErrorLabel("Invalid Order ID");
-            return;
-        }
-        Object message = new Message(OP_UPDATE_EXIT_TIME_OF_ORDER, null, orderID);
-        ClientUI.client.accept(message);
-        String answer = ClientCommunicator.msg.getMsgData().toString();
-        if (answer != null)
-        {
-            popup.setLabelColor("#FF0000");
-            popup.setErrorLabel(answer);
-        }
-        else
-        {
-            popup.setLabelColor("#00FF00");
-            popup.setErrorLabel("Order Exited Successfully!");
-        }
     }
 
     @FXML

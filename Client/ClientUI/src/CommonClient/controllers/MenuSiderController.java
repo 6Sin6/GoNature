@@ -129,9 +129,9 @@ public class MenuSiderController extends BaseController {
                 SupportRepresentativeDashboardPageController supportRepresentativeController = (SupportRepresentativeDashboardPageController) getController("/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
                 supportRepresentativeController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Order Bill");
-                btnAct1.setOnAction(supportRepresentativeController::OnClickIssueBillButton);
+                btnAct1.setOnAction(supportRepresentativeController::OnClickGenerateBillButton);
                 btnAct2.setText("Check Park Availability");
-                btnAct2.setOnAction(supportRepresentativeController::OnClickCheckParkAvailabilityButton);
+                btnAct2.setOnAction(supportRepresentativeController::OnClickAvailableSpotButton);
                 btnAct3.setVisible(true);
                 btnAct3.setText("Register a Group Guide");
                 btnAct3.setOnAction(supportRepresentativeController::OnClickRegisterGuideButton);

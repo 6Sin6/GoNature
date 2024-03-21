@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkEmployeeDashboardPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkEmployeeDashboardPageController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
@@ -16,8 +16,8 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnGenerateBill" layoutX="143.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickGenerateBillButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Generate&#10;Bill" textAlignment="CENTER" />
-            <Text layoutX="70.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Generate Park Visitor's Bill">
+            <MFXButton layoutX="143.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickGenerateBillButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Generate&#10;Bill" textAlignment="CENTER" />
+            <Text layoutX="86.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue a bill for an order">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -27,14 +27,14 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnAvailableSpot" layoutX="450.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickAvailableSpotButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Available&#10;Spot" textAlignment="CENTER" />
+            <MFXButton layoutX="450.0" layoutY="520.0" mnemonicParsing="false" onAction="#OnClickAvailableSpotButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Available&#10;Spot" textAlignment="CENTER" />
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
             <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Employee Dashboard!&#10;&#10;As an employee, you have to give the best possible service to every customer.&#10;This dashboard allows you to do the following:&#10;• Easily create detailed bills for park visitors, covering entry fees and more.&#10;• Quickly check if there is an available spot in the park, for a casual visit.&#10;• Make an entry or an exit of customers by entering their order ID.&#10;&#10;Effortlessly manage park operations and enhance visitor experiences with these features.&#10;Remember, you are the first interaction with our business,&#10;so don't forget to smile!">
                <font>
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnExit" styleClass="actButtonGreen" layoutX="760.0" layoutY="520.0" onAction="#OnClickExitButton" prefHeight="50.0" prefWidth="100.0" text="Submit&#10;Exit" textAlignment="CENTER" />
+            <MFXButton layoutX="760.0" layoutY="520.0" onAction="#OnClickExitButton" prefHeight="50.0" prefWidth="100.0" styleClass="actButtonGreen" text="Submit&#10;Exit" textAlignment="CENTER" />
             <Text layoutX="714.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark Park Order Exit">
                <font>
                   <Font name="System Bold" size="20.0" />
