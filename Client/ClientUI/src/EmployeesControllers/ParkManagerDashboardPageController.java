@@ -8,10 +8,13 @@ import javafx.fxml.FXML;
 public class ParkManagerDashboardPageController extends BaseController {
 
     @FXML
-    private MFXButton btnAvailableSpot;
+    private MFXButton btnChangeParkParameters;
 
     @FXML
-    private MFXButton btnChangeParkParameters;
+    private MFXButton btnIssueReports;
+
+    @FXML
+    private MFXButton btnViewReports;
 
     public void cleanup() {
         // No cleanup required
@@ -23,6 +26,23 @@ public class ParkManagerDashboardPageController extends BaseController {
         applicationWindowController.loadEmployeesPage("RequestSettingParkParametersPage");
         if (applicationWindowController.getCurrentActiveController() instanceof RequestSettingParkParametersController) {
             ((RequestSettingParkParametersController) applicationWindowController.getCurrentActiveController()).getParkParameters();
+        }
+    }
+
+    @FXML
+    public void OnClickIssueReportsButton(ActionEvent event)
+    {
+        applicationWindowController.loadEmployeesPage("IssueReportsPage");
+        if (applicationWindowController.getCurrentActiveController() instanceof IssueReportsController) {
+            ((IssueReportsController) applicationWindowController.getCurrentActiveController()).start();
+        }
+    }
+    @FXML
+    public void OnClickViewReportsButton(ActionEvent event)
+    {
+        applicationWindowController.loadEmployeesPage("ViewReportsPage");
+        if (applicationWindowController.getCurrentActiveController() instanceof ViewReportsPageController) {
+            ((ViewReportsPageController) applicationWindowController.getCurrentActiveController()).start();
         }
     }
 

@@ -1,15 +1,17 @@
 package DataBase;
 
 import Entities.*;
+import GoNatureServer.GmailSender;
 import ServerUIPageController.ServerPortFrameController;
+
+
+
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
-import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 /**
  * Manages the database connection for the application.
@@ -667,6 +669,26 @@ public class DBConnection {
         }
     }
 
+    public byte[] getReportBlob(boolean isDepartmentReport, String type, String month, String year, String bodyID) {
+        try {
+            String reportTable = isDepartmentReport ? ".department_manager_reports" : ".park_manager_reports";
+            String bodyColumn = isDepartmentReport ? "departmentId" : "parkID";
+            String tableName = this.schemaName + reportTable;
+            String whereClause = "reportType='" + type + "' AND month='" + month + "' AND year='" + year + "'" + " AND " + bodyColumn + "='" + bodyID + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "blobData");
+            if (results.next()) {
+                Blob blob = results.getBlob("blobData");
+                byte[] bytes = blob.getBytes(1, (int) blob.length());
+                blob.free();
+                return bytes;
+            }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
     // =================================================================================================================//
     //                                                                                                                 //
     //                                           WORKER EXCLUSIVE METHODS                                              //
@@ -676,13 +698,15 @@ public class DBConnection {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
-            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 23 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 24 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_ACCEPTED.ordinal() + 1);
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 23 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 24 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_ACCEPTED.getOrderStatus());
             try {
-                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress");
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
                 while (rs.next()) {
                     Orders.add(new ArrayList<>());
                     Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
                     Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("VisitorID"));
+
                 }
             } catch (SQLException e) {
                 serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
@@ -691,13 +715,16 @@ public class DBConnection {
 
             // Update the status of selected orders to pending confirmation
             if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> PendingConfirmationOrders = new ArrayList<>();
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    } else {
-                        serverController.addtolog("Send to Email Address: " + order.get(1) + " Cancelled");
+                    }
+                    else{
+                        PendingConfirmationOrders.add(order);
                     }
                 }
+                sendMails(PendingConfirmationOrders,"Order Confirmation Notification","awaiting confirmation");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
@@ -708,13 +735,14 @@ public class DBConnection {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
-            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79260 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79320 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
             try {
-                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress");
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress","VisitorID");
                 while (rs.next()) {
                     Orders.add(new ArrayList<>());
                     Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
                     Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("VisitorID"));
                 }
             } catch (SQLException e) {
                 serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
@@ -723,13 +751,15 @@ public class DBConnection {
 
             // Update the status of selected orders to cancelled
             if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> CancelledOrders = new ArrayList<>();
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
                         serverController.addtolog("Failed to cancel order status for OrderID: " + order.get(0));
                     } else {
-                        serverController.addtolog("Send to Email Address: " + order.get(1) + " Confirm notification");
+                        CancelledOrders.add(order);
                     }
                 }
+                sendMails(CancelledOrders,"Order Cancelled Notification","cancelled");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
@@ -779,6 +809,19 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return "Activating failed to unknown reason, please try again later.";
+        }
+    }
+
+    private void sendMails(ArrayList<ArrayList<String>> Orders,String Subject,String Type){
+        try{
+            new Thread(() -> {
+                for (ArrayList<String> order : Orders) {
+                    GmailSender.sendEmail(order.get(1),Subject,"Hello Visitor " + order.get(2)+"\n"+"Your order id : "+order.get(0)+" is now "+Type);
+                }
+            }).start();
+        }
+        catch (Exception e){
+            serverController.addtolog("Error sending email: " + e.getMessage());
         }
     }
 }

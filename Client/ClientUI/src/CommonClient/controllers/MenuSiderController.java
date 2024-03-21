@@ -93,19 +93,27 @@ public class MenuSiderController extends BaseController {
             case "Park Manager":
                 ParkManagerDashboardPageController parkManagerController = (ParkManagerDashboardPageController) getController("/EmployeesUI/ParkManagerDashboardPage.fxml");
                 parkManagerController.setApplicationWindowController(appController);
-                btnAct1.setText("Prepare Reports");
-                btnAct1.setOnAction(parkManagerController::OnClickGenerateReportsButton);
-                btnAct2.setText("Set Park Parameters");
-                btnAct2.setOnAction(parkManagerController::OnClickChangeParkParametersButton);
+//                btnAct1.setText("Prepare Reports");
+//                btnAct1.setOnAction(parkManagerController::OnClickGenerateReportsButton);
+                btnAct1.setText("Set Park Parameters");
+                btnAct1.setOnAction(parkManagerController::OnClickChangeParkParametersButton);
+                btnAct2.setText("Issue Reports");
+                btnAct2.setOnAction(parkManagerController::OnClickIssueReportsButton);
+                btnAct3.setVisible(true);
+                btnAct3.setText("View Reports");
+                btnAct3.setOnAction(parkManagerController::OnClickViewReportsButton);
                 break;
 
             case "Department Manager":
                 DepartmentManagerDashboardPageController departmentManagerController = (DepartmentManagerDashboardPageController) getController("/EmployeesUI/DepartmentManagerDashboardPage.fxml");
                 departmentManagerController.setApplicationWindowController(appController);
-                btnAct1.setText("Issue Reports");
-                btnAct1.setOnAction(departmentManagerController::OnClickIssueReportsButton);
-                btnAct2.setText("Manage Requests");
-                btnAct2.setOnAction(departmentManagerController::OnClickViewRequestsButton);
+                btnAct1.setText("Manage Requests");
+                btnAct1.setOnAction(departmentManagerController::OnClickViewRequestsButton);
+                btnAct2.setText("Issue Reports");
+                btnAct2.setOnAction(departmentManagerController::OnClickIssueReportsButton);
+                btnAct3.setVisible(true);
+                btnAct3.setText("View Reports");
+                btnAct3.setOnAction(departmentManagerController::OnClickViewReportsButton);
                 break;
 
             case "Park Employee":

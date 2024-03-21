@@ -9,9 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.text.Text;
 
 public class DepartmentManagerDashboardPageController extends BaseController {
-
     @FXML
     private MFXButton btnIssueReports;
+
+    @FXML
+    private MFXButton btnViewReports;
 
     @FXML
     private MFXButton btnViewRequests;
@@ -27,6 +29,18 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     public void OnClickIssueReportsButton(ActionEvent event)
     {
         applicationWindowController.loadEmployeesPage("IssueReportsPage");
+        if (applicationWindowController.getCurrentActiveController() instanceof IssueReportsController) {
+            ((IssueReportsController) applicationWindowController.getCurrentActiveController()).start();
+        }
+    }
+
+    @FXML
+    public void OnClickViewReportsButton(ActionEvent event)
+    {
+        applicationWindowController.loadEmployeesPage("ViewReportsPage");
+        if (applicationWindowController.getCurrentActiveController() instanceof ViewReportsPageController) {
+            ((ViewReportsPageController) applicationWindowController.getCurrentActiveController()).start();
+        }
     }
 
     @FXML

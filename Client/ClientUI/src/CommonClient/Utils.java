@@ -10,8 +10,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utils {
+    public static final String[] departmentReports = new String[]{"Visitations", "Cancellations"};
+    public static Map<String, String> departmentReportsMap = new HashMap<String, String>() {{
+        put("Visitations Statistics", "visitation");
+        put("Cancellations Statistics", "cancellation");
+    }};
+
+    public static Map<String, String> parkManagerReportsMap = new HashMap<String, String>() {{
+        put("Number of Visitors Statistics", "numofvisitors");
+        put("Capacity Statistics", "usage");
+    }};
+
     public static String parseVisitDate(Timestamp visitTime) {
         // Convert the Timestamp to a Date object
         Date date = new Date(visitTime.getTime());

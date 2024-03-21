@@ -1,44 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueVisitationReportController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueVisitationReportController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
          <children>
-            <Text layoutX="297.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visitation Report Issuance" textAlignment="CENTER">
+            <Text layoutX="247.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department Reports Issuance" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text fx:id="txtDate" layoutX="27.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date: 03/2024">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Text>
-            <StackedBarChart fx:id="chartVisitationStatistics" layoutX="10.0" layoutY="240.0" prefHeight="440.0" prefWidth="930.0" title="Visitation Statistics">
-               <xAxis>
-                  <CategoryAxis side="BOTTOM" />
-               </xAxis>
-               <yAxis>
-                  <NumberAxis side="LEFT" />
-               </yAxis>
-            </StackedBarChart>
-            <Text fx:id="txtNoReport" layoutX="350.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There is no visitation report this month">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Text>
-            <MFXButton fx:id="btnDownloadCSV" layoutX="425.0" layoutY="675.0" onAction="#OnClickDownloadCSVButton" prefHeight="50.0" prefWidth="100.0" text="Download CSV" />
+            <MFXButton fx:id="btnGenerateReport" layoutX="161.0" layoutY="405.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="654.0" styleClass="actButtonGreen" text="Generate Report" />
+            <ComboBox fx:id="monthCmb" layoutX="504.0" layoutY="326.0" prefHeight="39.0" prefWidth="146.0" />
+            <ComboBox fx:id="yearCmb" layoutX="674.0" layoutY="326.0" prefHeight="39.0" prefWidth="139.0" />
+            <Label layoutX="553.0" layoutY="303.0" text="Month" />
+            <Label layoutX="720.0" layoutY="303.0" text="Year" />
+            <Label fx:id="errMsg" layoutX="466.0" layoutY="376.0" prefHeight="17.0" prefWidth="347.0" />
+            <Label fx:id="generateResultMsg" layoutX="475.0" layoutY="467.0" prefHeight="17.0" prefWidth="347.0" />
+            <ComboBox fx:id="parkCmb" layoutX="331.0" layoutY="326.0" prefHeight="39.0" prefWidth="146.0" />
+            <Label layoutX="393.0" layoutY="303.0" text="Park" />
+            <ComboBox fx:id="reportCmb" layoutX="161.0" layoutY="326.0" prefHeight="39.0" prefWidth="146.0" />
+            <Label layoutX="202.0" layoutY="303.0" text="Report Type" />
          </children>
       </Pane>
    </children>
