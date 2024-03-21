@@ -49,11 +49,9 @@ public class SupportRepresentativeDashboardPageController extends BaseController
         applicationWindowController.loadEmployeesPage("RegisterGroupGuidePage");
     }
 
-    private void onSubmit(String[] inputs)
-    {
+    private void onSubmit(String[] inputs) {
         String orderID = inputs[0];
-        if (!CommonUtils.CommonUtils.isValidOrderID(orderID))
-        {
+        if (!CommonUtils.CommonUtils.isValidOrderID(orderID)) {
             popup.setErrorLabel("Invalid Order ID");
             return;
         }
@@ -61,8 +59,15 @@ public class SupportRepresentativeDashboardPageController extends BaseController
         ClientUI.client.accept(message);
         String answer = ClientCommunicator.msg.getMsgData().toString();
         if (answer != null)
+        {
+            popup.setLabelColor("#FF0000");
             popup.setErrorLabel(answer);
-        else popup.setErrorLabel("");
+        }
+        else
+        {
+            popup.setLabelColor("#008000");
+            popup.setErrorLabel("Order has exited successfully!");
+        }
     }
 
     @FXML
