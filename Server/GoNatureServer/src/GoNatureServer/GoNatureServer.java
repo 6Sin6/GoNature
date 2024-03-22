@@ -216,8 +216,11 @@ public class GoNatureServer extends AbstractServer {
                 } else {
                     Message respondMsg = new Message(OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN, username, null);
                     client.sendToClient(respondMsg);
-                    return;
                 }
+            } else {
+                signedInInstances.put(username, client);
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN, username, username);
+                client.sendToClient(respondMsg);
             }
         }
 
