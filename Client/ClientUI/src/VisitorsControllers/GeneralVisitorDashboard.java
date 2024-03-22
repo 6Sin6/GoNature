@@ -1,47 +1,22 @@
 package VisitorsControllers;
 
-import CommonClient.ClientUI;
-import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
-import CommonUtils.InputTextPopup;
-import Entities.Message;
-import Entities.OpCodes;
-import client.ClientCommunicator;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public abstract class GeneralVisitorDashboard extends BaseController {
-    protected InputTextPopup onAuthPopup;
 
-    protected void onAuth(String path, String id) {
-        String strToPrint = "";
-        if (!Utils.isIDValid(id)) {
-            strToPrint = "Invalid ID! Try again";
-        }
-        if (strToPrint.isEmpty() && !id.equals(getUserID())) {
-            strToPrint = "Invalid ID Format! Try again";
-        }
-        if (strToPrint.isEmpty()) {
-            onAuthPopup.setErrorLabel(strToPrint);
-            if (!Objects.equals(path, "")) {
-                applicationWindowController.setCenterPage(path);
-                applicationWindowController.loadMenu(applicationWindowController.getUser());
-                if (Objects.equals(path, "/VisitorsUI/ActiveOrdersPage.fxml")) {
-                    Object controller = applicationWindowController.getCurrentActiveController();
-                    if (controller instanceof ActiveOrdersPageController) {
-                        ((ActiveOrdersPageController) controller).start();
-                    }
-                }
+    protected void routeToPage(String path) {
+        applicationWindowController.setCenterPage(path);
+        applicationWindowController.loadMenu(applicationWindowController.getUser());
+        applicationWindowController.setCenterPage(path);
+        applicationWindowController.loadMenu(applicationWindowController.getUser());
+        if (Objects.equals(path, "/VisitorsUI/ActiveOrdersPage.fxml")) {
+            Object controller = applicationWindowController.getCurrentActiveController();
+            if (controller instanceof ActiveOrdersPageController) {
+                ((ActiveOrdersPageController) controller).start();
             }
-        } else {
-            onAuthPopup.setErrorLabel(strToPrint);
         }
-    }
-
-    protected void authenticateWithID(String path) {
-        onAuthPopup = new InputTextPopup(new String[]{"Enter ID to Authenticate "}, (inputText) -> this.onAuth(path, inputText[0]), 500, 300, true, false, true);
-        onAuthPopup.show(applicationWindowController.getRoot());
     }
 
     public abstract String getUserID();

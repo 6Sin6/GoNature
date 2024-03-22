@@ -1,6 +1,5 @@
 package VisitorsControllers;
 
-import CommonUtils.InputTextPopup;
 import Entities.SingleVisitor;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -56,13 +55,11 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
-        authenticateWithID(orderPage);
+        routeToPage(orderPage);
     }
 
     @FXML
     public void OnClickViewOrdersButton(ActionEvent event) {
-        authenticateWithID(activeOrdersPage);
+        routeToPage(activeOrdersPage);
     }
-
-
 }
