@@ -88,7 +88,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return;
         }
         Order o1 = list.get(rowIndex);
-        applicationWindowController.loadVistorsPage("UpdateOrderDetailsPage");
+        applicationWindowController.loadVisitorsPage("UpdateOrderDetailsPage");
         Object controller = applicationWindowController.getCurrentActiveController();
         if (controller instanceof UpdateOrderDetailsPageController) {
             ((UpdateOrderDetailsPageController) controller).setFields(o1);

@@ -172,7 +172,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 ConfirmationPopup confirmPopup;
                 confirmPopup = new ConfirmationPopup(strForPopup, () ->
                 {
-                    applicationWindowController.loadVistorsPage("WaitListPage");
+                    applicationWindowController.loadVisitorsPage("WaitListPage");
                     applicationWindowController.loadMenu(applicationWindowController.getUser());
                     clearFields();
                 }, () -> {

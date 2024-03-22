@@ -24,4 +24,13 @@ public enum OrderType {
     OrderType(int orderType) {
         this.orderType = orderType;
     }
+
+    /**
+     * Retrieves the order type value.
+     *
+     * @return The order type value.
+     */
+    public int getOrderType() {
+        return orderType;
+    }
 }

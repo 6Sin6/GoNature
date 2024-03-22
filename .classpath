@@ -16,5 +16,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/virtualizedfx-11.2.6.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Java EE 6-Java EE 6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.mail"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/itextpdf-5.5.9"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jfreechart-1.5.3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

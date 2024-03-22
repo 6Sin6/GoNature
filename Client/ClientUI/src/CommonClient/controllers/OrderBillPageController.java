@@ -79,7 +79,7 @@ public class OrderBillPageController extends BaseController {
         if (referredByEmployee) {
             applicationWindowController.loadEmployeesPage("GenerateBillPage");
         } else {
-            applicationWindowController.loadVistorsPage("ActiveOrdersPage");
+            applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof ActiveOrdersPageController) {
                 ((ActiveOrdersPageController) controller).start();

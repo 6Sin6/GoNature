@@ -3,6 +3,7 @@
 // license found at www.lloseng.com 
 package GoNatureServer;
 
+import CommonClient.Utils;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
@@ -259,7 +260,7 @@ public class GoNatureServer extends AbstractServer {
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
-        if (db.CheckAvalibiltyBefore(order) && db.CheckAvalibiltyAfter(order)) {
+        if (db.CheckAvailabilityBeforeReservationTime(order) && db.CheckAvailabilityAfterReservationTime(order)) {
             order.setOrderStatus(OrderStatus.STATUS_ACCEPTED);
             if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
                 Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
@@ -380,8 +381,34 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws IOException {
-//        String[] params = (String[]) message.getMsgData();
-        Message respondMsg = new Message(OpCodes.OP_GENERATE_REPORT_BLOB, message.getMsgUserName(), false);
+        String reportType = (String) message.getMsgData();
+        boolean isGenerated = false;
+        String departmentID = null;
+        switch(reportType) {
+            case "visitations":
+                departmentID = db.getDepartmentIDByManagerID(message.getMsgUserName());
+                if (departmentID == null) {
+                    break;
+                }
+                isGenerated = db.generateVisitationReport(departmentID);
+                break;
+            case "cancellations":
+                departmentID = db.getDepartmentIDByManagerID(message.getMsgUserName());
+                if (departmentID == null) {
+                    break;
+                }
+                reportType = "Cancellations Statistics";
+                break;
+            case "numofvisitors":
+                reportType = "Number of Visitors Statistics";
+                break;
+            case "usage":
+                reportType = "Capacity Statistics";
+                break;
+        }
+
+
+        Message respondMsg = new Message(OpCodes.OP_GENERATE_REPORT_BLOB, message.getMsgUserName(), isGenerated);
         client.sendToClient(respondMsg);
     }
 

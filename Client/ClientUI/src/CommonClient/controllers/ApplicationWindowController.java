@@ -172,10 +172,8 @@ public class ApplicationWindowController implements Initializable {
         EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
         EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
         EmployeesPagesMap.put("GenerateBillPage", "/EmployeesUI/GenerateBillPage.fxml");
-        EmployeesPagesMap.put("IssueCancellationReportPage", "/EmployeesUI/IssueCancellationReportPage.fxml");
         EmployeesPagesMap.put("IssueReportsPage", "/EmployeesUI/IssueReportsPage.fxml");
         EmployeesPagesMap.put("ViewReportsPage", "/EmployeesUI/ViewReportsPage.fxml");
-        EmployeesPagesMap.put("IssueVisitationReportPage", "/EmployeesUI/IssueVisitationReportPage.fxml");
         EmployeesPagesMap.put("PrepareNumberOfVisitorsReportPage", "/EmployeesUI/PrepareNumberOfVisitorsReportPage.fxml");
         EmployeesPagesMap.put("PrepareReportsPage", "/EmployeesUI/PrepareReportsPage.fxml");
         EmployeesPagesMap.put("PrepareUsageReportPage", "/EmployeesUI/PrepareUsageReportPage.fxml");
@@ -205,7 +203,7 @@ public class ApplicationWindowController implements Initializable {
         VisitorsPagesMap.put("UpdateOrderDetailsPage", "/VisitorsUI/UpdateOrderDetailsPage.fxml");
     }
 
-    public void loadVistorsPage(String NameOfFxml) {
+    public void loadVisitorsPage(String NameOfFxml) {
         String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {
             setCenterPage(fxmlPath);

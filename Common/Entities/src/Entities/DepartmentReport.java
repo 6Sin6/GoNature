@@ -1,43 +1,34 @@
 package Entities;
 
-import java.sql.Timestamp;
+
+import com.itextpdf.text.DocumentException;
+import org.jfree.chart.JFreeChart;
+
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * The DepartmentReport class represents a report associated with a department.
  * It contains information about the date and the department ID.
  */
-public class DepartmentReport {
-    private Timestamp Date;
-    private Integer department;
+public abstract class DepartmentReport {
+    private Integer departmentID;
 
     /**
      * Constructs a DepartmentReport object with the specified parameters.
-     *
-     * @param date       The timestamp representing the date of the report.
-     * @param department The ID of the department associated with the report.
+     * @param departmentID The ID of the department associated with the report.
      */
-    public DepartmentReport(Timestamp date, Integer department) {
-        Date = date;
-        this.department = department;
+    public DepartmentReport(Integer departmentID) {
+        this.departmentID = departmentID;
     }
 
     /**
-     * Retrieves the date of the report.
-     *
-     * @return The timestamp representing the date of the report.
+     * Creates a PDF file based on the data in the specified ResultSet.
+     * @return A Blob object representing the PDF file.
      */
-    public Timestamp getDate() {
-        return Date;
-    }
-
-    /**
-     * Sets the date of the report.
-     *
-     * @param date The timestamp representing the date to set.
-     */
-    public void setDate(Timestamp date) {
-        Date = date;
-    }
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException { return null;};
 
     /**
      * Retrieves the ID of the department associated with the report.
@@ -45,15 +36,15 @@ public class DepartmentReport {
      * @return The ID of the department.
      */
     public Integer getDepartmentID() {
-        return department;
+        return departmentID;
     }
 
     /**
      * Sets the ID of the department associated with the report.
      *
-     * @param department The ID of the department to set.
+     * @param departmentID The ID of the department to set.
      */
-    public void setDepartment(Integer department) {
-        this.department = department;
+    public void setDepartmentID(Integer departmentID) {
+        this.departmentID = departmentID;
     }
 }
