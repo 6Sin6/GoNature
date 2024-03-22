@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static CommonUtils.CommonUtils.parseVisitDate;
+import static CommonUtils.CommonUtils.parseVisitTime;
+
 
 public class ActiveOrdersPageController extends BaseController implements Initializable {
 
@@ -135,8 +138,8 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             }
             list.add(item);
             Timestamp orderTimeStamp = item.getVisitationDate();
-            String date = CommonClient.Utils.parseVisitDate(orderTimeStamp);
-            String time = CommonClient.Utils.parseVisitTime(orderTimeStamp);
+            String date = parseVisitDate(orderTimeStamp);
+            String time = parseVisitTime(orderTimeStamp);
             Map<String, String> row = new HashMap<>();
             row.put("Order Number", item.getOrderID());
             row.put("Park Name", ParkBank.getParkNameByID(item.getParkID()));

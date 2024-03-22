@@ -2,7 +2,13 @@ package CommonUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,4 +149,58 @@ public class CommonUtils {
 
         return Timestamp.valueOf(dateFormat.format(date) + " " + hours + ":" + mins + ":00");
     }
+
+    public static List<Timestamp> getNextWeekHours(Timestamp startTimestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(startTimestamp.getTime());
+        List<Timestamp> validHours = new ArrayList<>();
+        Calendar endTimestamp = (Calendar) cal.clone();
+        endTimestamp.add(Calendar.DAY_OF_MONTH, 7);
+
+        while (cal.before(endTimestamp)) {
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            if (hour >= 8 && hour < 21) {
+                validHours.add(new Timestamp(cal.getTimeInMillis()));
+            }
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+        }
+
+        return validHours;
+    }
+
+    public static Timestamp convertStringToTimestamp(String date, String time) {
+        // Combine Date and Time Strings
+        String dateTimeString = date + "T" + time;
+
+        // Define the formatter for LocalDateTime
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        // Parse the String to LocalDateTime
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+        // Convert LocalDateTime to java.sql.Timestamp
+        Timestamp timestamp = Timestamp.valueOf(dateTime);
+
+        return timestamp;
+    }
+
+    public static String parseVisitDate(Timestamp visitTime) {
+        // Convert the Timestamp to a Date object
+        Date date = new Date(visitTime.getTime());
+
+        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Format the Date object into a string
+        return dateFormat.format(date);
+    }
+
+    public static String parseVisitTime(Timestamp visitTime) {
+        // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        // Format the Date object into a string
+        return dateFormat.format(visitTime);
+    }
+
 }

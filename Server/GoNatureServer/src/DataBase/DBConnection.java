@@ -1,18 +1,18 @@
 package DataBase;
 
+import CommonUtils.CommonUtils;
 import Entities.*;
 import GoNatureServer.GmailSender;
 import ServerUIPageController.ServerPortFrameController;
 
-
-
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static GoNatureServer.GoNatureServer.createExitTime;
 
 /**
  * Manages the database connection for the application.
@@ -290,8 +290,8 @@ public class DBConnection {
                     "'" + order.getClientEmailAddress() + "'",
                     "'" + order.getPhoneNumber() + "'",
                     String.valueOf(order.getOrderStatus().ordinal() + 1),
-                    "'" + order.getEnteredTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
-                    "'" + order.getExitedTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getEnteredTime().toString().substring(0, order.getEnteredTime().toString().length() - 2) + "'",
+                    "'" + order.getExitedTime().toString().substring(0, order.getExitedTime().toString().length() - 2) + "'",
                     String.valueOf(order.getOrderType().ordinal() + 1),
                     String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
@@ -439,9 +439,9 @@ public class DBConnection {
     /**
      * Checks if an order exists for a specific visitor, park, and visitation date.
      *
-     * @param visitorID       The ID of the visitor.
-     * @param parkID          The ID of the park.
-     * @param visitationDate  The visitation date.
+     * @param visitorID      The ID of the visitor.
+     * @param parkID         The ID of the park.
+     * @param visitationDate The visitation date.
      * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
      */
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
@@ -463,8 +463,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     *         Returns a new Park object with default values if no matching park is found.
-     *         Returns null if a SQLException is thrown.
+     * Returns a new Park object with default values if no matching park is found.
+     * Returns null if a SQLException is thrown.
      */
     public Park getParkDetails(String parkID) {
         try {
@@ -720,12 +720,11 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    }
-                    else{
+                    } else {
                         PendingConfirmationOrders.add(order);
                     }
                 }
-                sendMails(PendingConfirmationOrders,"Order Confirmation Notification","awaiting confirmation");
+                sendMails(PendingConfirmationOrders, "Order Confirmation Notification", "awaiting confirmation");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
@@ -738,7 +737,7 @@ public class DBConnection {
             String tableName = this.schemaName + ".orders";
             String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79320 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
             try {
-                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress","VisitorID");
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
                 while (rs.next()) {
                     Orders.add(new ArrayList<>());
                     Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
@@ -760,7 +759,7 @@ public class DBConnection {
                         CancelledOrders.add(order);
                     }
                 }
-                sendMails(CancelledOrders,"Order Cancelled Notification","cancelled");
+                sendMails(CancelledOrders, "Order Cancelled Notification", "cancelled");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
@@ -773,8 +772,7 @@ public class DBConnection {
      * @param orderID the order ID.
      * @return a message indicating the result of the operation, null if successful.
      */
-    public String setExitTimeOfOrder(String orderID)
-    {
+    public String setExitTimeOfOrder(String orderID) {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "OrderID='" + orderID + "'";
@@ -813,8 +811,7 @@ public class DBConnection {
         }
     }
 
-    public String activateGroupGuide(String groupGuideID)
-    {
+    public String activateGroupGuide(String groupGuideID) {
         try {
             String tableName = this.schemaName + ".group-guides";
             String whereClause = "ID='" + groupGuideID + "'";
@@ -822,7 +819,7 @@ public class DBConnection {
             if (!resultSet.next())
                 return "Group guide id doesn`t exist.";
             if (!resultSet.getBoolean("pending"))
-                return  "Group guide is already active.";
+                return "Group guide is already active.";
 
             if (!dbController.updateRecord(tableName, "pending=false", whereClause))
                 return "failed activating, please try again.";
@@ -833,16 +830,88 @@ public class DBConnection {
         }
     }
 
-    private void sendMails(ArrayList<ArrayList<String>> Orders,String Subject,String Type){
-        try{
+    private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
+        try {
             new Thread(() -> {
                 for (ArrayList<String> order : Orders) {
-                    GmailSender.sendEmail(order.get(1),Subject,"Hello Visitor " + order.get(2)+"\n"+"Your order id : "+order.get(0)+" is now "+Type);
+                    GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
                 }
             }).start();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             serverController.addtolog("Error sending email: " + e.getMessage());
         }
     }
+
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           END OF WORKER EXCLUSIVE METHODS                                       //
+    //                                                                                                                 //
+    //=================================================================================================================//
+
+    public Boolean CheckAvalibiltyBefore(Order checkOrder) {
+        try {
+            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "'" + checkOrder.getEnteredTime().toString().substring(0, checkOrder.getEnteredTime().toString().length() - 2) +
+                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
+                    + checkOrder.getParkID().toString() + "';";
+            ResultSet resultSet = dbController.selectRecordsField(tableName, whereClause, field);
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("IsWithinCapacity");
+            return result != 0;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public Boolean CheckAvalibiltyAfter(Order checkOrder) {
+        try {
+            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "'" + checkOrder.getExitedTime().toString().substring(0, checkOrder.getExitedTime().toString().length() - 2) +
+                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
+                    + checkOrder.getParkID().toString() + "';";
+            ResultSet resultSet = dbController.selectRecordsField(tableName, whereClause, field);
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("IsWithinCapacity");
+            return result != 0;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public Integer getExpectedTime(String parkID) {
+        try {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID='" + parkID + "'";
+            ResultSet resultSet = dbController.selectRecordsField(tableName, whereClause, "DefaultVisitationTime");
+            if (!resultSet.next())
+                return null;
+            return resultSet.getInt("ExpectedTime");
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<Timestamp> getAvailableTimeStamps(Order order) {
+        Order WorkingOrder = order;
+        List<Timestamp> availableHours = CommonUtils.getNextWeekHours(order.getEnteredTime());
+        ArrayList<Timestamp> availableTimestamps = new ArrayList<>();
+        for (Timestamp hourDate : availableHours) {
+            WorkingOrder.setEnteredTime(hourDate);
+            WorkingOrder.setExitedTime(createExitTime(hourDate, getExpectedTime(WorkingOrder.getParkID())));
+            if (CheckAvalibiltyAfter(WorkingOrder) && CheckAvalibiltyBefore(WorkingOrder)) {
+                availableTimestamps.add(hourDate);
+            }
+        }
+        return availableTimestamps;
+    }
+
+
 }

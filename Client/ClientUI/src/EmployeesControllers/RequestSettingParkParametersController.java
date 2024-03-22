@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static CommonClient.Utils.*;
-import static CommonUtils.CommonUtils.convertTimestampToMinutes;
+import static CommonUtils.CommonUtils.*;
 
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
     @FXML

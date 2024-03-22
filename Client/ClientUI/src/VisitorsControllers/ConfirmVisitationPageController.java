@@ -9,8 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-import static CommonClient.Utils.parseVisitDate;
-import static CommonClient.Utils.parseVisitTime;
+import static CommonUtils.CommonUtils.parseVisitDate;
+import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class ConfirmVisitationPageController extends BaseController {
     @FXML

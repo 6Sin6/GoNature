@@ -1,6 +1,7 @@
 package Entities;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 
@@ -50,6 +51,19 @@ public class Order implements Serializable {
         OrderType = orderType;
         NumOfVisitors = numOfVisitors;
     }
+//    public Order(Order o, Timestamp setNewStartTime, Timestamp setNewEndTime) {
+//        this.VisitorID = o.getVisitorID();
+//        ParkID = o.getParkID();
+//        VisitationDate = o.getVisitationDate();
+//        ClientEmailAddress = o.getClientEmailAddress();
+//        PhoneNumber = o.getPhoneNumber();
+//        this.orderStatus = o.getOrderStatus();
+//        EnteredTime = setNewStartTime;
+//        ExitedTime = setNewEndTime;
+//        OrderID = o.getOrderID();
+//        OrderType = o.getOrderType();
+//        NumOfVisitors = o.getNumOfVisitors();
+//    }
 
     /**
      * Retrieves the number of visitors associated with the order.

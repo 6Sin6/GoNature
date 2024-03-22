@@ -10,8 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-import static CommonClient.Utils.parseVisitDate;
-import static CommonClient.Utils.parseVisitTime;
+
 
 public class HandleOrderDetailsPageController extends BaseController {
     @FXML

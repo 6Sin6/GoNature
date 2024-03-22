@@ -23,6 +23,9 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 
+import static CommonUtils.CommonUtils.parseVisitDate;
+import static CommonUtils.CommonUtils.parseVisitTime;
+
 
 public class UpdateOrderDetailsPageController extends BaseController implements Initializable {
 
@@ -71,8 +74,8 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         EmailText.setText(order.getClientEmailAddress());
         PhoneText.setText(order.getPhoneNumber());
         Timestamp timestamp = order.getVisitationDate();
-        String date = CommonClient.Utils.parseVisitDate(timestamp);
-        String time = CommonClient.Utils.parseVisitTime(timestamp);
+        String date = parseVisitDate(timestamp);
+        String time = parseVisitTime(timestamp);
         PhoneText.setText(order.getPhoneNumber());
         EmailText.setText(order.getClientEmailAddress());
         DateLabel.setText(date);

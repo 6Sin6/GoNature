@@ -111,6 +111,25 @@ public class DBController {
     }
 
     /**
+     * Selects records with specified fields from the specified table and logs the action.
+     *
+     * @param tableName   The name of the table from which to select records.
+     * @param whereClause The WHERE clause to specify which records to select.
+     * @param field      The field to select from the table.
+     * @return A ResultSet containing the selected records, or null if an error occurs.
+     */
+
+    public ResultSet selectRecordsField(String tableName, String whereClause, String field) throws SQLException {
+        String sql = "SELECT " + field + " FROM " + tableName + (whereClause.isEmpty() ? "" : " WHERE " + whereClause);
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            throw new SQLException("Select from " + tableName + " failed: " + e.getMessage());
+        }
+    }
+
+    /**
      * Selects records from the specified table and logs the action.
      *
      * @param tableName   The name of the table from which to select records.

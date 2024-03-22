@@ -146,7 +146,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         }
         errorLbl.setText("");
         SingleVisitor visitor = (SingleVisitor) applicationWindowController.getUser();
-        Timestamp timeOfVisit = CommonClient.Utils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
+        Timestamp timeOfVisit = CommonUtils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
         Order order = new Order(visitor.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_SINGLE, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
         Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, visitor.getUsername(), order);
         ClientUI.client.accept(msg);

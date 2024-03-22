@@ -11,7 +11,9 @@ import ServerUIPageController.ServerPortFrameController;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -102,74 +104,82 @@ public class GoNatureServer extends AbstractServer {
     }
 
 
-    public void handleMessageFromClient(Object msg, ConnectionToClient client) throws IOException {
+    public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         if (!(msg instanceof Message)) {
             return;
         }
         Message message = (Message) msg;
-        switch (message.getMsgOpcode()) {
-            case OP_SYNC_HANDSHAKE:
-                handleSyncHandshake(message, client);
-                break;
-            case OP_LOGOUT:
-                handleLogout(message, client);
-                break;
-            case OP_SIGN_IN:
-                handleSignIn(message, client);
-                break;
-            case OP_GET_VISITOR_ORDERS:
-                handleGetVisitorOrders(message, client);
-                break;
-            case OP_GET_ORDER_BY_ID:
-                handleGetOrderByID(message, client);
-                break;
-            case OP_UPDATE_ORDER_DETAILS_BY_ORDERID:
-                handleUpdateOrderDetailsByOrderId(message, client);
-                break;
-            case OP_CREATE_NEW_VISITATION:
-                handleCreateNewVisitation(message, client);
-                break;
-            case OP_GET_USER_ORDERS_BY_USERID_ORDERID:
-                handleGetUserOrdersByUserID(message, client);
-                break;
-            case OP_ACTIVATE_GROUP_GUIDE:
-                handleActivateGroupGuide(message, client);
-                break;
-            case OP_HANDLE_VISITATION_CANCEL_ORDER:
-                handleCancelOrderVisitation(message, client);
-                break;
-            case OP_GET_REQUESTS_FROM_PARK_MANAGER:
-                handleGetRequestsFromParkManager(message, client);
-                break;
-            case OP_AUTHORIZE_PARK_REQUEST:
-                handleAuthorizeParkRequest(message, client);
-                break;
-            case OP_DECLINE_PARK_REQUEST:
-                handleDeclineParkRequest(message, client);
-                break;
-            case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
-                handleSubmitRequestsToDepartment(message, client);
-                break;
-            case OP_GET_PARK_DETAILS_BY_PARK_ID:
-                handleGetParkDetailsByParkID(message, client);
-                break;
-            case OP_MARK_ORDER_AS_PAID:
-                handleMarkOrderAsPaid(message, client);
-                break;
-            case OP_UPDATE_EXIT_TIME_OF_ORDER:
-                handleUpdateExitTimeOfOrder(message, client);
-                break;
-            case OP_VIEW_REPORT_BLOB:
-                handleViewReportBlob(message, client);
-                break;
-            case OP_GENERATE_REPORT_BLOB:
-                handleGenerateReportBlob(message, client);
-                break;
-            case OP_QUIT:
-                handleQuit(client);
-                break;
-            default:
-                controller.addtolog("Error Unknown Opcode");
+        try {
+            switch (message.getMsgOpcode()) {
+                case OP_SYNC_HANDSHAKE:
+                    handleSyncHandshake(message, client);
+                    break;
+                case OP_LOGOUT:
+                    handleLogout(message, client);
+                    break;
+                case OP_SIGN_IN:
+                    handleSignIn(message, client);
+                    break;
+                case OP_GET_VISITOR_ORDERS:
+                    handleGetVisitorOrders(message, client);
+                    break;
+                case OP_GET_ORDER_BY_ID:
+                    handleGetOrderByID(message, client);
+                    break;
+                case OP_UPDATE_ORDER_DETAILS_BY_ORDERID:
+                    handleUpdateOrderDetailsByOrderId(message, client);
+                    break;
+                case OP_CREATE_NEW_VISITATION:
+                    handleCreateNewVisitation(message, client);
+                    break;
+                case OP_GET_USER_ORDERS_BY_USERID_ORDERID:
+                    handleGetUserOrdersByUserID(message, client);
+                    break;
+                case OP_ACTIVATE_GROUP_GUIDE:
+                    handleActivateGroupGuide(message, client);
+                    break;
+                case OP_HANDLE_VISITATION_CANCEL_ORDER:
+                    handleCancelOrderVisitation(message, client);
+                    break;
+                case OP_GET_REQUESTS_FROM_PARK_MANAGER:
+                    handleGetRequestsFromParkManager(message, client);
+                    break;
+                case OP_AUTHORIZE_PARK_REQUEST:
+                    handleAuthorizeParkRequest(message, client);
+                    break;
+                case OP_DECLINE_PARK_REQUEST:
+                    handleDeclineParkRequest(message, client);
+                    break;
+                case OP_SUBMIT_REQUESTS_TO_DEPARTMENT:
+                    handleSubmitRequestsToDepartment(message, client);
+                    break;
+                case OP_GET_PARK_DETAILS_BY_PARK_ID:
+                    handleGetParkDetailsByParkID(message, client);
+                    break;
+                case OP_MARK_ORDER_AS_PAID:
+                    handleMarkOrderAsPaid(message, client);
+                    break;
+                case OP_UPDATE_EXIT_TIME_OF_ORDER:
+                    handleUpdateExitTimeOfOrder(message, client);
+                    break;
+                case OP_VIEW_REPORT_BLOB:
+                    handleViewReportBlob(message, client);
+                    break;
+                case OP_GENERATE_REPORT_BLOB:
+                    handleGenerateReportBlob(message, client);
+                    break;
+                case OP_GET_AVAILABLE_SPOTS:
+                    handleGetAvailableSpots(message, client);
+                    break;
+                case OP_QUIT:
+                    handleQuit(client);
+                    break;
+                default:
+                    controller.addtolog("Error Unknown Opcode");
+            }
+        }
+        catch (Exception e) {
+            controller.addtolog("Failed to handle message: " + e.getMessage());
         }
     }
 
@@ -243,16 +253,23 @@ public class GoNatureServer extends AbstractServer {
 
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
-        order.setOrderStatus(OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
-
-        if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
-            Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+        order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
+        if (db.CheckAvalibiltyBefore(order) && db.CheckAvalibiltyAfter(order)) {
+            order.setOrderStatus(OrderStatus.STATUS_ACCEPTED);
+            if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
+                Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+                client.sendToClient(createOrderMsg);
+                return;
+            }
+            Order newOrder = db.addOrder(order);
+            Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
             client.sendToClient(createOrderMsg);
-            return;
         }
-        Order newOrder = db.addOrder(order);
-        Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
-        client.sendToClient(createOrderMsg);
+        else{
+            Message NO_AVAILABLE_SPOT = new Message(OpCodes.OP_NO_AVAILABLE_SPOT, message.getMsgUserName(), null);
+            client.sendToClient(NO_AVAILABLE_SPOT);
+        }
+
     }
 
     private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
@@ -362,6 +379,23 @@ public class GoNatureServer extends AbstractServer {
 //        String[] params = (String[]) message.getMsgData();
         Message respondMsg = new Message(OpCodes.OP_GENERATE_REPORT_BLOB, message.getMsgUserName(), false);
         client.sendToClient(respondMsg);
+    }
+
+    private void handleGetAvailableSpots(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        ArrayList<Timestamp> availableSpots = db.getAvailableTimeStamps(order);
+        if (availableSpots.isEmpty()) {
+            Message respondMsg = new Message(OpCodes.OP_NO_AVAILABLE_SPOT, message.getMsgUserName(), null);
+            client.sendToClient(respondMsg);
+        }
+        Message respondMsg = new Message(OpCodes.OP_GET_AVAILABLE_SPOTS, message.getMsgUserName(), availableSpots);
+        client.sendToClient(respondMsg);
+    }
+    public static Timestamp createExitTime(Timestamp enterTime, int expectedTime) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(enterTime.getTime());
+        cal.add(Calendar.MINUTE, expectedTime);
+        return (new Timestamp(cal.getTimeInMillis()));
     }
 
 
