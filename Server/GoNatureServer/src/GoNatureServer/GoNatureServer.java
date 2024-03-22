@@ -177,8 +177,13 @@ public class GoNatureServer extends AbstractServer {
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
+            try {
+                client.sendToClient(respondMsg);
+            } catch (Exception ex) {
+                controller.addtolog("Failed to send message to client");
+            }
             controller.addtolog("Failed to handle message: " + e.getMessage());
         }
     }
@@ -264,8 +269,7 @@ public class GoNatureServer extends AbstractServer {
             Order newOrder = db.addOrder(order);
             Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
             client.sendToClient(createOrderMsg);
-        }
-        else{
+        } else {
             Message NO_AVAILABLE_SPOT = new Message(OpCodes.OP_NO_AVAILABLE_SPOT, message.getMsgUserName(), null);
             client.sendToClient(NO_AVAILABLE_SPOT);
         }
@@ -391,6 +395,7 @@ public class GoNatureServer extends AbstractServer {
         Message respondMsg = new Message(OpCodes.OP_GET_AVAILABLE_SPOTS, message.getMsgUserName(), availableSpots);
         client.sendToClient(respondMsg);
     }
+
     public static Timestamp createExitTime(Timestamp enterTime, int expectedTime) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(enterTime.getTime());

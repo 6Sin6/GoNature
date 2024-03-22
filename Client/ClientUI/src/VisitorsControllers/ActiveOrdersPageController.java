@@ -73,7 +73,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private int rowIndex;
 
-    private ArrayList<Order> list= new ArrayList<>();;
+    private ArrayList<Order> list= new ArrayList<>();
 
     public void cleanup() {
         rowIndex = -1;
@@ -92,6 +92,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         Object controller = applicationWindowController.getCurrentActiveController();
         if (controller instanceof UpdateOrderDetailsPageController) {
             ((UpdateOrderDetailsPageController) controller).setFields(o1);
+            ((UpdateOrderDetailsPageController) controller).setOrdersList(list);
         }
 
     }

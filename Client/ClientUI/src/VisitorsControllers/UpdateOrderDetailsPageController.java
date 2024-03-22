@@ -21,6 +21,7 @@ import javafx.event.ActionEvent;
 
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static CommonUtils.CommonUtils.parseVisitDate;
@@ -62,7 +63,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     @FXML
     private Text txtHeader;
 
-
+    private ArrayList<Order> ordersList;
     private Order order;
 
 
@@ -80,6 +81,9 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         EmailText.setText(order.getClientEmailAddress());
         DateLabel.setText(date);
         TimeLabel.setText(time);
+    }
+    public void setOrdersList(ArrayList<Order> ordersList) {
+        this.ordersList = ordersList;
     }
 
     @FXML
@@ -148,6 +152,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     }
 
     public void OnClickCancelOrderBtn(ActionEvent actionEvent) throws CommunicationException {
+        boolean flag;
         User user = applicationWindowController.getUser();
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
@@ -156,8 +161,18 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             throw new CommunicationException("Respond not appropriate from server");
         }
         String strForPopup = "The order has been canceled successfully";
+        if (ordersList.size() == 1 && order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {
+            strForPopup  = "Your only order has been cancelled you are getting redirected to home page";
+            flag = true;
+        } else {
+            flag = false;
+        }
         ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
         {
+            if (flag) {
+                applicationWindowController.logout();
+                return;
+            }
             applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
             applicationWindowController.loadMenu(applicationWindowController.getUser());
         }

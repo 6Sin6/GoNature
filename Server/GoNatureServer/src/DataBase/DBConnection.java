@@ -892,7 +892,7 @@ public class DBConnection {
             ResultSet resultSet = dbController.selectRecordsField(tableName, whereClause, "DefaultVisitationTime");
             if (!resultSet.next())
                 return null;
-            return resultSet.getInt("ExpectedTime");
+            return resultSet.getInt("DefaultVisitationTime");
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
