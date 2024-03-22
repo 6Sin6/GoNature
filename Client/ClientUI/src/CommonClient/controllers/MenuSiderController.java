@@ -75,7 +75,9 @@ public class MenuSiderController extends BaseController {
     }
 
     public void handleHomePageRoute() {
-        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
+        applicationWindowController.homepage();
+        userRoleLabel.setText("");
+        usernameLabel.setText("");
     }
 
     public void handleDashboardRoute() {

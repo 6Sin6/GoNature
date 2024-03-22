@@ -126,10 +126,30 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
+    public void setCenterPageForNewVisitor(String fxmlPath, User user) {
+        setUser(user);
+        setCenterPage(fxmlPath);
+    }
+
     public void logout() {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
-        loadDashboardPage(Role.ROLE_GUEST);
+        String pathTorRoute;
+        if (user instanceof SingleVisitor) {
+            pathTorRoute = "/CommonClient/gui/HomePage.fxml";
+        } else {
+            pathTorRoute = "/CommonClient/gui/LoginPage.fxml";
+        }
+        setCenterPage(pathTorRoute);
+        this.user = null;
+        menuSider = null;
+    }
+
+    public void homepage() {
+        Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
+        ClientUI.client.accept(msg);
+        String pathTorRoute = "/CommonClient/gui/HomePage.fxml";
+        setCenterPage(pathTorRoute);
         this.user = null;
         menuSider = null;
     }

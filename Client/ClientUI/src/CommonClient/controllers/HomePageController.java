@@ -141,7 +141,7 @@ public class HomePageController extends BaseController implements Initializable 
             Message respondMsg = ClientCommunicator.msg;
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPage("/VisitorsUI/VisitorOrderVisitationPage.fxml");
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
             } else {
                 applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                 applicationWindowController.loadMenu(new SingleVisitor(inputID));

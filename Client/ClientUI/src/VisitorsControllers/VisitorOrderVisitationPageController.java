@@ -2,8 +2,8 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
-import CommonUtils.ConfirmationPopup;
 import CommonUtils.CommonUtils;
+import CommonUtils.ConfirmationPopup;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -14,7 +14,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -179,7 +182,6 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 },
                         300, 150, false, "Yes", "No", false);
                 confirmPopup.show(applicationWindowController.getRoot());
-                return;
             }
         }
     }
