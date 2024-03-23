@@ -1,51 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
-<StackPane fx:id="loginPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.LoginPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.LoginPageController">
    <children>
-      <Pane fx:id="pane" prefHeight="768.0" prefWidth="1280.0">
+      <ImageView fitHeight="768.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../../../../Common/Resources/src/assets/SignInPage.png" />
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" disable="true" fill="#48ea7e" height="500.0" stroke="#05000b" strokeLineCap="ROUND" strokeType="OUTSIDE" strokeWidth="3.0" style="-fx-border-radius: 470px;" width="427.0" StackPane.alignment="CENTER" />
+      <Pane prefHeight="768.0" prefWidth="1280.0">
          <children>
-            <Text fx:id="header" layoutX="559.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" wrappingWidth="161.13671875">
+            <Text fill="#7e5f42" layoutX="532.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" textAlignment="CENTER" wrappingWidth="226.7366943359375">
                <font>
-                  <Font name="System Bold" size="36.0" />
+                  <Font name="System Bold" size="64.0" />
                </font>
             </Text>
-            <Separator fx:id="sep" layoutX="8.0" layoutY="104.0" prefHeight="7.0" prefWidth="1263.0" />
-            <Label fx:id="userNameLbl" layoutX="431.0" layoutY="263.0" prefHeight="48.0" prefWidth="94.0" text="Username:">
+            <MFXButton buttonType="RAISED" defaultButton="true" depthLevel="LEVEL3" layoutX="646.0" layoutY="461.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="LOGIN" textFill="#7e5f42">
                <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <MFXTextField fx:id="userNameText" layoutX="527.0" layoutY="263.0" prefHeight="48.0" prefWidth="236.0">
+                  <Font size="18.0" />
+               </font></MFXButton>
+            <Label fx:id="ErrorMsg" alignment="CENTER" blendMode="HARD_LIGHT" layoutX="438.0" layoutY="509.0" prefHeight="71.0" prefWidth="404.0" textAlignment="CENTER" textFill="RED" textOverrun="CLIP" wrapText="true">
                <font>
-                  <Font size="16.0" />
-               </font></MFXTextField>
-            <Label fx:id="passwordLbl" layoutX="431.0" layoutY="344.0" prefHeight="48.0" prefWidth="82.0" text="Password:">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <MFXPasswordField fx:id="passwordText" layoutX="527.0" layoutY="344.0" prefHeight="48.0" prefWidth="236.0">
-               <font>
-                  <Font size="16.0" />
-               </font></MFXPasswordField>
-            <MFXButton fx:id="loginBtn" defaultButton="true" buttonType="RAISED" layoutX="628.0" layoutY="415.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="Sign In" />
-            <Label fx:id="ErrorMsg" layoutX="371.0" layoutY="500.0" prefHeight="71.0" prefWidth="566.0" />
-            <ImageView onMouseClicked="#navigateToHomePage" fx:id="backBtn" fitHeight="77.0" fitWidth="94.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                  <Font size="14.0" />
+               </font></Label>
+            <ImageView accessibleRole="INCREMENT_BUTTON" blendMode="LIGHTEN" cache="true" cacheHint="QUALITY" fitHeight="77.0" fitWidth="94.0" layoutX="14.0" layoutY="13.0" onMouseClicked="#navigateToHomePage" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="/assets/backButton.png" />
+                    <Image url="@../../../../../Common/Resources/src/assets/back.png" />
                 </image>
+            </ImageView>
+            <TextField fx:id="userNameText" layoutX="531.0" layoutY="306.0" prefHeight="50.0" prefWidth="250.0" promptText="Username">
+               <font>
+                  <Font size="18.0" />
+               </font></TextField>
+            <PasswordField fx:id="passwordText" layoutX="531.0" layoutY="387.0" prefHeight="50.0" prefWidth="250.0" promptText="Password">
+               <font>
+                  <Font size="18.0" />
+               </font></PasswordField>
+            <ImageView blendMode="MULTIPLY" fitHeight="30.0" fitWidth="30.0" layoutX="493.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../Common/Resources/src/assets/usernameIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView blendMode="MULTIPLY" fitHeight="30.0" fitWidth="30.0" layoutX="493.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../Common/Resources/src/assets/passwordIcon.png" />
+               </image>
             </ImageView>
          </children>
       </Pane>
