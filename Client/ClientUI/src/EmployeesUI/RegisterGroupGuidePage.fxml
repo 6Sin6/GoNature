@@ -10,16 +10,14 @@
 <?import javafx.scene.text.Text?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RegisterGroupGuideController">
-   <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
-         <children>
             <Text layoutX="302.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="300.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
+            <Text layoutX="290.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
                <font>
                   <Font size="20.0" />
                </font>
@@ -34,14 +32,12 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <MFXTextField fx:id="txtUsername" layoutX="450.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" defaultButton="true" layoutX="420.0" layoutY="260.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
+            <MFXTextField fx:id="txtID" layoutX="450.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
+            <MFXButton buttonType="RAISED" defaultButton="true" layoutX="420.0" layoutY="260.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
             <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="315.0" styleClass="error-text" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-         </children>
       </Pane>
-   </children>
 </StackPane>
