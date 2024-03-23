@@ -1,6 +1,11 @@
 package Entities;
 
+import com.itextpdf.text.DocumentException;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -88,4 +93,18 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable {
             throw new IllegalArgumentException("Order type must be single");
     }
 
+
+    @Override
+    /**
+     * This method is intended to create a PDF Blob from the NumOfVisitorsReport.
+     * Currently, this method is not implemented and returns null.
+     *
+     * @return A Blob object representing the PDF version of the report.
+     * @throws DocumentException If there is an error while creating the PDF document.
+     * @throws SQLException If there is an error while converting the PDF to a Blob.
+     * @throws IOException If there is an error while handling the PDF file.
+     * */
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
+        return null;
+    }
 }

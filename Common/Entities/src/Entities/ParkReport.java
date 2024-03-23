@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * The ParkReport class represents a report associated with a park.
  * This class is abstract and serves as a base class for specific types of reports.
  */
-public abstract class ParkReport implements Serializable {
+public abstract class ParkReport extends ReportConstructor implements Serializable {
     private Timestamp Date;
     private Park park;
 

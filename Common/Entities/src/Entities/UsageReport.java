@@ -1,6 +1,11 @@
 package Entities;
 
+import com.itextpdf.text.DocumentException;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -64,4 +69,8 @@ public class UsageReport extends ParkReport implements Serializable {
         usageReportDetailBank.removeReport(report);
     }
 
+    @Override
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
+        return null;
+    }
 }

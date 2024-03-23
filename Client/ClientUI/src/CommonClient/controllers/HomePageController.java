@@ -185,7 +185,7 @@ public class HomePageController extends BaseController implements Initializable 
     }
 
     public void onBookButtonClicked() {
-        onAuthPopup = new InputTextPopup(new String[]{"Enter Your ID Please : "}, (inputText) -> this.onAuth(inputText[0]), 500, 300, true, false, true);
+        onAuthPopup = new InputTextPopup(new String[]{"Enter Your ID Please : "}, (inputText) -> this.onAuth(inputText[0]), 500, 300, true, true, true);
         onAuthPopup.show(applicationWindowController.getRoot());
     }
 }
