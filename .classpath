@@ -4,19 +4,14 @@
 	<classpathentry kind="src" path="Client/ClientUI/src"/>
 	<classpathentry kind="src" path="Client/GoNatureClient/src"/>
 	<classpathentry kind="src" path="Common/Entities/src"/>
+	<classpathentry kind="src" path="Common/OCSF/src"/>
 	<classpathentry kind="src" path="Common/Resources/src"/>
 	<classpathentry kind="src" path="Server/GoNatureServer/src"/>
 	<classpathentry kind="src" path="Server/ServerUI/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-8.0.13"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-8.0.13"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-8.0.13"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/materialfx-11.13.5"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/adapter-0.2.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/materialfx-11.13.5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/adapter-0.2.0"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/virtualizedfx-11.2.6.1"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Java EE 6-Java EE 6"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.mail"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/itextpdf-5.5.9"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jfreechart-1.5.3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

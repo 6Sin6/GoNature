@@ -155,7 +155,7 @@ public class DBConnection {
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
-                            if (checkGroupGuide(userGoNatureData.getString("ID"))) {
+                            if (checkGroupGuide(userGoNatureData.getString("ID")) ) {
                                 return new VisitorGroupGuide(
                                         "",
                                         "",
@@ -475,9 +475,9 @@ public class DBConnection {
     /**
      * Checks if an order exists for a specific visitor, park, and visitation date.
      *
-     * @param visitorID       The ID of the visitor.
-     * @param parkID          The ID of the park.
-     * @param visitationDate  The visitation date.
+     * @param visitorID      The ID of the visitor.
+     * @param parkID         The ID of the park.
+     * @param visitationDate The visitation date.
      * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
      */
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
@@ -499,8 +499,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     *         Returns a new Park object with default values if no matching park is found.
-     *         Returns null if a SQLException is thrown.
+     * Returns a new Park object with default values if no matching park is found.
+     * Returns null if a SQLException is thrown.
      */
     public Park getParkDetails(String parkID) {
         try {
@@ -1056,7 +1056,6 @@ public class DBConnection {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
         }
     }
-
     public void cancelOrdersInWaitlist24HoursBefore() {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
