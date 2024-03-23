@@ -8,9 +8,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -20,50 +17,17 @@
       <ImageView fitHeight="768.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@../../../../../Common/Resources/src/assets/SignInPage.png" />
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="SRC_ATOP" disable="true" height="500.0" stroke="#03661a" strokeType="OUTSIDE" strokeWidth="2.0" width="427.0" StackPane.alignment="CENTER">
-         <fill>
-            <RadialGradient centerX="0.5" centerY="1.0" focusDistance="0.33027526435502086" radius="0.5688074006946808">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.6483041048049927" green="0.9684210419654846" blue="0.4196491241455078" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="0.19488303363323212" green="0.7894737124443054" blue="0.061403509229421616" />
-                     </color>
-                  </Stop>
-               </stops>
-            </RadialGradient>
-         </fill>
-      </Rectangle>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" disable="true" fill="#48ea7e" height="500.0" stroke="#05000b" strokeLineCap="ROUND" strokeType="OUTSIDE" strokeWidth="3.0" style="-fx-border-radius: 470px;" width="427.0" StackPane.alignment="CENTER" />
       <Pane prefHeight="768.0" prefWidth="1280.0">
          <children>
-            <Text layoutX="532.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" wrappingWidth="226.7366943359375">
+            <Text fill="#7e5f42" layoutX="532.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" textAlignment="CENTER" wrappingWidth="226.7366943359375">
                <font>
                   <Font name="System Bold" size="64.0" />
                </font>
-               <fill>
-                  <RadialGradient centerX="0.26548671511422217" centerY="0.5037878661444692" focusDistance="0.35779816513761475" radius="1.0">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.15789473056793213" green="0.4833333194255829" blue="0.5263158082962036" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </fill>
             </Text>
-            <MFXButton buttonType="RAISED" defaultButton="true" depthLevel="LEVEL3" layoutX="646.0" layoutY="461.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="Sign In">
+            <MFXButton buttonType="RAISED" defaultButton="true" depthLevel="LEVEL3" layoutX="646.0" layoutY="461.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="LOGIN" textFill="#7e5f42">
                <font>
-                  <Font size="14.0" />
+                  <Font size="18.0" />
                </font></MFXButton>
             <Label fx:id="ErrorMsg" alignment="CENTER" blendMode="HARD_LIGHT" layoutX="438.0" layoutY="509.0" prefHeight="71.0" prefWidth="404.0" textAlignment="CENTER" textFill="RED" textOverrun="CLIP" wrapText="true">
                <font>
