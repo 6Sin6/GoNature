@@ -546,6 +546,72 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Sets the exit time of an order to now.
+     *
+     * @param orderID the order ID.
+     * @return a message indicating the result of the operation, null if successful.
+     */
+    public String setExitTimeOfOrder(String orderID)
+    {
+        try {
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
+            if (!results.next()) {
+                return "Order ID does not exist.";
+            }
+
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp exitTime = results.getTimestamp("ExitedTime");
+            // Extract year and month components from the current time
+            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
+            int currentYear = currentDate.getYear();
+            int currentMonth = currentDate.getMonthValue();
+
+            // Extract year and month components from the exit time
+            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
+            int exitYear = exitDate.getYear();
+            int exitMonth = exitDate.getMonthValue();
+            if (currentYear != exitYear || currentMonth != exitMonth) {
+                return "Order is not for today.";
+            }
+
+            if (currentTime.compareTo(exitTime) > 0) {
+                return "Order has already been fulfilled.";
+            }
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
+                return "Update failed. Please try again.";
+            }
+
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Something went wrong... please try again later.";
+        }
+    }
+
+    public String activateGroupGuide(String groupGuideID)
+    {
+        try {
+            String tableName = this.schemaName + ".group-guides";
+            String whereClause = "ID='" + groupGuideID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
+            if (!resultSet.next())
+                return "Group guide ID does not exist.";
+            if (!resultSet.getBoolean("pendingStatus"))
+                return  "Group guide has already been authorized.";
+
+            if (!dbController.updateRecord(tableName, "pendingStatus=false", whereClause))
+                return "Group guide authorization failed. Try again later.";
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return "Something went wrong... Please try again later.";
+        }
+    }
+
     //=================================================================================================================//
     //                                                                                                                 //
     //                                           MANAGERS EXCLUSIVE METHODS                                            //
@@ -793,6 +859,35 @@ public class DBConnection {
         }
     }
 
+    public int[][] generateNumOfVisitorsReport(int month)
+    {
+        try
+        {
+            // Definitions
+            String tableName = this.schemaName + ".orders";
+            int orderStatus = OrderStatus.STATUS_FULFILLED.getOrderStatus();
+            String whereClause = "MONTH (VisitationDate) = "+month+" AND (orderStatus = " + orderStatus + ")" +
+                    "ORDER BY VisitationDate";
+            int[][] amountPerDay = new int[2][31]; // row per visitor type, column per day in month
+            int day, orderType, numOfVisitors;
+
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "VisitationDate, NumOfVisitors");
+            while (results.next()) // building amountPerDay.
+            {
+                day = results.getTimestamp("VisitationDate").toLocalDateTime().getDayOfMonth();
+                orderType = results.getInt("OrderType");
+                numOfVisitors = results.getInt("NumOfVisitors");
+                amountPerDay[orderType - 1][day - 1] += numOfVisitors;
+            }
+            return amountPerDay;
+        }
+        catch(SQLException e)
+        {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
     // =================================================================================================================//
     //                                                                                                                 //
     //                                           WORKER EXCLUSIVE METHODS                                              //
@@ -870,71 +965,7 @@ public class DBConnection {
         }
     }
 
-    /**
-     * Sets the exit time of an order to now.
-     *
-     * @param orderID the order ID.
-     * @return a message indicating the result of the operation, null if successful.
-     */
-    public String setExitTimeOfOrder(String orderID)
-    {
-        try {
-            String tableName = this.schemaName + ".orders";
-            String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
-            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
-            if (!results.next()) {
-                return "Order ID does not exist.";
-            }
 
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            Timestamp exitTime = results.getTimestamp("ExitedTime");
-            // Extract year and month components from the current time
-            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
-            int currentYear = currentDate.getYear();
-            int currentMonth = currentDate.getMonthValue();
-
-            // Extract year and month components from the exit time
-            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
-            int exitYear = exitDate.getYear();
-            int exitMonth = exitDate.getMonthValue();
-            if (currentYear != exitYear || currentMonth != exitMonth) {
-                return "Order is not for today.";
-            }
-
-            if (currentTime.compareTo(exitTime) > 0) {
-                return "Order has already been fulfilled.";
-            }
-
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
-                return "Update failed. Please try again.";
-            }
-
-            return null;
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return "Something went wrong... please try again later.";
-        }
-    }
-
-    public String activateGroupGuide(String groupGuideID)
-    {
-        try {
-            String tableName = this.schemaName + ".group-guides";
-            String whereClause = "ID='" + groupGuideID + "'";
-            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
-            if (!resultSet.next())
-                return "Group guide ID does not exist.";
-            if (!resultSet.getBoolean("pendingStatus"))
-                return  "Group guide has already been authorized.";
-
-            if (!dbController.updateRecord(tableName, "pendingStatus=false", whereClause))
-                return "Group guide authorization failed. Try again later.";
-            return null;
-        } catch (SQLException e) {
-            this.serverController.addtolog(e.getMessage());
-            return "Something went wrong... Please try again later.";
-        }
-    }
 
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
         try {

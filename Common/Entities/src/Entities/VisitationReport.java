@@ -53,6 +53,8 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         this.reportData.put(statName, reportData);
     }
 
+
+
     /**
      * Retrieves the data associated with the report.
      *
@@ -61,6 +63,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     public HashMap<String, ResultSet> getReportData() {
         return reportData;
     }
+
+
+
 
     /**
      * Sets the data associated with the report.
@@ -71,6 +76,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         this.reportData = reportData;
     }
 
+
+
+
     /**
      * Adds a ResultSet to the report data.
      * @param statName The name of the statistic.
@@ -80,6 +88,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         this.reportData.put(statName, reportData);
     }
 
+
+
+
     /**
      * Removes a ResultSet from the report data.
      *
@@ -88,6 +99,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     public void removeReportData(String statName) {
         this.reportData.remove(statName);
     }
+
+
+
 
 
     /**
@@ -167,6 +181,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return new SerialBlob(outputStream.toByteArray());
     }
 
+
+
+
     /**
      * Creates a chart with JFreeChart based on the data in the specified ResultSet.
      *
@@ -233,6 +250,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return chart;
     }
 
+
+
+
     /**
      * Creates a pie chart with JFreeChart based on the data in the specified ResultSet.
      *
@@ -269,6 +289,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: ({2})", NumberFormat.getNumberInstance(), NumberFormat.getPercentInstance()));
         return chart;
     }
+
+
+
 
     /**
      * Creates a table with the data in the specified ResultSet.
@@ -315,6 +338,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return table;
     }
 
+
+
+
     /**
      * Creates a paragraph with the specified text and font.
      *
@@ -335,6 +361,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return title;
     }
 
+
+
+
     /**
      * Creates a cell with the specified text and centers it.
      *
@@ -346,6 +375,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
     }
+
+
+
 
     /**
      * Retrieves the average time spent for the specified date and order type.
@@ -370,6 +402,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         }
         return 0.0; // Return 0 if data for the date is not found
     }
+
+
+
 
     /**
      * Retrieves the total time spent for the specified order type.
