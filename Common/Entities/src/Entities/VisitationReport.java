@@ -45,7 +45,7 @@ public class VisitationReport extends DepartmentReport implements Serializable {
      * @param departmentID The ID of the department associated with the report.
      * @param statName    The name of the statistic.
      * @param reportData   The data associated with the report.
-     * The data is stored as a HashMap<String, ResultSet>.
+     * The data is stored as a HashMap String, ResultSet .
      */
     public VisitationReport(Integer departmentID, String statName, ResultSet reportData) {
         super(departmentID);
@@ -65,7 +65,7 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     /**
      * Sets the data associated with the report.
      *
-     * @param reportData The data to set as a HashMap<String, ResultSet>.
+     * @param reportData The data to set as a HashMap String, ResultSet.
      */
     public void setReportData(HashMap<String, ResultSet> reportData) {
         this.reportData = reportData;
@@ -272,7 +272,7 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
     /**
      * Creates a table with the data in the specified ResultSet.
-     * @params orderType The order type to display in the table.
+     * @param orderType The order type to display in the table.
      * @return The PdfPTable object representing the table.
      */
     private PdfPTable createTable(int orderType) throws SQLException {

@@ -3,9 +3,7 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.ParkManager;
+import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -27,6 +25,9 @@ public class IssueReportsController extends BaseController {
     @FXML
     private ComboBox<String> reportCmb;
 
+    @FXML
+    private ComboBox<String> parkCmb;
+
     private boolean parkManagerPage = false;
 
     public void cleanup() {
@@ -34,16 +35,39 @@ public class IssueReportsController extends BaseController {
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
         reportCmb.getItems().clear();
+        parkCmb.getSelectionModel().clearSelection();
+        parkCmb.getItems().clear();
     }
 
 
     public void start() {
-        if (applicationWindowController.getUser() instanceof ParkManager) {
+        if (applicationWindowController.getUser() instanceof ParkDepartmentManager) {
+            reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
+            parkCmb.setValue("All Parks");
+            parkCmb.setDisable(true);
+        } else {
+            parkCmb.setValue("");
             parkManagerPage = true;
-            reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
+        }
+        reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
+        parkCmb.getItems().addAll(ParkBank.getUnmodifiableMap().keySet());
+        reportCmb.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            onSelectReport();
+        });
+    }
+
+    void onSelectReport() {
+        String selectedReport = reportCmb.getValue();
+        if (selectedReport == null) {
             return;
         }
-        reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
+
+        if (Utils.parkManagerReportsMap.containsKey(selectedReport)) {
+            parkCmb.setDisable(false);
+        } else {
+            parkCmb.setDisable(true);
+            parkCmb.setValue("All Parks");
+        }
     }
 
     @FXML
@@ -52,6 +76,14 @@ public class IssueReportsController extends BaseController {
         if (selectedReport == null) {
             errMsg.setText("Please select a report type");
             return;
+        }
+
+        String selectedPark = parkCmb.getValue();
+        if (Utils.parkManagerReportsMap.containsKey(selectedReport) && selectedPark == null) {
+            errMsg.setText("This is a park specific report. Please select a park");
+            return;
+        } else if (Utils.departmentReportsMap.containsKey(selectedReport)) {
+            parkCmb.setValue("All Parks");
         }
         errMsg.setText("");
 

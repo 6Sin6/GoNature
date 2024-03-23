@@ -25,12 +25,6 @@ public abstract class DepartmentReport extends ReportConstructor {
     }
 
     /**
-     * Creates a PDF file based on the data in the specified ResultSet.
-     * @return A Blob object representing the PDF file.
-     */
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException { return null;};
-
-    /**
      * Retrieves the ID of the department associated with the report.
      *
      * @return The ID of the department.

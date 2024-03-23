@@ -19,16 +19,18 @@
                </font>
             </Text>
             <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="14.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can issue vital reports:&#10;&#10;• Cancellation Reports: Review last month's cancellation details.&#10;Understanding cancellations helps optimize operations and improve customer satisfaction.&#10;&#10;• Visitation Reports: Explore visitation data, including visitor numbers and demographics from the previous month.&#10;&#10;Utilize these insights to make informed decisions and enhance visitor experiences." wrappingWidth="855.159912109375">
+            <Text layoutX="14.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can issue vital reports:&#10;&#10;• Cancellation Reports: Review last month's cancellation details.&#10;Understanding cancellations helps optimize operations and improve customer satisfaction.&#10;&#10;• Visitation Reports: Explore visitation data, including visitor numbers and demographics from the previous month.&#10;• Number of Visitors &amp; Usage Reports: Are your park managers late on their reports? Issue the reports of a select of parks with the click of a button.&#10;&#10;Utilize these insights to make informed decisions and enhance visitor experiences." wrappingWidth="855.159912109375">
                <font>
                   <Font size="22.0" />
                </font>
             </Text>
-            <Label layoutX="443.0" layoutY="436.0" text="Report Type" />
-            <ComboBox fx:id="reportCmb" layoutX="336.0" layoutY="460.0" prefHeight="39.0" prefWidth="278.0" />
-            <Label fx:id="generateResultMsg" layoutX="359.0" layoutY="590.0" prefHeight="17.0" prefWidth="347.0" />
-            <Label fx:id="errMsg" layoutX="374.0" layoutY="506.0" prefHeight="17.0" prefWidth="305.0" styleClass="error-text" />
-            <MFXButton fx:id="btnGenerateReport" layoutX="145.0" layoutY="529.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="Generate Report" />
+            <Label layoutX="262.0" layoutY="494.0" text="Report Type" />
+            <ComboBox fx:id="reportCmb" layoutX="155.0" layoutY="515.0" prefHeight="39.0" prefWidth="278.0" />
+            <ComboBox fx:id="parkCmb" layoutX="507.0" layoutY="515.0" prefHeight="39.0" prefWidth="278.0" />
+            <Label fx:id="generateResultMsg" layoutX="356.0" layoutY="649.0" prefHeight="17.0" prefWidth="347.0" />
+            <Label fx:id="errMsg" layoutX="377.0" layoutY="567.0" prefHeight="17.0" prefWidth="305.0" styleClass="error-text" />
+            <MFXButton fx:id="btnGenerateReport" layoutX="138.0" layoutY="590.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="Generate Report" />
+            <Label layoutX="635.0" layoutY="494.0" text="Park" />
          </children>
       </Pane>
    </children>
