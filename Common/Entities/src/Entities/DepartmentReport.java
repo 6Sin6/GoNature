@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * The DepartmentReport class represents a report associated with a department.
  * It contains information about the date and the department ID.
  */
-public abstract class DepartmentReport {
+public abstract class DepartmentReport extends ReportConstructor {
     private Integer departmentID;
 
     /**
