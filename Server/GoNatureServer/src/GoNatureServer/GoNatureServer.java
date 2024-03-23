@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -221,6 +222,11 @@ public class GoNatureServer extends AbstractServer {
                 Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
                 client.sendToClient(respondMsg);
                 return;
+            }
+            if (authenticatedUser instanceof VisitorGroupGuide && (Objects.equals(authenticatedUser.getUsername(), ""))){
+                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", "Visitor Group Guide is not activated");
+                    client.sendToClient(respondMsg);
+                    return;
             }
             signedInInstances.put(authenticatedUser.getUsername(), client);
             Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);

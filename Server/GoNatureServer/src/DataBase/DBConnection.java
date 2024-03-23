@@ -149,6 +149,16 @@ public class DBConnection {
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
+                            if (checkGroupGuide(userGoNatureData.getString("ID")) ) {
+                                return new VisitorGroupGuide(
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        ""
+                                );
+                            }
                             return new VisitorGroupGuide(
                                     userCredentials.getString("username"),
                                     "",
@@ -952,11 +962,12 @@ public class DBConnection {
 
     public String activateGroupGuide(String groupGuideID) {
         try {
-            String tableName = this.schemaName + ".group-guides";
+            String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + groupGuideID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
             if (!resultSet.next())
                 return "Group guide ID does not exist.";
+
             if (!resultSet.getBoolean("pendingStatus"))
                 return "Group guide has already been authorized.";
 
@@ -966,6 +977,20 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return "Something went wrong... Please try again later.";
+        }
+    }
+    public boolean checkGroupGuide(String groupGuideID) {
+        try {
+            String tableName = this.schemaName + ".group_guides";
+            String whereClause = "ID='" + groupGuideID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("pendingStatus");
+            return result == 1;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
         }
     }
 

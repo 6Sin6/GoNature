@@ -144,6 +144,9 @@ public class MenuSiderController extends BaseController {
                 btnAct1.setOnAction(visitorGroupGuideController::OnClickViewOrdersButton);
                 btnAct2.setText("Make an Order");
                 btnAct2.setOnAction(visitorGroupGuideController::OnClickOrderVisitButton);
+                btnAct3.setVisible(true);
+                btnAct3.setText("Awaiting Confirmation");
+                btnAct3.setOnAction(visitorGroupGuideController::OnClickViewConfirmationsOrdersButton);
                 break;
 
             case "Visitor":

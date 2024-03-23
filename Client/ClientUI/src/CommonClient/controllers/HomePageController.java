@@ -178,7 +178,6 @@ public class HomePageController extends BaseController implements Initializable 
                     }
                 }
             }
-
         } else {
             onAuthPopup.setErrorLabel(strToPrint);
         }

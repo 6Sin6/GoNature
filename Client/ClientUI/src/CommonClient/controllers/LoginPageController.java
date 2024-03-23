@@ -75,6 +75,10 @@ public class LoginPageController extends BaseController {
         if (returnOpCode != OpCodes.OP_SIGN_IN) {
             throw new CommunicationException("Response is inappropriate from server");
         }
+        if (respondMsg.getMsgData() instanceof String && (((String) respondMsg.getMsgData()).contains("Visitor Group Guide is not activated"))){
+                ErrorMsg.setText("Visitor Group Guide is not activated");
+                return;
+        }
 
         // Logging user in, unless incorrect user and password.
         user = (User) respondMsg.getMsgData();
