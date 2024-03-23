@@ -5,6 +5,8 @@ import CommonClient.controllers.BaseController;
 import CommonUtils.InputTextPopup;
 import Entities.Message;
 import client.ClientCommunicator;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
@@ -37,5 +39,25 @@ public abstract class GeneralEmployeeDashboard extends BaseController
             popup.setLabelColor("#00FF00");
             popup.setErrorLabel("Order Exited Successfully!");
         }
+    }
+
+    @FXML
+    public void OnClickAvailableSpotButton(ActionEvent ignoredEvent)
+    {
+        applicationWindowController.loadEmployeesPage("CheckAvailableSpotsPage");
+    }
+
+    @FXML
+    public void OnClickGenerateBillButton(ActionEvent ignoredEvent)
+    {
+        applicationWindowController.loadEmployeesPage("GenerateBillPage");
+    }
+
+
+    @FXML
+    void OnClickExitButton(ActionEvent ignoredEvent)
+    {
+        popup = new InputTextPopup(new String[]{"Enter Order ID"}, this::onSubmit, 0, 0, true, true, false);
+        popup.show(applicationWindowController.getRoot());
     }
 }
