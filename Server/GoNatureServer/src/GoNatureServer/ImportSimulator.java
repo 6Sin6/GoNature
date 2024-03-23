@@ -14,12 +14,21 @@ public class ImportSimulator {
     private DBController dbController;
     private final String schemaName = "usermanagement";
 
+    /**
+     * Constructor
+     * @param controller - the database controller
+     * @param dbConnection - the database connection
+     */
     public ImportSimulator(ServerUIFrameController controller, DBConnection dbConnection) {
         this.serverController = controller;
         this.dbController = dbConnection.getDbController();
         this.dbConnection = dbConnection;
     }
 
+    /**
+     * This method imports all the users from the external database
+     * Meticulously inserts the users into the correct tables
+     */
     public void handleImportUsers() {
         try {
             String tableName = schemaName + ".users";
