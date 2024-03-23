@@ -8,7 +8,8 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public abstract class ReportConstructor {
+public abstract class ReportConstructor
+{
     /**
      * Creates a PDF file based on the data in the specified ResultSet.
      * @return A Blob object representing the PDF file.
@@ -17,6 +18,8 @@ public abstract class ReportConstructor {
      * @throws IOException If an error occurs while reading the data.
      */
     public abstract Blob createPDFBlob() throws DocumentException, SQLException, IOException;
+
+
 
     /**
      * Creates a paragraph with the specified text and font.
@@ -37,6 +40,8 @@ public abstract class ReportConstructor {
         title.setSpacingAfter(spacing);
         return title;
     }
+
+
 
     /**
      * Creates a cell with the specified text and centers it.

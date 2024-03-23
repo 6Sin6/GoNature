@@ -859,19 +859,27 @@ public class DBConnection {
         }
     }
 
-    public int[][] generateNumOfVisitorsReport(int month)
+    public boolean generateNumOfVisitorsReport(int parkID)
     {
         try
         {
             // Definitions
-            String tableName = this.schemaName + ".orders";
+            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
             int orderStatus = OrderStatus.STATUS_FULFILLED.getOrderStatus();
-            String whereClause = "MONTH (VisitationDate) = "+month+" AND (orderStatus = " + orderStatus + ")" +
-                    "ORDER BY VisitationDate";
-            int[][] amountPerDay = new int[2][31]; // row per visitor type, column per day in month
+
+            String tableName_Orders = this.schemaName + ".orders";
+            String whereClause_Orders = "MONTH (VisitationDate) = " + month + " AND orderStatus = " + orderStatus + " AND ParkID = " + parkID;
+            String orderByClause_Orders = " ORDER BY VisitationDate";
+
+            int[][] amountPerDay = new int[OrderType.values().length][31]; // row per order type, column per day in month
             int day, orderType, numOfVisitors;
 
-            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "VisitationDate, NumOfVisitors");
+            String reportName = "numofvisitors";
+            String tableName_Reports = this.schemaName + ".park_manager_reports";
+            String whereClause_Reports = "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + month + "' AND year='" + year + "'";
+
+            // Retrieving data from DB
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, NumOfVisitors");
             while (results.next()) // building amountPerDay.
             {
                 day = results.getTimestamp("VisitationDate").toLocalDateTime().getDayOfMonth();
@@ -879,12 +887,38 @@ public class DBConnection {
                 numOfVisitors = results.getInt("NumOfVisitors");
                 amountPerDay[orderType - 1][day - 1] += numOfVisitors;
             }
-            return amountPerDay;
-        }
-        catch(SQLException e)
+            results.close();
+
+            // Building report entity and blob.
+            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, amountPerDay);
+            Blob generatedBlob = report.createPDFBlob();
+
+            // If exists - updates the report.
+            ResultSet blobData = dbController.selectRecordsFields(tableName_Reports, whereClause_Reports, "blobData");
+            if (blobData.next()) // does exists?
+            {
+                if (!dbController.updateBlobRecord(tableName_Reports, "blobData", generatedBlob, whereClause_Reports))
+                { // failed updating
+                    this.serverController.addtolog("Update in " + tableName_Reports + " failed. Update " + reportName +" report");
+                    return false;
+                }
+                return true;
+            }
+
+            // Doesn't exist - inserts the report into the database
+            String columns = "reportType, parkID, month, year, blobData";
+            String[] values = {reportName, String.valueOf(parkID), String.valueOf(month), String.valueOf(year) };
+            if (!dbController.insertBlobRecord(tableName_Reports, columns, generatedBlob, values))
+            { // failed inserting
+                this.serverController.addtolog("Insert into " + tableName_Reports + " failed. Insert " + reportName + " report");
+                return false;
+            }
+
+            return true;
+        } catch (SQLException | DocumentException | IOException e)
         {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            return false;
         }
     }
 
