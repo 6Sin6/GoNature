@@ -15,7 +15,7 @@
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.LoginPageController">
    <children>
       <ImageView fitHeight="768.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../../../../../Common/Resources/src/assets/SignInPage.png" />
+         <Image url="/assets/SignInPage.png" />
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" disable="true" fill="#48ea7e" height="500.0" stroke="#05000b" strokeLineCap="ROUND" strokeType="OUTSIDE" strokeWidth="3.0" style="-fx-border-radius: 470px;" width="427.0" StackPane.alignment="CENTER" />
       <Pane prefHeight="768.0" prefWidth="1280.0">
@@ -35,7 +35,7 @@
                </font></Label>
             <ImageView accessibleRole="INCREMENT_BUTTON" blendMode="LIGHTEN" cache="true" cacheHint="QUALITY" fitHeight="77.0" fitWidth="94.0" layoutX="14.0" layoutY="13.0" onMouseClicked="#navigateToHomePage" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@../../../../../Common/Resources/src/assets/back.png" />
+                    <Image url="/assets/back.png" />
                 </image>
             </ImageView>
             <TextField fx:id="userNameText" layoutX="531.0" layoutY="306.0" prefHeight="50.0" prefWidth="250.0" promptText="Username">
@@ -48,12 +48,12 @@
                </font></PasswordField>
             <ImageView blendMode="MULTIPLY" fitHeight="30.0" fitWidth="30.0" layoutX="493.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Common/Resources/src/assets/usernameIcon.png" />
+                  <Image url="/assets/usernameIcon.png" />
                </image>
             </ImageView>
             <ImageView blendMode="MULTIPLY" fitHeight="30.0" fitWidth="30.0" layoutX="493.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Common/Resources/src/assets/passwordIcon.png" />
+                  <Image url="/assets/passwordIcon.png" />
                </image>
             </ImageView>
          </children>
