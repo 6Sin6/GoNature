@@ -95,8 +95,6 @@ public class MenuSiderController extends BaseController {
             case "Park Manager":
                 ParkManagerDashboardPageController parkManagerController = (ParkManagerDashboardPageController) getController("/EmployeesUI/ParkManagerDashboardPage.fxml");
                 parkManagerController.setApplicationWindowController(appController);
-//                btnAct1.setText("Prepare Reports");
-//                btnAct1.setOnAction(parkManagerController::OnClickGenerateReportsButton);
                 btnAct1.setText("Set Park Parameters");
                 btnAct1.setOnAction(parkManagerController::OnClickChangeParkParametersButton);
                 btnAct2.setText("Issue Reports");

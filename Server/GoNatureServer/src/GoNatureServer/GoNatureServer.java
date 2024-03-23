@@ -397,7 +397,7 @@ public class GoNatureServer extends AbstractServer {
                 if (departmentID == null) {
                     break;
                 }
-                reportType = "Cancellations Statistics";
+                isGenerated = db.generateCancellationsReport(departmentID);
                 break;
             case "numofvisitors":
                 reportType = "Number of Visitors Statistics";

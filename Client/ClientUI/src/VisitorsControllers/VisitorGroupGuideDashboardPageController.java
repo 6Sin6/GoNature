@@ -49,8 +49,6 @@ public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDash
 
     @FXML
     private MFXButton bntViewOrders;
-    private final String orderPage = "/VisitorsUI/GroupGuideOrderVisitationPage.fxml";
-    private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
 
     public void cleanup() {
         // Nothing to clean up
@@ -64,13 +62,16 @@ public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDash
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
-        routeToPage(orderPage);
+        applicationWindowController.loadVisitorsPage("GroupGuideOrderVisitationPage");
     }
 
     @FXML
     public void OnClickViewOrdersButton(ActionEvent event) {
-
-        routeToPage(activeOrdersPage);
+        applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
+        Object controller = applicationWindowController.getCurrentActiveController();
+        if (controller instanceof ActiveOrdersPageController) {
+            ((ActiveOrdersPageController) controller).start();
+        }
     }
 
 }

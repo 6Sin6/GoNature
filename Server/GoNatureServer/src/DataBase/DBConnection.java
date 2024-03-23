@@ -530,6 +530,10 @@ public class DBConnection {
 
             String tableName2 = this.schemaName + ".payments";
             String columns = "OrderID, paid, price";
+            ResultSet orderPayment = dbController.selectRecordsFields(tableName2, "OrderID=" + orderID, "paid");
+            if (orderPayment.next()) {
+                return true;
+            }
 
             if (!dbController.insertRecord(tableName2, columns, orderID, "true", String.valueOf(order.getNumOfVisitors() * Order.pricePerVisitor))) {
                 this.serverController.addtolog("Insert into " + this.schemaName + ".payments failed. Mark order as paid:" + orderID);

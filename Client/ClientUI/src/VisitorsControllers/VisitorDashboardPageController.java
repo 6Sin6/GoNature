@@ -39,10 +39,6 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     @FXML
     private ImageView pngViewOrders;
 
-
-    private final String orderPage = "/VisitorsUI/VisitorOrderVisitationPage.fxml";
-    private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
-
     public void cleanup() {
         // Nothing to clean up
     }
@@ -55,11 +51,15 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
-        routeToPage(orderPage);
+        applicationWindowController.loadVisitorsPage("VisitorOrderVisitationPage");
     }
 
     @FXML
     public void OnClickViewOrdersButton(ActionEvent event) {
-        routeToPage(activeOrdersPage);
+        applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
+        Object controller = applicationWindowController.getCurrentActiveController();
+        if (controller instanceof ActiveOrdersPageController) {
+            ((ActiveOrdersPageController) controller).start();
+        }
     }
 }

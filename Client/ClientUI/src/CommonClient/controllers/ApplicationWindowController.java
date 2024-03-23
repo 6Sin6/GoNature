@@ -94,12 +94,9 @@ public class ApplicationWindowController implements Initializable {
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
-                    String prefix = user instanceof SingleVisitor ? "Visitor ID : " : "User : ";
+                    String prefix = user instanceof SingleVisitor ? "Visitor ID: " : "User: ";
                     menuController.setUsername(prefix + user.getUsername());
                     menuController.buildMenuItems(this);
-                } else {
-                    // Handle the case where the controller wasn't retrieved successfully
-                    System.out.println("Failed to retrieve MenuSiderController.");
                 }
             }
             mainPane.setLeft(menuSider);

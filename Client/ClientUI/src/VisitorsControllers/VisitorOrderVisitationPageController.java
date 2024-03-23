@@ -168,7 +168,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                         , 600, 300, false, "OK", false);
                 confirmPopup.show(applicationWindowController.getRoot());
             } else {
-                String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
+                String strForPopup = "The park is at full capacity. Would you like to signup to the wait-list?";
                 ConfirmationPopup confirmPopup;
                 confirmPopup = new ConfirmationPopup(strForPopup, () ->
                 {
