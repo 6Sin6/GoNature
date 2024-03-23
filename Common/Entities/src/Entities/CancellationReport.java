@@ -20,7 +20,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @param department The ID of the department associated with the report.
      */
     public CancellationReport(Timestamp date, Integer department) {
-        super(date, department);
+        super(department);
         GroupOrders = new OrderBank(OrderType.ORD_TYPE_GROUP);
         SingleOrders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
     }
@@ -34,7 +34,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @param orders     The order bank containing cancelled orders.
      */
     public CancellationReport(Timestamp date, Integer department, OrderBank orders) {
-        super(date, department);
+        super(department);
         if (orders.getOrdersType() == OrderType.ORD_TYPE_GROUP) {
             GroupOrders = orders.getOrdersByStatus(OrderStatus.STATUS_CANCELLED);
             SingleOrders = new OrderBank(OrderType.ORD_TYPE_SINGLE);
@@ -55,7 +55,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @throws IllegalArgumentException If both orders are of the same type.
      */
     public CancellationReport(Timestamp date, Integer department, OrderBank orders1, OrderBank orders2) {
-        super(date, department);
+        super(department);
         if (orders1.getOrdersType() == orders1.getOrdersType()) {
             throw new IllegalArgumentException("Orders must be of different types");
         }

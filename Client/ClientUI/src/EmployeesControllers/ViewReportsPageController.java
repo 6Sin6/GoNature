@@ -17,8 +17,13 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
+
+import static CommonClient.Utils.getNumberFromMonthName;
 
 public class ViewReportsPageController extends BaseController {
     @FXML
@@ -51,6 +56,10 @@ public class ViewReportsPageController extends BaseController {
         reportCmb.getSelectionModel().clearSelection();
         monthCmb.getSelectionModel().clearSelection();
         yearCmb.getSelectionModel().clearSelection();
+        parkCmb.getItems().clear();
+        reportCmb.getItems().clear();
+        monthCmb.getItems().clear();
+        yearCmb.getItems().clear();
     }
 
     public void start() {
@@ -58,10 +67,11 @@ public class ViewReportsPageController extends BaseController {
         monthCmb.getItems().addAll("January", "February", "March", "April", "May", "June", "July", "August", "September",
                 "October", "November", "December");
 
-        String[] years = new String[4];
+        ArrayList<String> years = new ArrayList<>();
+        int earliestYear = 2021;
         int currentYear = java.time.Year.now().getValue();
-        for (int i = 0; i < 4; i++) {
-            years[i] = String.valueOf(currentYear - i);
+        for (int i = earliestYear; i <= currentYear; i++) {
+            years.add(String.valueOf(i));
         }
         yearCmb.getItems().addAll(years);
 
@@ -81,7 +91,7 @@ public class ViewReportsPageController extends BaseController {
     }
 
     @FXML
-    void onClickViewReport(ActionEvent event) throws IOException, CommunicationException {
+    void onClickViewReport(ActionEvent event) throws IOException, CommunicationException, ParseException {
         if (monthCmb.getValue() == null || yearCmb.getValue() == null || reportCmb.getValue() == null) {
             errMsg.setText("Please select a month, year, park and a report type.");
             return;
@@ -106,8 +116,8 @@ public class ViewReportsPageController extends BaseController {
         ParkDepartmentManager depMgr = (ParkDepartmentManager) applicationWindowController.getUser();
         String[] params = new String[]{
                 String.valueOf(isDepartmentReport),
-                isDepartmentReport ? Utils.parkManagerReportsMap.get(selectedReport) : Utils.departmentReportsMap.get(selectedReport),
-                selectedMonth,
+                isDepartmentReport ? Utils.departmentReportsMap.get(selectedReport) : Utils.parkManagerReportsMap.get(selectedReport),
+                String.valueOf(getNumberFromMonthName(selectedMonth)),
                 selectedYear,
                 isDepartmentReport ? String.valueOf(depMgr.getDepartmentID()) : ParkBank.getUnmodifiableMap().get(parkCmb.getValue())
         };

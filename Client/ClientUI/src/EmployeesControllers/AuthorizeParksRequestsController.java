@@ -1,7 +1,6 @@
 package EmployeesControllers;
 
 import CommonClient.ClientUI;
-import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
@@ -20,8 +19,8 @@ import javafx.scene.text.Text;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import static CommonClient.Utils.parseVisitTime;
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class AuthorizeParksRequestsController extends BaseController {
     @FXML

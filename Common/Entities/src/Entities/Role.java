@@ -78,6 +78,12 @@ public enum Role {
         }
     }
 
+    /**
+     * Converts a Role enum to its corresponding string representation.
+     *
+     * @param role The Role enum to convert.
+     * @return The string representation of the input Role enum, or null if no matching string is found.
+     */
     public static String roleToString(Role role) {
         switch (role) {
             case ROLE_GUEST:

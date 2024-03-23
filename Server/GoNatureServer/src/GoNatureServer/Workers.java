@@ -3,7 +3,7 @@ package GoNatureServer;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
-import ServerUIPageController.ServerPortFrameController;
+import ServerUIPageController.ServerUIFrameController;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +16,7 @@ public class Workers {
 
     private static final List<ScheduledExecutorService> executors = new ArrayList<>();
 
-    public static void startClientProcessingThread(ServerPortFrameController controller, AbstractServer server) {
+    public static void startClientProcessingThread(ServerUIFrameController controller, AbstractServer server) {
         new Thread(() -> {
             try {
                 while (server != null && server.isListening()) {
@@ -38,7 +38,7 @@ public class Workers {
         }, "Client Processing Thread").start();
     }
 
-    public static void SendReminderDayBeforeWorker(DBConnection db, ServerPortFrameController controller) {
+    public static void SendReminderDayBeforeWorker(DBConnection db, ServerUIFrameController controller) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {
@@ -59,7 +59,7 @@ public class Workers {
         executors.add(scheduler);
     }
 
-    public static void CancelOrdersThatDidntConfirmWorker(DBConnection db, ServerPortFrameController controller) {
+    public static void CancelOrdersThatDidntConfirmWorker(DBConnection db, ServerUIFrameController controller) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {

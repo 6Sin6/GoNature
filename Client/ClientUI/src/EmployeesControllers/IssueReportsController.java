@@ -33,6 +33,7 @@ public class IssueReportsController extends BaseController {
         errMsg.setText("");
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
+        reportCmb.getItems().clear();
     }
 
 
@@ -55,10 +56,15 @@ public class IssueReportsController extends BaseController {
         errMsg.setText("");
 
 
+        String reportType = parkManagerPage ?
+                Utils.parkManagerReportsMap.get(selectedReport) :
+                    Utils.departmentReportsMap.get(selectedReport) != null ? Utils.departmentReportsMap.get(selectedReport) :
+                            Utils.parkManagerReportsMap.get(selectedReport);
+
         Message msg = new Message(
                 OpCodes.OP_GENERATE_REPORT_BLOB,
                 applicationWindowController.getUser().getUsername(),
-                parkManagerPage ? Utils.parkManagerReportsMap.get(selectedReport) : Utils.departmentReportsMap.get(selectedReport)
+                reportType
         );
 
         ClientUI.client.accept(msg);

@@ -45,11 +45,4 @@ public class ParkManagerDashboardPageController extends BaseController {
             ((ViewReportsPageController) applicationWindowController.getCurrentActiveController()).start();
         }
     }
-
-    @FXML
-    public void OnClickGenerateReportsButton(ActionEvent event)
-    {
-        applicationWindowController.loadEmployeesPage("PrepareReportsPage");
-    }
-
 }

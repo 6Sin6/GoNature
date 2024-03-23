@@ -2,16 +2,18 @@ package DataBase;
 
 import Entities.*;
 import GoNatureServer.GmailSender;
-import ServerUIPageController.ServerPortFrameController;
+import ServerUIPageController.ServerUIFrameController;
+import com.itextpdf.text.DocumentException;
 
-
-
-
+import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.*;
+import static GoNatureServer.GoNatureServer.createExitTime;
 
 /**
  * Manages the database connection for the application.
@@ -24,7 +26,7 @@ public class DBConnection {
     private static DBConnection dbConnection;
     private String schemaName;
 
-    private final ServerPortFrameController serverController;
+    private final ServerUIFrameController serverController;
 
     private DBController dbController;
 
@@ -36,7 +38,7 @@ public class DBConnection {
      * @param controller The server port frame controller used for retrieving
      *                   connection details and logging.
      */
-    private DBConnection(ServerPortFrameController controller) throws ClassNotFoundException, SQLException {
+    private DBConnection(ServerUIFrameController controller) throws ClassNotFoundException, SQLException {
         this.serverController = controller;
         if (!driverDefinition()) {
             throw new ClassNotFoundException("Driver definition failed");
@@ -47,6 +49,10 @@ public class DBConnection {
         this.dbController = new DBController(conn);
     }
 
+    public DBController getDbController() {
+        return dbController;
+    }
+
     /**
      * Provides the singleton instance of the DBConnection.
      * If the instance does not exist, it is created using the provided controller.
@@ -55,7 +61,7 @@ public class DBConnection {
      *                   connection details and logging.
      * @return The singleton instance of DBConnection.
      */
-    public static DBConnection getInstance(ServerPortFrameController controller) throws Exception {
+    public static DBConnection getInstance(ServerUIFrameController controller) throws Exception {
         if (dbConnection == null) {
             dbConnection = new DBConnection(controller);
         }
@@ -156,8 +162,8 @@ public class DBConnection {
                             ResultSet managerData = dbController.selectRecords(this.schemaName + ".park_employees", "ParkID=" + userGoNatureData.getString("ParkID") + " AND isParkManager=true");
                             if (parkData.next() && managerData.next()) {
                                 return new ParkEmployee(
-                                        userCredentials.getString("firstname"),
-                                        userCredentials.getString("lastname"),
+                                        userGoNatureData.getString("firstname"),
+                                        userGoNatureData.getString("lastname"),
                                         userCredentials.getString("username"),
                                         "",
                                         userGoNatureData.getString("EmailAddress"),
@@ -225,8 +231,8 @@ public class DBConnection {
 
                                                 )
                                         ),
-                                        userCredentials.getString("firstName"),
-                                        userCredentials.getString("lastName")
+                                        userGoNatureData.getString("firstName"),
+                                        userGoNatureData.getString("lastName")
                                 );
                             }
                         default:
@@ -524,6 +530,10 @@ public class DBConnection {
 
             String tableName2 = this.schemaName + ".payments";
             String columns = "OrderID, paid, price";
+            ResultSet orderPayment = dbController.selectRecordsFields(tableName2, "OrderID=" + orderID, "paid");
+            if (orderPayment.next()) {
+                return true;
+            }
 
             if (!dbController.insertRecord(tableName2, columns, orderID, "true", String.valueOf(order.getNumOfVisitors() * Order.pricePerVisitor))) {
                 this.serverController.addtolog("Insert into " + this.schemaName + ".payments failed. Mark order as paid:" + orderID);
@@ -689,6 +699,100 @@ public class DBConnection {
         }
     }
 
+    public String getDepartmentIDByManagerID(String managerID) {
+        try {
+            String tableName = this.schemaName + ".department_managers";
+            String whereClause = "username='" + managerID + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "departmentID");
+            if (results.next()) {
+                return results.getString("departmentID");
+            }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean generateVisitationReport(String departmentID) {
+        try {
+            String reportName = "visitations";
+            String parkTableName = this.schemaName + ".parks";
+            String parkWhereClause = "departmentID='" + departmentID + "'";
+
+            // Retrieve ParkIDs matching the departmentID
+            ResultSet parkResults = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
+            StringBuilder parkIDs = new StringBuilder();
+            while(parkResults.next()) {
+                if (parkIDs.length() > 0) {
+                    parkIDs.append(", ");
+                }
+                parkIDs.append("'").append(parkResults.getString("ParkID")).append("'");
+            }
+
+            String ordersTableName = this.schemaName + ".orders" + " AS o";
+            String joinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
+            String visitationDateField = "DATE(o.VisitationDate) AS VisitationDate";
+            String avgTimeSpentFieldSingleFamilyOrders = "CAST(AVG(CASE WHEN o.OrderType = 1 THEN TIMESTAMPDIFF(MINUTE, o.EnteredTime, o.ExitedTime) END) AS DOUBLE) AS AverageTimeSpent_1";
+            String avgTimeSpentFieldGroupOrders = "CAST(AVG(CASE WHEN o.OrderType = 2 THEN TIMESTAMPDIFF(MINUTE, o.EnteredTime, o.ExitedTime) END) AS DOUBLE) AS AverageTimeSpent_2";
+            String ordersWhereClause =
+                    "p.departmentID='" + departmentID + "' AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) <= DAY(CURRENT_DATE) AND (orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + " OR orderStatus=" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + ") GROUP BY DATE(o.VisitationDate)";
+            String orderByClause = " ORDER BY DATE(VisitationDate) ASC";
+            ResultSet results =
+                    dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + orderByClause, visitationDateField, avgTimeSpentFieldSingleFamilyOrders, avgTimeSpentFieldGroupOrders);
+
+            String entranceSelectFields = "o.ParkID, p.ParkName, o.OrderType, o.VisitationDate AS ReservationTime, o.EnteredTime AS EntranceTime, TIMEDIFF(o.ExitedTime, o.EnteredTime) AS TimeSpent";
+            String entranceWhereClause = "o.ParkID IN (" + parkIDs + ") AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) < DAY(CURRENT_DATE)";
+            String entranceJoinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
+            String entranceOrderByClause = " ORDER BY o.ParkID, ReservationTime ASC";
+            ResultSet entranceResults = dbController.selectRecordsFields(ordersTableName + entranceJoinClause, entranceWhereClause + entranceOrderByClause, entranceSelectFields);
+
+            VisitationReport visitationReport = new VisitationReport(Integer.valueOf(departmentID), "timespent", results);
+            visitationReport.addReportData("entrance", entranceResults);
+
+
+            Blob generatedBlob = visitationReport.createPDFBlob();
+            results.close();
+            entranceResults.close();
+
+            ResultSet blobData = dbController.selectRecordsFields(this.schemaName + ".department_manager_reports", "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'", "blobData");
+            String reportTableName = this.schemaName + ".department_manager_reports";
+            if (blobData.next()) {
+                if (!dbController.updateBlobRecord(reportTableName, "blobData", generatedBlob, "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'")) {
+                    this.serverController.addtolog("Update in " + reportTableName + " failed. Update visitation report");
+                    return false;
+                }
+                return true;
+            }
+
+            String columns = "departmentId, reportType, month, year, blobData";
+            String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+            if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
+                this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
+                return false;
+            }
+
+            return true;
+        } catch (SQLException | DocumentException | IOException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean generateCancellationsReport(String departmentID) {
+        try {
+            String parkTableName = this.schemaName + ".parks";
+            String parkWhereClause = "departmentID='" + departmentID + "'";
+
+            // Retrieve ParkIDs matching the departmentID
+            ResultSet parkResults = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
+            return true;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
     // =================================================================================================================//
     //                                                                                                                 //
     //                                           WORKER EXCLUSIVE METHODS                                              //
@@ -759,7 +863,7 @@ public class DBConnection {
                         CancelledOrders.add(order);
                     }
                 }
-                sendMails(CancelledOrders,"Order Cancelled Notification","cancelled");
+                sendMails(CancelledOrders, "Order Cancelled Notification", "cancelled");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
@@ -776,19 +880,39 @@ public class DBConnection {
     {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "'";
-            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime");
-            if (!resultSet.next())
-                return "Order id doesn`t exist.";
-            if (resultSet.getTimestamp("ExitedTime") != null)
-                return  "Order has already exited.";
+            String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
+            if (!results.next()) {
+                return "Order ID does not exist.";
+            }
 
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause))
-                return "failed exiting, please try again.";
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp exitTime = results.getTimestamp("ExitedTime");
+            // Extract year and month components from the current time
+            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
+            int currentYear = currentDate.getYear();
+            int currentMonth = currentDate.getMonthValue();
+
+            // Extract year and month components from the exit time
+            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
+            int exitYear = exitDate.getYear();
+            int exitMonth = exitDate.getMonthValue();
+            if (currentYear != exitYear || currentMonth != exitMonth) {
+                return "Order is not for today.";
+            }
+
+            if (currentTime.compareTo(exitTime) > 0) {
+                return "Order has already been fulfilled.";
+            }
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
+                return "Update failed. Please try again.";
+            }
+
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return "Exiting failed to unknown reason, please try again later.";
+            return "Something went wrong... please try again later.";
         }
     }
 
@@ -797,31 +921,157 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".group-guides";
             String whereClause = "ID='" + groupGuideID + "'";
-            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "Active");
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
             if (!resultSet.next())
-                return "Group guide id doesn`t exist.";
-            if (!resultSet.getBoolean("pending"))
-                return  "Group guide is already active.";
+                return "Group guide ID does not exist.";
+            if (!resultSet.getBoolean("pendingStatus"))
+                return  "Group guide has already been authorized.";
 
-            if (!dbController.updateRecord(tableName, "pending=false", whereClause))
-                return "failed activating, please try again.";
+            if (!dbController.updateRecord(tableName, "pendingStatus=false", whereClause))
+                return "Group guide authorization failed. Try again later.";
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return "Activating failed to unknown reason, please try again later.";
+            return "Something went wrong... Please try again later.";
         }
     }
 
-    private void sendMails(ArrayList<ArrayList<String>> Orders,String Subject,String Type){
-        try{
+    private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
+        try {
             new Thread(() -> {
                 for (ArrayList<String> order : Orders) {
-                    GmailSender.sendEmail(order.get(1),Subject,"Hello Visitor " + order.get(2)+"\n"+"Your order id : "+order.get(0)+" is now "+Type);
+                    GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
                 }
             }).start();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             serverController.addtolog("Error sending email: " + e.getMessage());
         }
     }
+
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           END OF WORKER EXCLUSIVE METHODS                                       //
+    //                                                                                                                 //
+    //=================================================================================================================//
+
+    public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) {
+        try {
+            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "'" + checkOrder.getEnteredTime().toString().substring(0, checkOrder.getEnteredTime().toString().length() - 2) +
+                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
+                    + checkOrder.getParkID().toString() + "';";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("IsWithinCapacity");
+            return result != 0;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) {
+        try {
+            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "'" + checkOrder.getExitedTime().toString().substring(0, checkOrder.getExitedTime().toString().length() - 2) +
+                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
+                    + checkOrder.getParkID().toString() + "';";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("IsWithinCapacity");
+            return result != 0;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public Integer getExpectedTime(String parkID) {
+        try {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID='" + parkID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "DefaultVisitationTime");
+            if (!resultSet.next())
+                return null;
+            return resultSet.getInt("DefaultVisitationTime");
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<Timestamp> getAvailableTimeStamps(Order order) {
+        Order WorkingOrder = order;
+        List<Timestamp> availableHours = getNextWeekHours(order.getEnteredTime());
+        ArrayList<Timestamp> availableTimestamps = new ArrayList<>();
+        for (Timestamp hourDate : availableHours) {
+            WorkingOrder.setEnteredTime(hourDate);
+            WorkingOrder.setExitedTime(createExitTime(hourDate, getExpectedTime(WorkingOrder.getParkID())));
+            if (CheckAvailabilityAfterReservationTime(WorkingOrder) && CheckAvailabilityBeforeReservationTime(WorkingOrder)) {
+                availableTimestamps.add(hourDate);
+            }
+        }
+        return availableTimestamps;
+    }
+
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           IMPORT SIMULATOR METHODS                                              //
+    //                                                                                                                 //
+    //=================================================================================================================//
+
+    public void insertUser(String username, String password, int role) {
+        try {
+            String tableName = this.schemaName + ".users";
+            String columns = "username, password, role";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + password + "'", String.valueOf(role))) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert user:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertGroupGuide(String username, String ID, String email, String firstName, String lastName) {
+        try {
+            String tableName = this.schemaName + ".group_guides";
+            String columns = "ID, username, FirstName, LastName, EmailAddress, pendingStatus";
+            if (!dbController.insertRecord(tableName, columns, "'" + ID + "'", "'" + username + "'", "'" + firstName + "'", "'" + lastName + "'", "'" + email + "'", "true")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert group guide:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertParkEmployee(String username, String email, String parkID, String firstName, String lastName, boolean isParkManager, String ID) {
+        try {
+            String tableName = this.schemaName + ".park_employees";
+            String columns = "username, EmailAddress, ParkID, firstName, lastName, isParkManager, employeeID";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + email + "'", "'" + parkID + "'", "'" + firstName + "'", "'" + lastName + "'", String.valueOf(isParkManager), "'" + ID + "'")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert park manager:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertDepartmentManager(String username, String email, String departmentID, String firstName, String lastName, String ID) {
+        try {
+            String tableName = this.schemaName + ".department_managers";
+            String columns = "username, EmailAddress, departmentID, firstName, lastName, employeeID";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + email + "'", "'" + departmentID + "'", "'" + firstName + "'", "'" + lastName + "'", "'" + ID + "'")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert department manager:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
 }
+

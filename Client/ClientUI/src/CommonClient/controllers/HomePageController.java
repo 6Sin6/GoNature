@@ -3,6 +3,7 @@ package CommonClient.controllers;
 import CommonClient.ClientUI;
 import CommonClient.Utils;
 import CommonUtils.InputTextPopup;
+import CommonUtils.MessagePopup;
 import Entities.*;
 import VisitorsControllers.ConfirmVisitationPageController;
 import VisitorsControllers.HandleOrderDetailsPageController;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
@@ -139,12 +141,42 @@ public class HomePageController extends BaseController implements Initializable 
             Message message = new Message(OpCodes.OP_GET_VISITOR_ORDERS, inputID, visitor);
             ClientUI.client.accept(message);
             Message respondMsg = ClientCommunicator.msg;
+            if (respondMsg.getMsgOpcode() != OpCodes.OP_GET_VISITOR_ORDERS) {
+                onAuthPopup.setErrorLabel("Error getting orders");
+                return;
+            }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPage("/VisitorsUI/VisitorOrderVisitationPage.fxml");
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
             } else {
-                applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
-                applicationWindowController.loadMenu(new SingleVisitor(inputID));
+                ArrayList<Order> activeOrders = new ArrayList<>();
+                ArrayList<Order> OrdersToConfirm = new ArrayList<>();
+                boolean flag = false;
+                for (Order order : orders) {
+                    if (order.getOrderStatus() != OrderStatus.STATUS_CANCELLED &&
+                            order.getOrderStatus() != OrderStatus.STATUS_CONFIRMED_AND_ABSENT &&
+                            order.getOrderStatus() != OrderStatus.STATUS_FULFILLED) {
+                        activeOrders.add(order);
+                    }
+                    if (order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION) {
+                        flag = true;
+                        OrdersToConfirm.add(order);
+                    }
+                }
+                if (activeOrders.isEmpty()) {
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                } else {
+                    applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
+                    applicationWindowController.loadMenu(new SingleVisitor(inputID));
+                    if (flag) {
+                        StringBuilder ordersToConfirm = new StringBuilder();
+                        for (Order order : OrdersToConfirm) {
+                            ordersToConfirm.append(order.getOrderID()).append(" ");
+                        }
+                        MessagePopup messagePopup = new MessagePopup("Orders : " + ordersToConfirm + " are pending confirmation", Duration.seconds(5), 500, 300, false);
+                        messagePopup.show(applicationWindowController.getRoot());
+                    }
+                }
             }
 
         } else {

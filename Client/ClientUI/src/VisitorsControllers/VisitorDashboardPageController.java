@@ -1,6 +1,5 @@
 package VisitorsControllers;
 
-import CommonUtils.InputTextPopup;
 import Entities.SingleVisitor;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -40,10 +39,6 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     @FXML
     private ImageView pngViewOrders;
 
-
-    private final String orderPage = "/VisitorsUI/VisitorOrderVisitationPage.fxml";
-    private final String activeOrdersPage = "/VisitorsUI/ActiveOrdersPage.fxml";
-
     public void cleanup() {
         // Nothing to clean up
     }
@@ -56,13 +51,15 @@ public class VisitorDashboardPageController extends GeneralVisitorDashboard {
 
     @FXML
     public void OnClickOrderVisitButton(ActionEvent event) {
-        authenticateWithID(orderPage);
+        applicationWindowController.loadVisitorsPage("VisitorOrderVisitationPage");
     }
 
     @FXML
     public void OnClickViewOrdersButton(ActionEvent event) {
-        authenticateWithID(activeOrdersPage);
+        applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
+        Object controller = applicationWindowController.getCurrentActiveController();
+        if (controller instanceof ActiveOrdersPageController) {
+            ((ActiveOrdersPageController) controller).start();
+        }
     }
-
-
 }

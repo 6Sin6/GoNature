@@ -1,6 +1,7 @@
 package ServerUIPageController;
 
 import GoNatureServer.GoNatureServer;
+import GoNatureServer.ImportSimulator;
 import ServerUIPage.ServerUI;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class ServerPortFrameController implements Initializable {
+public class ServerUIFrameController implements Initializable {
     ObservableList<String> list;
 
     @FXML
@@ -65,6 +66,9 @@ public class ServerPortFrameController implements Initializable {
     private Button BtnStop;
 
     @FXML
+    private MFXButton importBtn;
+
+    @FXML
     private TextField portxt;
 
     @FXML
@@ -78,9 +82,6 @@ public class ServerPortFrameController implements Initializable {
 
     @FXML
     private TableColumn<Map, String> colStatus;
-
-
-
 
     public String getPort() {
         return portxt.getText();
@@ -101,9 +102,9 @@ public class ServerPortFrameController implements Initializable {
     }
 
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerPort.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerUIFrame.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerPort.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerUIFrame.css").toExternalForm());
 
         Image windowImage = new Image("/assets/GoNatureServerLogo.png");
         primaryStage.getIcons().add(windowImage);
@@ -150,9 +151,6 @@ public class ServerPortFrameController implements Initializable {
         list = FXCollections.observableArrayList(UrlComboList);
         URLComboBox.setItems(list);
     }
-
-
-
 
     public String getURLComboBox() {
         return (String) URLComboBox.getValue();
@@ -203,6 +201,7 @@ public class ServerPortFrameController implements Initializable {
         // Use removeIf with a predicate to remove rows matching the condition
         tableClients.getItems().removeIf(row -> ip.equals(row.get("ip")));
     }
+
     @FXML
     public void toggleControllers(boolean flag) {
         btnStart.setDisable(flag);
@@ -211,5 +210,10 @@ public class ServerPortFrameController implements Initializable {
         URLComboBox.setDisable(flag);
         portxt.setDisable(flag);
         BtnStop.setDisable(!flag);
+    }
+
+    @FXML
+    void importUsers(ActionEvent event) throws Exception {
+        ServerUI.initializeImportSimulator(this);
     }
 }

@@ -1,10 +1,8 @@
 package DataBase;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -45,6 +43,46 @@ public class DBController {
         return false;
     }
 
+
+    /**
+     * Inserts a new record into the specified table and logs the action.
+     *
+     * @param tableName The name of the table where the record will be inserted.
+     * @param columns   The columns to insert into the table. Assumes a prepared statement format.
+     * @param blob      The blob to insert into the table.
+     * @param values    The values to insert into the table. Assumes a prepared statement format.
+     * @return true if the insert operation was successful, false otherwise.
+     */
+    public boolean insertBlobRecord(String tableName, String columns, Blob blob, String... values) throws SQLException {
+        if (tableName.isEmpty()) {
+            throw new SQLException("Table name cannot be empty");
+        }
+        // Generate parameter placeholders for prepared statement
+        String[] placeholders = new String[values.length];
+        Arrays.fill(placeholders, "?");
+        String valuesPlaceholder = String.join(", ", placeholders);
+
+        String sql = "INSERT INTO " + tableName + "(" + columns + ")" + " VALUES (" + valuesPlaceholder + ", ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            // Set other parameters
+            for (int i = 0; i < values.length; i++) {
+                pstmt.setString(i + 1, values[i]);
+            }
+            // Set Blob parameter
+            pstmt.setBlob(values.length + 1, blob);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Insert into " + tableName + " failed: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+
     /**
      * Updates records in the specified table and logs the action.
      *
@@ -67,6 +105,36 @@ public class DBController {
             throw new SQLException("Update in " + tableName + " failed: " + e.getMessage());
         }
     }
+
+    /**
+     * Updates an existing record in the specified table with the provided blob data and where clause, and logs the action.
+     *
+     * @param tableName  The name of the table where the record will be updated.
+     * @param blobColumn The name of the column containing the blob data.
+     * @param blob       The new blob data to update in the table.
+     * @param whereClause The WHERE clause to specify which record(s) to update. Assumes a prepared statement format.
+     * @return true if the update operation was successful, false otherwise.
+     */
+    public boolean updateBlobRecord(String tableName, String blobColumn, Blob blob, String whereClause) throws SQLException {
+        if (tableName.isEmpty() || blobColumn.isEmpty() || whereClause.isEmpty()) {
+            throw new SQLException("Table name, blob column name, and where clause cannot be empty");
+        }
+
+        String sql = "UPDATE " + tableName + " SET " + blobColumn + " = ? WHERE " + whereClause;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            // Set Blob parameter
+            pstmt.setBlob(1, blob);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Update " + tableName + " failed: " + e.getMessage());
+        }
+        return false;
+    }
+
 
 
     /**

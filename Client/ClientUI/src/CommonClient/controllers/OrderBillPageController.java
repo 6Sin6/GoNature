@@ -54,7 +54,7 @@ public class OrderBillPageController extends BaseController {
     private Text priceTxt;
 
     private MessagePopup messageController;
-    private boolean referredByEmployee;
+    private boolean groupGuidePage;
 
     public void cleanup() {
         discountTxt.setText("");
@@ -76,10 +76,10 @@ public class OrderBillPageController extends BaseController {
 
     public void proceedToPayment() {
         messageController.closePopup(true);
-        if (referredByEmployee) {
+        if (!groupGuidePage) {
             applicationWindowController.loadEmployeesPage("GenerateBillPage");
         } else {
-            applicationWindowController.loadVistorsPage("ActiveOrdersPage");
+            applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof ActiveOrdersPageController) {
                 ((ActiveOrdersPageController) controller).start();
@@ -89,7 +89,7 @@ public class OrderBillPageController extends BaseController {
     }
 
     public void start(Order order, boolean referredPostOrder) {
-        this.referredByEmployee = referredPostOrder;
+        this.groupGuidePage = referredPostOrder;
         signatureTxt.setVisible(!referredPostOrder);
 
 

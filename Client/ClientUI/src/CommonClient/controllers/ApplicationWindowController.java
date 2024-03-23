@@ -94,12 +94,9 @@ public class ApplicationWindowController implements Initializable {
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
-                    String prefix = user instanceof SingleVisitor ? "Visitor ID : " : "User : ";
+                    String prefix = user instanceof SingleVisitor ? "Visitor ID: " : "User: ";
                     menuController.setUsername(prefix + user.getUsername());
                     menuController.buildMenuItems(this);
-                } else {
-                    // Handle the case where the controller wasn't retrieved successfully
-                    System.out.println("Failed to retrieve MenuSiderController.");
                 }
             }
             mainPane.setLeft(menuSider);
@@ -121,17 +118,35 @@ public class ApplicationWindowController implements Initializable {
             if (!Objects.equals(fxmlPath, "/CommonClient/gui/LoginPage.fxml") &&
                     !Objects.equals(fxmlPath, "/CommonClient/gui/HomePage.fxml")) {
                 newMenu = menuSider;
-            } else {
-                ((BaseController) currentActiveController).cleanup();
             }
             mainPane.setLeft(newMenu);
         }
     }
 
+    public void setCenterPageForNewVisitor(String fxmlPath, User user) {
+        setUser(user);
+        setCenterPage(fxmlPath);
+    }
+
     public void logout() {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
-        loadDashboardPage(Role.ROLE_GUEST);
+        String pathTorRoute;
+        if (user instanceof SingleVisitor) {
+            pathTorRoute = "/CommonClient/gui/HomePage.fxml";
+        } else {
+            pathTorRoute = "/CommonClient/gui/LoginPage.fxml";
+        }
+        setCenterPage(pathTorRoute);
+        this.user = null;
+        menuSider = null;
+    }
+
+    public void homepage() {
+        Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
+        ClientUI.client.accept(msg);
+        String pathTorRoute = "/CommonClient/gui/HomePage.fxml";
+        setCenterPage(pathTorRoute);
         this.user = null;
         menuSider = null;
     }
@@ -154,10 +169,8 @@ public class ApplicationWindowController implements Initializable {
         EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
         EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
         EmployeesPagesMap.put("GenerateBillPage", "/EmployeesUI/GenerateBillPage.fxml");
-        EmployeesPagesMap.put("IssueCancellationReportPage", "/EmployeesUI/IssueCancellationReportPage.fxml");
         EmployeesPagesMap.put("IssueReportsPage", "/EmployeesUI/IssueReportsPage.fxml");
         EmployeesPagesMap.put("ViewReportsPage", "/EmployeesUI/ViewReportsPage.fxml");
-        EmployeesPagesMap.put("IssueVisitationReportPage", "/EmployeesUI/IssueVisitationReportPage.fxml");
         EmployeesPagesMap.put("PrepareNumberOfVisitorsReportPage", "/EmployeesUI/PrepareNumberOfVisitorsReportPage.fxml");
         EmployeesPagesMap.put("PrepareReportsPage", "/EmployeesUI/PrepareReportsPage.fxml");
         EmployeesPagesMap.put("PrepareUsageReportPage", "/EmployeesUI/PrepareUsageReportPage.fxml");
@@ -187,7 +200,7 @@ public class ApplicationWindowController implements Initializable {
         VisitorsPagesMap.put("UpdateOrderDetailsPage", "/VisitorsUI/UpdateOrderDetailsPage.fxml");
     }
 
-    public void loadVistorsPage(String NameOfFxml) {
+    public void loadVisitorsPage(String NameOfFxml) {
         String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {
             setCenterPage(fxmlPath);

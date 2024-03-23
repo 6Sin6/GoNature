@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static CommonUtils.CommonUtils.parseVisitDate;
+import static CommonUtils.CommonUtils.parseVisitTime;
+
 
 public class ActiveOrdersPageController extends BaseController implements Initializable {
 
@@ -70,7 +73,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private int rowIndex;
 
-    private ArrayList<Order> list= new ArrayList<>();;
+    private ArrayList<Order> list= new ArrayList<>();
 
     public void cleanup() {
         rowIndex = -1;
@@ -85,10 +88,11 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return;
         }
         Order o1 = list.get(rowIndex);
-        applicationWindowController.loadVistorsPage("UpdateOrderDetailsPage");
+        applicationWindowController.loadVisitorsPage("UpdateOrderDetailsPage");
         Object controller = applicationWindowController.getCurrentActiveController();
         if (controller instanceof UpdateOrderDetailsPageController) {
             ((UpdateOrderDetailsPageController) controller).setFields(o1);
+            ((UpdateOrderDetailsPageController) controller).setOrdersList(list);
         }
 
     }
@@ -135,8 +139,8 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             }
             list.add(item);
             Timestamp orderTimeStamp = item.getVisitationDate();
-            String date = CommonClient.Utils.parseVisitDate(orderTimeStamp);
-            String time = CommonClient.Utils.parseVisitTime(orderTimeStamp);
+            String date = parseVisitDate(orderTimeStamp);
+            String time = parseVisitTime(orderTimeStamp);
             Map<String, String> row = new HashMap<>();
             row.put("Order Number", item.getOrderID());
             row.put("Park Name", ParkBank.getParkNameByID(item.getParkID()));

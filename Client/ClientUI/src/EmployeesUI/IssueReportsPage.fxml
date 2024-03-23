@@ -26,7 +26,7 @@
             </Text>
             <Label layoutX="443.0" layoutY="436.0" text="Report Type" />
             <ComboBox fx:id="reportCmb" layoutX="336.0" layoutY="460.0" prefHeight="39.0" prefWidth="278.0" />
-            <Label fx:id="generateResultMsg" layoutX="415.0" layoutY="590.0" prefHeight="17.0" prefWidth="347.0" />
+            <Label fx:id="generateResultMsg" layoutX="359.0" layoutY="590.0" prefHeight="17.0" prefWidth="347.0" />
             <Label fx:id="errMsg" layoutX="374.0" layoutY="506.0" prefHeight="17.0" prefWidth="305.0" styleClass="error-text" />
             <MFXButton fx:id="btnGenerateReport" layoutX="145.0" layoutY="529.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="Generate Report" />
          </children>
