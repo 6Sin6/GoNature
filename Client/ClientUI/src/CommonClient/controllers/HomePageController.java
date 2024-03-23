@@ -173,7 +173,7 @@ public class HomePageController extends BaseController implements Initializable 
                         for (Order order : OrdersToConfirm) {
                             ordersToConfirm.append(order.getOrderID()).append(" ");
                         }
-                        MessagePopup messagePopup = new MessagePopup("Orders : " + ordersToConfirm + " are pending confirmation", Duration.seconds(5), 500, 300, false);
+                        MessagePopup messagePopup = new MessagePopup("Orders : " + ordersToConfirm + "\nare pending confirmation", Duration.seconds(5), 500, 300, false);
                         messagePopup.show(applicationWindowController.getRoot());
                     }
                 }

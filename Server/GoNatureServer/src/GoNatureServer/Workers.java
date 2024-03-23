@@ -50,6 +50,7 @@ public class Workers {
 
             controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
             db.updateOrderStatusForUpcomingVisits();
+            db.cancelOrdersInWaitlist24HoursBefore();
         };
 
         long initialDelay = calculateInitialDelay();

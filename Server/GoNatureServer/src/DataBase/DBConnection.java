@@ -834,6 +834,42 @@ public class DBConnection {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
         }
     }
+    public void cancelOrdersInWaitlist24HoursBefore() {
+        try {
+            ArrayList<ArrayList<String>> Orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 23 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 24 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_WAITLIST.getOrderStatus());
+            try {
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
+                while (rs.next()) {
+                    Orders.add(new ArrayList<>());
+                    Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("VisitorID"));
+
+                }
+            } catch (SQLException e) {
+                serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+                return;
+            }
+
+            // Update the status of selected orders to pending confirmation
+            if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> WaitListOrdersCancelled = new ArrayList<>();
+                for (ArrayList<String> order : Orders) {
+                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
+                        serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
+                    }
+                    else{
+                        WaitListOrdersCancelled.add(order);
+                    }
+                }
+                sendMails(WaitListOrdersCancelled,"Order Cancel Notification","canceled");
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
+        }
+    }
 
     public void ChangeLatePendingConfirmationToCancelled() {
         try {

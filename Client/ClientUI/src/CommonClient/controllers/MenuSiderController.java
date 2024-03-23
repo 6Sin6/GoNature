@@ -153,6 +153,9 @@ public class MenuSiderController extends BaseController {
                 btnAct1.setOnAction(visitorController::OnClickViewOrdersButton);
                 btnAct2.setText("Make an Order");
                 btnAct2.setOnAction(visitorController::OnClickOrderVisitButton);
+                btnAct3.setVisible(true);
+                btnAct3.setText("Awaiting Confirmation");
+                btnAct3.setOnAction(visitorController::OnClickViewConfirmationsOrdersButton);
                 break;
         }
     }

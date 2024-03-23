@@ -198,6 +198,7 @@ public class ApplicationWindowController implements Initializable {
         VisitorsPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
         VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
         VisitorsPagesMap.put("UpdateOrderDetailsPage", "/VisitorsUI/UpdateOrderDetailsPage.fxml");
+        VisitorsPagesMap.put("OrdersWaitingConfirmation", "/VisitorsUI/OrdersWaitingConfirmation.fxml");
     }
 
     public void loadVisitorsPage(String NameOfFxml) {
