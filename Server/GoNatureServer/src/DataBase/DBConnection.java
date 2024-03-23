@@ -444,9 +444,9 @@ public class DBConnection {
     /**
      * Checks if an order exists for a specific visitor, park, and visitation date.
      *
-     * @param visitorID       The ID of the visitor.
-     * @param parkID          The ID of the park.
-     * @param visitationDate  The visitation date.
+     * @param visitorID      The ID of the visitor.
+     * @param parkID         The ID of the park.
+     * @param visitationDate The visitation date.
      * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
      */
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
@@ -468,8 +468,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     *         Returns a new Park object with default values if no matching park is found.
-     *         Returns null if a SQLException is thrown.
+     * Returns a new Park object with default values if no matching park is found.
+     * Returns null if a SQLException is thrown.
      */
     public Park getParkDetails(String parkID) {
         try {
@@ -723,7 +723,7 @@ public class DBConnection {
             // Retrieve ParkIDs matching the departmentID
             ResultSet parkResults = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
             StringBuilder parkIDs = new StringBuilder();
-            while(parkResults.next()) {
+            while (parkResults.next()) {
                 if (parkIDs.length() > 0) {
                     parkIDs.append(", ");
                 }
@@ -766,7 +766,7 @@ public class DBConnection {
             }
 
             String columns = "departmentId, reportType, month, year, blobData";
-            String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+            String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear())};
             if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
                 this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
                 return false;
@@ -823,17 +823,17 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    }
-                    else{
+                    } else {
                         PendingConfirmationOrders.add(order);
                     }
                 }
-                sendMails(PendingConfirmationOrders,"Order Confirmation Notification","awaiting confirmation");
+                sendMails(PendingConfirmationOrders, "Order Confirmation Notification", "awaiting confirmation");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
         }
     }
+
     public void cancelOrdersInWaitlist24HoursBefore() {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -859,12 +859,11 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    }
-                    else{
+                    } else {
                         WaitListOrdersCancelled.add(order);
                     }
                 }
-                sendMails(WaitListOrdersCancelled,"Order Cancel Notification","canceled");
+                sendMails(WaitListOrdersCancelled, "Order Cancel Notification", "canceled");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
@@ -877,7 +876,7 @@ public class DBConnection {
             String tableName = this.schemaName + ".orders";
             String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79320 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
             try {
-                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress","VisitorID");
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
                 while (rs.next()) {
                     Orders.add(new ArrayList<>());
                     Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
@@ -912,8 +911,7 @@ public class DBConnection {
      * @param orderID the order ID.
      * @return a message indicating the result of the operation, null if successful.
      */
-    public String setExitTimeOfOrder(String orderID)
-    {
+    public String setExitTimeOfOrder(String orderID) {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
@@ -952,8 +950,7 @@ public class DBConnection {
         }
     }
 
-    public String activateGroupGuide(String groupGuideID)
-    {
+    public String activateGroupGuide(String groupGuideID) {
         try {
             String tableName = this.schemaName + ".group-guides";
             String whereClause = "ID='" + groupGuideID + "'";
@@ -961,7 +958,7 @@ public class DBConnection {
             if (!resultSet.next())
                 return "Group guide ID does not exist.";
             if (!resultSet.getBoolean("pendingStatus"))
-                return  "Group guide has already been authorized.";
+                return "Group guide has already been authorized.";
 
             if (!dbController.updateRecord(tableName, "pendingStatus=false", whereClause))
                 return "Group guide authorization failed. Try again later.";
@@ -1108,6 +1105,10 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
         }
+    }
+
+    public boolean updateOrderStatusAsWaitList(String orderID) {
+        return updateOrderStatus(orderID, OrderStatus.STATUS_WAITLIST);
     }
 }
 

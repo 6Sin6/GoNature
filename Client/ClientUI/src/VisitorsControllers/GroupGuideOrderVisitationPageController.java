@@ -73,6 +73,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     private MFXTextField txtPhone;
     @FXML
     private Label label;
+
     public void cleanup() {
         txtEmail.clear();
         txtFirstName.clear();
@@ -173,45 +174,48 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         label.setText("");
         VisitorGroupGuide guide = (VisitorGroupGuide) applicationWindowController.getUser();
         Timestamp timeOfVisit = CommonUtils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
-        Order order = new Order(guide.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_GROUP, (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue())));
+        Order order = new Order(guide.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, null, null, OrderType.ORD_TYPE_GROUP, (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue())));
         Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, guide.getUsername(), order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION) {
-            throw new CommunicationException("Respond not appropriate from server");
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
+            throw new CommunicationException("Response from server is not appropriate");
         }
-        if (respondMsg.getMsgData() instanceof Order) {
-            if (((Order) respondMsg.getMsgData()).getOrderID() != null) {
-                Order cnfrmorder = (Order) respondMsg.getMsgData();
-                String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
-                ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
-                {
-                    applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                }
-                        , 600, 300, false, "OK", false);
-                confirmPopup.show(applicationWindowController.getRoot());
-            } else {
-                String strForPopup = "The park is Full Do you want to enter for waitlist?";
-                ConfirmationPopup confirmPopup;
-                confirmPopup = new ConfirmationPopup(strForPopup, () ->
-                {
-                    applicationWindowController.setCenterPage("/VisitorsUI/WaitListPage");
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                }, () -> {
-                    applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                },
-                        300, 150, false, "Yes", "No", false);
-                confirmPopup.show(applicationWindowController.getRoot());
+        Order cnfrmorder = (Order) respondMsg.getMsgData();
+        if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+                applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
+                applicationWindowController.loadMenu(applicationWindowController.getUser());
+                clearFields();
             }
+                    , 600, 300, false, "OK", false);
+            confirmPopup.show(applicationWindowController.getRoot());
         } else {
-            label.setText("The order is not created");
+            String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
+            ConfirmationPopup confirmPopup;
+            String fullName = "" + txtFirstName.getText() + " " + txtLastName.getText();
+            confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+                applicationWindowController.loadVisitorsPage("WaitListPage");
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (controller instanceof WaitListPageController) {
+                    ((WaitListPageController) controller).setFields(order, fullName);
+                }
+                clearFields();
+            }, () -> {
+                applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (controller instanceof AlternativeTimesTableController) {
+                    ((AlternativeTimesTableController) controller).start(order, fullName);
+                }
+            },
+                    800, 400, false, "Yes", "No", false);
+            confirmPopup.show(applicationWindowController.getRoot());
         }
+
     }
 
     /**

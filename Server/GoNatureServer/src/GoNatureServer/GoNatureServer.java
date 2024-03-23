@@ -175,6 +175,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_GET_AVAILABLE_SPOTS:
                     handleGetAvailableSpots(message, client);
                     break;
+                case OP_INSERT_VISITATION_TO_WAITLIST:
+                    handleCreateNewVisitationForWaitList(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -387,7 +390,7 @@ public class GoNatureServer extends AbstractServer {
         String reportType = (String) message.getMsgData();
         boolean isGenerated = false;
         String departmentID = null;
-        switch(reportType) {
+        switch (reportType) {
             case "visitations":
                 departmentID = db.getDepartmentIDByManagerID(message.getMsgUserName());
                 if (departmentID == null) {
@@ -434,6 +437,22 @@ public class GoNatureServer extends AbstractServer {
     }
 
 
+    private void handleCreateNewVisitationForWaitList(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
+        if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
+            Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+            client.sendToClient(createOrderMsg);
+            return;
+        }
+        order.setOrderStatus(OrderStatus.STATUS_WAITLIST);
+        Order newOrder = db.addOrder(order);
+        Message createOrderMsg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, message.getMsgUserName(), newOrder);
+        client.sendToClient(createOrderMsg);
+
+
+    }
+
     /**
      * This method overrides the one in the superclass.  Called
      * when the server stops listening for connections.
@@ -469,5 +488,6 @@ public class GoNatureServer extends AbstractServer {
             server.controller.addtolog("Server isn't initialized");
         }
     }
+
 }
 //End of GoNatureServer class

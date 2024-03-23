@@ -73,7 +73,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private int rowIndex;
 
-    private ArrayList<Order> list= new ArrayList<>();
+    private ArrayList<Order> list = new ArrayList<>();
 
     public void cleanup() {
         rowIndex = -1;
@@ -114,8 +114,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         ClientUI.client.accept(send);
         if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
             populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
-        }
-        else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR){
+        } else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
             MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
             popup.show(applicationWindowController.getRoot());
         }

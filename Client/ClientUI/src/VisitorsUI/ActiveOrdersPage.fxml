@@ -10,29 +10,33 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0"
+           prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="VisitorsControllers.ActiveOrdersPageController">
     <children>
         <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
             <children>
-                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Text fx:id="txtHeader" layoutX="366.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
+                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0"/>
+                <Text fx:id="txtHeader" layoutX="366.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="WaitListOption">
                     <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font name="System Bold" size="36.0"/>
                     </font>
                 </Text>
                 <TableView fx:id="tableOrders" layoutY="82.0" prefHeight="538.0" prefWidth="950.0">
                     <columns>
-                        <TableColumn fx:id="colOrderNumber" prefWidth="118.0" text="Order Number" />
-                        <TableColumn fx:id="colParkName" prefWidth="112.0" text="Park Name" />
-                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="126.0" text="Number Of Visitors" />
-                        <TableColumn fx:id="colTelephone" prefWidth="143.0" text="Telephone" />
-                        <TableColumn fx:id="colEmail" prefWidth="143.0" text="Email" />
-                        <TableColumn fx:id="colDate" prefWidth="130.0" text="Date" />
-                        <TableColumn fx:id="colTime" prefWidth="177.0" text="Time" />
+                        <TableColumn fx:id="colOrderNumber" prefWidth="118.0" text="Order Number"/>
+                        <TableColumn fx:id="colParkName" prefWidth="112.0" text="Park Name"/>
+                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="126.0" text="Number Of Visitors"/>
+                        <TableColumn fx:id="colTelephone" prefWidth="143.0" text="Telephone"/>
+                        <TableColumn fx:id="colEmail" prefWidth="143.0" text="Email"/>
+                        <TableColumn fx:id="colDate" prefWidth="130.0" text="Date"/>
+                        <TableColumn fx:id="colTime" prefWidth="177.0" text="Time"/>
                     </columns>
                 </TableView>
-                <MFXButton fx:id="handleOrderbtn" layoutX="425.0" layoutY="625.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
-            <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0" />
+                <MFXButton fx:id="handleOrderbtn" layoutX="425.0" layoutY="625.0" onAction="#OnClickHandleOrderButton"
+                           prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order"/>
+                <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0"/>
             </children>
         </Pane>
     </children>
