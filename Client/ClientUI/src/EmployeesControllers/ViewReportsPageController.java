@@ -88,6 +88,21 @@ public class ViewReportsPageController extends BaseController {
             reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
         }
         reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
+        reportCmb.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onSelectReport());
+    }
+
+    void onSelectReport() {
+        String selectedReport = reportCmb.getValue();
+        if (selectedReport == null) {
+            return;
+        }
+
+        if (Utils.parkManagerReportsMap.containsKey(selectedReport)) {
+            parkCmb.setDisable(false);
+        } else {
+            parkCmb.setDisable(true);
+            parkCmb.setValue("All Parks");
+        }
     }
 
     @FXML

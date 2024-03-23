@@ -16,13 +16,13 @@
                     <Font name="System Bold" size="18.0" />
                 </font>
             </Text>
-            <Text fx:id="typeDescTxt" layoutX="24.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />
+            <Text fx:id="typeDescTxt" layoutX="26.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />
             <Text layoutX="124.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of visitors:" wrappingWidth="215.0">
                 <font>
                     <Font size="18.0" />
                 </font>
             </Text>
-            <Text fx:id="numVisitorsTxt" layoutX="295.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="43.4970703125">
+            <Text fx:id="numVisitorsTxt" layoutX="278.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="43.4970703125">
                 <font>
                     <Font size="18.0" />
                 </font>
@@ -38,7 +38,7 @@
                     <Font size="18.0" />
                 </font>
             </Text>
-            <Text fx:id="discountTxt" layoutX="221.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0">
+            <Text fx:id="discountTxt" layoutX="204.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0">
                 <font>
                     <Font size="18.0" />
                 </font>
@@ -48,7 +48,7 @@
                     <Font size="18.0" />
                 </font>
             </Text>
-            <Text fx:id="priceAfterDiscTxt" layoutX="261.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0">
+            <Text fx:id="priceAfterDiscTxt" layoutX="261.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0">
                 <font>
                     <Font name="System Bold" size="18.0" />
                 </font>
@@ -58,7 +58,7 @@
                     <Font size="18.0" />
                 </font>
             </Text>
-            <Text fx:id="fullPriceTxt" layoutX="278.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="78.78515625">
+            <Text fx:id="fullPriceTxt" layoutX="253.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="78.78515625">
                 <font>
                     <Font size="18.0" />
                 </font>
@@ -68,7 +68,7 @@
                     <Font size="14.0" />
                 </font>
             </Text>
-            <Text fx:id="orderTypeTxt" layoutX="144.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="299.712890625">
+            <Text fx:id="orderTypeTxt" layoutX="131.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="299.712890625">
                 <font>
                     <Font size="18.0" />
                 </font>
@@ -78,7 +78,7 @@
                     <Image url="/assets/GoNatureLogo.png" />
                 </image>
             </ImageView>
-         <Text fx:id="priceTxt" layoutX="278.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="68.0">
+         <Text fx:id="priceTxt" layoutX="255.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="68.0">
             <font>
                <Font size="18.0" />
             </font>
@@ -90,13 +90,13 @@
               <Font name="System Bold" size="24.0" />
           </font>
       </Text>
-      <Text fx:id="orderIdTxt" layoutX="524.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="78.78515625">
+      <Text fx:id="orderIdTxt" layoutX="500.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="78.78515625">
           <font>
               <Font name="System Bold" size="24.0" />
           </font>
       </Text>
       <Separator layoutX="10.0" layoutY="71.0" prefHeight="8.0" prefWidth="930.0" />
-   <MFXButton fx:id="proceedBtn" styleClass="actButtonGreen" layoutX="761.0" layoutY="676.0" onAction="#proceedToPayment" prefHeight="69.0" prefWidth="159.0" text="Proceed" />
+   <MFXButton fx:id="proceedBtn" layoutX="761.0" layoutY="676.0" onAction="#proceedToPayment" prefHeight="69.0" prefWidth="159.0" styleClass="actButtonGreen" text="Proceed" />
    <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
         <image>
              <Image url="/assets/backButtonWhite.png" />
@@ -112,7 +112,7 @@
          <Font size="14.0" />
       </font>
    </Text>
-   <Text fx:id="dateTxt" layoutX="81.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="93.0">
+   <Text fx:id="dateTxt" layoutX="72.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="198.0">
       <font>
          <Font size="14.0" />
       </font>
