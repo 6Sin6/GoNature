@@ -2,13 +2,9 @@ package DataBase;
 
 import Entities.*;
 import GoNatureServer.GmailSender;
-import ServerUIPageController.ServerPortFrameController;
+import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
 
-
-import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
@@ -30,7 +26,7 @@ public class DBConnection {
     private static DBConnection dbConnection;
     private String schemaName;
 
-    private final ServerPortFrameController serverController;
+    private final ServerUIFrameController serverController;
 
     private DBController dbController;
 
@@ -42,7 +38,7 @@ public class DBConnection {
      * @param controller The server port frame controller used for retrieving
      *                   connection details and logging.
      */
-    private DBConnection(ServerPortFrameController controller) throws ClassNotFoundException, SQLException {
+    private DBConnection(ServerUIFrameController controller) throws ClassNotFoundException, SQLException {
         this.serverController = controller;
         if (!driverDefinition()) {
             throw new ClassNotFoundException("Driver definition failed");
@@ -53,6 +49,10 @@ public class DBConnection {
         this.dbController = new DBController(conn);
     }
 
+    public DBController getDbController() {
+        return dbController;
+    }
+
     /**
      * Provides the singleton instance of the DBConnection.
      * If the instance does not exist, it is created using the provided controller.
@@ -61,7 +61,7 @@ public class DBConnection {
      *                   connection details and logging.
      * @return The singleton instance of DBConnection.
      */
-    public static DBConnection getInstance(ServerPortFrameController controller) throws Exception {
+    public static DBConnection getInstance(ServerUIFrameController controller) throws Exception {
         if (dbConnection == null) {
             dbConnection = new DBConnection(controller);
         }
@@ -1018,4 +1018,60 @@ public class DBConnection {
         }
         return availableTimestamps;
     }
+
+
+    //=================================================================================================================//
+    //                                                                                                                 //
+    //                                           IMPORT SIMULATOR METHODS                                              //
+    //                                                                                                                 //
+    //=================================================================================================================//
+
+    public void insertUser(String username, String password, int role) {
+        try {
+            String tableName = this.schemaName + ".users";
+            String columns = "username, password, role";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + password + "'", String.valueOf(role))) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert user:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertGroupGuide(String username, String ID, String email, String firstName, String lastName) {
+        try {
+            String tableName = this.schemaName + ".group_guides";
+            String columns = "ID, username, FirstName, LastName, EmailAddress, pendingStatus";
+            if (!dbController.insertRecord(tableName, columns, "'" + ID + "'", "'" + username + "'", "'" + firstName + "'", "'" + lastName + "'", "'" + email + "'", "true")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert group guide:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertParkEmployee(String username, String email, String parkID, String firstName, String lastName, boolean isParkManager, String ID) {
+        try {
+            String tableName = this.schemaName + ".park_employees";
+            String columns = "username, EmailAddress, ParkID, firstName, lastName, isParkManager, employeeID";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + email + "'", "'" + parkID + "'", "'" + firstName + "'", "'" + lastName + "'", String.valueOf(isParkManager), "'" + ID + "'")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert park manager:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
+
+    public void insertDepartmentManager(String username, String email, String departmentID, String firstName, String lastName, String ID) {
+        try {
+            String tableName = this.schemaName + ".department_managers";
+            String columns = "username, EmailAddress, departmentID, firstName, lastName, employeeID";
+            if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + email + "'", "'" + departmentID + "'", "'" + firstName + "'", "'" + lastName + "'", "'" + ID + "'")) {
+                this.serverController.addtolog("Insert into " + tableName + " failed. Insert department manager:" + username);
+            }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+        }
+    }
 }
+

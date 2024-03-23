@@ -3,12 +3,11 @@
 // license found at www.lloseng.com 
 package GoNatureServer;
 
-import CommonClient.Utils;
 import CommonServer.ocsf.AbstractServer;
 import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
 import Entities.*;
-import ServerUIPageController.ServerPortFrameController;
+import ServerUIPageController.ServerUIFrameController;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ public class GoNatureServer extends AbstractServer {
     //Class variables *************************************************
 
     private static GoNatureServer server;
-    private ServerPortFrameController controller;
+    private ServerUIFrameController controller;
     private DBConnection db;
 
     private Map<String, ConnectionToClient> signedInInstances = new ConcurrentHashMap<>();
@@ -50,12 +49,12 @@ public class GoNatureServer extends AbstractServer {
      * @param port The port number to connect on.
      */
 
-    private GoNatureServer(int port, ServerPortFrameController controller) throws Exception {
+    private GoNatureServer(int port, ServerUIFrameController controller) throws Exception {
         super(port);
         this.controller = controller;
     }
 
-    public void initializeDBConnection(ServerPortFrameController controller) throws Exception {
+    public void initializeDBConnection(ServerUIFrameController controller) throws Exception {
         try {
             db = DBConnection.getInstance(controller);
         } catch (ClassNotFoundException | SQLException e) {
@@ -66,7 +65,11 @@ public class GoNatureServer extends AbstractServer {
         }
     }
 
-    public static GoNatureServer getInstance(int port, ServerPortFrameController controller) throws Exception {
+    public DBConnection getDBConnection(ServerUIFrameController controller) throws Exception {
+        return this.db;
+    }
+
+    public static GoNatureServer getInstance(int port, ServerUIFrameController controller) throws Exception {
         if (server == null) {
             server = new GoNatureServer(port, controller);
         }

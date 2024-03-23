@@ -1,7 +1,9 @@
 package ServerUIPage;
 
+import DataBase.DBConnection;
 import GoNatureServer.GoNatureServer;
-import ServerUIPageController.ServerPortFrameController;
+import GoNatureServer.ImportSimulator;
+import ServerUIPageController.ServerUIFrameController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -17,14 +19,14 @@ public class ServerUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ServerPortFrameController aFrame = new ServerPortFrameController();
+        ServerUIFrameController aFrame = new ServerUIFrameController();
         primaryStage.setOnCloseRequest(e -> Platform.runLater(() -> {
             GoNatureServer.closeServer();
         }));
         aFrame.start(primaryStage);
     }
 
-    public static void runServer(ServerPortFrameController guiController) {
+    public static void runServer(ServerUIFrameController guiController) {
         int port = 5555; // Fallback port
 
         try {
@@ -41,6 +43,17 @@ public class ServerUI extends Application {
             } catch (Exception ex) {
                 guiController.addtolog("Error: Failed to listen for clients!");
             }
+        } catch (Exception e) {
+            guiController.addtolog(e.getMessage());
+        }
+    }
+
+    public static void initializeImportSimulator(ServerUIFrameController guiController) {
+        try {
+            GoNatureServer server = GoNatureServer.getInstance(5555, guiController);
+            DBConnection db = server.getDBConnection(guiController);
+            ImportSimulator simulator = new ImportSimulator(guiController, db);
+            simulator.handleImportUsers();
         } catch (Exception e) {
             guiController.addtolog(e.getMessage());
         }
