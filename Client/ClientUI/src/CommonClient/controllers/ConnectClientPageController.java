@@ -9,11 +9,13 @@ import client.ClientController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 public class ConnectClientPageController extends BaseController {
     @FXML
     private MFXButton connectBtn;
-
+    @FXML
+    private Label lblErrorMsg;
     @FXML
     private MFXTextField ipTxt;
     private static String CurrentIP = "localhost";
@@ -26,6 +28,7 @@ public class ConnectClientPageController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             // Todo: Set text label to "Something went wrong..."
+            lblErrorMsg.setText("Something is wrong, try again, please!");
         }
     }
 

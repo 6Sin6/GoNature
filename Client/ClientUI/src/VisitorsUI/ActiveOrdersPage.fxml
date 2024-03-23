@@ -2,25 +2,31 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
+<?import javafx.scene.image.Image?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
     <children>
         <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
             <children>
-                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Text fx:id="txtHeader" layoutX="366.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
+            <ImageView blendMode="MULTIPLY" fitHeight="733.0" fitWidth="849.0" layoutX="101.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/activeOrdersBack.jpg" />
+               </image>
+            </ImageView>
+                <Text fx:id="txtHeader" layoutX="268.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
                     <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font name="System Bold" size="64.0" />
                     </font>
                 </Text>
-                <TableView fx:id="tableOrders" layoutY="82.0" prefHeight="538.0" prefWidth="950.0">
+                <TableView fx:id="tableOrders" layoutY="105.0" prefHeight="538.0" prefWidth="950.0">
                     <columns>
                         <TableColumn fx:id="colOrderNumber" prefWidth="118.0" text="Order Number" />
                         <TableColumn fx:id="colParkName" prefWidth="112.0" text="Park Name" />
@@ -31,8 +37,15 @@
                         <TableColumn fx:id="colTime" prefWidth="177.0" text="Time" />
                     </columns>
                 </TableView>
-                <MFXButton fx:id="handleOrderbtn" layoutX="425.0" layoutY="625.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
-            <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0" />
+                <MFXButton fx:id="handleOrderbtn" buttonType="RAISED" layoutX="425.0" layoutY="671.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
+            <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="375.0" layoutY="724.0" prefHeight="30.0" prefWidth="200.0" textFill="#f20707">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <ImageView fitHeight="95.0" fitWidth="112.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/GoNatureLogo.png" />
+               </image></ImageView>
             </children>
         </Pane>
     </children>

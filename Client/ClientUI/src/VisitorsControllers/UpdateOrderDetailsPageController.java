@@ -141,11 +141,11 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             return false;
         }
         if (!CommonUtils.isEmailAddressValid(EmailText.getText())) {
-            errorLabel.setText("invalid Email address");
+            errorLabel.setText("Invalid Email address");
             return false;
         }
         if (!CommonUtils.isValidPhone((PhoneText.getText()))) {
-            errorLabel.setText("invalid Phone number");
+            errorLabel.setText("Invalid Phone number");
             return false;
         }
         return true;
