@@ -49,19 +49,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     private Label TimeLabel;
 
     @FXML
-    private MFXButton UpdateBtn;
-
-    @FXML
-    private Pane btnHandleOrder;
-
-    @FXML
-    private MFXButton cancelBtn;
-
-    @FXML
     private Label errorLabel;
-
-    @FXML
-    private Text txtHeader;
 
     private ArrayList<Order> ordersList;
     private Order order;

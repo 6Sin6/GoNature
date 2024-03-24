@@ -7,8 +7,6 @@ import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-
+import javafx.scene.control.TextField;
 import javax.naming.CommunicationException;
-import javax.xml.soap.Text;
-import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -33,11 +26,18 @@ import java.util.ResourceBundle;
 
 public class GroupGuideOrderVisitationPageController extends BaseController implements Initializable {
     ObservableList<String> list;
-    @FXML
-    private Label erorrLbl;
-    @FXML
-    private MFXButton btnCreateOrder;
 
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private TextField txtFirstName;
+
+    @FXML
+    private TextField txtLastName;
+
+    @FXML
+    private TextField txtPhone;
 
     @FXML
     private DatePicker datePicker;
@@ -46,31 +46,11 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     private MFXLegacyComboBox<String> numOfVisitorsCmbBox;
 
     @FXML
-    private Pane pane;
-
-    @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
-
-    @FXML
-    private Separator sepOrder;
-
-    @FXML
-    private StackPane stackPane;
 
     @FXML
     private MFXLegacyComboBox<String> timeOfVisitCmbBox;
 
-    @FXML
-    private MFXTextField txtEmail;
-
-    @FXML
-    private MFXTextField txtFirstName;
-
-    @FXML
-    private MFXTextField txtLastName;
-
-    @FXML
-    private MFXTextField txtPhone;
     @FXML
     private Label label;
     public void cleanup() {
