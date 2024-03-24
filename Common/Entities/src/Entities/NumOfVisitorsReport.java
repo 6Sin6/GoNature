@@ -213,6 +213,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         document.add(pieChartImage);
 
         document.newPage();
+        document.newPage();
 
         // Create left and right columns for tables
         float[] columnWidths = {0.45f, 0.15f, 0.45f};
@@ -391,17 +392,15 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         while (this.reportData.next())
         {
             int orderTypeRes = reportData.getInt("OrderType");
-            if (orderTypeRes != orderType) // Checking if it's the right order type.
+            if (orderTypeRes == orderType) // Checking if it's the right order type.
             {
-                this.reportData.next();
-                continue;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            String formattedDate = sdf.format(this.reportData.getTimestamp("VisitationDate"));
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                String formattedDate = sdf.format(this.reportData.getTimestamp("VisitationDate"));
 
-            table.addCell(this.createCenterCell(formattedDate));
-            table.addCell(this.createCenterCell(OrderType.values()[this.reportData.getInt("OrderType") - 1].toString()));
-            table.addCell(this.createCenterCell(String.valueOf(this.reportData.getInt("NumOfVisitors"))));
+                table.addCell(this.createCenterCell(formattedDate));
+                table.addCell(this.createCenterCell(OrderType.values()[this.reportData.getInt("OrderType") - 1].toString()));
+                table.addCell(this.createCenterCell(String.valueOf(this.reportData.getInt("NumOfVisitors"))));
+            }
         }
 
         return table;

@@ -1004,6 +1004,36 @@ public class DBConnection {
     }
 
     /**
+     * Handles the update and insertion of park reports in the database.
+     * If a report for the current month already exists, the method updates the existing report.
+     * If a report for the current month does not exist, the method inserts a new report.
+     * @param parkID The ID of the park for which to update or insert the report.
+     * @param reportName The name of the report to update or insert.
+     * @param generatedBlob The PDF blob containing the report data.
+     * @return {@code true} if the report is successfully updated or inserted, {@code false} otherwise.
+     * @throws SQLException If an SQL exception occurs.
+     */
+    private boolean handleInsertionParkReports(String parkID, String reportName, Blob generatedBlob) throws SQLException {
+        ResultSet blobData = dbController.selectRecordsFields(this.schemaName + ".park_manager_reports", "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'", "blobData");
+        String reportTableName = this.schemaName + ".park_manager_reports";
+        if (blobData.next()) {
+            if (!dbController.updateBlobRecord(reportTableName, "blobData", generatedBlob, "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'")) {
+                this.serverController.addtolog("Update in " + reportTableName + " failed. Update visitation report");
+                return false;
+            }
+            return true;
+        }
+
+        String columns = "parkID, reportType, month, year, blobData";
+        String[] values = {parkID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+        if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
+            this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Retrieves all park IDs associated with a specific department.
      * @param departmentID The ID of the department.
      * @return A ResultSet containing all park IDs associated with the specified department.
@@ -1035,19 +1065,16 @@ public class DBConnection {
 
     public boolean generateNumOfVisitorsReport(int parkID)
     {
-        try
-        {
+        try {
             // Definitions
             int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
-            int orderStatus = OrderStatus.STATUS_FULFILLED.getOrderStatus();
+            String orderStatus = "'" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "'";
 
             String tableName_Orders = this.schemaName + ".orders";
-            String whereClause_Orders = "MONTH (VisitationDate) = " + month + " AND orderStatus = " + orderStatus + " AND ParkID = " + parkID;
+            String whereClause_Orders = "MONTH (VisitationDate) = " + month + " AND orderStatus IN (" + orderStatus + ") AND ParkID = " + parkID;
             String orderByClause_Orders = " ORDER BY VisitationDate";
 
             String reportName = "numofvisitors";
-            String tableName_Reports = this.schemaName + ".park_manager_reports";
-            String whereClause_Reports = "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + month + "' AND year='" + year + "'";
 
             // Retrieving data from DB
             ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, OrderType, NumOfVisitors");
@@ -1057,30 +1084,8 @@ public class DBConnection {
             Blob generatedBlob = report.createPDFBlob();
             results.close();
 
-            // If exists - updates the report.
-            ResultSet blobData = dbController.selectRecordsFields(tableName_Reports, whereClause_Reports, "blobData");
-            if (blobData.next()) // does exists?
-            {
-                if (!dbController.updateBlobRecord(tableName_Reports, "blobData", generatedBlob, whereClause_Reports))
-                { // failed updating
-                    this.serverController.addtolog("Update in " + tableName_Reports + " failed. Update " + reportName +" report");
-                    return false;
-                }
-                return true;
-            }
-
-            // Doesn't exist - inserts the report into the database
-            String columns = "reportType, parkID, month, year, blobData";
-            String[] values = {reportName, String.valueOf(parkID), String.valueOf(month), String.valueOf(year) };
-            if (!dbController.insertBlobRecord(tableName_Reports, columns, generatedBlob, values))
-            { // failed inserting
-                this.serverController.addtolog("Insert into " + tableName_Reports + " failed. Insert " + reportName + " report");
-                return false;
-            }
-
-            return true;
-        } catch (SQLException | DocumentException | IOException e)
-        {
+            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
             return false;
         }
