@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static CommonUtils.CommonUtils.*;
+import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.getNextWeekHours;
+import static CommonUtils.OrderProcessor.findBestCombination;
 import static GoNatureServer.GoNatureServer.createExitTime;
 
 /**
@@ -149,7 +151,7 @@ public class DBConnection {
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
-                            if (checkGroupGuide(userGoNatureData.getString("ID")) ) {
+                            if (checkGroupGuide(userGoNatureData.getString("ID"))) {
                                 return new VisitorGroupGuide(
                                         "",
                                         "",
@@ -324,6 +326,21 @@ public class DBConnection {
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             return null;
+        }
+    }
+
+    public boolean checkOrderPayment(Order order) {
+        try {
+            String orderID = order.getOrderID();
+            String tableName1 = this.schemaName + ".payments";
+            ResultSet orderPayment = dbController.selectRecordsFields(tableName1, "OrderID=" + orderID, "paid");
+            if (!orderPayment.next()) {
+                return false;
+            }
+            return orderPayment.getInt("paid") == 1;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
         }
     }
 
@@ -979,6 +996,7 @@ public class DBConnection {
             return "Something went wrong... Please try again later.";
         }
     }
+
     public boolean checkGroupGuide(String groupGuideID) {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -1063,6 +1081,46 @@ public class DBConnection {
         }
     }
 
+    public ArrayList<Order> getMatchingWaitlistOrders(String parkID, Timestamp startTime) {
+        try {
+            ArrayList<Order> orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "ParkID='" + parkID + "' AND EnteredTime = '" + startTime.toString().substring(0, startTime.toString().length() - 2) + "'AND orderStatus = 1";
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            while (results.next()) {
+                orders.add(new Order(
+                        results.getString("VisitorID"),
+                        results.getString("ParkID"),
+                        results.getTimestamp("VisitationDate"),
+                        results.getString("ClientEmailAddress"),
+                        results.getString("PhoneNumber"),
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
+                        results.getTimestamp("EnteredTime"),
+                        results.getTimestamp("ExitedTime"),
+                        results.getString("OrderID"),
+                        OrderType.values()[results.getInt("OrderType") - 1],
+                        results.getInt("NumOfVisitors")
+                ));
+            }
+            results.close();
+            return orders;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean extractFromWaitList(Order order){
+        ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(),order.getEnteredTime());
+        List<Order> extractedOrders = findBestCombination(ordersToWorkWith, order.getNumOfVisitors());
+        for (Order extractedOrder : extractedOrders){
+            if(!updateOrderStatus(extractedOrder.getOrderID(),OrderStatus.STATUS_ACCEPTED)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public ArrayList<Timestamp> getAvailableTimeStamps(Order order) {
         Order WorkingOrder = order;
         List<Timestamp> availableHours = getNextWeekHours(order.getEnteredTime());
@@ -1132,8 +1190,5 @@ public class DBConnection {
         }
     }
 
-    public boolean updateOrderStatusAsWaitList(String orderID) {
-        return updateOrderStatus(orderID, OrderStatus.STATUS_WAITLIST);
-    }
 }
 

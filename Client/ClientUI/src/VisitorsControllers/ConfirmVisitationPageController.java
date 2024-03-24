@@ -77,10 +77,22 @@ public class ConfirmVisitationPageController extends BaseController {
     }
 
     @FXML
-    void OnClickConfirmVisitationButton(ActionEvent event) {
+    void OnClickConfirmVisitationButton(ActionEvent event) throws CommunicationException {
         User user = applicationWindowController.getUser();
-        Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
+        Object msg = new Message(OpCodes.OP_CONFIRMATION, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
+        Message respondMsg = ClientCommunicator.msg;
+        if (respondMsg.getMsgOpcode() != OpCodes.OP_CONFIRMATION) {
+            throw new CommunicationException("Respond not appropriate from server");
+        }
+        String strForPopup = "The order has been confirmed successfully";
+        ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+        {
+            applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
+            applicationWindowController.loadMenu(applicationWindowController.getUser());
+        }
+                , 600, 300, false, "OK", false);
+        confirmPopup.show(applicationWindowController.getRoot());
     }
 
     @FXML

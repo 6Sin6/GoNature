@@ -179,6 +179,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_INSERT_VISITATION_TO_WAITLIST:
                     handleCreateNewVisitationForWaitList(message, client);
                     break;
+                case OP_CONFIRMATION:
+                    handleConfirmOrderVisitation(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -223,10 +226,10 @@ public class GoNatureServer extends AbstractServer {
                 client.sendToClient(respondMsg);
                 return;
             }
-            if (authenticatedUser instanceof VisitorGroupGuide && (Objects.equals(authenticatedUser.getUsername(), ""))){
-                    Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", "Visitor Group Guide is not activated");
-                    client.sendToClient(respondMsg);
-                    return;
+            if (authenticatedUser instanceof VisitorGroupGuide && (Objects.equals(authenticatedUser.getUsername(), ""))) {
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", "Visitor Group Guide is not activated");
+                client.sendToClient(respondMsg);
+                return;
             }
             signedInInstances.put(authenticatedUser.getUsername(), client);
             Message respondMsg = new Message(OpCodes.OP_SIGN_IN, authenticatedUser.getUsername(), authenticatedUser);
@@ -348,12 +351,30 @@ public class GoNatureServer extends AbstractServer {
     private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
+        db.extractFromWaitList(order);
         boolean isCanceled = db.updateOrderStatusAsCancelled(orderID);
         if (!isCanceled) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
         }
         Message respondMsg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, message.getMsgUserName(), isCanceled);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleConfirmOrderVisitation(Message message, ConnectionToClient client) throws IOException {
+        Order order = (Order) message.getMsgData();
+        String orderID = order.getOrderID();
+        boolean isChanged;
+        if (db.checkOrderPayment(order)) {
+            isChanged = db.updateOrderStatus(orderID, OrderStatus.STATUS_CONFIRMED_PAID);
+        } else {
+            isChanged = db.updateOrderStatus(orderID, OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT);
+        }
+        if (!isChanged) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
+            client.sendToClient(respondMsg);
+        }
+        Message respondMsg = new Message(OpCodes.OP_CONFIRMATION, message.getMsgUserName(), isChanged);
         client.sendToClient(respondMsg);
     }
 

@@ -48,12 +48,13 @@ public class OrderProcessor {
     // Example usage
     public static void main(String[] args) {
         List<Order> orders = Arrays.asList(
-                new Order("1", "Park1", new Timestamp(System.currentTimeMillis()), "email1@test.com", "111", OrderStatus.STATUS_WAITLIST, null, null, "O1", OrderType.ORD_TYPE_SINGLE, 9),
                 new Order("2", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "O2", OrderType.ORD_TYPE_SINGLE, 2),
+                new Order("1", "Park1", new Timestamp(System.currentTimeMillis()), "email1@test.com", "111", OrderStatus.STATUS_WAITLIST, null, null, "O1", OrderType.ORD_TYPE_SINGLE, 5),
                 new Order("4", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "O5", OrderType.ORD_TYPE_SINGLE, 2),
                 new Order("5", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "7", OrderType.ORD_TYPE_SINGLE, 2),
                 new Order("6", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "9", OrderType.ORD_TYPE_SINGLE, 2),
-                new Order("3", "Park3", new Timestamp(System.currentTimeMillis()), "email3@test.com", "333", OrderStatus.STATUS_WAITLIST, null, null, "O3", OrderType.ORD_TYPE_SINGLE, 2)
+                new Order("3", "Park3", new Timestamp(System.currentTimeMillis()), "email3@test.com", "333", OrderStatus.STATUS_WAITLIST, null, null, "O3", OrderType.ORD_TYPE_SINGLE, 2),
+                new Order("9", "Park1", new Timestamp(System.currentTimeMillis()), "email1@test.com", "111", OrderStatus.STATUS_WAITLIST, null, null, "O6", OrderType.ORD_TYPE_SINGLE, 5)
         );
 
         int target = 10;
