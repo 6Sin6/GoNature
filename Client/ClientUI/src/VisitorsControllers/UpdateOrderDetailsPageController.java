@@ -49,19 +49,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     private Label TimeLabel;
 
     @FXML
-    private MFXButton UpdateBtn;
-
-    @FXML
-    private Pane btnHandleOrder;
-
-    @FXML
-    private MFXButton cancelBtn;
-
-    @FXML
     private Label errorLabel;
-
-    @FXML
-    private Text txtHeader;
 
     private ArrayList<Order> ordersList;
     private Order order;
@@ -141,11 +129,11 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             return false;
         }
         if (!CommonUtils.isEmailAddressValid(EmailText.getText())) {
-            errorLabel.setText("invalid Email address");
+            errorLabel.setText("Invalid Email address");
             return false;
         }
         if (!CommonUtils.isValidPhone((PhoneText.getText()))) {
-            errorLabel.setText("invalid Phone number");
+            errorLabel.setText("Invalid Phone number");
             return false;
         }
         return true;
