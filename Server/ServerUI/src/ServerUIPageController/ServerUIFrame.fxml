@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.image.Image?>
-<Pane prefHeight="693.0" prefWidth="864.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerUIPageController.ServerUIFrameController">
+<Pane prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerUIPageController.ServerUIFrameController">
     <children>
         <MFXButton fx:id="btnStart" defaultButton="true" layoutX="34.0" layoutY="325.0" mnemonicParsing="false" onAction="#Done" prefHeight="52.0" prefWidth="307.0" text="Start GoNatureServer" />
         <TextField fx:id="portxt" layoutX="121.0" layoutY="135.0" prefHeight="25.0" prefWidth="218.0" />
@@ -48,7 +48,7 @@
         </Label>
         <ImageView fitHeight="71.0" fitWidth="80.0" layoutX="264.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/GoNatureServerLogo.png"/>
+                <Image url="/assets/GoNatureServerLogo.png" />
             </image>
         </ImageView>
         <Label alignment="CENTER" layoutX="566.0" layoutY="97.0" text="Connected Clients" textAlignment="CENTER">
@@ -61,7 +61,7 @@
                 <Font name="System Bold" size="16.0" />
             </font>
         </Label>
-      <MFXButton fx:id="importBtn" styleClass="" layoutX="42.0" layoutY="584.0" onAction="#importUsers" prefHeight="33.0" prefWidth="307.0" text="Import Users" />
+      <MFXButton fx:id="importBtn" layoutX="42.0" layoutY="584.0" onAction="#importUsers" prefHeight="33.0" prefWidth="307.0" styleClass="" text="Import Users" />
       <Text layoutX="64.0" layoutY="569.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Import Users From External DB">
          <font>
             <Font name="System Bold" size="18.0" />
