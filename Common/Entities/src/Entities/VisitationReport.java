@@ -39,6 +39,9 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 public class VisitationReport extends DepartmentReport implements Serializable {
     private HashMap<String, ResultSet> reportData;
 
+
+
+
     /**
      * Constructs a new VisitationReport object with the specified date and department.
      *
@@ -53,6 +56,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         this.reportData.put(statName, reportData);
     }
 
+
+
+
     /**
      * Retrieves the data associated with the report.
      *
@@ -61,6 +67,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     public HashMap<String, ResultSet> getReportData() {
         return reportData;
     }
+
+
+
 
     /**
      * Sets the data associated with the report.
@@ -71,6 +80,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         this.reportData = reportData;
     }
 
+
+
+
     /**
      * Adds a ResultSet to the report data.
      * @param statName The name of the statistic.
@@ -79,6 +91,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     public void addReportData(String statName, ResultSet reportData) {
         this.reportData.put(statName, reportData);
     }
+
+
+
 
     /**
      * Removes a ResultSet from the report data.
@@ -90,13 +105,21 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
+
+
+
     /**
+     * This method is intended to create a PDF Blob for the VisitationReport.
      * Creates a PDF file based on the data in the specified ResultSet.
      *
      * @return A Blob object representing the PDF file.
+     * @throws DocumentException If there is an error while creating the PDF document.
+     * @throws SQLException If there is an error while converting the PDF to a Blob.
+     * @throws IOException If there is an error while handling the PDF file.
      */
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
+    {
         String customFontPath = "/fonts/Roboto-Regular.ttf";
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -167,12 +190,16 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return new SerialBlob(outputStream.toByteArray());
     }
 
+
+
+
     /**
      * Creates a chart with JFreeChart based on the data in the specified ResultSet.
      *
      * @return The JFreeChart object representing the chart.
      */
-    protected JFreeChart createChart() throws SQLException {
+    protected JFreeChart createChart() throws SQLException
+    {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         double maxTimeSpent = 0;
 
@@ -233,6 +260,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return chart;
     }
 
+
+
+
     /**
      * Creates a pie chart with JFreeChart based on the data in the specified ResultSet.
      *
@@ -269,6 +299,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: ({2})", NumberFormat.getNumberInstance(), NumberFormat.getPercentInstance()));
         return chart;
     }
+
+
+
 
     /**
      * Creates a table with the data in the specified ResultSet.
@@ -315,6 +348,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         return table;
     }
 
+
+
+
     /**
      * Retrieves the average time spent for the specified date and order type.
      *
@@ -338,6 +374,9 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         }
         return 0.0; // Return 0 if data for the date is not found
     }
+
+
+
 
     /**
      * Retrieves the total time spent for the specified order type.
