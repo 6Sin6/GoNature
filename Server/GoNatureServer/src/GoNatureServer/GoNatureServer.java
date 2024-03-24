@@ -416,24 +416,26 @@ public class GoNatureServer extends AbstractServer {
     private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws IOException {
         String reportType = (String) message.getMsgData();
         boolean isGenerated = false;
-        String departmentID = null;
+        String id = null; // used for department ID (for first 2 cases) or park ID (for other cases)
         switch (reportType) {
             case "visitations":
-                departmentID = db.getDepartmentIDByManagerID(message.getMsgUserName());
-                if (departmentID == null) {
+                id = db.getDepartmentIDByManagerUsername(message.getMsgUserName());
+                if (id == null) {
                     break;
                 }
-                isGenerated = db.generateVisitationReport(departmentID);
+                isGenerated = db.generateVisitationReport(id);
                 break;
             case "cancellations":
-                departmentID = db.getDepartmentIDByManagerID(message.getMsgUserName());
-                if (departmentID == null) {
+                id = db.getDepartmentIDByManagerUsername(message.getMsgUserName());
+                if (id == null) {
                     break;
                 }
-                isGenerated = db.generateCancellationsReport(departmentID);
+                isGenerated = db.generateCancellationsReport(id);
                 break;
             case "numofvisitors":
-                reportType = "Number of Visitors Statistics";
+                id = db.getParkIDByManagerUsername(message.getMsgUserName());
+                if (id != null)
+                    isGenerated = db.generateNumOfVisitorsReport(Integer.parseInt(id));
                 break;
             case "usage":
                 reportType = "Capacity Statistics";

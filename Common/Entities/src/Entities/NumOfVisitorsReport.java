@@ -26,10 +26,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import static CommonUtils.CommonUtils.parseVisitTime;
 
 /**
  * The NumOfVisitorsReport class represents a report detailing the number of visitors to a park.
@@ -37,23 +40,27 @@ import java.time.LocalDate;
  */
 public class NumOfVisitorsReport extends ParkReport implements Serializable
 {
-    private int[][] reportData;
+    private final ResultSet reportData;
+    private final int[][] amountPerDay; // total per day of each order type
+    private int[] totalPerType; // total of visitors per order type.
+    private boolean isDataCalculated, isTotalCalculated;
 
 
 
     /**
-     * Constructs a NumOfVisitorsReport object with the specified parameters.
+     * Constructs a new NumOfVisitorsReport with the specified park ID and report data.
      *
-     * @param parkID The park associated with the report.
-     * @param reportData The report data as a 2D array.
-     * The data is stored at 2D array - first dimension is for OrderType, second dimension is for day per month (size 31).
+     * @param parkID The ID of the park.
+     * @param resultSet The report data.
      */
-    public NumOfVisitorsReport(Integer parkID, int[][] reportData)
+    public NumOfVisitorsReport(Integer parkID, ResultSet resultSet)
     {
         super(parkID);
-        if (reportData[0].length != 31 || reportData.length != this.getAmountOfOrderTypes())
-            throw new IllegalArgumentException("Array must be of size 31");
-        this.reportData = reportData;
+        this.amountPerDay = new int[this.getAmountOfOrderTypes()][31];
+        this.totalPerType = new int[this.getAmountOfOrderTypes()];
+        this.isTotalCalculated = false;
+        this.isDataCalculated = false;
+        this.reportData = resultSet;
     }
 
 
@@ -78,12 +85,26 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
+     * @throws SQLException If there is an error while retrieving the data.
      */
-    private int getData(int orderType, int dayOfOrder)
+    private int getData(int orderType, int dayOfOrder) throws SQLException
     {
-        if (orderType < 1 || orderType >= this.getAmountOfOrderTypes() || dayOfOrder < 1 || dayOfOrder > 31)
+        if (orderType < 1 || orderType > this.getAmountOfOrderTypes() || dayOfOrder < 1 || dayOfOrder > 31)
             throw new IllegalArgumentException("Invalid order type or day");
-        return this.reportData[orderType - 1][dayOfOrder - 1];
+
+        if (!this.isDataCalculated) // in case data is not calculated - calculating.
+        {
+            int day, numOfVisitors, type;
+            while (this.reportData.next()) // building reportData.
+            {
+                day = reportData.getTimestamp("VisitationDate").toLocalDateTime().getDayOfMonth();
+                type = reportData.getInt("OrderType");
+                numOfVisitors = reportData.getInt("NumOfVisitors");
+                amountPerDay[type - 1][day - 1] += numOfVisitors;
+            }
+            this.isDataCalculated = true;
+        }
+        return this.amountPerDay[orderType - 1][dayOfOrder - 1];
     }
 
 
@@ -96,10 +117,50 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
+     * @throws SQLException If there is an error while retrieving the data.
      */
-    private int getData(OrderType orderType, int dayOfOrder)
+    private int getData(OrderType orderType, int dayOfOrder) throws SQLException
     {
         return this.getData(orderType.getOrderType(), dayOfOrder);
+    }
+
+
+
+    /**
+     * Returns the total number of visitors for the specified order type.
+     *
+     * @param orderType The order type.
+     * @return The total number of visitors for the specified order type.
+     * @throws IllegalArgumentException If the order type is invalid.
+     */
+    private int getTotalPerType(int orderType) throws SQLException
+    {
+        if (orderType < 1 || orderType > this.getAmountOfOrderTypes())
+            throw new IllegalArgumentException("Invalid order type or day");
+
+        if (!this.isTotalCalculated) // in case it wasn't calculated - calculating.
+        {
+            for (OrderType ot : OrderType.values())
+                for (int day = 1; day <= 31; day++)
+                    this.totalPerType[ot.getOrderType()] += this.getData(ot, day);
+            this.isTotalCalculated = true;
+        }
+
+        return this.totalPerType[orderType - 1];
+    }
+
+
+
+    /**
+     * Returns the total number of visitors for the specified order type.
+     *
+     * @param orderType The order type.
+     * @return The total number of visitors for the specified order type.
+     * @throws IllegalArgumentException If the order type is invalid.
+     */
+    private int getTotalPerType(OrderType orderType) throws SQLException
+    {
+        return this.getTotalPerType(orderType.getOrderType());
     }
 
 
@@ -128,12 +189,13 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         // Open the document
         document.open();
 
-        // Add title
+        // Add title to document
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         Font titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
         document.add(this.createParagraph("Number of Visitors Report - Park: " + super.getParkID(), titleFont, true, 50, true));
 
-        JFreeChart chart = this.createChart();
+        // Add Bar Chart (Grouped Column Chart)
+        JFreeChart chart = this.createBarChart();
         ByteArrayOutputStream chartOutputStream = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(chartOutputStream, chart, 1300, 600);
         Image chartImage = Image.getInstance(chartOutputStream.toByteArray());
@@ -142,6 +204,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
 
         chartImage.setSpacingAfter(75);
 
+        // Add Pie Chart
         JFreeChart pieChart = this.createPieChart();
         ByteArrayOutputStream pieChartOutputStream = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(pieChartOutputStream, pieChart, 700, 700);
@@ -156,6 +219,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         PdfPTable tablesContainer = new PdfPTable(columnWidths);
         tablesContainer.setWidthPercentage(100);
 
+
         // Single Orders Table
         PdfPTable tableSingle = this.createTable(OrderType.ORD_TYPE_SINGLE.getOrderType());
         tableSingle.setSpacingBefore(30);
@@ -167,7 +231,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
 
         // Title Table
         PdfPCell titleCell = new PdfPCell();
-        titleCell.addElement(this.createParagraph("Entrance Statistics", titleFont, true, 0, true));
+        titleCell.addElement(this.createParagraph("Orders Statistics", titleFont, true, 0, true));
         titleCell.setBorder(Rectangle.NO_BORDER);
         tablesContainer.addCell(titleCell);
 
@@ -189,16 +253,19 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
+
+
     /**
-     * Creates a chart with JFreeChart based on the data in the specified reportData 2D int array.
+     * Creates a  grouped column chart with JFreeChart based on the data in the specified reportData 2D int array.
      *
      * @return The JFreeChart object representing the chart.
      */
-    protected JFreeChart createChart() throws SQLException
+    protected JFreeChart createBarChart() throws SQLException
     {
         // Definitions
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         int data, maxAmount = 0;
+        // Initialize dataset for the pie chart
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         // Initialize colors for the bars
         Color groupOrdersColor = new Color(12, 36, 58);
         Color singleFamilyOrdersColor = new Color(188, 33, 33);
@@ -211,8 +278,11 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
                 data = this.getData(orderType, day); // Retrieve data
                 dataset.addValue(data, orderType.toString(), String.valueOf(day)); // Add to dataset
                 maxAmount = Math.max(maxAmount, data); // Get max
+                if (!this.isTotalCalculated) // summing total of visitors per type, in case it wasn't calculated.
+                    this.totalPerType[orderType.getOrderType() - 1] += data;
             }
         }
+        this.isTotalCalculated = true; // Calculating total of visitors per type has been done.
 
         // Create the chart
         JFreeChart chart = ChartFactory.createBarChart(
@@ -257,21 +327,18 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      *
      * @return The JFreeChart object representing the pie chart.
      */
-    protected JFreeChart createPieChart() throws SQLException {
+    protected JFreeChart createPieChart() throws SQLException
+    {
         // Initialize dataset for the pie chart
-        DefaultPieDataset dataset = new DefaultPieDataset();
-
-        // Get total time spent for each order type for the entire month
-        double totalGroupTimeSpent = getTotalTimeSpent("_2");
-        double totalSingleFamilyTimeSpent = getTotalTimeSpent("_1");
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
 
         // Add data to the dataset
-        dataset.setValue("Group Orders", totalGroupTimeSpent);
-        dataset.setValue("Single/Family-Sized Orders", totalSingleFamilyTimeSpent);
+        for (OrderType orderType : OrderType.values())
+            dataset.setValue(orderType.toString(), this.getTotalPerType(orderType));
 
         // Create the pie chart
         JFreeChart chart = ChartFactory.createPieChart(
-                "Total Time Spent by Order Type", // Chart title
+                "Total Visitors Per Order Type In Month", // Chart title
                 dataset, // Dataset
                 true, // Include legend
                 true, // Include tooltips
@@ -287,5 +354,63 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         plot.setLabelShadowPaint(null);
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: ({2})", NumberFormat.getNumberInstance(), NumberFormat.getPercentInstance()));
         return chart;
+    }
+
+
+
+
+    /**
+     * Creates a table with the data in the specified ResultSet.
+     * @param orderType The order type to display in the table.
+     * @return The PdfPTable object representing the table.
+     */
+    private PdfPTable createTable(int orderType) throws SQLException
+    {
+        // Columns of table
+        ArrayList<String> columns = new ArrayList<>();
+        columns.add("Visitation Date");
+        columns.add("Order Type");
+        columns.add("Number of Visitors");
+
+        // Add table
+        PdfPTable table = new PdfPTable(columns.size());
+        table.setWidthPercentage(100);
+
+        // Add table headers
+        columns.forEach(columnTitle -> {
+            PdfPCell header = new PdfPCell();
+            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            header.setBorderWidth(2);
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setPhrase(new Phrase(columnTitle));
+            table.addCell(header);
+        });
+
+        // Collecting Data for tables.
+        this.reportData.beforeFirst();
+        while (this.reportData.next())
+        {
+            int orderTypeRes = reportData.getInt("OrderType");
+            if (orderTypeRes != orderType) // Checking if it's the right order type.
+            {
+                this.reportData.next();
+                continue;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String formattedDate = sdf.format(this.reportData.getTimestamp("VisitationDate"));
+
+            table.addCell(this.createCenterCell(formattedDate));
+            table.addCell(this.createCenterCell(OrderType.values()[this.reportData.getInt("OrderType") - 1].toString()));
+            table.addCell(this.createCenterCell(String.valueOf(this.reportData.getInt("NumOfVisitors"))));
+        }
+
+        return table;
+    }
+
+
+
+    private PdfPTable createTable(OrderType orderType) throws SQLException
+    {
+        return this.createTable(orderType.getOrderType());
     }
 }

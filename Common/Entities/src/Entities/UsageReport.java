@@ -24,7 +24,7 @@ public class UsageReport extends ParkReport implements Serializable {
      * @param usageReportDetailBank The bank containing the details of the usage report.
      */
     public UsageReport(Timestamp date, Park park, UsageReportDetailBank usageReportDetailBank) {
-        super(date, park);
+        super(1);
         this.usageReportDetailBank = usageReportDetailBank;
     }
 
@@ -35,7 +35,7 @@ public class UsageReport extends ParkReport implements Serializable {
      * @param park The park associated with the report.
      */
     public UsageReport(Timestamp date, Park park) {
-        super(date, park);
+        super(1);
         this.usageReportDetailBank = new UsageReportDetailBank();
     }
 
@@ -47,7 +47,7 @@ public class UsageReport extends ParkReport implements Serializable {
      * @param report The initial report detail to add to the report bank.
      */
     public UsageReport(Timestamp date, Park park, UsageReportDetail report) {
-        super(date, park);
+        super(1);
         this.usageReportDetailBank = new UsageReportDetailBank(report);
     }
 

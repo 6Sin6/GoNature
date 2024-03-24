@@ -43,9 +43,9 @@ public enum OrderType {
         switch (this)
         {
             case ORD_TYPE_SINGLE:
-                return "Single/Family-Sized Orders";
+                return "Single/Family-Sized";
             case ORD_TYPE_GROUP:
-                return "Group Orders";
+                return "Group";
             default:
                 return "";
         }

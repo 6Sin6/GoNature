@@ -796,14 +796,31 @@ public class DBConnection {
         }
     }
 
-    public String getDepartmentIDByManagerID(String managerID) {
+    public String getDepartmentIDByManagerUsername(String managerUsername) {
         try {
             String tableName = this.schemaName + ".department_managers";
-            String whereClause = "username='" + managerID + "'";
+            String whereClause = "username='" + managerUsername + "'";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "departmentID");
             if (results.next()) {
                 return results.getString("departmentID");
             }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public String getParkIDByManagerUsername(String managerUsername)
+    {
+        try
+        {
+            String tableName = this.schemaName + ".park_employees";
+            String whereClause = "username='" + managerUsername + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkID");
+            if (results.next())
+                return results.getString("ParkID");
+
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
@@ -1028,27 +1045,17 @@ public class DBConnection {
             String whereClause_Orders = "MONTH (VisitationDate) = " + month + " AND orderStatus = " + orderStatus + " AND ParkID = " + parkID;
             String orderByClause_Orders = " ORDER BY VisitationDate";
 
-            int[][] amountPerDay = new int[OrderType.values().length][31]; // row per order type, column per day in month
-            int day, orderType, numOfVisitors;
-
             String reportName = "numofvisitors";
             String tableName_Reports = this.schemaName + ".park_manager_reports";
             String whereClause_Reports = "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + month + "' AND year='" + year + "'";
 
             // Retrieving data from DB
-            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, NumOfVisitors");
-            while (results.next()) // building amountPerDay.
-            {
-                day = results.getTimestamp("VisitationDate").toLocalDateTime().getDayOfMonth();
-                orderType = results.getInt("OrderType");
-                numOfVisitors = results.getInt("NumOfVisitors");
-                amountPerDay[orderType - 1][day - 1] += numOfVisitors;
-            }
-            results.close();
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, OrderType, NumOfVisitors");
 
             // Building report entity and blob.
-            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, amountPerDay);
+            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, results);
             Blob generatedBlob = report.createPDFBlob();
+            results.close();
 
             // If exists - updates the report.
             ResultSet blobData = dbController.selectRecordsFields(tableName_Reports, whereClause_Reports, "blobData");
