@@ -36,6 +36,7 @@ public enum OpCodes {
     OP_NO_AVAILABLE_SPOT(35),
     OP_CHECK_AVAILABLE_SPOT(36),
     OP_CONFIRMATION(37),
+    OP_CREATE_SPOTANEOUS_ORDER(38),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

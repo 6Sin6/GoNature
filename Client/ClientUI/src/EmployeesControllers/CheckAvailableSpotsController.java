@@ -2,6 +2,7 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.ParkBank;
@@ -93,7 +94,17 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
 
     @FXML
     void OnClickMakeOrderBtn(ActionEvent event) {
+        try {
+            MessagePopup msg = new MessagePopup("/EmployeesUI/SpontaneousOrderSubmit.fxml", 0, 0, true, false);
+            SpontaneousOrderSubmitController controller = (SpontaneousOrderSubmitController) msg.getController();
+            controller.setApplicationWindowController(applicationWindowController);
+            msg.show(applicationWindowController.getRoot());
 
+            controller.setMessagePopup(msg);
+            controller.start(parkCmbBox.getValue(), availableSpots);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

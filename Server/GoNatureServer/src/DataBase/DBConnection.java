@@ -304,12 +304,12 @@ public class DBConnection {
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
             if (!dbController.insertRecord(tableName, columns, "'" + order.getVisitorID() + "'",
                     "'" + order.getParkID() + "'",
-                    "'" + order.getVisitationDate().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getVisitationDate().toString().split("\\.")[0] + "'",
                     "'" + order.getClientEmailAddress() + "'",
                     "'" + order.getPhoneNumber() + "'",
                     String.valueOf(order.getOrderStatus().ordinal() + 1),
-                    "'" + order.getEnteredTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
-                    "'" + order.getExitedTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getEnteredTime().toString().split("\\.")[0] + "'",
+                    "'" + order.getExitedTime().toString().split("\\.")[0] + "'",
                     String.valueOf(order.getOrderType().ordinal() + 1),
                     String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
@@ -318,7 +318,7 @@ public class DBConnection {
             this.serverController.addtolog("Insert into " + tableName + " succeeded. Insert order:" + order);
 
             // Get the order from the DB (extract newly assigned order ID)
-            ResultSet results = dbController.selectRecordsFields(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate() + "'", "OrderID");
+            ResultSet results = dbController.selectRecordsFields(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate().toString().split("\\.")[0] + "'", "OrderID");
             if (results.next()) {
                 order.setOrderID(results.getString("OrderID"));
                 return order;
@@ -549,7 +549,8 @@ public class DBConnection {
         try {
             String orderID = order.getOrderID();
             String tableName = this.schemaName + ".orders";
-            String setClause = "orderStatus=" + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus();
+            OrderStatus newOrderStatus = order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT ? OrderStatus.STATUS_SPONTANEOUS_ORDER : OrderStatus.STATUS_CONFIRMED_PAID;
+            String setClause = "orderStatus=" + newOrderStatus.getOrderStatus();
             String whereClause = "OrderID=" + orderID;
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
@@ -1201,9 +1202,8 @@ public class DBConnection {
     public Integer GetAvailableSpotForEntry(String parkID, Timestamp wantedTime) {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
-
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().substring(0, wantedTime.toString().length() - 2) + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (9) AND o.ParkID = '" + parkID + "'";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (3,5,9,7) AND o.ParkID = '" + parkID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return null;
