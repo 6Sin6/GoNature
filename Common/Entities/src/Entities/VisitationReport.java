@@ -302,7 +302,6 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         while (entranceData.next()) {
             int orderTypeRes = entranceData.getInt("OrderType");
             if (orderTypeRes != orderType) {
-                entranceData.next();
                 continue;
             }
             table.addCell(this.createCenterCell(String.valueOf(entranceData.getInt("ParkID"))));

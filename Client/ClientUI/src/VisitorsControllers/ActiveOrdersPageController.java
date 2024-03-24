@@ -151,12 +151,29 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             tableData.add(row);
         }
         tableOrders.setItems(tableData);
+        Timestamp orderTimeStamp = new Timestamp(System.currentTimeMillis());
+
     }
 
     private void makeRowClickable() {
-        // Set row factory to handle clicks on rows
         tableOrders.setRowFactory(tv -> {
-            TableRow<Map<String, String>> row = new TableRow<>();
+            TableRow<Map<String, String>> row = new TableRow<Map<String, String>>() {
+                @Override
+                protected void updateItem(Map<String, String> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setStyle("");
+                    } else {
+                        String orderId = item.get("Order Number");
+                        Order order = findOrderById(orderId);
+                        if (order != null && order.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
+                            setStyle("-fx-background-color: #ffce00;");
+                        } else {
+                            setStyle("");
+                        }
+                    }
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                     Map<String, String> clickedRowData = row.getItem();
@@ -167,6 +184,17 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return row;
         });
     }
+
+    private Order findOrderById(String orderId) {
+        for (Order order : list) {
+            if (order.getOrderID().equals(orderId)) {
+                return order;
+            }
+        }
+        return null;
+    }
+
+
 
 
 }

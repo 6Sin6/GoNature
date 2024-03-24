@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
-public class CreateAletrnativeOrderController extends BaseController implements Initializable {
+public class CreateAlternativeOrderController extends BaseController implements Initializable {
 
     @FXML
     private MFXButton btnSignUp;
