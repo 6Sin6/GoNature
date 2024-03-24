@@ -55,6 +55,10 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
 
     @FXML
     void OnClickctnCheckAvailability(ActionEvent event) {
+        progressBar.setVisible(false);
+        ParkOccupancyTxt.setVisible(false);
+        MakeOrderBtn.setVisible(false);
+        availableSpotsTxt.setVisible(false);
         if (parkCmbBox.getValue().equals("")) {
             errorLbl.setVisible(true);
             return;
@@ -65,15 +69,22 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         ClientUI.client.accept(msgToServer);
         Object answer = ClientCommunicator.msg;
         Message msgFromServer = (Message) answer;
-        ArrayList<Integer> msgData = (ArrayList<Integer>) msgFromServer.getMsgData();
-        Integer parkCapacity = msgData.get(1);
-        availableSpots = msgData.get(0);
-        progressBar.setProgress((double) (parkCapacity - availableSpots) / parkCapacity);
-        availableSpotsTxt.setText("Available spots right now : " + availableSpots);
-        progressBar.setVisible(true);
-        ParkOccupancyTxt.setVisible(true);
-        if (availableSpots > 0) {
-            MakeOrderBtn.setVisible(true);
+        if (!(msgFromServer.getMsgData() instanceof ArrayList)) {
+            availableSpotsTxt.setText("No Avaliable Spots");
+            availableSpotsTxt.setVisible(true);
+        }
+        else {
+            ArrayList<Integer> msgData = (ArrayList<Integer>) msgFromServer.getMsgData();
+            Integer parkCapacity = msgData.get(1);
+            availableSpots = msgData.get(0);
+            progressBar.setProgress((double) (parkCapacity - availableSpots) / parkCapacity);
+            availableSpotsTxt.setText("Available spots right now : " + availableSpots);
+            availableSpotsTxt.setVisible(true);
+            progressBar.setVisible(true);
+            ParkOccupancyTxt.setVisible(true);
+            if (availableSpots > 0) {
+                MakeOrderBtn.setVisible(true);
+            }
         }
     }
 

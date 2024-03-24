@@ -1181,6 +1181,24 @@ public class DBConnection {
         }
     }
 
+    public Boolean insertFullCapacity(String Parkid, String ParkCapacity,String Year,String Month,String Day){
+        String tableName = this.schemaName + ".park_capacity_info";
+        String field = "ParkID, capacity, Year, Month, Day";
+        String values = "'" + Parkid + "', " + ParkCapacity + ", " + Year + ", " + Month + ", " + Day;
+        try{
+            dbController.insertRecord(tableName, field, values);
+        }
+        catch (SQLException e){
+            if ("23000".equals(e.getSQLState())) { // Change "23505" to the SQL state code as per your DBMS
+                return false;
+            } else {
+                this.serverController.addtolog(e.getMessage());
+                return null;
+            }
+        }
+       return true;
+    }
+
     public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) {
         try {
             String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
