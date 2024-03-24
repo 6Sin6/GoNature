@@ -115,11 +115,12 @@ public class OrderBillPageController extends BaseController {
 
         String orderTypeDescription = "";
         if (order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {
-            orderTypeTxt.setText("Single visitation");
+            boolean isFamilySized = order.getNumOfVisitors() > 1;
+            orderTypeTxt.setText(isFamilySized ? "Family-sized visitation" : "Single visitation");
             if (order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER) {
-                orderTypeDescription = order.getNumOfVisitors() > 5 ? "Spontaneous family-sized visitation" : "Spontaneous single visitation";
+                orderTypeDescription = isFamilySized ? "Spontaneous family-sized visitation" : "Spontaneous single visitation";
             } else {
-                orderTypeDescription = order.getNumOfVisitors() > 5 ? "Pre-ordered family-sized visitation" : "Pre-ordered single visitation";
+                orderTypeDescription = isFamilySized ? "Pre-ordered family-sized visitation" : "Pre-ordered single visitation";
             }
         } else if (order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
             orderTypeTxt.setText("Group visitation");

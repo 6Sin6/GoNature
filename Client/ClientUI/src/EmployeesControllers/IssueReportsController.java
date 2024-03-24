@@ -79,7 +79,7 @@ public class IssueReportsController extends BaseController {
         }
 
         String selectedPark = parkCmb.getValue();
-        if (Utils.parkManagerReportsMap.containsKey(selectedReport) && selectedPark == null) {
+        if (Utils.parkManagerReportsMap.containsKey(selectedReport) && (selectedPark == null || selectedPark.equals("All Parks"))) {
             errMsg.setText("This is a park specific report. Please select a park");
             return;
         } else if (Utils.departmentReportsMap.containsKey(selectedReport)) {
