@@ -1,5 +1,8 @@
 package Entities;
 
+import com.itextpdf.text.DocumentException;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -17,8 +20,9 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
      *
      * @param parkID The park id associated with the report.
      */
-    public ParkReport(Integer parkID)
+    public ParkReport(Integer parkID) throws DocumentException, IOException
     {
+        super();
         this.parkID = parkID;
     }
 

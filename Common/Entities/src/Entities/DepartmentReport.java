@@ -22,7 +22,9 @@ public abstract class DepartmentReport extends ReportConstructor {
      * Constructs a DepartmentReport object with the specified parameters.
      * @param departmentID The ID of the department associated with the report.
      */
-    public DepartmentReport(Integer departmentID) {
+    public DepartmentReport(Integer departmentID) throws DocumentException, IOException
+    {
+        super();
         this.departmentID = departmentID;
     }
 
