@@ -264,15 +264,12 @@ public class GoNatureServer extends AbstractServer {
             requestedOrders = db.getUserOrders(((AbstractVisitor) visitor).getID());
         } else {
             requestedOrders = db.getUserOrders(((SingleVisitor) visitor).getID());
-
         }
-
-
         Message getVisitorOrdersMsg = new Message(OpCodes.OP_GET_VISITOR_ORDERS, visitor.getUsername(), requestedOrders);
         client.sendToClient(getVisitorOrdersMsg);
     }
 
-    private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws IOException {
+    private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
         if (db.CheckAvailabilityBeforeReservationTime(order) && db.CheckAvailabilityAfterReservationTime(order)) {
@@ -283,8 +280,16 @@ public class GoNatureServer extends AbstractServer {
                 return;
             }
             Order newOrder = db.addOrder(order);
-            Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
-            client.sendToClient(createOrderMsg);
+            if (newOrder!=null){
+                Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
+                client.sendToClient(createOrderMsg);
+                GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order "+order.getOrderID()+" created","Your order "+order.getOrderID()+" "+order.getVisitationDate().toString()+" created Successfully");
+            }
+            else {
+                Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
+                client.sendToClient(respondMsg);
+            }
+
         } else {
             Message NO_AVAILABLE_SPOT = new Message(OpCodes.OP_NO_AVAILABLE_SPOT, message.getMsgUserName(), null);
             client.sendToClient(NO_AVAILABLE_SPOT);
@@ -351,7 +356,10 @@ public class GoNatureServer extends AbstractServer {
     private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
-        db.extractFromWaitList(order);
+        if(!db.extractFromWaitList(order)){
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
+            client.sendToClient(respondMsg);
+        }
         boolean isCanceled = db.updateOrderStatusAsCancelled(orderID);
         if (!isCanceled) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
@@ -464,7 +472,7 @@ public class GoNatureServer extends AbstractServer {
     }
 
 
-    private void handleCreateNewVisitationForWaitList(Message message, ConnectionToClient client) throws IOException {
+    private void handleCreateNewVisitationForWaitList(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
         if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
@@ -474,10 +482,15 @@ public class GoNatureServer extends AbstractServer {
         }
         order.setOrderStatus(OrderStatus.STATUS_WAITLIST);
         Order newOrder = db.addOrder(order);
-        Message createOrderMsg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, message.getMsgUserName(), newOrder);
-        client.sendToClient(createOrderMsg);
-
-
+        if (newOrder!=null){
+            Message createOrderMsg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, message.getMsgUserName(), newOrder);
+            client.sendToClient(createOrderMsg);
+            GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order "+order.getOrderID()+" entered the waitlist","Your order "+order.getOrderID()+" "+order.getVisitationDate().toString()+" joined the waitlist");
+        }
+        else {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
+            client.sendToClient(respondMsg);
+        }
     }
 
     /**

@@ -1247,6 +1247,7 @@ public class DBConnection {
             if(!updateOrderStatus(extractedOrder.getOrderID(),OrderStatus.STATUS_ACCEPTED)){
                 return false;
             }
+            GmailSender.sendEmail(extractedOrder.getClientEmailAddress(),"Your order has been accepted","Your order for date "+extractedOrder.getVisitationDate()+" has been accepted");
         }
         return true;
     }
