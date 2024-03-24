@@ -34,7 +34,8 @@ public enum OpCodes {
     OP_VIEW_REPORT_BLOB(33), /* Expect: String[] - 0: isDepartmentReport boolean, 1: reportType ["visitations", "cancellations"], 2: month, 3: year, 3: ParkID or DepartmentID. Returns: byte[] - PDF Blob */
     OP_GENERATE_REPORT_BLOB(34), /* Expect: String - reportType ["visitations", "cancellations"]. Returns: boolean indicator */
     OP_NO_AVAILABLE_SPOT(35),
-    OP_CONFIRMATION(36),
+    OP_CHECK_AVAILABLE_SPOT(36),
+    OP_CONFIRMATION(37),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

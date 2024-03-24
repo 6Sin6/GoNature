@@ -182,6 +182,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_CONFIRMATION:
                     handleConfirmOrderVisitation(message, client);
                     break;
+                case OP_CHECK_AVAILABLE_SPOT:
+                    handleCheckAvailableSpot(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -256,6 +259,30 @@ public class GoNatureServer extends AbstractServer {
         }
 
     }
+
+    private void handleCheckAvailableSpot(Message message, ConnectionToClient client) throws IOException {
+        String parkID = (String) message.getMsgData();
+        Park park = db.getParkDetails(parkID);
+        if (park == null) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), false);
+            client.sendToClient(respondMsg);
+            return;
+        }
+        Integer parkCapacity = park.getCapacity();
+        Integer parkEpectedVisitationTime = db.getExpectedTime(parkID);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+        Integer VisitorsBefore = db.GetAvailableSpotForEntry(parkID, currentTime);
+        Integer VisitorsAfter = db.GetAvailableSpotForEntry(parkID, createExitTime(currentTime, parkEpectedVisitationTime));
+
+        Integer availableSpots = Math.max(parkCapacity - Math.max(VisitorsBefore, VisitorsAfter), 0);
+        ArrayList<Integer> availableSpotsList = new ArrayList<>();
+        availableSpotsList.add(availableSpots);
+        availableSpotsList.add(parkCapacity);
+        Message respondMsg = new Message(OpCodes.OP_CHECK_AVAILABLE_SPOT, message.getMsgUserName(), availableSpotsList);
+        client.sendToClient(respondMsg);
+    }
+
 
     private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws IOException {
         User visitor = (User) message.getMsgData();
