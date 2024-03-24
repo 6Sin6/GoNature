@@ -5,9 +5,6 @@ import GoNatureServer.GmailSender;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
@@ -155,7 +152,7 @@ public class DBConnection {
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
-                            if (checkGroupGuide(userGoNatureData.getString("ID")) ) {
+                            if (checkGroupGuide(userGoNatureData.getString("ID"))) {
                                 return new VisitorGroupGuide(
                                         "",
                                         "",
@@ -307,12 +304,12 @@ public class DBConnection {
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
             if (!dbController.insertRecord(tableName, columns, "'" + order.getVisitorID() + "'",
                     "'" + order.getParkID() + "'",
-                    "'" + order.getVisitationDate().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getVisitationDate().toString().split("\\.")[0] + "'",
                     "'" + order.getClientEmailAddress() + "'",
                     "'" + order.getPhoneNumber() + "'",
                     String.valueOf(order.getOrderStatus().ordinal() + 1),
-                    "'" + order.getEnteredTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
-                    "'" + order.getExitedTime().toString().substring(0, order.getVisitationDate().toString().length() - 2) + "'",
+                    "'" + order.getEnteredTime().toString().split("\\.")[0] + "'",
+                    "'" + order.getExitedTime().toString().split("\\.")[0] + "'",
                     String.valueOf(order.getOrderType().ordinal() + 1),
                     String.valueOf(order.getNumOfVisitors()))) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert order:" + order);
@@ -321,7 +318,7 @@ public class DBConnection {
             this.serverController.addtolog("Insert into " + tableName + " succeeded. Insert order:" + order);
 
             // Get the order from the DB (extract newly assigned order ID)
-            ResultSet results = dbController.selectRecordsFields(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate() + "'", "OrderID");
+            ResultSet results = dbController.selectRecordsFields(tableName, "VisitorID='" + order.getVisitorID() + "' AND ParkID='" + order.getParkID() + "' AND VisitationDate='" + order.getVisitationDate().toString().split("\\.")[0] + "'", "OrderID");
             if (results.next()) {
                 order.setOrderID(results.getString("OrderID"));
                 return order;
@@ -552,7 +549,8 @@ public class DBConnection {
         try {
             String orderID = order.getOrderID();
             String tableName = this.schemaName + ".orders";
-            String setClause = "orderStatus=" + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus();
+            OrderStatus newOrderStatus = order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT ? OrderStatus.STATUS_SPONTANEOUS_ORDER : OrderStatus.STATUS_CONFIRMED_PAID;
+            String setClause = "orderStatus=" + newOrderStatus.getOrderStatus();
             String whereClause = "OrderID=" + orderID;
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
@@ -583,8 +581,7 @@ public class DBConnection {
      * @param orderID the order ID.
      * @return a message indicating the result of the operation, null if successful.
      */
-    public String setExitTimeOfOrder(String orderID)
-    {
+    public String setExitTimeOfOrder(String orderID) {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
@@ -623,8 +620,7 @@ public class DBConnection {
         }
     }
 
-    public String activateGroupGuide(String groupGuideID)
-    {
+    public String activateGroupGuide(String groupGuideID) {
         try {
             String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + groupGuideID + "'";
@@ -632,7 +628,7 @@ public class DBConnection {
             if (!resultSet.next())
                 return "Group guide ID does not exist.";
             if (!resultSet.getBoolean("pendingStatus"))
-                return  "Group guide has already been authorized.";
+                return "Group guide has already been authorized.";
 
             if (!dbController.updateRecord(tableName, "pendingStatus=false", whereClause))
                 return "Group guide authorization failed. Try again later.";
@@ -818,6 +814,7 @@ public class DBConnection {
      * The report is saved as a PDF file and stored in the database.
      * The report is generated for the current month only.
      * The report is generated for the department with the specified ID.
+     *
      * @param departmentID The ID of the department for which to generate the report.
      * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
      */
@@ -866,6 +863,7 @@ public class DBConnection {
      * The report is saved as a PDF file and stored in the database.
      * The report is generated for the current month only.
      * The report is generated for the park with the specified ID.
+     *
      * @param departmentID The ID of the department for which to generate the report.
      * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
      */
@@ -886,8 +884,8 @@ public class DBConnection {
                     "o.ParkID IN (" + this.getAllDepartmentParksChained(departmentID) + ")";
             String ordersWhereVisitationDate = " AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) <= DAY(CURRENT_DATE)";
             String ordersWhereStatus = " AND orderStatus IN ('" +
-                            OrderStatus.STATUS_CONFIRMED_AND_ABSENT.getOrderStatus() + "', '" + OrderStatus.STATUS_CANCELLED.getOrderStatus() +
-                            "')";
+                    OrderStatus.STATUS_CONFIRMED_AND_ABSENT.getOrderStatus() + "', '" + OrderStatus.STATUS_CANCELLED.getOrderStatus() +
+                    "')";
             String groupByClause = " GROUP BY o.ParkID, p.ParkName, DAY(o.VisitationDate)";
             String orderByClause = " ORDER BY date ASC";
             ResultSet departmentResults =
@@ -960,8 +958,9 @@ public class DBConnection {
      * Handles the update and insertion of department reports in the database.
      * If a report for the current month already exists, the method updates the existing report.
      * If a report for the current month does not exist, the method inserts a new report.
-     * @param departmentID The ID of the department for which to update or insert the report.
-     * @param reportName The name of the report to update or insert.
+     *
+     * @param departmentID  The ID of the department for which to update or insert the report.
+     * @param reportName    The name of the report to update or insert.
      * @param generatedBlob The PDF blob containing the report data.
      * @return {@code true} if the report is successfully updated or inserted, {@code false} otherwise.
      * @throws SQLException If an SQL exception occurs.
@@ -978,7 +977,7 @@ public class DBConnection {
         }
 
         String columns = "departmentId, reportType, month, year, blobData";
-        String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+        String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear())};
         if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
             this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
             return false;
@@ -988,9 +987,10 @@ public class DBConnection {
 
     /**
      * Retrieves all park IDs associated with a specific department.
+     *
      * @param departmentID The ID of the department.
      * @return A ResultSet containing all park IDs associated with the specified department.
-     *         Returns null if there is an error.
+     * Returns null if there is an error.
      */
     private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException {
         String parkTableName = this.schemaName + ".parks";
@@ -1000,14 +1000,15 @@ public class DBConnection {
 
     /**
      * Retrieves all park IDs associated with a specific department.
+     *
      * @param departmentID The ID of the department.
      * @return A StringBuilder containing all park IDs associated with the specified department.
-     *         Returns null if there is an error.
+     * Returns null if there is an error.
      */
     private StringBuilder getAllDepartmentParksChained(String departmentID) throws SQLException {
         ResultSet parkResults = this.getDepartmentParkIDs(departmentID);
         StringBuilder parkIDs = new StringBuilder();
-        while(parkResults.next()) {
+        while (parkResults.next()) {
             if (parkIDs.length() > 0) {
                 parkIDs.append(", ");
             }
@@ -1050,12 +1051,13 @@ public class DBConnection {
                         PendingConfirmationOrders.add(order);
                     }
                 }
-                sendMails(PendingConfirmationOrders,"Order Confirmation Notification","awaiting confirmation");
+                sendMails(PendingConfirmationOrders, "Order Confirmation Notification", "awaiting confirmation");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
         }
     }
+
     public void cancelOrdersInWaitlist24HoursBefore() {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1085,7 +1087,7 @@ public class DBConnection {
                         WaitListOrdersCancelled.add(order);
                     }
                 }
-                sendMails(WaitListOrdersCancelled, "Order Cancel Notification","canceled");
+                sendMails(WaitListOrdersCancelled, "Order Cancel Notification", "canceled");
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
@@ -1098,7 +1100,7 @@ public class DBConnection {
             String tableName = this.schemaName + ".orders";
             String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 79199 SECOND AND NOW() + INTERVAL 79320 SECOND AND orderStatus = " + (OrderStatus.STATUS_PENDING_CONFIRMATION.getOrderStatus());
             try {
-                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress","VisitorID");
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
                 while (rs.next()) {
                     Orders.add(new ArrayList<>());
                     Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
@@ -1197,6 +1199,22 @@ public class DBConnection {
         }
     }
 
+    public Integer GetAvailableSpotForEntry(String parkID, Timestamp wantedTime) {
+        try {
+            String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (3,5,9,7) AND o.ParkID = '" + parkID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
+            if (!resultSet.next())
+                return null;
+            int result = resultSet.getInt("numOfVisitors");
+            return result;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
     public Integer getExpectedTime(String parkID) {
         try {
             String tableName = this.schemaName + ".parks";
@@ -1240,11 +1258,11 @@ public class DBConnection {
         }
     }
 
-    public boolean extractFromWaitList(Order order){
-        ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(),order.getEnteredTime());
+    public boolean extractFromWaitList(Order order) {
+        ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(), order.getEnteredTime());
         List<Order> extractedOrders = findBestCombination(ordersToWorkWith, order.getNumOfVisitors());
-        for (Order extractedOrder : extractedOrders){
-            if(!updateOrderStatus(extractedOrder.getOrderID(),OrderStatus.STATUS_ACCEPTED)){
+        for (Order extractedOrder : extractedOrders) {
+            if (!updateOrderStatus(extractedOrder.getOrderID(), OrderStatus.STATUS_ACCEPTED)) {
                 return false;
             }
             GmailSender.sendEmail(extractedOrder.getClientEmailAddress(),"Your order has been accepted","Your order for date "+extractedOrder.getVisitationDate()+" has been accepted");
