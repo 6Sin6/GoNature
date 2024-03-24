@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
+<Pane id="rootBillPane" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.SpontaneousOrderSubmitController">
+    <children>
+        <Separator layoutX="10.0" layoutY="71.0" prefHeight="8.0" prefWidth="930.0"/>
+        <Text layoutX="310.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spontaneous Order"
+              wrappingWidth="357.873046875">
+            <font>
+                <Font name="System Bold" size="36.0"/>
+            </font>
+        </Text>
+        <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" defaultButton="true" layoutX="433.0" layoutY="558.0"
+                   onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49"
+                   text="Create Order"/>
+        <MFXTextField fx:id="txtFirstName" layoutX="422.0" layoutY="211.0" prefHeight="30.0" prefWidth="200.0"/>
+        <MFXTextField fx:id="txtLastName" layoutX="422.0" layoutY="266.0" prefWidth="200.0"/>
+        <MFXTextField fx:id="txtNumOfVisitors" alignment="CENTER" layoutX="422.0" layoutY="327.0" prefHeight="48.0"
+                      prefWidth="200.0" text="1"/>
+        <MFXTextField fx:id="txtPhone" layoutX="422.0" layoutY="392.0" prefWidth="200.0"/>
+        <MFXTextField fx:id="txtEmail" layoutX="422.0" layoutY="448.0" prefWidth="200.0"/>
+        <Text layoutX="321.0" layoutY="241.0" text="First Name:">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Text>
+        <Text layoutX="322.0" layoutY="296.0" text="Last Name:">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Text>
+        <Text layoutX="272.0" layoutY="358.0" text="Number of visitors:">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Text>
+        <Text layoutX="351.0" layoutY="422.0" text="Phone:">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Text>
+        <Text layoutX="361.0" layoutY="468.0" text="Email:">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Text>
+        <Text fx:id="DetailsTxt" layoutX="310.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              wrappingWidth="357.8730396926403">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Text>
+        <Label fx:id="errorLbl" layoutX="326.0" layoutY="644.0" prefHeight="40.0" prefWidth="326.0"
+               styleClass="error-text">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+    </children>
+</Pane>

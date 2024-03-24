@@ -3,22 +3,19 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonClient.controllers.OrderBillPageController;
-import CommonUtils.CommonUtils;
 import CommonUtils.MessagePopup;
-import Entities.*;
+import Entities.Message;
+import Entities.OpCodes;
+import Entities.Order;
 import client.ClientCommunicator;
-
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.util.*;
+import java.util.Objects;
 
 import static CommonUtils.CommonUtils.isAllDigits;
 
@@ -99,7 +96,7 @@ public class GenerateBillController extends BaseController {
 
     private void handleBillPresentation(Order order) {
         try {
-            MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true,  false);
+            MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true, false);
             OrderBillPageController controller = (OrderBillPageController) msg.getController();
             controller.setApplicationWindowController(applicationWindowController);
             msg.show(applicationWindowController.getRoot());
@@ -109,6 +106,11 @@ public class GenerateBillController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void GenerateBillSpontaneousOrder(String orderID) {
+        txtOrderID.setText(orderID);
+        OnClickGenerateBillButton(null);
     }
 
 }
