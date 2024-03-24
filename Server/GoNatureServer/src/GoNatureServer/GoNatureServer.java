@@ -325,12 +325,13 @@ public class GoNatureServer extends AbstractServer {
                 return;
             }
             Order newOrder = db.addOrder(order);
-            if (newOrder!=null){
+            if (newOrder != null) {
                 Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);
                 client.sendToClient(createOrderMsg);
-                GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order "+order.getOrderID()+" created","Your order "+order.getOrderID()+" "+order.getVisitationDate().toString()+" created Successfully");
-            }
-            else {
+                new Thread(() -> {
+                    GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order " + order.getOrderID() + " created", "Your order " + order.getOrderID() + " " + order.getVisitationDate().toString() + " created Successfully");
+                }).start();
+            } else {
                 Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
                 client.sendToClient(respondMsg);
             }
@@ -401,7 +402,7 @@ public class GoNatureServer extends AbstractServer {
     private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws IOException {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
-        if(!db.extractFromWaitList(order)){
+        if (!db.extractFromWaitList(order)) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
         }
@@ -527,12 +528,13 @@ public class GoNatureServer extends AbstractServer {
         }
         order.setOrderStatus(OrderStatus.STATUS_WAITLIST);
         Order newOrder = db.addOrder(order);
-        if (newOrder!=null){
+        if (newOrder != null) {
             Message createOrderMsg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, message.getMsgUserName(), newOrder);
             client.sendToClient(createOrderMsg);
-            GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order "+order.getOrderID()+" entered the waitlist","Your order "+order.getOrderID()+" "+order.getVisitationDate().toString()+" joined the waitlist");
-        }
-        else {
+            new Thread(() -> {
+                GmailSender.sendEmail(newOrder.getClientEmailAddress(), "Your order " + order.getOrderID() + " entered the waitlist", "Your order " + order.getOrderID() + " " + order.getVisitationDate().toString() + " joined the waitlist");
+            }).start();
+        } else {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
             client.sendToClient(respondMsg);
         }

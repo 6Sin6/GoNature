@@ -1185,7 +1185,7 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
-            String whereClause = "'" + checkOrder.getExitedTime().toString().substring(0, checkOrder.getExitedTime().toString().length() - 2) +
+            String whereClause = "'" + checkOrder.getExitedTime().toString().split("\\.")[0] +
                     "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
                     + checkOrder.getParkID().toString() + "';";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
@@ -1203,7 +1203,27 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (3,5,9,7) AND o.ParkID = '" + parkID + "'";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN ("+OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus()+","
+                    +OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus()+","
+                    +OrderStatus.STATUS_FULFILLED.getOrderStatus()+","
+                    +OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus()+")" +
+                    " AND o.ParkID = '" + parkID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
+            if (!resultSet.next())
+                return null;
+            int result = resultSet.getInt("numOfVisitors");
+            return result;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public Integer GetAvailableSpotForWaitListCheck(String parkID, Timestamp wantedTime) {
+        try {
+            String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
+            String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus= '"+OrderStatus.STATUS_ACCEPTED.getOrderStatus()+"' AND o.ParkID = '" + parkID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return null;
@@ -1233,7 +1253,7 @@ public class DBConnection {
         try {
             ArrayList<Order> orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
-            String whereClause = "ParkID='" + parkID + "' AND EnteredTime = '" + startTime.toString().substring(0, startTime.toString().length() - 2) + "'AND orderStatus = 1";
+            String whereClause = "ParkID='" + parkID + "' AND EnteredTime = '" + startTime.toString().split("\\.")[0] + "'AND orderStatus = 1";
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             while (results.next()) {
                 orders.add(new Order(
@@ -1258,14 +1278,31 @@ public class DBConnection {
         }
     }
 
+    private int getParkCapacity(String parkID) {
+        try {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID='" + parkID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "Capacity", "GapVisitorsCapacity");
+            if (!resultSet.next())
+                return 0;
+            return resultSet.getInt("Capacity") - resultSet.getInt("GapVisitorsCapacity");
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return 0;
+        }
+    }
+
     public boolean extractFromWaitList(Order order) {
         ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(), order.getEnteredTime());
-        List<Order> extractedOrders = findBestCombination(ordersToWorkWith, order.getNumOfVisitors());
+        int capacityNow = GetAvailableSpotForWaitListCheck(order.getParkID(), order.getEnteredTime());
+        List<Order> extractedOrders = findBestCombination(ordersToWorkWith, getParkCapacity(order.getParkID()) - capacityNow + order.getNumOfVisitors());
         for (Order extractedOrder : extractedOrders) {
             if (!updateOrderStatus(extractedOrder.getOrderID(), OrderStatus.STATUS_ACCEPTED)) {
                 return false;
             }
-            GmailSender.sendEmail(extractedOrder.getClientEmailAddress(),"Your order has been accepted","Your order for date "+extractedOrder.getVisitationDate()+" has been accepted");
+            new Thread(() -> {
+                GmailSender.sendEmail(extractedOrder.getClientEmailAddress(), "Your order has been accepted", "Your order for date " + extractedOrder.getVisitationDate() + " has been accepted");
+            }).start();
         }
         return true;
     }
