@@ -14,87 +14,117 @@
 
 <?import javafx.scene.image.Image?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.UpdateOrderDetailsPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+           prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="VisitorsControllers.UpdateOrderDetailsPageController">
     <children>
-      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="/assets/visitorsBackground.jpg" />
-         </image></ImageView>
+        <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="/assets/visitorsBackground.jpg"/>
+            </image>
+        </ImageView>
         <Pane fx:id="btnHandleOrder" prefHeight="800.0" prefWidth="1000.0">
             <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#38d7a2" height="430.0" layoutX="280.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="428.0" />
-                <Text fx:id="txtHeader" layoutX="265.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Update Order details">
+                <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#38d7a2" height="430.0" layoutX="280.0"
+                           layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="428.0"/>
+                <Text fx:id="txtHeader" layoutX="265.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Update Order details">
                     <font>
-                        <Font name="System Bold" size="48.0" />
+                        <Font name="System Bold" size="48.0"/>
                     </font>
                 </Text>
-                <MFXButton fx:id="UpdateBtn" buttonType="RAISED" layoutX="525.0" layoutY="580.0" onAction="#OnClickUpdateBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#adff49" text="Update Order" />
+                <MFXButton fx:id="UpdateBtn" buttonType="RAISED" layoutX="525.0" layoutY="580.0"
+                           onAction="#OnClickUpdateBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#adff49"
+                           text="Update Order"/>
                 <Label layoutX="330.0" layoutY="150.0" prefHeight="27.0" prefWidth="68.0" text="Order ID :">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
                 <Label layoutX="330.0" layoutY="220.0" prefHeight="27.0" prefWidth="52.0" text="Park :">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
                 <Label layoutX="330.0" layoutY="290.0" prefHeight="27.0" prefWidth="52.0" text="Email :">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
                 <Label layoutX="330.0" layoutY="360.0" prefHeight="27.0" prefWidth="82.0" text="Telephone :">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
                 <Label layoutX="330.0" layoutY="420.0" prefHeight="27.0" prefWidth="66.0" text="Date:">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
                 <Label layoutX="330.0" layoutY="490.0" prefHeight="27.0" prefWidth="52.0" text="Time :">
-               <font>
-                  <Font size="15.0" />
-               </font></Label>
-                <Label fx:id="OrderIDText" layoutX="446.0" layoutY="150.0" prefHeight="30.0" prefWidth="200.0" text="Label" />
-                <Label fx:id="ParkName" layoutX="446.0" layoutY="220.0" prefHeight="30.0" prefWidth="200.0" text="Label" />
-                <Label fx:id="TimeLabel" layoutX="446.0" layoutY="490.0" prefHeight="30.0" prefWidth="200.0" text="Label" />
-                <Label fx:id="DateLabel" layoutX="446.0" layoutY="420.0" prefHeight="30.0" prefWidth="200.0" text="Label" />
-                <TextField fx:id="PhoneText" layoutX="446.0" layoutY="360.0" prefHeight="30.0" prefWidth="200.0" />
-                <TextField fx:id="EmailText" layoutX="446.0" layoutY="290.0" prefHeight="30.0" prefWidth="200.0" />
-                <Label fx:id="errorLabel" alignment="CENTER" layoutX="374.0" layoutY="90.0" prefHeight="30.0" prefWidth="250.0" textFill="#f50b0b">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font></Label>
-                <MFXButton fx:id="cancelBtn" buttonType="RAISED" layoutX="325.0" layoutY="580.0" onAction="#OnClickCancelOrderBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#d70707" text="Cancel" />
-            <Separator layoutX="424.0" layoutY="120.0" orientation="VERTICAL" prefHeight="430.0" prefWidth="6.0" />
-            <ImageView fx:id="orderIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/orderIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/parkIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/emailIcon.gif" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="359.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/phoneIcon.gif" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="419.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/dateIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="490.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="/assets/timeIcon.png" />
-               </image>
-            </ImageView>
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="OrderIDText" layoutX="446.0" layoutY="150.0" prefHeight="30.0" prefWidth="200.0"
+                       text="Label"/>
+                <Label fx:id="ParkName" layoutX="446.0" layoutY="220.0" prefHeight="30.0" prefWidth="200.0"
+                       text="Label"/>
+                <Label fx:id="TimeLabel" layoutX="446.0" layoutY="490.0" prefHeight="30.0" prefWidth="200.0"
+                       text="Label"/>
+                <Label fx:id="DateLabel" layoutX="446.0" layoutY="420.0" prefHeight="30.0" prefWidth="200.0"
+                       text="Label"/>
+                <TextField fx:id="PhoneText" layoutX="446.0" layoutY="360.0" prefHeight="30.0" prefWidth="200.0"/>
+                <TextField fx:id="EmailText" layoutX="446.0" layoutY="290.0" prefHeight="30.0" prefWidth="200.0"/>
+                <Label fx:id="errorLabel" alignment="CENTER" layoutX="374.0" layoutY="90.0" prefHeight="30.0"
+                       prefWidth="250.0" textFill="#f50b0b">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Label>
+                <MFXButton fx:id="cancelBtn" buttonType="RAISED" layoutX="325.0" layoutY="580.0"
+                           onAction="#OnClickCancelOrderBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#adff49"
+                           text="Cancel"/>
+                <MFXButton fx:id="PayBtn" buttonType="RAISED" layoutX="725" layoutY="580.0"
+                           onAction="#OnClickPayOrderBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#adff49"
+                           text="Pay"/>
+                <Separator layoutX="424.0" layoutY="120.0" orientation="VERTICAL" prefHeight="430.0" prefWidth="6.0"/>
+                <ImageView fx:id="orderIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="149.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/orderIcon.png"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="219.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/parkIcon.png"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="289.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/emailIcon.gif"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="359.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/phoneIcon.gif"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="419.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/dateIcon.png"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="490.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/assets/timeIcon.png"/>
+                    </image>
+                </ImageView>
             </children>
         </Pane>
     </children>
