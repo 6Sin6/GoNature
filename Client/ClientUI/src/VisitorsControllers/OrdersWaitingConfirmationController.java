@@ -31,8 +31,7 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
-
-public class ActiveOrdersPageController extends BaseController implements Initializable {
+public class OrdersWaitingConfirmationController extends BaseController implements Initializable {
 
     @FXML
     private Pane bntHandleOrder;
@@ -64,7 +63,6 @@ public class ActiveOrdersPageController extends BaseController implements Initia
     @FXML
     private TableColumn<Map, String> colTime;
 
-
     @FXML
     private MFXButton handleOrderbtn;
 
@@ -73,7 +71,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     private int rowIndex;
 
-    private ArrayList<Order> list = new ArrayList<>();
+    private ArrayList<Order> list= new ArrayList<>();
 
     public void cleanup() {
         rowIndex = -1;
@@ -88,11 +86,11 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return;
         }
         Order o1 = list.get(rowIndex);
-        applicationWindowController.loadVisitorsPage("UpdateOrderDetailsPage");
+        applicationWindowController.loadVisitorsPage("ConfirmVisitationPage");
         Object controller = applicationWindowController.getCurrentActiveController();
-        if (controller instanceof UpdateOrderDetailsPageController) {
-            ((UpdateOrderDetailsPageController) controller).setFields(o1);
-            ((UpdateOrderDetailsPageController) controller).setOrdersList(list);
+        if (controller instanceof ConfirmVisitationPageController) {
+            ((ConfirmVisitationPageController) controller).setOrder(o1);
+            ((ConfirmVisitationPageController) controller).setOrdersList(list);
         }
 
     }
@@ -113,8 +111,9 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
         ClientUI.client.accept(send);
         if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
-            populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
-        } else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
+            populateTable(filterOrders((ArrayList<Order>) (ClientCommunicator.msg.getMsgData())));
+        }
+        else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR){
             MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
             popup.show(applicationWindowController.getRoot());
         }
@@ -124,7 +123,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
     public void populateTable(ArrayList<Order> dataList) {
         list.clear();
         if (dataList.isEmpty()) {
-            MessagePopup popup = new MessagePopup("No active orders", Duration.seconds(5), 600, 150, false);
+            MessagePopup popup = new MessagePopup("There are no orders awaiting confirmation", Duration.seconds(5), 600, 150, false);
             popup.show(applicationWindowController.getRoot());
         }
         rowIndex = -1;
@@ -168,7 +167,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         });
     }
 
+    private ArrayList<Order> filterOrders(ArrayList<Order> orders) {
+        ArrayList<Order> filteredOrders = new ArrayList<>();
+        for (Order order : orders) {
+            if (order.getOrderStatus() ==OrderStatus.STATUS_PENDING_CONFIRMATION) {
+                filteredOrders.add(order);
+            }
+        }
+        return filteredOrders;
+    }
 
 }
-
-

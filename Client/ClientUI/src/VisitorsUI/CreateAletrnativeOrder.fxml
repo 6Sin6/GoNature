@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0"
+           prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="VisitorsControllers.CreateAletrnativeOrderController">
+    <children>
+        <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0"
+              prefWidth="950.0">
+            <children>
+                <Text fx:id="txtHeader" layoutX="336.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Alternative Order" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="36.0"/>
+                    </font>
+                </Text>
+                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0"/>
+                <Text layoutX="252.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full Name:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="413.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="471.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number Of Visitors:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="252.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time:">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Text>
+                <Label fx:id="lblParkName" layoutX="487.0" layoutY="128.0" text="lblParkName">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblNumOfVisitors" layoutX="487.0" layoutY="175.0" prefHeight="30.0" prefWidth="174.0"
+                       text="lblNumOfVisitors">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblDate" layoutX="487.0" layoutY="224.0" prefHeight="30.0" prefWidth="151.0"
+                       text="lblDate">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblTime" layoutX="487.0" layoutY="272.0" prefHeight="30.0" prefWidth="151.0"
+                       text="lblTime">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblName" layoutX="487.0" layoutY="328.0" prefHeight="30.0" prefWidth="151.0"
+                       text="lblName">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblPhone" layoutX="487.0" layoutY="391.0" prefHeight="30.0" prefWidth="151.0"
+                       text="lblPhone">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblEmail" layoutX="476.0" layoutY="446.0" prefHeight="27.0" prefWidth="151.0"
+                       text="lblEmail">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+                <MFXButton fx:id="btnSignUp" buttonType="RAISED" layoutX="387.0" layoutY="540.0"
+                           onAction="#OnClickSignUpButton" prefHeight="50.0" prefWidth="100.0" text="Sign-Up Now!"/>
+                <Label fx:id="lblError" layoutX="361.0" layoutY="633.0" prefHeight="38.0" prefWidth="229.0"
+                       textFill="#f80505">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+    </children>
+</StackPane>

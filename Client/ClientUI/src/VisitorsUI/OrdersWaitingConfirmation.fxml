@@ -10,12 +10,12 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrdersWaitingConfirmationController">
     <children>
         <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
             <children>
                 <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Text fx:id="txtHeader" layoutX="366.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
+                <Text fx:id="txtHeader" layoutX="337.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Orders" wrappingWidth="275.0703125">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>

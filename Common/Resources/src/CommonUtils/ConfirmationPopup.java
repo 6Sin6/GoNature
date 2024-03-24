@@ -12,7 +12,10 @@ public class ConfirmationPopup extends BasePopup {
         super(fullScreenMode, width, height);
         yesButton.setText(FirstBtn);
         noButton.setText(SecondBtn);
+        this.yesButton.getStyleClass().add("menu-item-big");
+        this.noButton.getStyleClass().add("menu-item-big");
         Label questionLabel = new Label(question);
+        questionLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white;");
         popup.getChildren().addAll(questionLabel, yesButton, noButton);
 
         yesButton.setOnAction(e -> {

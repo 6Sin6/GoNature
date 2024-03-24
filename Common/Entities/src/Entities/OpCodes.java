@@ -11,7 +11,7 @@ public enum OpCodes {
     OP_CREATE_NEW_VISITATION(7), /* Expect: Order, Returns: boolean indicator */
     OP_CREATE_NEW_GROUP_VISITATION(8), /* Same method as above - Perform an upcast to Order!!! Rework group size + group guide ID... */
     OP_INSERT_VISITATION_TO_WAITLIST(9),
-    OP_INSERT_GROUP_VISITATION_TO_WAITLIST(10),
+    OP_GET_AVAILABLE_SPOTS(10),
     OP_HANDLE_VISITATION_STATUS(11), /* Expect: String - OrderID, OrderStatus status. Returns: boolean indicator*/
     OP_HANDLE_GROUP_VISITATION_STATUS(12), /* Same method as above */
     OP_GET_ORDER_BY_ID(13), /* Expect: String - OrderID, Returns: Order with data if order is found. Order with null data if order is not found. Null if exception was thrown */
@@ -34,7 +34,7 @@ public enum OpCodes {
     OP_VIEW_REPORT_BLOB(33), /* Expect: String[] - 0: isDepartmentReport boolean, 1: reportType ["visitations", "cancellations"], 2: month, 3: year, 3: ParkID or DepartmentID. Returns: byte[] - PDF Blob */
     OP_GENERATE_REPORT_BLOB(34), /* Expect: String - reportType ["visitations", "cancellations"]. Returns: boolean indicator */
     OP_NO_AVAILABLE_SPOT(35),
-    OP_GET_AVAILABLE_SPOTS(36),
+    OP_CONFIRMATION(36),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

@@ -147,43 +147,48 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         errorLbl.setText("");
         SingleVisitor visitor = (SingleVisitor) applicationWindowController.getUser();
         Timestamp timeOfVisit = CommonUtils.convertStringToTimestamp(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue());
-        Order order = new Order(visitor.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, timeOfVisit, null, OrderType.ORD_TYPE_SINGLE, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
+        Order order = new Order(visitor.getID(), ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue()), timeOfVisit, txtEmail.getText(), txtPhone.getText(), null, timeOfVisit, null, null, OrderType.ORD_TYPE_SINGLE, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
         Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, visitor.getUsername(), order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
             throw new CommunicationException("Response from server is not appropriate");
         }
-        if (respondMsg.getMsgData() instanceof Order) {
-            if (((Order) respondMsg.getMsgData()).getOrderID() != null) {
-                Order cnfrmorder = (Order) respondMsg.getMsgData();
-                String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
-                ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
-                {
-                    applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                }
-                        , 600, 300, false, "OK", false);
-                confirmPopup.show(applicationWindowController.getRoot());
-            } else {
-                String strForPopup = "The park is at full capacity. Would you like to signup to the wait-list?";
-                ConfirmationPopup confirmPopup;
-                confirmPopup = new ConfirmationPopup(strForPopup, () ->
-                {
-                    applicationWindowController.loadVisitorsPage("WaitListPage");
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                }, () -> {
-                    applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
-                    applicationWindowController.loadMenu(applicationWindowController.getUser());
-                    clearFields();
-                },
-                        300, 150, false, "Yes", "No", false);
-                confirmPopup.show(applicationWindowController.getRoot());
+        Order cnfrmorder = (Order) respondMsg.getMsgData();
+        if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+                applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
+                applicationWindowController.loadMenu(applicationWindowController.getUser());
+                clearFields();
             }
+                    , 600, 300, false, "OK", false);
+            confirmPopup.show(applicationWindowController.getRoot());
+        } else {
+            String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
+            ConfirmationPopup confirmPopup;
+            String fullName = "" + txtFirstName.getText() + " " + txtLastName.getText();
+            confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+                applicationWindowController.loadVisitorsPage("WaitListPage");
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (controller instanceof WaitListPageController) {
+                    ((WaitListPageController) controller).setFields(order, fullName);
+                }
+                clearFields();
+            }, () -> {
+                applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (controller instanceof AlternativeTimesTableController) {
+                    ((AlternativeTimesTableController) controller).start(order, fullName);
+                }
+            },
+                    800, 400, false, "Yes", "No", false);
+            confirmPopup.show(applicationWindowController.getRoot());
         }
+
     }
 
 

@@ -5,14 +5,20 @@ import GoNatureServer.GmailSender;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static CommonUtils.CommonUtils.*;
+import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
+import static CommonUtils.CommonUtils.getNextWeekHours;
+import static CommonUtils.OrderProcessor.findBestCombination;
 import static GoNatureServer.GoNatureServer.createExitTime;
 
 /**
@@ -149,6 +155,16 @@ public class DBConnection {
                 if (userGoNatureData.next()) {
                     switch (userRole) {
                         case 1:
+                            if (checkGroupGuide(userGoNatureData.getString("ID")) ) {
+                                return new VisitorGroupGuide(
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        ""
+                                );
+                            }
                             return new VisitorGroupGuide(
                                     userCredentials.getString("username"),
                                     "",
@@ -317,6 +333,21 @@ public class DBConnection {
         }
     }
 
+    public boolean checkOrderPayment(Order order) {
+        try {
+            String orderID = order.getOrderID();
+            String tableName1 = this.schemaName + ".payments";
+            ResultSet orderPayment = dbController.selectRecordsFields(tableName1, "OrderID=" + orderID, "paid");
+            if (!orderPayment.next()) {
+                return false;
+            }
+            return orderPayment.getInt("paid") == 1;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Retrieves an order by its ID.
      *
@@ -444,9 +475,9 @@ public class DBConnection {
     /**
      * Checks if an order exists for a specific visitor, park, and visitation date.
      *
-     * @param visitorID       The ID of the visitor.
-     * @param parkID          The ID of the park.
-     * @param visitationDate  The visitation date.
+     * @param visitorID      The ID of the visitor.
+     * @param parkID         The ID of the park.
+     * @param visitationDate The visitation date.
      * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
      */
     public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
@@ -468,8 +499,8 @@ public class DBConnection {
      *
      * @param parkID The ID of the park for which to fetch the details.
      * @return A Park object containing the details of the park and its manager.
-     *         Returns a new Park object with default values if no matching park is found.
-     *         Returns null if a SQLException is thrown.
+     * Returns a new Park object with default values if no matching park is found.
+     * Returns null if a SQLException is thrown.
      */
     public Park getParkDetails(String parkID) {
         try {
@@ -595,7 +626,7 @@ public class DBConnection {
     public String activateGroupGuide(String groupGuideID)
     {
         try {
-            String tableName = this.schemaName + ".group-guides";
+            String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + groupGuideID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
             if (!resultSet.next())
@@ -780,21 +811,22 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Generates a visitation report for a specific department.
+     * The report contains the average time spent by visitors in the park for each day of the current month.
+     * As well as the distribution of visitors by order type (single family/group) for the month.
+     * The report is saved as a PDF file and stored in the database.
+     * The report is generated for the current month only.
+     * The report is generated for the department with the specified ID.
+     * @param departmentID The ID of the department for which to generate the report.
+     * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
+     */
     public boolean generateVisitationReport(String departmentID) {
         try {
             String reportName = "visitations";
-            String parkTableName = this.schemaName + ".parks";
-            String parkWhereClause = "departmentID='" + departmentID + "'";
 
             // Retrieve ParkIDs matching the departmentID
-            ResultSet parkResults = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
-            StringBuilder parkIDs = new StringBuilder();
-            while(parkResults.next()) {
-                if (parkIDs.length() > 0) {
-                    parkIDs.append(", ");
-                }
-                parkIDs.append("'").append(parkResults.getString("ParkID")).append("'");
-            }
+            StringBuilder parkIDs = this.getAllDepartmentParksChained(departmentID);
 
             String ordersTableName = this.schemaName + ".orders" + " AS o";
             String joinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
@@ -808,7 +840,7 @@ public class DBConnection {
                     dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + orderByClause, visitationDateField, avgTimeSpentFieldSingleFamilyOrders, avgTimeSpentFieldGroupOrders);
 
             String entranceSelectFields = "o.ParkID, p.ParkName, o.OrderType, o.VisitationDate AS ReservationTime, o.EnteredTime AS EntranceTime, TIMEDIFF(o.ExitedTime, o.EnteredTime) AS TimeSpent";
-            String entranceWhereClause = "o.ParkID IN (" + parkIDs + ") AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) < DAY(CURRENT_DATE)";
+            String entranceWhereClause = "o.ParkID IN (" + parkIDs + ") AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) <= DAY(CURRENT_DATE)";
             String entranceJoinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
             String entranceOrderByClause = " ORDER BY o.ParkID, ReservationTime ASC";
             ResultSet entranceResults = dbController.selectRecordsFields(ordersTableName + entranceJoinClause, entranceWhereClause + entranceOrderByClause, entranceSelectFields);
@@ -820,43 +852,168 @@ public class DBConnection {
             Blob generatedBlob = visitationReport.createPDFBlob();
             results.close();
             entranceResults.close();
-
-            ResultSet blobData = dbController.selectRecordsFields(this.schemaName + ".department_manager_reports", "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'", "blobData");
-            String reportTableName = this.schemaName + ".department_manager_reports";
-            if (blobData.next()) {
-                if (!dbController.updateBlobRecord(reportTableName, "blobData", generatedBlob, "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'")) {
-                    this.serverController.addtolog("Update in " + reportTableName + " failed. Update visitation report");
-                    return false;
-                }
-                return true;
-            }
-
-            String columns = "departmentId, reportType, month, year, blobData";
-            String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
-            if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
-                this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
-                return false;
-            }
-
-            return true;
+            return this.handleInsertionDepartmentReports(departmentID, reportName, generatedBlob);
         } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Generates a visitation report for a specific park.
+     * The report contains the distribution of cancelled and unfulfilled orders per day for the current month.
+     * As well as the distribution of cancelled and unfulfilled orders by order type (single family/group) and by park.
+     * The report is saved as a PDF file and stored in the database.
+     * The report is generated for the current month only.
+     * The report is generated for the park with the specified ID.
+     * @param departmentID The ID of the department for which to generate the report.
+     * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
+     */
     public boolean generateCancellationsReport(String departmentID) {
         try {
-            String parkTableName = this.schemaName + ".parks";
-            String parkWhereClause = "departmentID='" + departmentID + "'";
+            String reportName = "cancellations";
 
             // Retrieve ParkIDs matching the departmentID
-            ResultSet parkResults = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
-            return true;
-        } catch (SQLException e) {
+            ResultSet parkIDs = this.getDepartmentParkIDs(departmentID);
+
+            HashMap<String, ResultSet> departmentData = new HashMap<>();
+
+            // Retrieve Distribution of Cancelled Orders for the Entire Department
+            String ordersTableName = this.schemaName + ".orders" + " AS o";
+            String joinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
+            String selectFields = "DAY(o.VisitationDate) AS date, COUNT(*) as TotalCancelledOrders";
+            String ordersWhereClause =
+                    "o.ParkID IN (" + this.getAllDepartmentParksChained(departmentID) + ")";
+            String ordersWhereVisitationDate = " AND YEAR(o.VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(o.VisitationDate) = MONTH(CURRENT_DATE) AND DAY(o.VisitationDate) <= DAY(CURRENT_DATE)";
+            String ordersWhereStatus = " AND orderStatus IN ('" +
+                            OrderStatus.STATUS_CONFIRMED_AND_ABSENT.getOrderStatus() + "', '" + OrderStatus.STATUS_CANCELLED.getOrderStatus() +
+                            "')";
+            String groupByClause = " GROUP BY o.ParkID, p.ParkName, DAY(o.VisitationDate)";
+            String orderByClause = " ORDER BY date ASC";
+            ResultSet departmentResults =
+                    dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + ordersWhereStatus + ordersWhereVisitationDate + groupByClause + orderByClause, selectFields);
+            if (!departmentResults.next()) {
+                return false;
+            }
+            departmentData.put("distribution", departmentResults);
+
+            // Retrieve Average Distribution of Cancelled Orders for the Entire Department
+            groupByClause = " GROUP BY DAY(o.VisitationDate)";
+            selectFields = "DAY(o.VisitationDate) AS date, AVG(CASE WHEN orderStatus IN ('"
+                    + OrderStatus.STATUS_CONFIRMED_AND_ABSENT.getOrderStatus() + "', '" + OrderStatus.STATUS_CANCELLED.getOrderStatus() +
+                    "') THEN 1 ELSE 0 END) as AverageCancelledOrders";
+            ResultSet departmentAvgResults =
+                    dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + ordersWhereVisitationDate + groupByClause + orderByClause, selectFields);
+            if (!departmentAvgResults.next()) {
+                return false;
+            }
+            departmentData.put("average", departmentAvgResults);
+
+            CancellationReport cancellationReport = new CancellationReport(Integer.valueOf(departmentID), departmentData);
+
+            // Retrieve Distribution and Average of Cancelled Orders for Each Park In the Department
+            String parkID = "";
+            ordersTableName = this.schemaName + ".orders" + " AS o";
+            joinClause = " JOIN gonature.parks AS p ON o.ParkID = p.ParkID";
+            selectFields = "o.ParkID, p.ParkName, DAY(o.VisitationDate) AS date, COUNT(*) as TotalCancelledOrders";
+            String selectFieldsAvg = "DAY(o.VisitationDate) AS date, AVG(CASE WHEN orderStatus IN ("
+                    + OrderStatus.STATUS_CONFIRMED_AND_ABSENT.getOrderStatus() + "," + OrderStatus.STATUS_CANCELLED.getOrderStatus() +
+                    ") THEN 1 ELSE 0 END) as AverageCancelledOrders";
+            String orderByClauseAvg = " ORDER BY date ASC";
+            String groupByClauseAvg = " GROUP BY DAY(o.VisitationDate)";
+            groupByClause = " GROUP BY o.ParkID, p.ParkName, DAY(o.VisitationDate)";
+            orderByClause = " ORDER BY o.ParkID ASC, date ASC";
+
+            HashMap<String, ResultSet> parkCancellations = new HashMap<>();
+            while (parkIDs.next()) {
+                parkID = parkIDs.getString("ParkID");
+                ordersWhereClause = "o.ParkID='" + parkID + "'";
+                ResultSet parkDistResults =
+                        dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + ordersWhereStatus + ordersWhereVisitationDate + groupByClause + orderByClause, selectFields);
+                if (!parkDistResults.next()) {
+                    return false;
+                }
+                parkCancellations.put("distribution_" + parkID, parkDistResults);
+
+                ResultSet parkAvgResults =
+                        dbController.selectRecordsFields(ordersTableName + joinClause, ordersWhereClause + ordersWhereVisitationDate + groupByClauseAvg + orderByClauseAvg, selectFieldsAvg);
+                if (!parkAvgResults.next()) {
+                    return false;
+                }
+                parkCancellations.put("average_" + parkID, parkAvgResults);
+            }
+            cancellationReport.setParksData(parkCancellations);
+
+
+            Blob generatedBlob = cancellationReport.createPDFBlob();
+            departmentResults.close();
+            departmentAvgResults.close();
+
+            return this.handleInsertionDepartmentReports(departmentID, reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Handles the update and insertion of department reports in the database.
+     * If a report for the current month already exists, the method updates the existing report.
+     * If a report for the current month does not exist, the method inserts a new report.
+     * @param departmentID The ID of the department for which to update or insert the report.
+     * @param reportName The name of the report to update or insert.
+     * @param generatedBlob The PDF blob containing the report data.
+     * @return {@code true} if the report is successfully updated or inserted, {@code false} otherwise.
+     * @throws SQLException If an SQL exception occurs.
+     */
+    private boolean handleInsertionDepartmentReports(String departmentID, String reportName, Blob generatedBlob) throws SQLException {
+        ResultSet blobData = dbController.selectRecordsFields(this.schemaName + ".department_manager_reports", "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'", "blobData");
+        String reportTableName = this.schemaName + ".department_manager_reports";
+        if (blobData.next()) {
+            if (!dbController.updateBlobRecord(reportTableName, "blobData", generatedBlob, "departmentId='" + departmentID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'")) {
+                this.serverController.addtolog("Update in " + reportTableName + " failed. Update visitation report");
+                return false;
+            }
+            return true;
+        }
+
+        String columns = "departmentId, reportType, month, year, blobData";
+        String[] values = {departmentID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+        if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
+            this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Retrieves all park IDs associated with a specific department.
+     * @param departmentID The ID of the department.
+     * @return A ResultSet containing all park IDs associated with the specified department.
+     *         Returns null if there is an error.
+     */
+    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException {
+        String parkTableName = this.schemaName + ".parks";
+        String parkWhereClause = "departmentID='" + departmentID + "'";
+        return dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
+    }
+
+    /**
+     * Retrieves all park IDs associated with a specific department.
+     * @param departmentID The ID of the department.
+     * @return A StringBuilder containing all park IDs associated with the specified department.
+     *         Returns null if there is an error.
+     */
+    private StringBuilder getAllDepartmentParksChained(String departmentID) throws SQLException {
+        ResultSet parkResults = this.getDepartmentParkIDs(departmentID);
+        StringBuilder parkIDs = new StringBuilder();
+        while(parkResults.next()) {
+            if (parkIDs.length() > 0) {
+                parkIDs.append(", ");
+            }
+            parkIDs.append("'").append(parkResults.getString("ParkID")).append("'");
+        }
+        return parkIDs;
     }
 
     public boolean generateNumOfVisitorsReport(int parkID)
@@ -952,8 +1109,7 @@ public class DBConnection {
                 for (ArrayList<String> order : Orders) {
                     if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_PENDING_CONFIRMATION)) {
                         serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
-                    }
-                    else{
+                    } else {
                         PendingConfirmationOrders.add(order);
                     }
                 }
@@ -961,6 +1117,41 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+        }
+    }
+    public void cancelOrdersInWaitlist24HoursBefore() {
+        try {
+            ArrayList<ArrayList<String>> Orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 23 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 24 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_WAITLIST.getOrderStatus());
+            try {
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID", "ClientEmailAddress", "VisitorID");
+                while (rs.next()) {
+                    Orders.add(new ArrayList<>());
+                    Orders.get(Orders.size() - 1).add(rs.getString("OrderID"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("ClientEmailAddress"));
+                    Orders.get(Orders.size() - 1).add(rs.getString("VisitorID"));
+
+                }
+            } catch (SQLException e) {
+                serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+                return;
+            }
+
+            // Update the status of selected orders to pending confirmation
+            if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> WaitListOrdersCancelled = new ArrayList<>();
+                for (ArrayList<String> order : Orders) {
+                    if (!updateOrderStatus(order.get(0), OrderStatus.STATUS_CANCELLED)) {
+                        serverController.addtolog("Failed to update order status for OrderID: " + order.get(0));
+                    } else {
+                        WaitListOrdersCancelled.add(order);
+                    }
+                }
+                sendMails(WaitListOrdersCancelled, "Order Cancel Notification","canceled");
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
         }
     }
 
@@ -999,6 +1190,20 @@ public class DBConnection {
         }
     }
 
+    public boolean checkGroupGuide(String groupGuideID) {
+        try {
+            String tableName = this.schemaName + ".group_guides";
+            String whereClause = "ID='" + groupGuideID + "'";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, "pendingStatus");
+            if (!resultSet.next())
+                return false;
+            int result = resultSet.getInt("pendingStatus");
+            return result == 1;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
 
 
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
@@ -1070,6 +1275,46 @@ public class DBConnection {
         }
     }
 
+    public ArrayList<Order> getMatchingWaitlistOrders(String parkID, Timestamp startTime) {
+        try {
+            ArrayList<Order> orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "ParkID='" + parkID + "' AND EnteredTime = '" + startTime.toString().substring(0, startTime.toString().length() - 2) + "'AND orderStatus = 1";
+            ResultSet results = dbController.selectRecords(tableName, whereClause);
+            while (results.next()) {
+                orders.add(new Order(
+                        results.getString("VisitorID"),
+                        results.getString("ParkID"),
+                        results.getTimestamp("VisitationDate"),
+                        results.getString("ClientEmailAddress"),
+                        results.getString("PhoneNumber"),
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
+                        results.getTimestamp("EnteredTime"),
+                        results.getTimestamp("ExitedTime"),
+                        results.getString("OrderID"),
+                        OrderType.values()[results.getInt("OrderType") - 1],
+                        results.getInt("NumOfVisitors")
+                ));
+            }
+            results.close();
+            return orders;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean extractFromWaitList(Order order){
+        ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(),order.getEnteredTime());
+        List<Order> extractedOrders = findBestCombination(ordersToWorkWith, order.getNumOfVisitors());
+        for (Order extractedOrder : extractedOrders){
+            if(!updateOrderStatus(extractedOrder.getOrderID(),OrderStatus.STATUS_ACCEPTED)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public ArrayList<Timestamp> getAvailableTimeStamps(Order order) {
         Order WorkingOrder = order;
         List<Timestamp> availableHours = getNextWeekHours(order.getEnteredTime());
@@ -1138,5 +1383,6 @@ public class DBConnection {
             this.serverController.addtolog(e.getMessage());
         }
     }
+
 }
 
