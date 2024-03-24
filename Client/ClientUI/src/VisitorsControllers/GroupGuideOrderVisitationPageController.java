@@ -3,8 +3,10 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonClient.controllers.OrderBillPageController;
 import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.MessagePopup;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -184,14 +186,14 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
         if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
-            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
-            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully! Would you like to pay now and get discount or pay later ?";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () -> handleBillPresentation(cnfrmorder), () ->
             {
                 applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                 applicationWindowController.loadMenu(applicationWindowController.getUser());
                 clearFields();
             }
-                    , 600, 300, false, "OK", false);
+                    , 950, 500, false, "Pay now!", "Later", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
@@ -212,7 +214,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
                     ((AlternativeTimesTableController) controller).start(order, fullName);
                 }
             },
-                    800, 400, false, "Yes", "No", false);
+                    800, 400, false, "WaitListPage", "AlternativeTimesTable", false);
             confirmPopup.show(applicationWindowController.getRoot());
         }
 
@@ -261,7 +263,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         txtFirstName.clear();
         txtLastName.clear();
         txtPhone.clear();
-
+        label.setText("");
         // Reset combo boxes
         numOfVisitorsCmbBox.getSelectionModel().clearSelection();
         parkCmbBox.getSelectionModel().clearSelection();
@@ -274,5 +276,19 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         datePicker.setValue(null);
     }
 
+
+    private void handleBillPresentation(Order order) {
+        try {
+            MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);
+            GenerateBillForGroupGuideController controller = (GenerateBillForGroupGuideController) msg.getController();
+            controller.setApplicationWindowController(applicationWindowController);
+            msg.show(applicationWindowController.getRoot());
+
+            controller.setMessagePopup(msg);
+            controller.start(order, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
