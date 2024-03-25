@@ -11,7 +11,8 @@ import java.sql.Timestamp;
  * This class is abstract and serves as a base class for specific types of reports.
  */
 public abstract class ParkReport extends ReportConstructor implements Serializable {
-    private Integer parkID;
+    private final Integer parkID;
+    private final String parkName;
 
 
 
@@ -20,10 +21,11 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
      *
      * @param parkID The park id associated with the report.
      */
-    public ParkReport(Integer parkID) throws DocumentException, IOException
+    public ParkReport(Integer parkID, String parkName) throws DocumentException, IOException
     {
         super();
         this.parkID = parkID;
+        this.parkName = parkName;
     }
 
 

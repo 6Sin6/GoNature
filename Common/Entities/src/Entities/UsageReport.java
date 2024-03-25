@@ -27,9 +27,9 @@ public class UsageReport extends ParkReport implements Serializable
     private boolean[] wasFull;
 
 
-    public UsageReport(Integer parkID, ResultSet resultSet) throws DocumentException, IOException, SQLException
+    public UsageReport(Integer parkID, String parkName, ResultSet resultSet) throws DocumentException, IOException, SQLException
     {
-        super(parkID);
+        super(parkID, parkName);
         this.reportData = resultSet;
         this.wasFull = new boolean[31];
     }

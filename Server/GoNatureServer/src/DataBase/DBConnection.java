@@ -1086,12 +1086,15 @@ public class DBConnection {
             String orderByClause_Orders = " ORDER BY VisitationDate";
 
             String reportName = "numofvisitors";
+            String parkName = getParkNameByID(parkID);
+            if (parkName == null)
+                return false;
 
             // Retrieving data from DB
             ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, OrderType, NumOfVisitors");
 
             // Building report entity and blob.
-            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, results);
+            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, parkName, results);
             Blob generatedBlob = report.createPDFBlob();
             results.close();
 
@@ -1115,12 +1118,16 @@ public class DBConnection {
             String orderByClause_Orders = " ORDER BY Day";
 
             String reportName = "usage";
+            String parkName = getParkNameByID(parkID);
+            if (parkName == null)
+                return false;
 
             // Retrieving data from DB
             ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "capacity, Day");
 
             // Building report entity and blob.
-            UsageReport report = new UsageReport(parkID, results);
+
+            UsageReport report = new UsageReport(parkID, parkName, results);
             Blob generatedBlob = report.createPDFBlob();
             results.close();
 
@@ -1129,6 +1136,23 @@ public class DBConnection {
             this.serverController.addtolog(e.getMessage());
             return false;
         }
+    }
+
+    private String getParkNameByID(Integer parkID)
+    {
+        try
+        {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID = " + parkID;
+            ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
+            if (rs.next())
+                return rs.getString("ParkName");
+        }
+        catch (SQLException e)
+        {
+            this.serverController.addtolog(e.getMessage());
+        }
+        return null;
     }
 
 

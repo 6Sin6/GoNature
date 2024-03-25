@@ -38,9 +38,9 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @param parkID The ID of the park.
      * @param resultSet The report data.
      */
-    public NumOfVisitorsReport(Integer parkID, ResultSet resultSet) throws DocumentException, IOException, SQLException
+    public NumOfVisitorsReport(Integer parkID, String parkName, ResultSet resultSet) throws DocumentException, IOException, SQLException
     {
-        super(parkID);
+        super(parkID, parkName);
         this.amountPerDay = new int[this.getAmountOfOrderTypes()][31];
         this.totalPerType = new int[this.getAmountOfOrderTypes()];
 
