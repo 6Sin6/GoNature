@@ -132,7 +132,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
             throw new CommunicationException("Response from server is not appropriate");
         }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
@@ -146,6 +146,14 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             }
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
+        } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
+            String strForPopup = "ou already have an order with these details";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+            }
+                    , 600, 300, false, "OK", false);
+            confirmPopup.show(applicationWindowController.getRoot());
+
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
             ConfirmationPopup confirmPopup;

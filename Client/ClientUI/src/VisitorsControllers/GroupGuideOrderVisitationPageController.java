@@ -19,6 +19,7 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
 import javax.naming.CommunicationException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -161,7 +162,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
             throw new CommunicationException("Response from server is not appropriate");
         }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
@@ -175,6 +176,14 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             }
                     , 950, 500, false, "Pay now!", "Later", false);
             confirmPopup.show(applicationWindowController.getRoot());
+        } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
+            String strForPopup = "You already have an order with these details";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+            }
+                    , 600, 300, false, "OK", false);
+            confirmPopup.show(applicationWindowController.getRoot());
+
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
             ConfirmationPopup confirmPopup;
