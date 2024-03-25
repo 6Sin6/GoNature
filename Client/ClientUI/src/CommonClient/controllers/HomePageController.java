@@ -133,10 +133,15 @@ public class HomePageController extends BaseController implements Initializable 
             Message signInReq = new Message(OpCodes.OP_SIGN_IN, inputID, inputID);
             ClientUI.client.accept(signInReq);
             Message respondToSignIn = ClientCommunicator.msg;
+            if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+                onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
+                return;
+            }
             if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
                 onAuthPopup.setErrorLabel("Already Signed In !");
                 return;
             }
+
             SingleVisitor visitor = new SingleVisitor(inputID);
             Message message = new Message(OpCodes.OP_GET_VISITOR_ORDERS, inputID, visitor);
             ClientUI.client.accept(message);

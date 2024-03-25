@@ -638,6 +638,21 @@ public class DBConnection {
             return "Something went wrong... Please try again later.";
         }
     }
+    public boolean isGroupGuide(String userID) {
+        try {
+            String tableName = this.schemaName + ".group_guides";
+            String whereClause = "ID='" + userID + "' AND pendingStatus = 0) THEN '1' ELSE '0' END AS Result;";
+            String fields = "CASE WHEN EXISTS (SELECT 1 ";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, fields);
+            if (!resultSet.next()) {
+                return false;
+            }
+            return resultSet.getInt("Result") == 1;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            throw new RuntimeException("Failed to check if user is a group guide.");
+        }
+    }
 
     //=================================================================================================================//
     //                                                                                                                 //

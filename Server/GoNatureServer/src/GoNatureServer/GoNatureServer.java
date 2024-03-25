@@ -244,6 +244,11 @@ public class GoNatureServer extends AbstractServer {
         }
         if (message.getMsgData() instanceof String) {
             String username = (String) message.getMsgData();
+            if(db.isGroupGuide(username)){
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, username, username);
+                client.sendToClient(respondMsg);
+                return;
+            }
             if (signedInInstances.containsKey(username)) {
                 if (signedInInstances.get(username).getInetAddress() == null) {
                     // remove crashed client from the map and add it again with the new client.
