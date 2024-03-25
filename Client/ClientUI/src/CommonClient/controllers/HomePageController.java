@@ -78,7 +78,10 @@ public class HomePageController extends BaseController implements Initializable 
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-
+        if(returnOpCode == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+            onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
+            return;
+        }
         // Checking if the response from the server is inappropriate.
         if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
             throw new CommunicationException("Response is inappropriate from server");

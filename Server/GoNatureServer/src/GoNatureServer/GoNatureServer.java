@@ -362,6 +362,11 @@ public class GoNatureServer extends AbstractServer {
 
     private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
         String[] data = (String[]) message.getMsgData();
+        if(db.isGroupGuide(data[0])){
+            Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, "", null);
+            client.sendToClient(respondMsg);
+            return;
+        }
         Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
         Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", userOrder);
         client.sendToClient(getUserMsg);
