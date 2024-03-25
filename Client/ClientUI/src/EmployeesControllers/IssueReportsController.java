@@ -6,11 +6,12 @@ import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 
 public class IssueReportsController extends BaseController {
     @FXML
@@ -28,9 +29,13 @@ public class IssueReportsController extends BaseController {
     @FXML
     private ComboBox<String> parkCmb;
 
+    @FXML
+    private ImageView imgLoading;
+
     private boolean parkManagerPage = false;
 
-    public void cleanup() {
+    public void cleanup()
+    {
         errMsg.setText("");
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
@@ -39,75 +44,105 @@ public class IssueReportsController extends BaseController {
         parkCmb.getItems().clear();
     }
 
+    private boolean isDepartmentManager()
+    {
+        return (applicationWindowController.getUser() instanceof ParkDepartmentManager);
+    }
 
-    public void start() {
-        if (applicationWindowController.getUser() instanceof ParkDepartmentManager) {
+    private String getParkName_ParkManager()
+    {
+        return ((ParkManager)applicationWindowController.getUser()).getPark().getParkName();
+    }
+
+    public void start()
+    {
+        if (this.isDepartmentManager()) // Department manager connected
+        {
             reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
+            parkCmb.getItems().addAll(ParkBank.getUnmodifiableMap().keySet());
             parkCmb.setValue("All Parks");
             parkCmb.setDisable(true);
-        } else {
-            parkCmb.setValue("");
-            parkManagerPage = true;
         }
+        else // Park manager connected
+        {
+            parkCmb.setValue(this.getParkName_ParkManager());
+            parkManagerPage = true;
+            parkCmb.setDisable(true);
+        }
+
         reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
-        parkCmb.getItems().addAll(ParkBank.getUnmodifiableMap().keySet());
         reportCmb.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             onSelectReport();
         });
+
+        reportCmb.setValue(reportCmb.getItems().get(0));
     }
 
-    void onSelectReport() {
-        String selectedReport = reportCmb.getValue();
-        if (selectedReport == null) {
+    void onSelectReport()
+    {
+        if (!isDepartmentManager()) // if a park manager is connected, parksCmb stays disabled.
             return;
-        }
 
-        if (Utils.parkManagerReportsMap.containsKey(selectedReport)) {
+        String selectedReport = reportCmb.getValue();
+
+        if (Utils.parkManagerReportsMap.containsKey(selectedReport))
+        {
             parkCmb.setDisable(false);
-        } else {
+            parkCmb.setValue(parkCmb.getItems().get(0));
+        } else
+        {
             parkCmb.setDisable(true);
             parkCmb.setValue("All Parks");
         }
     }
 
     @FXML
-    void onClickGenerateReport(ActionEvent event) {
+    void onClickGenerateReport(ActionEvent ignoredEvent)
+    {
+        btnGenerateReport.setDisable(true);
+        generateResultMsg.setText("Generating report...");
+        imgLoading.setVisible(true);
+
         String selectedReport = reportCmb.getValue();
-        if (selectedReport == null) {
-            errMsg.setText("Please select a report type");
-            return;
-        }
+        String reportType;
 
-        String selectedPark = parkCmb.getValue();
-        if (Utils.parkManagerReportsMap.containsKey(selectedReport) && (selectedPark == null || selectedPark.equals("All Parks"))) {
-            errMsg.setText("This is a park specific report. Please select a park");
-            return;
-        } else if (Utils.departmentReportsMap.containsKey(selectedReport)) {
-            parkCmb.setValue("All Parks");
-        }
-        errMsg.setText("");
+        if (!this.parkManagerPage && Utils.departmentReportsMap.get(selectedReport) != null)
+            reportType = Utils.departmentReportsMap.get(selectedReport);
+        else reportType = Utils.parkManagerReportsMap.get(selectedReport);
 
+        Task<Void> generateReportTask = new Task<Void>() {
+            @Override
+            protected Void call() {
+                Message msg = new Message(
+                        OpCodes.OP_GENERATE_REPORT_BLOB,
+                        applicationWindowController.getUser().getUsername(),
+                        reportType
+                );
 
-        String reportType = parkManagerPage ?
-                Utils.parkManagerReportsMap.get(selectedReport) :
-                    Utils.departmentReportsMap.get(selectedReport) != null ? Utils.departmentReportsMap.get(selectedReport) :
-                            Utils.parkManagerReportsMap.get(selectedReport);
-
-        Message msg = new Message(
-                OpCodes.OP_GENERATE_REPORT_BLOB,
-                applicationWindowController.getUser().getUsername(),
-                reportType
-        );
-
-        ClientUI.client.accept(msg);
-
-        Message response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() == OpCodes.OP_GENERATE_REPORT_BLOB) {
-            if ((Boolean) response.getMsgData()) {
-                generateResultMsg.setText("Report generated successfully");
-            } else {
-                generateResultMsg.setText("Failed to generate report");
+                ClientUI.client.accept(msg);
+                return null;
             }
-        }
+        };
+
+        generateReportTask.setOnSucceeded(event -> {
+            btnGenerateReport.setDisable(false);
+
+            imgLoading.setVisible(false);
+
+            Message response = ClientCommunicator.msg;
+            if (response.getMsgOpcode() == OpCodes.OP_GENERATE_REPORT_BLOB)
+            {
+                if ((Boolean) response.getMsgData())
+                {
+                    errMsg.setText("");
+                    generateResultMsg.setText("Report generated successfully");
+                } else
+                {
+                    generateResultMsg.setText("");
+                    errMsg.setText("Failed to generate report");
+                }
+            }
+        });
+        new Thread(generateReportTask).start();
     }
 }
