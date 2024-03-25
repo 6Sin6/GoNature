@@ -183,11 +183,7 @@ public class HomePageController extends BaseController implements Initializable 
                     applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                     applicationWindowController.loadMenu(new SingleVisitor(inputID));
                     if (flag) {
-                        StringBuilder ordersToConfirm = new StringBuilder();
-                        for (Order order : OrdersToConfirm) {
-                            ordersToConfirm.append(order.getOrderID()).append(" ");
-                        }
-                        MessagePopup messagePopup = new MessagePopup("Orders : " + ordersToConfirm + "\nare pending confirmation", Duration.seconds(5), 500, 300, false);
+                        MessagePopup messagePopup = new MessagePopup("You have " + OrdersToConfirm.size() + " orders pending confirmation", Duration.seconds(5), 500, 300, false);
                         messagePopup.show(applicationWindowController.getRoot());
                     }
                 }
