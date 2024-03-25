@@ -1145,15 +1145,17 @@ public class DBConnection {
     }
 
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
-        try {
             new Thread(() -> {
-                for (ArrayList<String> order : Orders) {
-                    GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
+                try {
+                    for (ArrayList<String> order : Orders) {
+                        GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
+                    }
+                }
+                catch (Exception e) {
+                    serverController.addtolog("Error sending email: " + e.getMessage());
                 }
             }).start();
-        } catch (Exception e) {
-            serverController.addtolog("Error sending email: " + e.getMessage());
-        }
+
     }
 
 

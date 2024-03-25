@@ -123,9 +123,24 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
-    public void setCenterPageForNewVisitor(String fxmlPath, User user) {
+    public void setCompletePage(String centerFxmlPath, String leftFxmlPath) {
+        // Load center page
+        Parent centerPage = loadPage(centerFxmlPath);
+        if (centerPage != null) {
+            mainPane.setCenter(centerPage);
+        }
+
+        // Load left page
+        Parent leftPage = loadPage(leftFxmlPath);
+        if (leftPage != null) {
+            mainPane.setLeft(leftPage);
+        }
+
+    }
+
+    public void setCenterPageForNewVisitor(String fxmlPath, User user, String leftFxmlPath) {
         setUser(user);
-        setCenterPage(fxmlPath);
+        setCompletePage(fxmlPath,leftFxmlPath);
     }
 
     public void logout() {

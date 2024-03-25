@@ -92,7 +92,7 @@ public class HomePageController extends BaseController implements Initializable 
 
         onAuthPopup.setErrorLabel("");
         try {
-            String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/HandleOrderDetailsPage.fxml";
+            String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
             applicationWindowController.setCenterPage(pathToPage);
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof BaseController) {
@@ -147,7 +147,7 @@ public class HomePageController extends BaseController implements Initializable 
             }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
             } else {
                 ArrayList<Order> activeOrders = new ArrayList<>();
                 ArrayList<Order> OrdersToConfirm = new ArrayList<>();
@@ -164,7 +164,7 @@ public class HomePageController extends BaseController implements Initializable 
                     }
                 }
                 if (activeOrders.isEmpty()) {
-                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
                 } else {
                     applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                     applicationWindowController.loadMenu(new SingleVisitor(inputID));
