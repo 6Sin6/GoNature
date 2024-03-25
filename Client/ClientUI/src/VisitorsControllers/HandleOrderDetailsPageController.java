@@ -2,34 +2,16 @@ package VisitorsControllers;
 
 import CommonClient.controllers.BaseController;
 import Entities.Order;
-import Entities.ParkBank;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.text.Text;
+import javafx.scene.control.TextField;
 
 
 
 public class HandleOrderDetailsPageController extends BaseController {
-    @FXML
-    private MFXButton btnCancelOrder;
 
     @FXML
-    private MFXButton btnSubmitChanges;
-
-    @FXML
-    private Label lblErrorMsg;
-
-    @FXML
-    private Text txtDescription;
-
-    @FXML
-    private MFXTextField txtEmail;
-
-    @FXML
-    private Text txtHeader;
+    private TextField txtEmail;
 
     private Order order;
 

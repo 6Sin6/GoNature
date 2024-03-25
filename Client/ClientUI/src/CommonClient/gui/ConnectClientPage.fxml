@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -28,7 +28,6 @@
          </font>
       </Text>
       <Separator layoutX="4.0" layoutY="184.0" prefHeight="11.0" prefWidth="1270.0" />
-      <MFXTextField fx:id="ipTxt" alignment="CENTER" animated="false" floatMode="DISABLED" floatingTextGap="0.0" layoutX="460.0" layoutY="305.0" prefHeight="50.0" prefWidth="350.0" promptText="Enter IP Address" />
       <Text layoutX="460.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connect to Server" textAlignment="CENTER" wrappingWidth="350.0">
          <font>
             <Font name="System Bold" size="36.0" />
@@ -40,6 +39,7 @@
          <image>
             <Image url="/assets/connToServer.png" />
          </image></ImageView>
+      <TextField fx:id="ipTxt" layoutX="460.0" layoutY="311.0" prefHeight="40.0" prefWidth="350.0" />
 
    </children>
 </Pane>

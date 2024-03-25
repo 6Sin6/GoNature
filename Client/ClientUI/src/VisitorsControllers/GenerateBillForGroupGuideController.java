@@ -18,12 +18,6 @@ import java.util.Date;
 public class GenerateBillForGroupGuideController extends OrderBillPageController {
 
     @FXML
-    private ImageView backBtn;
-
-    @FXML
-    private Pane billPane;
-
-    @FXML
     private Text discountTxt;
 
     @FXML
@@ -43,12 +37,6 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
 
     @FXML
     private Text priceAfterDiscTxt;
-
-    @FXML
-    private Text signatureTxt;
-
-    @FXML
-    private MFXButton proceedBtn;
 
     @FXML
     private Text typeDescTxt;

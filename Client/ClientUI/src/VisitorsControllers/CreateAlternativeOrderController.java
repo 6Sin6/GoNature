@@ -49,13 +49,6 @@ public class CreateAlternativeOrderController extends BaseController implements 
     private Label lblTime;
 
     @FXML
-    private Text txtDescription;
-
-    @FXML
-    private Text txtHeader;
-
-
-    @FXML
     private Label lblError;
 
     private Order order;

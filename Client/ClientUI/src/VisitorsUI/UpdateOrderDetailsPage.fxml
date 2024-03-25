@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -65,32 +64,32 @@
                </font></Label>
                 <MFXButton fx:id="cancelBtn" buttonType="RAISED" layoutX="325.0" layoutY="580.0" onAction="#OnClickCancelOrderBtn" prefHeight="50.0" prefWidth="150.0" rippleColor="#d70707" text="Cancel" />
             <Separator layoutX="424.0" layoutY="120.0" orientation="VERTICAL" prefHeight="430.0" prefWidth="6.0" />
-            <ImageView fx:id="orderIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="orderIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/orderIcon.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/parkIcon.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/emailIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="359.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="359.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/phoneIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="419.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="419.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/dateIcon.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="490.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="295.0" layoutY="490.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/timeIcon.png" />
                </image>

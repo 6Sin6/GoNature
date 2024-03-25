@@ -2,37 +2,45 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrdersWaitingConfirmationController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.OrdersWaitingConfirmationController">
     <children>
-        <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/visitorsBackground.jpg" />
+         </image>
+      </ImageView>
+        <Pane fx:id="bntHandleOrder" prefHeight="800.0" prefWidth="1000.0">
             <children>
-                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Text fx:id="txtHeader" layoutX="337.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Orders" wrappingWidth="275.0703125">
+                <Text fx:id="txtHeader" layoutX="336.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Orders" wrappingWidth="377.0703125">
                     <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font name="System Bold" size="48.0" />
                     </font>
                 </Text>
-                <TableView fx:id="tableOrders" layoutY="82.0" prefHeight="538.0" prefWidth="950.0">
+                <TableView fx:id="tableOrders" layoutX="59.0" layoutY="125.0" prefHeight="538.0" prefWidth="883.0">
                     <columns>
-                        <TableColumn fx:id="colOrderNumber" prefWidth="118.0" text="Order Number" />
-                        <TableColumn fx:id="colParkName" prefWidth="112.0" text="Park Name" />
-                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="126.0" text="Number Of Visitors" />
+                        <TableColumn fx:id="colOrderNumber" prefWidth="92.0" text="Order Number" />
+                        <TableColumn fx:id="colParkName" prefWidth="144.0" text="Park Name" />
+                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="120.0" text="Number Of Visitors" />
                         <TableColumn fx:id="colTelephone" prefWidth="143.0" text="Telephone" />
                         <TableColumn fx:id="colEmail" prefWidth="143.0" text="Email" />
                         <TableColumn fx:id="colDate" prefWidth="130.0" text="Date" />
-                        <TableColumn fx:id="colTime" prefWidth="177.0" text="Time" />
+                        <TableColumn fx:id="colTime" prefWidth="110.0" text="Time" />
                     </columns>
                 </TableView>
-                <MFXButton fx:id="handleOrderbtn" layoutX="425.0" layoutY="625.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
-                <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0" />
+                <MFXButton fx:id="handleOrderbtn" layoutX="450.0" layoutY="671.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
+                <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="351.0" layoutY="721.0" prefHeight="30.0" prefWidth="300.0" textAlignment="CENTER" textFill="#f20606">
+               <font>
+                  <Font name="System Italic Bold" size="20.0" />
+               </font></Label>
             </children>
         </Pane>
     </children>

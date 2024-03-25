@@ -4,13 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+
+<?import javafx.scene.image.Image?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.LoginPageController">
    <children>
@@ -25,9 +26,9 @@
                   <Font name="System Bold" size="64.0" />
                </font>
             </Text>
-            <MFXButton buttonType="RAISED" defaultButton="true" depthLevel="LEVEL3" layoutX="646.0" layoutY="461.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="LOGIN" textFill="#7e5f42">
+            <MFXButton buttonType="RAISED" defaultButton="true" layoutX="646.0" layoutY="461.0" onAction="#onLoginClick" prefHeight="48.0" prefWidth="135.0" rippleColor="#adff49" text="LOGIN" textAlignment="CENTER" textFill="#7e5f42" textOverrun="CLIP">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="18.0" />
                </font></MFXButton>
             <Label fx:id="ErrorMsg" alignment="CENTER" blendMode="HARD_LIGHT" layoutX="438.0" layoutY="509.0" prefHeight="71.0" prefWidth="404.0" textAlignment="CENTER" textFill="RED" textOverrun="CLIP" wrapText="true">
                <font>
