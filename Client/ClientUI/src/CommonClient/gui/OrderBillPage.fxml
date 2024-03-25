@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
+<!--<?import javafx.scene.image.Image?>-->
 <Pane id="rootBillPane" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.OrderBillPageController">
     <Pane fx:id="billPane" layoutX="9.0" layoutY="172.0" prefHeight="423.0" prefWidth="930.0">
@@ -86,7 +86,7 @@
             <ImageView fitHeight="212.0" fitWidth="275.0" layoutX="647.0" layoutY="10.0" pickOnBounds="true"
                        preserveRatio="true">
                 <image>
-                    <Image url="/assets/GoNatureLogo.png"/>
+<!--                    <Image url="/assets/GoNatureLogo.png"/>-->
                 </image>
             </ImageView>
             <Text fx:id="priceTxt" layoutX="255.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0"
@@ -115,7 +115,7 @@
     <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0"
                onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
         <image>
-            <Image url="/assets/backButtonWhite.png"/>
+<!--            <Image url="/assets/backButtonWhite.png"/>-->
         </image>
     </ImageView>
     <Text layoutX="400.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Billing"

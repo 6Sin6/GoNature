@@ -3,13 +3,12 @@ package CommonClient.controllers;
 import CommonClient.ClientUI;
 import Entities.Message;
 import Entities.OpCodes;
-import Entities.Role;
 import client.ClientCommunicator;
 import client.ClientController;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class ConnectClientPageController extends BaseController {
     @FXML
@@ -17,7 +16,7 @@ public class ConnectClientPageController extends BaseController {
     @FXML
     private Label lblErrorMsg;
     @FXML
-    private MFXTextField ipTxt;
+    private TextField ipTxt;
     private static String CurrentIP = "localhost";
 
     public void onConnect() {

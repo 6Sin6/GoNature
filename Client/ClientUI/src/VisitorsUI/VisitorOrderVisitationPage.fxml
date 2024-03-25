@@ -5,7 +5,6 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -13,9 +12,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.image.Image?>
+
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.VisitorOrderVisitationPageController">
    <children>
-      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+       <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="/assets/visitorsBackground.jpg" />
          </image>
@@ -72,9 +73,9 @@
                   <Font size="16.0" />
                </font>
             </Text>
-            <Label fx:id="errorLbl" alignment="CENTER" layoutX="328.0" layoutY="533.0" prefHeight="40.0" prefWidth="343.0" styleClass="error-text" textFill="RED">
+            <Label fx:id="errorLbl" alignment="CENTER" layoutX="316.0" layoutY="529.0" prefHeight="60.0" prefWidth="360.0" textAlignment="CENTER" textFill="RED" wrapText="true">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="14.0" />
                </font>
             </Label>
             <TextField fx:id="txtFirstName" layoutX="440.0" layoutY="131.0" prefHeight="30.0" prefWidth="200.0">
@@ -88,44 +89,44 @@
                </font>
             </TextField>
             <TextField fx:id="txtNumOfVisitors" alignment="CENTER" layoutX="491.0" layoutY="385.0" prefHeight="30.0" promptText="1" />
-            <TextField fx:id="txtPhone" layoutX="440.0" layoutY="430.0" prefHeight="30.0" prefWidth="200.0" />
-            <TextField fx:id="txtEmail" layoutX="440.0" layoutY="488.0" prefHeight="30.0" prefWidth="200.0" />
-            <ImageView fx:id="fNameIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../Common/Resources/src/assets/fNameIcon.gif" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="lNameIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="186.0" pickOnBounds="true" preserveRatio="true">
+            <TextField fx:id="txtPhone" accessibleHelp="0512345678" layoutX="440.0" layoutY="430.0" prefHeight="30.0" prefWidth="200.0" promptText="0512345678" />
+            <TextField fx:id="txtEmail" layoutX="440.0" layoutY="488.0" prefHeight="30.0" prefWidth="200.0" promptText="yosefyosef@mail.com" />
+            <ImageView fx:id="fNameIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/fNameIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="lNameIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="186.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/fNameIcon.gif" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="parkIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/parkIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="282.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="dateIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="282.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/dateIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="timeIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/timeIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="numOfVisIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="numOfVisIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/familyIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="430.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="phoneIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="430.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/phoneIcon.gif" />
                </image>
             </ImageView>
-            <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="310.0" layoutY="488.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="emailIcon" fitHeight="30.0" fitWidth="30.0" layoutX="305.0" layoutY="488.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="/assets/emailIcon.gif" />
                </image>
