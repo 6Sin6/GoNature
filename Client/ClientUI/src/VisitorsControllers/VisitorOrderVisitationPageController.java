@@ -235,8 +235,8 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         // Reset the date picker
         datePicker.setValue(null);
     }
-//    public void navigateToHomePage() {
-//        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
-//    }
+    public void navigateToHomePage() {
+        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
+    }
 
 }
