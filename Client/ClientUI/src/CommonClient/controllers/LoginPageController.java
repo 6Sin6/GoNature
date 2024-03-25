@@ -1,10 +1,8 @@
 package CommonClient.controllers;
 
 import CommonClient.ClientUI;
-import Entities.Message;
-import Entities.OpCodes;
-import Entities.Role;
-import Entities.User;
+import CommonUtils.MessagePopup;
+import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -13,7 +11,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+
 import javax.naming.CommunicationException;
+import java.util.ArrayList;
 
 public class LoginPageController extends BaseController {
 
@@ -84,8 +85,43 @@ public class LoginPageController extends BaseController {
         user = (User) respondMsg.getMsgData();
         if (respondMsg.getMsgData() != null && user.getRole() != Role.ROLE_GUEST) {
             resetAllFields();
+            if(user.getRole() == Role.ROLE_VISITOR_GROUP_GUIDE)
+            {
+                Message ordersMessage = new Message(OpCodes.OP_GET_VISITOR_ORDERS, user.getUsername(), user);
+                ClientUI.client.accept(ordersMessage);
+                Message ordersResponse = ClientCommunicator.msg;
+                if (ordersResponse.getMsgOpcode() != OpCodes.OP_GET_VISITOR_ORDERS) {
+                    ErrorMsg.setText("Response is inappropriate from server");
+                    return;
+                }
+                ArrayList<Order> orders = (ArrayList<Order>) ordersResponse.getMsgData();
+
+                    ArrayList<Order> activeOrders = new ArrayList<>();
+                    ArrayList<Order> OrdersToConfirm = new ArrayList<>();
+                    boolean flag = false;
+                    for (Order order : orders) {
+                        if (order.getOrderStatus() != OrderStatus.STATUS_CANCELLED &&
+                                order.getOrderStatus() != OrderStatus.STATUS_CONFIRMED_AND_ABSENT &&
+                                order.getOrderStatus() != OrderStatus.STATUS_FULFILLED) {
+                            activeOrders.add(order);
+                        }
+                        if (order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION) {
+                            flag = true;
+                            OrdersToConfirm.add(order);
+                        }
+                    }
+                    if (flag) {
+                        MessagePopup messagePopup = new MessagePopup("You have " +  OrdersToConfirm.size()  + " orders pending confirmation", Duration.seconds(5), 500, 300, false);
+                        applicationWindowController.loadDashboardPage(user.getRole());
+                        applicationWindowController.loadMenu(user);
+                        messagePopup.show(applicationWindowController.getRoot());
+                    }
+            }
+            else {
+
             applicationWindowController.loadDashboardPage(user.getRole());
             applicationWindowController.loadMenu(user);
+            }
         } else {
             ErrorMsg.setText("Wrong username or password, Please try again!");
         }
