@@ -87,7 +87,12 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.setErrorLabel("");
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
+            if(order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
+                onAuthPopup.setErrorLabel("Group Orders are not allowed to be updated without sign in !");
+                return;
+            }
             applicationWindowController.setCenterPage(pathToPage);
+
             applicationWindowController.loadMenu(new SingleVisitor(values[0]));
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof BaseController) {

@@ -62,7 +62,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
 
     public void setFields(Order o1) {
         User user = applicationWindowController.getUser();
-        if (user instanceof SingleVisitor || o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
+        if (o1.getOrderType() == OrderType.ORD_TYPE_SINGLE|| o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
             PayBtn.setVisible(false);
         } else {
             PayBtn.setVisible(true);
