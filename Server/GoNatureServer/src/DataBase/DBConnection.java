@@ -1063,6 +1063,16 @@ public class DBConnection {
         return parkIDs;
     }
 
+
+
+    /**
+     * Generates a report containing the number of visitors for a specific park and month.
+     * The report contains the number of visitors for each day of the month, separated by order type (single family/group).
+     * The report is generated for the current month only.
+     * The report is generated for the park with the specified ID.
+     * @param parkID The ID of the park for which to generate the report.
+     * @return {@code true} if the report is successfully generated, {@code false} otherwise.
+     */
     public boolean generateNumOfVisitorsReport(int parkID)
     {
         try {
@@ -1090,6 +1100,36 @@ public class DBConnection {
             return false;
         }
     }
+
+
+    public boolean generateUsageReport(int parkID)
+    {
+        try {
+            // Definitions
+            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
+            String orderStatus = "'" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "'";
+
+            String tableName_Orders = this.schemaName + ".park_capacity_info";
+            String whereClause_Orders = "ParkID = " + parkID + " AND Month = " + month;
+            String orderByClause_Orders = " ORDER BY Day";
+
+            String reportName = "usage";
+
+            // Retrieving data from DB
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "capacity, Day");
+
+            // Building report entity and blob.
+            UsageReport report = new UsageReport(parkID, results);
+            Blob generatedBlob = report.createPDFBlob();
+            results.close();
+
+            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
 
     // =================================================================================================================//
     //                                                                                                                 //

@@ -246,7 +246,7 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         columns.add("Time Spent");
 
         // Add table
-        PdfPTable table = super.createTable(columns);
+        PdfPTable table = super.createTable(columns, 100);
 
         // Collecting data for table
         ResultSet entranceData = this.reportData.get("entrance");

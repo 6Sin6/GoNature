@@ -269,15 +269,16 @@ public abstract class ReportConstructor
 
 
     /**
-     * Creates a table with the specified columns.
+     * Creates a table with the specified columns and width percentage.
      *
-     * @param columns the list of column titles
-     * @return the PdfPTable object representing the table
+     * @param columns a list of column titles
+     * @param widthPercentage the width of the table as a percentage of the page width
+     * @return a PdfPTable object representing the table
      */
-    public PdfPTable createTable(ArrayList<String> columns)
+    public PdfPTable createTable(ArrayList<String> columns, int widthPercentage)
     {
         PdfPTable table = new PdfPTable(columns.size());
-        table.setWidthPercentage(100);
+        table.setWidthPercentage(widthPercentage);
 
         // Add table headers
         columns.forEach(columnTitle -> {

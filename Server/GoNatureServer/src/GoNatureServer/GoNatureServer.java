@@ -438,7 +438,9 @@ public class GoNatureServer extends AbstractServer {
                     isGenerated = db.generateNumOfVisitorsReport(Integer.parseInt(id));
                 break;
             case "usage":
-                reportType = "Capacity Statistics";
+                id = db.getParkIDByManagerUsername(message.getMsgUserName());
+                if (id != null)
+                    isGenerated = db.generateUsageReport(Integer.parseInt(id));
                 break;
         }
 

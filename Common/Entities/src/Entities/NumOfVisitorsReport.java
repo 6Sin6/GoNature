@@ -287,7 +287,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         columns.add("Number of Visitors");
 
         // Add table
-        PdfPTable table = super.createTable(columns);
+        PdfPTable table = super.createTable(columns, 100);
 
         // Collecting Data for table
         while (this.reportData.next())
