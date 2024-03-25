@@ -58,6 +58,7 @@ public class ViewReportsPageController extends BaseController {
         reportCmb.getItems().clear();
         monthCmb.getItems().clear();
         yearCmb.getItems().clear();
+        parkManagerPage = false;
     }
 
     public void start() {
@@ -126,13 +127,21 @@ public class ViewReportsPageController extends BaseController {
             parkCmb.setValue("All Parks");
         }
 
-        ParkDepartmentManager depMgr = (ParkDepartmentManager) applicationWindowController.getUser();
+        String bodyId = "";
+        // Park manager cannot select a department report, this is why the else clause is valid.
+        // Nothing here is a best practice, sue me...
+        if (!parkManagerPage && isDepartmentReport) {
+            bodyId = String.valueOf(((ParkDepartmentManager) applicationWindowController.getUser()).getDepartmentID());
+        } else if (!isDepartmentReport) {
+            bodyId = ParkBank.getUnmodifiableMap().get(parkCmb.getValue());
+        }
+
         String[] params = new String[]{
                 String.valueOf(isDepartmentReport),
                 isDepartmentReport ? Utils.departmentReportsMap.get(selectedReport) : Utils.parkManagerReportsMap.get(selectedReport),
                 String.valueOf(getNumberFromMonthName(selectedMonth)),
                 selectedYear,
-                isDepartmentReport ? String.valueOf(depMgr.getDepartmentID()) : ParkBank.getUnmodifiableMap().get(parkCmb.getValue())
+                bodyId
         };
         Message msg = new Message(OpCodes.OP_VIEW_REPORT_BLOB, applicationWindowController.getUser().getUsername(), params);
         ClientUI.client.accept(msg);

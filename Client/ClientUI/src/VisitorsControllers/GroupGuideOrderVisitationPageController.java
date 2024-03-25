@@ -233,7 +233,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             return false;
         }
         if (CommonClient.Utils.isOrderTimeValid(datePicker.getValue().toString(), timeOfVisitCmbBox.getValue().toString())) {
-            label.setText("Invalid OrderTime . You can't Make an Order 24 hours Before the order time.");
+            label.setText("Invalid OrderTime. Can't make the order for near 24 hours.");
             return false;
         }
         if (CommonUtils.convertStringToInt(numOfVisitorsCmbBox.getValue()) <= 0) {

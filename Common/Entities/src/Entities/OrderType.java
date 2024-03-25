@@ -33,4 +33,21 @@ public enum OrderType {
     public int getOrderType() {
         return orderType;
     }
+
+
+
+
+    @Override
+    public String toString()
+    {
+        switch (this)
+        {
+            case ORD_TYPE_SINGLE:
+                return "Single/Family-Sized";
+            case ORD_TYPE_GROUP:
+                return "Group";
+            default:
+                return "";
+        }
+    }
 }

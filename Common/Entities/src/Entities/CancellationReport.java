@@ -37,7 +37,8 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @param departmentData   The data associated with the report.
      * The data is stored as a HashMap String, ResultSet.
      */
-    public CancellationReport(Integer departmentID, HashMap<String, ResultSet> departmentData) {
+    public CancellationReport(Integer departmentID, HashMap<String, ResultSet> departmentData) throws DocumentException, IOException
+    {
         super(departmentID);
         this.departmentData = departmentData;
     }
@@ -103,7 +104,8 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @return A Blob object representing the PDF file.
      */
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
+    {
         String customFontPath = "/fonts/Roboto-Regular.ttf";
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -117,7 +119,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
         // Add title
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         Font titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
-        document.add(this.createParagraph("Cancellations Report - Department: " + super.getDepartmentID(), titleFont, true, 50, true));
+        document.add(this.createPDFTitle("Cancellations Report - Department: " + super.getDepartmentID(), titleFont, true, 50, true));
 
         // Create histogram chart
         AtomicInteger totalCount = new AtomicInteger(0); // Must be a reference to update the value in createDistributionSeries

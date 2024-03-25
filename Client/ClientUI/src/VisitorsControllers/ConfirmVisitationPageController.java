@@ -124,6 +124,4 @@ public class ConfirmVisitationPageController extends BaseController {
                 , 600, 300, false, "OK", false);
         confirmPopup.show(applicationWindowController.getRoot());
     }
-
-
 }

@@ -1,5 +1,8 @@
 package Entities;
 
+import com.itextpdf.text.DocumentException;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -8,53 +11,34 @@ import java.sql.Timestamp;
  * This class is abstract and serves as a base class for specific types of reports.
  */
 public abstract class ParkReport extends ReportConstructor implements Serializable {
-    private Timestamp Date;
-    private Park park;
+    private final Integer parkID;
+    private final String parkName;
+
+
 
     /**
      * Constructs a ParkReport object with the specified parameters.
      *
-     * @param date The date of the report.
-     * @param park The park associated with the report.
+     * @param parkID The park id associated with the report.
      */
-    public ParkReport(Timestamp date, Park park) {
-        Date = date;
-        this.park = park;
+    public ParkReport(Integer parkID, String parkName) throws DocumentException, IOException
+    {
+        super();
+        this.parkID = parkID;
+        this.parkName = parkName;
     }
 
-    /**
-     * Gets the date of the report.
-     *
-     * @return The date of the report.
-     */
-    public Timestamp getDate() {
-        return Date;
-    }
+
 
     /**
-     * Sets the date of the report.
+     * Gets the park id associated with the report.
      *
-     * @param date The date of the report to set.
+     * @return The park id associated with the report.
      */
-    public void setDate(Timestamp date) {
-        Date = date;
+    public Integer getParkID() {
+        return parkID;
     }
 
-    /**
-     * Gets the park associated with the report.
-     *
-     * @return The park associated with the report.
-     */
-    public Park getPark() {
-        return park;
-    }
 
-    /**
-     * Sets the park associated with the report.
-     *
-     * @param park The park associated with the report to set.
-     */
-    public void setPark(Park park) {
-        this.park = park;
-    }
+
 }

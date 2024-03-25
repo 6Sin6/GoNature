@@ -41,7 +41,7 @@ public class Utils {
 
     public static int getNumberFromMonthName(String monthName) throws ParseException {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new SimpleDateFormat("MMM").parse(monthName));
+        cal.setTime(new SimpleDateFormat("MMMM", Locale.ENGLISH).parse(monthName));
         return cal.get(Calendar.MONTH) + 1;
     }
 

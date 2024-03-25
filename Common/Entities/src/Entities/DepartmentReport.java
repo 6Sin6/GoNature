@@ -16,13 +16,29 @@ import java.sql.SQLException;
 public abstract class DepartmentReport extends ReportConstructor {
     private Integer departmentID;
 
+
+
     /**
      * Constructs a DepartmentReport object with the specified parameters.
      * @param departmentID The ID of the department associated with the report.
      */
-    public DepartmentReport(Integer departmentID) {
+    public DepartmentReport(Integer departmentID) throws DocumentException, IOException
+    {
+        super();
         this.departmentID = departmentID;
     }
+
+
+
+
+    /**
+     * Creates a PDF file based on the data in the specified ResultSet.
+     * @return A Blob object representing the PDF file.
+     */
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException { return null;};
+
+
+
 
     /**
      * Retrieves the ID of the department associated with the report.
@@ -32,6 +48,8 @@ public abstract class DepartmentReport extends ReportConstructor {
     public Integer getDepartmentID() {
         return departmentID;
     }
+
+
 
     /**
      * Sets the ID of the department associated with the report.

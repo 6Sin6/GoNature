@@ -6,7 +6,7 @@ import CommonUtils.InputTextPopup;
 import CommonUtils.MessagePopup;
 import Entities.*;
 import VisitorsControllers.ConfirmVisitationPageController;
-import VisitorsControllers.HandleOrderDetailsPageController;
+import VisitorsControllers.UpdateOrderDetailsPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -93,7 +93,13 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.setErrorLabel("");
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
+            if(order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
+                onAuthPopup.setErrorLabel("Group Orders are not allowed to be updated without sign in !");
+                return;
+            }
             applicationWindowController.setCenterPage(pathToPage);
+
+            applicationWindowController.loadMenu(new SingleVisitor(values[0]));
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof BaseController) {
                 ((BaseController) controller).setApplicationWindowController(applicationWindowController);
@@ -101,8 +107,8 @@ public class HomePageController extends BaseController implements Initializable 
 
             if (controller instanceof ConfirmVisitationPageController) {
                 ((ConfirmVisitationPageController) controller).setOrder(order);
-            } else if (controller instanceof HandleOrderDetailsPageController) {
-                ((HandleOrderDetailsPageController) controller).setOrder(order);
+            } else if (controller instanceof UpdateOrderDetailsPageController) {
+                ((UpdateOrderDetailsPageController) controller).setFields(order);
             }
         } catch (Exception e) {
             e.printStackTrace();

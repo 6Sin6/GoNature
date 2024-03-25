@@ -34,12 +34,6 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 public class OrdersWaitingConfirmationController extends BaseController implements Initializable {
 
     @FXML
-    private Pane bntHandleOrder;
-
-    @FXML
-    private Text txtHeader;
-
-    @FXML
     private TableView<Map<String, String>> tableOrders;
 
     @FXML
@@ -62,9 +56,6 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
 
     @FXML
     private TableColumn<Map, String> colTime;
-
-    @FXML
-    private MFXButton handleOrderbtn;
 
     @FXML
     private Label lblStatusMsg;

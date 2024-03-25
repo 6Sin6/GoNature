@@ -792,14 +792,31 @@ public class DBConnection {
         }
     }
 
-    public String getDepartmentIDByManagerID(String managerID) {
+    public String getDepartmentIDByManagerUsername(String managerUsername) {
         try {
             String tableName = this.schemaName + ".department_managers";
-            String whereClause = "username='" + managerID + "'";
+            String whereClause = "username='" + managerUsername + "'";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "departmentID");
             if (results.next()) {
                 return results.getString("departmentID");
             }
+            return null;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            return null;
+        }
+    }
+
+    public String getParkIDByManagerUsername(String managerUsername)
+    {
+        try
+        {
+            String tableName = this.schemaName + ".park_employees";
+            String whereClause = "username='" + managerUsername + "'";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkID");
+            if (results.next())
+                return results.getString("ParkID");
+
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
@@ -986,6 +1003,36 @@ public class DBConnection {
     }
 
     /**
+     * Handles the update and insertion of park reports in the database.
+     * If a report for the current month already exists, the method updates the existing report.
+     * If a report for the current month does not exist, the method inserts a new report.
+     * @param parkID The ID of the park for which to update or insert the report.
+     * @param reportName The name of the report to update or insert.
+     * @param generatedBlob The PDF blob containing the report data.
+     * @return {@code true} if the report is successfully updated or inserted, {@code false} otherwise.
+     * @throws SQLException If an SQL exception occurs.
+     */
+    private boolean handleInsertionParkReports(String parkID, String reportName, Blob generatedBlob) throws SQLException {
+        ResultSet blobData = dbController.selectRecordsFields(this.schemaName + ".park_manager_reports", "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'", "blobData");
+        String reportTableName = this.schemaName + ".park_manager_reports";
+        if (blobData.next()) {
+            if (!dbController.updateBlobRecord(reportTableName, "blobData", generatedBlob, "parkID='" + parkID + "' AND reportType='" + reportName + "' AND month='" + LocalDate.now().getMonthValue() + "' AND year='" + LocalDate.now().getYear() + "'")) {
+                this.serverController.addtolog("Update in " + reportTableName + " failed. Update visitation report");
+                return false;
+            }
+            return true;
+        }
+
+        String columns = "parkID, reportType, month, year, blobData";
+        String[] values = {parkID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+        if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
+            this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Retrieves all park IDs associated with a specific department.
      *
      * @param departmentID The ID of the department.
@@ -1016,6 +1063,98 @@ public class DBConnection {
         }
         return parkIDs;
     }
+
+
+
+    /**
+     * Generates a report containing the number of visitors for a specific park and month.
+     * The report contains the number of visitors for each day of the month, separated by order type (single family/group).
+     * The report is generated for the current month only.
+     * The report is generated for the park with the specified ID.
+     * @param parkID The ID of the park for which to generate the report.
+     * @return {@code true} if the report is successfully generated, {@code false} otherwise.
+     */
+    public boolean generateNumOfVisitorsReport(int parkID)
+    {
+        try {
+            // Definitions
+            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
+            String orderStatus = "'" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "'";
+
+            String tableName_Orders = this.schemaName + ".orders";
+            String whereClause_Orders = "MONTH (VisitationDate) = " + month + " AND orderStatus IN (" + orderStatus + ") AND ParkID = " + parkID;
+            String orderByClause_Orders = " ORDER BY VisitationDate";
+
+            String reportName = "numofvisitors";
+            String parkName = getParkNameByID(parkID);
+            if (parkName == null)
+                return false;
+
+            // Retrieving data from DB
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "VisitationDate, OrderType, NumOfVisitors");
+
+            // Building report entity and blob.
+            NumOfVisitorsReport report = new NumOfVisitorsReport(parkID, parkName, results);
+            Blob generatedBlob = report.createPDFBlob();
+            results.close();
+
+            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean generateUsageReport(int parkID)
+    {
+        try {
+            // Definitions
+            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
+            String orderStatus = "'" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "'";
+
+            String tableName_Orders = this.schemaName + ".park_capacity_info";
+            String whereClause_Orders = "ParkID = " + parkID + " AND Month = " + month;
+            String orderByClause_Orders = " ORDER BY Day";
+
+            String reportName = "usage";
+            String parkName = getParkNameByID(parkID);
+            if (parkName == null)
+                return false;
+
+            // Retrieving data from DB
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "capacity, Day");
+
+            // Building report entity and blob.
+
+            UsageReport report = new UsageReport(parkID, parkName, results);
+            Blob generatedBlob = report.createPDFBlob();
+            results.close();
+
+            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+    private String getParkNameByID(Integer parkID)
+    {
+        try
+        {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "ParkID = " + parkID;
+            ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
+            if (rs.next())
+                return rs.getString("ParkName");
+        }
+        catch (SQLException e)
+        {
+            this.serverController.addtolog(e.getMessage());
+        }
+        return null;
+    }
+
 
     // =================================================================================================================//
     //                                                                                                                 //
@@ -1143,6 +1282,7 @@ public class DBConnection {
             return false;
         }
     }
+
 
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
             new Thread(() -> {
