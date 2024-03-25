@@ -568,6 +568,9 @@ public class GoNatureServer extends AbstractServer {
     @Override
     protected void serverStopped() {
         this.controller.addtolog("Server has stopped listening for connections.");
+        if (db != null) {
+            db.closeConnection();
+        }
         Workers.shutdownExecutors();
     }
 

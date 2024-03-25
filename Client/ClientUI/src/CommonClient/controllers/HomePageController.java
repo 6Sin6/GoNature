@@ -8,6 +8,7 @@ import Entities.*;
 import VisitorsControllers.ConfirmVisitationPageController;
 import VisitorsControllers.UpdateOrderDetailsPageController;
 import client.ClientCommunicator;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.effect.DropShadow;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
+    @FXML
+    private MFXButton bookBtn;
 
     @FXML
     private ImageView centerImg;
@@ -29,6 +32,9 @@ public class HomePageController extends BaseController implements Initializable 
 
     @FXML
     private ImageView img2;
+
+    @FXML
+    private MFXButton signInBtn;
 
     private InputTextPopup onAuthPopup;
 
@@ -152,7 +158,7 @@ public class HomePageController extends BaseController implements Initializable 
             }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
             } else {
                 ArrayList<Order> activeOrders = new ArrayList<>();
                 ArrayList<Order> OrdersToConfirm = new ArrayList<>();
@@ -169,7 +175,7 @@ public class HomePageController extends BaseController implements Initializable 
                     }
                 }
                 if (activeOrders.isEmpty()) {
-                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
                 } else {
                     applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                     applicationWindowController.loadMenu(new SingleVisitor(inputID));
