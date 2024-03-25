@@ -84,9 +84,8 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
-     * @throws SQLException If there is an error while retrieving the data.
      */
-    private int getData(int orderType, int dayOfOrder) throws SQLException
+    private int getData(int orderType, int dayOfOrder)
     {
         if (orderType < 1 || orderType > this.getAmountOfOrderTypes() || dayOfOrder < 1 || dayOfOrder > 31)
             throw new IllegalArgumentException("Invalid order type or day");
@@ -104,9 +103,8 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
-     * @throws SQLException If there is an error while retrieving the data.
      */
-    private int getData(OrderType orderType, int dayOfOrder) throws SQLException
+    private int getData(OrderType orderType, int dayOfOrder)
     {
         return this.getData(orderType.getOrderType(), dayOfOrder);
     }
@@ -121,7 +119,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @return The total number of visitors for the specified order type.
      * @throws IllegalArgumentException If the order type is invalid.
      */
-    private int getTotalPerType(int orderType) throws SQLException
+    private int getTotalPerType(int orderType)
     {
         if (orderType < 1 || orderType > this.getAmountOfOrderTypes())
             throw new IllegalArgumentException("Invalid order type or day");
@@ -139,7 +137,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @return The total number of visitors for the specified order type.
      * @throws IllegalArgumentException If the order type is invalid.
      */
-    private int getTotalPerType(OrderType orderType) throws SQLException
+    private int getTotalPerType(OrderType orderType)
     {
         return this.getTotalPerType(orderType.getOrderType());
     }
@@ -160,7 +158,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     @Override
     public Blob createPDFBlob() throws DocumentException, SQLException, IOException
     {
-        String title_Document = "Number of Visitors Report - Park: " + super.getParkID();
+        String title_Document = "Number of Visitors Report - Park: " + super.getParkName();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         // Create PDF document
@@ -218,7 +216,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      *
      * @return The JFreeChart object representing the chart.
      */
-    private JFreeChart createBarChart() throws SQLException
+    private JFreeChart createBarChart()
     {
         // Definitions
         int data, maxAmount = 0;
@@ -256,7 +254,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      *
      * @return The JFreeChart object representing the pie chart.
      */
-    private JFreeChart createPieChart() throws SQLException
+    private JFreeChart createPieChart()
     {
         // Initialize dataset for the pie chart
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();

@@ -4,7 +4,6 @@ import com.itextpdf.text.DocumentException;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * The ParkReport class represents a report associated with a park.
@@ -41,4 +40,15 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
 
 
 
+
+
+    /**
+     * Returns the name of the park associated with the report.
+     *
+     * @return the name of the park associated with the report
+     */
+    public String getParkName()
+    {
+        return parkName;
+    }
 }

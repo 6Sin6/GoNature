@@ -51,7 +51,14 @@ public class IssueReportsController extends BaseController {
 
     private String getParkName_ParkManager()
     {
-        return ((ParkManager)applicationWindowController.getUser()).getPark().getParkName();
+        String parkID =  ((ParkManager)applicationWindowController.getUser()).getParkID();
+        Message msg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, applicationWindowController.getUser().getUsername(), parkID);
+        ClientUI.client.accept(msg);
+
+        Message response = ClientCommunicator.msg;
+        if (response.getMsgData() == null)
+            return "";
+        return (String) response.getMsgData();
     }
 
     public void start()

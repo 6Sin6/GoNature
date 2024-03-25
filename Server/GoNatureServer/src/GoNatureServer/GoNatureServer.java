@@ -189,6 +189,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_CREATE_SPOTANEOUS_ORDER:
                     handleCreateSpotaneousOrder(message, client);
                     break;
+                case OP_GET_PARK_NAME_BY_PARK_ID:
+                    handleGetParkNameByParkID(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -204,6 +207,15 @@ public class GoNatureServer extends AbstractServer {
             }
             controller.addtolog("Failed to handle message: " + e.getMessage());
         }
+    }
+
+    private void handleGetParkNameByParkID(Message message, ConnectionToClient client) throws IOException
+    {
+        String parkID = (String) message.getMsgData();
+        String parkName = db.getParkNameByID(Integer.parseInt(parkID));
+        Message respondMsg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, message.getMsgUserName(), parkName);
+
+        client.sendToClient(respondMsg);
     }
 
     private void handleSyncHandshake(Message message, ConnectionToClient client) throws IOException {

@@ -25,6 +25,7 @@ public enum OpCodes {
     OP_ORDER_ALREADY_EXIST(21),
     OP_GET_USER_ORDERS_BY_USERID_ORDERID(22), /* Expect: String[] - userID 0, orderID 1. Returns: Order */
     OP_ACTIVATE_GROUP_GUIDE(23), /* Expect: String - GroupGuideID. Returns: null if success. String with reason of fail message otherwise. */
+    OP_GET_PARK_NAME_BY_PARK_ID(24), /* Expect: String - ParkID. Returns: String - ParkName, null if failed. */
     OP_GET_REQUESTS_FROM_PARK_MANAGER(27), /* Expect: String - DepartmentID. Returns: ArrayList<RequestChangingParkParameters> */
     OP_AUTHORIZE_PARK_REQUEST(28), /* Expect: RequestChangingParkParameters. Returns: boolean indicator */
     OP_DECLINE_PARK_REQUEST(29), /* Same method as above */
