@@ -112,7 +112,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
     public void start() {
         Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
         ClientUI.client.accept(send);
-        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
+        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS||ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_GROUP_GROUP_GUIDE_ORDERS) {
             populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
         } else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
             MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
