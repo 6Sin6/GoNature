@@ -1,6 +1,6 @@
 # Intellij IDEA
 .idea
-
+.classpath
 # Bin folder
 bin/
 out/

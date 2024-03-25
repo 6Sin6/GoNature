@@ -3,12 +3,12 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonClient.controllers.OrderBillPageController;
 import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.MessagePopup;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +18,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.TextField;
 
 import javax.naming.CommunicationException;
-import javax.xml.soap.Text;
-import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -33,11 +29,18 @@ import java.util.ResourceBundle;
 
 public class GroupGuideOrderVisitationPageController extends BaseController implements Initializable {
     ObservableList<String> list;
-    @FXML
-    private Label erorrLbl;
-    @FXML
-    private MFXButton btnCreateOrder;
 
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private TextField txtFirstName;
+
+    @FXML
+    private TextField txtLastName;
+
+    @FXML
+    private TextField txtPhone;
 
     @FXML
     private DatePicker datePicker;
@@ -46,31 +49,11 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     private MFXLegacyComboBox<String> numOfVisitorsCmbBox;
 
     @FXML
-    private Pane pane;
-
-    @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
-
-    @FXML
-    private Separator sepOrder;
-
-    @FXML
-    private StackPane stackPane;
 
     @FXML
     private MFXLegacyComboBox<String> timeOfVisitCmbBox;
 
-    @FXML
-    private MFXTextField txtEmail;
-
-    @FXML
-    private MFXTextField txtFirstName;
-
-    @FXML
-    private MFXTextField txtLastName;
-
-    @FXML
-    private MFXTextField txtPhone;
     @FXML
     private Label label;
 
@@ -179,20 +162,28 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
             throw new CommunicationException("Response from server is not appropriate");
         }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
         if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
-            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
-            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully! Would you like to pay now and get discount or pay later ?";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () -> handleBillPresentation(cnfrmorder), () ->
             {
                 applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                 applicationWindowController.loadMenu(applicationWindowController.getUser());
                 clearFields();
             }
+                    , 950, 500, false, "Pay now!", "Later", false);
+            confirmPopup.show(applicationWindowController.getRoot());
+        } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
+            String strForPopup = "You already have an order with these details";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+            }
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
+
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
             ConfirmationPopup confirmPopup;
@@ -212,7 +203,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
                     ((AlternativeTimesTableController) controller).start(order, fullName);
                 }
             },
-                    800, 400, false, "Yes", "No", false);
+                    800, 400, false, "WaitListPage", "AlternativeTimesTable", false);
             confirmPopup.show(applicationWindowController.getRoot());
         }
 
@@ -261,7 +252,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         txtFirstName.clear();
         txtLastName.clear();
         txtPhone.clear();
-
+        label.setText("");
         // Reset combo boxes
         numOfVisitorsCmbBox.getSelectionModel().clearSelection();
         parkCmbBox.getSelectionModel().clearSelection();
@@ -274,5 +265,19 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         datePicker.setValue(null);
     }
 
+
+    private void handleBillPresentation(Order order) {
+        try {
+            MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);
+            GenerateBillForGroupGuideController controller = (GenerateBillForGroupGuideController) msg.getController();
+            controller.setApplicationWindowController(applicationWindowController);
+            msg.show(applicationWindowController.getRoot());
+
+            controller.setMessagePopup(msg);
+            controller.start(order, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

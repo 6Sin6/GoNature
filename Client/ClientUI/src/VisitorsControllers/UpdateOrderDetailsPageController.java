@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import CommonUtils.MessagePopup;
 
 import javax.naming.CommunicationException;
 
@@ -49,25 +50,23 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     private Label TimeLabel;
 
     @FXML
-    private MFXButton UpdateBtn;
-
-    @FXML
-    private Pane btnHandleOrder;
-
-    @FXML
-    private MFXButton cancelBtn;
-
-    @FXML
     private Label errorLabel;
 
     @FXML
-    private Text txtHeader;
+    private MFXButton PayBtn;
+
 
     private ArrayList<Order> ordersList;
     private Order order;
 
 
     public void setFields(Order o1) {
+        User user = applicationWindowController.getUser();
+        if (user instanceof SingleVisitor || o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
+            PayBtn.setVisible(false);
+        } else {
+            PayBtn.setVisible(true);
+        }
         errorLabel.setText("");
         this.order = o1;
         OrderIDText.setText(String.valueOf(order.getOrderID()));
@@ -82,6 +81,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         DateLabel.setText(date);
         TimeLabel.setText(time);
     }
+
     public void setOrdersList(ArrayList<Order> ordersList) {
         this.ordersList = ordersList;
     }
@@ -112,10 +112,10 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else if (user instanceof VisitorGroupGuide) {
-            Object msg = new Message(OpCodes.OP_UPDATE_GROUP_ORDER_DETAILS_BY_ORDERID, user.getUsername(), order);
+            Object msg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, user.getUsername(), arrForMsg);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_UPDATE_GROUP_ORDER_DETAILS_BY_ORDERID) {
+            if (respondMsg.getMsgOpcode() != OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID) {
                 throw new CommunicationException("Respond not appropriate from server");
             }
             String strForPopup = "The order details has been updated successfully";
@@ -141,11 +141,11 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             return false;
         }
         if (!CommonUtils.isEmailAddressValid(EmailText.getText())) {
-            errorLabel.setText("invalid Email address");
+            errorLabel.setText("Invalid Email address");
             return false;
         }
         if (!CommonUtils.isValidPhone((PhoneText.getText()))) {
-            errorLabel.setText("invalid Phone number");
+            errorLabel.setText("Invalid Phone number");
             return false;
         }
         return true;
@@ -162,7 +162,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         }
         String strForPopup = "The order has been canceled successfully";
         if (ordersList.size() == 1 && order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {
-            strForPopup  = "Your only order has been cancelled you are getting redirected to home page";
+            strForPopup = "Your only order has been cancelled you are getting redirected to home page";
             flag = true;
         } else {
             flag = false;
@@ -183,5 +183,23 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     @Override//need to check if we need it or not.
     public void cleanup() {
         super.cleanup();
+    }
+
+    public void OnClickPayOrderBtn(ActionEvent actionEvent) {
+        handleBillPresentation(this.order);
+    }
+
+    private void handleBillPresentation(Order order) {
+        try {
+            MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);
+            GenerateBillForGroupGuideController controller = (GenerateBillForGroupGuideController) msg.getController();
+            controller.setApplicationWindowController(applicationWindowController);
+            msg.show(applicationWindowController.getRoot());
+
+            controller.setMessagePopup(msg);
+            controller.start(order, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

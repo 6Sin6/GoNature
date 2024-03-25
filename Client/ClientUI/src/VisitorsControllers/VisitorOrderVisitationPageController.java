@@ -6,21 +6,15 @@ import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
+
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
@@ -36,47 +30,33 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
 
     ObservableList<String> list;
 
-    @FXML
-    private Text Header;
 
     @FXML
     private Label errorLbl;
 
     @FXML
-    private MFXButton btnCreateOrder;
-
-    @FXML
     private DatePicker datePicker;
-
-    @FXML
-    private Pane pane;
 
     @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
 
     @FXML
-    private Separator sepOrder;
-
-    @FXML
-    private StackPane stackPane;
-
-    @FXML
     private MFXLegacyComboBox<String> timeOfVisitCmbBox;
 
     @FXML
-    private MFXTextField txtEmail;
+    private TextField txtEmail;
 
     @FXML
-    private MFXTextField txtFirstName;
+    private TextField txtFirstName;
 
     @FXML
-    private MFXTextField txtLastName;
+    private TextField txtLastName;
 
     @FXML
-    private MFXTextField txtNumOfVisitors;
+    private TextField txtNumOfVisitors;
 
     @FXML
-    private MFXTextField txtPhone;
+    private TextField txtPhone;
 
     public void cleanup() {
         clearFields();
@@ -152,7 +132,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
             throw new CommunicationException("Response from server is not appropriate");
         }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
@@ -166,6 +146,14 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             }
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
+        } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
+            String strForPopup = "ou already have an order with these details";
+            ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
+            {
+            }
+                    , 600, 300, false, "OK", false);
+            confirmPopup.show(applicationWindowController.getRoot());
+
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
             ConfirmationPopup confirmPopup;

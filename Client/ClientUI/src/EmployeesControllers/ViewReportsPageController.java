@@ -8,7 +8,6 @@ import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
 
 import static CommonClient.Utils.getNumberFromMonthName;
@@ -161,7 +159,7 @@ public class ViewReportsPageController extends BaseController {
             return;
         }
 
-        String reportName = selectedReport + " Report"+"_"+selectedYear+"_"+selectedMonth+"_"+parkCmb.getValue();
+        String reportName = selectedReport + " Report" + "_" + selectedYear + "_" + selectedMonth + "_" + parkCmb.getValue();
         File tmpFile = File.createTempFile(reportName, ".pdf");
         tmpFile.deleteOnExit();
 

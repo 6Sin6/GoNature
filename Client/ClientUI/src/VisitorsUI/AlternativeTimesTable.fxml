@@ -22,7 +22,7 @@
                     </columns>
                 </TableView>
                 <Label fx:id="lblStatusMsg" layoutX="475.0" layoutY="687.0" />
-                <MFXButton fx:id="LblChooseBtn" layoutX="394.0" layoutY="627.0" onAction="#OnClickHandleOrderButton" prefHeight="47.0" prefWidth="137.0" rippleColor="#5eb972" text="Chose Visition " />
+                <MFXButton fx:id="LblChooseBtn" layoutX="394.0" layoutY="627.0" onAction="#OnClickHandleOrderButton" prefHeight="47.0" prefWidth="137.0" rippleColor="#5eb972" text="Choose Visition " />
                 <Text layoutX="292.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alternative Times" wrappingWidth="379.13671875">
                     <font>
                         <Font name="System Bold" size="36.0" />

@@ -47,7 +47,8 @@ public enum OrderStatus {
     /**
      * Represents order that has been fulfilled
      */
-    STATUS_FULFILLED(9);
+    STATUS_FULFILLED(9),
+    STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT(10);
 
     private int orderStatus;
 

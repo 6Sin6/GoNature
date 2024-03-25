@@ -9,7 +9,7 @@
 
 <?import javafx.scene.image.Image?>
 <Pane id="rootBillPane" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.OrderBillPageController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.GenerateBillForGroupGuideController">
     <Pane fx:id="billPane" layoutX="9.0" layoutY="172.0" prefHeight="423.0" prefWidth="930.0">
         <children>
             <Text layoutX="26.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order type - "
@@ -70,13 +70,6 @@
                     <Font size="18.0"/>
                 </font>
             </Text>
-            <Text fx:id="signatureTxt" layoutX="511.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  text="Thank you for visiting our parks today. We sincerely hope you've enjoyed your stay. Satisfied? please leave us a 5-star review at TripAdvisor.com and share your experience!"
-                  wrappingWidth="409.208984375">
-                <font>
-                    <Font size="14.0"/>
-                </font>
-            </Text>
             <Text fx:id="orderTypeTxt" layoutX="131.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0"
                   wrappingWidth="299.712890625">
                 <font>
@@ -111,7 +104,7 @@
     </Text>
     <Separator layoutX="10.0" layoutY="71.0" prefHeight="8.0" prefWidth="930.0"/>
     <MFXButton fx:id="proceedBtn" layoutX="761.0" layoutY="676.0" onAction="#proceedToPayment" prefHeight="69.0"
-               prefWidth="159.0" styleClass="actButtonGreen" text="Proceed"/>
+               prefWidth="159.0" styleClass="actButtonGreen" text="Pay"/>
     <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0"
                onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
         <image>

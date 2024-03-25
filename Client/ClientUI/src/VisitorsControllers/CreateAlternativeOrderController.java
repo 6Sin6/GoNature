@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
-public class CreateAletrnativeOrderController extends BaseController implements Initializable {
+public class CreateAlternativeOrderController extends BaseController implements Initializable {
 
     @FXML
     private MFXButton btnSignUp;
@@ -119,10 +119,10 @@ public class CreateAletrnativeOrderController extends BaseController implements 
                 confirmPopup.show(applicationWindowController.getRoot());
             }
         } else if (user instanceof VisitorGroupGuide) {
-            Object msg = new Message(OpCodes.OP_CREATE_NEW_GROUP_VISITATION, user.getUsername(), order);
+            Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, user.getUsername(), order);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_CREATE_NEW_GROUP_VISITATION) {
+            if (respondMsg.getMsgOpcode() != OpCodes.OP_CREATE_NEW_VISITATION) {
                 throw new CommunicationException("Respond not appropriate from server");
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();

@@ -70,10 +70,10 @@ public class AlternativeTimesTableController extends BaseController implements I
         Timestamp t1 = list.get(rowIndex);
         tempOrder.setVisitationDate(t1);
         tempOrder.setEnteredTime(t1);
-        applicationWindowController.loadVisitorsPage("CreateAletrnativeOrder");
+        applicationWindowController.loadVisitorsPage("CreateAlternativeOrder");
         Object controller = applicationWindowController.getCurrentActiveController();
-        if (controller instanceof CreateAletrnativeOrderController) {
-            ((CreateAletrnativeOrderController) controller).setFields(tempOrder, tempfullName);
+        if (controller instanceof CreateAlternativeOrderController) {
+            ((CreateAlternativeOrderController) controller).setFields(tempOrder, tempfullName);
         }
 
     }
