@@ -253,7 +253,7 @@ public class DBConnection {
                     }
                 }
             }
-            return null;
+            return new User("", "", Role.ROLE_GUEST);
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;

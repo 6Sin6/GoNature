@@ -85,9 +85,12 @@ public class LoginPageController extends BaseController {
             ErrorMsg.setText("Visitor Group Guide is not activated");
             return;
         }
-        if ((!(respondMsg.getMsgData() instanceof User))) {
+        if (respondMsg.getMsgData() == null || !(respondMsg.getMsgData() instanceof User)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        } else if (((User) respondMsg.getMsgData()).getRole().equals(Role.ROLE_GUEST)) {
+            ErrorMsg.setText("Invalid username or password");
             return;
         }
 
@@ -138,7 +141,6 @@ public class LoginPageController extends BaseController {
                     messagePopup.show(applicationWindowController.getRoot());
                 }
             } else {
-
                 applicationWindowController.loadDashboardPage(user.getRole());
                 applicationWindowController.loadMenu(user);
             }

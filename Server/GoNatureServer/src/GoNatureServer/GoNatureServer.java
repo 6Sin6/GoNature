@@ -242,8 +242,8 @@ public class GoNatureServer extends AbstractServer {
                 }
             }
             User authenticatedUser = db.login(userCredentials.getUsername(), userCredentials.getPassword());
-            if (authenticatedUser == null) {
-                Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", null);
+            if (authenticatedUser.getRole() == Role.ROLE_GUEST) { // Invalid username or password case...
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN, "", authenticatedUser);
                 client.sendToClient(respondMsg);
                 return;
             }
