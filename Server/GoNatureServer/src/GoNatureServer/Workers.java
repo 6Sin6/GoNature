@@ -50,9 +50,12 @@ public class Workers {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            db.updateOrderStatusForUpcomingVisits();
-            db.cancelOrdersInWaitlist24HoursBefore();
-            controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
+            try {
+                db.updateOrderStatusForUpcomingVisits();
+                db.cancelOrdersInWaitlist24HoursBefore();
+            } catch (Exception e) {
+                controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
+            }
         };
 
         long initialDelay = calculateInitialDelay();
@@ -66,13 +69,19 @@ public class Workers {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR, 22);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            db.ChangeLatePendingConfirmationToCancelled();
-            controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
+            try{
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR, 22);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                db.ChangeLatePendingConfirmationToCancelled();
+                controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
+            }
+            catch (Exception e){
+                controller.addtolog("failed CancelOrdersThatDidntConfirmWorker");
+            }
+
         };
 
         long initialDelay = calculateInitialDelay();
@@ -86,13 +95,18 @@ public class Workers {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR, 48);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            db.enterOrdersInWaitlist48HoursBefore();
-            controller.addtolog("Entering orders from the waitlist  " + calendar.getTime());
+            try {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR, 48);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                db.enterOrdersInWaitlist48HoursBefore();
+                controller.addtolog("Entering orders from the waitlist  " + calendar.getTime());
+            }
+            catch (Exception e){
+                controller.addtolog("failed enterOrdersFromWaitList48HoursBeforeWorker");
+            }
         };
 
         long initialDelay = calculateInitialDelay();

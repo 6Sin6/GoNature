@@ -2,6 +2,8 @@ package CommonClient.controllers;
 
 import CommonClient.ClientUI;
 import CommonClient.Utils;
+import CommonUtils.CommonUtils;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.InputTextPopup;
 import CommonUtils.MessagePopup;
 import Entities.*;
@@ -82,11 +84,23 @@ public class HomePageController extends BaseController implements Initializable 
             onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
             return;
         }
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         // Checking if the response from the server is inappropriate.
         if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
-            throw new CommunicationException("Response is inappropriate from server");
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
-
+        if(!(response.getMsgData() instanceof Order)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         Order order = (Order) response.getMsgData();
         if (order == null) {
             onAuthPopup.setErrorLabel("Invalid ID or Link! Try again");
@@ -146,17 +160,45 @@ public class HomePageController extends BaseController implements Initializable 
                 onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
                 return;
             }
-            if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+            if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN) {
                 onAuthPopup.setErrorLabel("Already Signed In !");
                 return;
             }
-
+            if(respondToSignIn.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             SingleVisitor visitor = new SingleVisitor(inputID);
             Message message = new Message(OpCodes.OP_GET_VISITOR_ORDERS, inputID, visitor);
             ClientUI.client.accept(message);
             Message respondMsg = ClientCommunicator.msg;
             if (respondMsg.getMsgOpcode() != OpCodes.OP_GET_VISITOR_ORDERS) {
                 onAuthPopup.setErrorLabel("Error getting orders");
+                return;
+            }
+            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (respondMsg.getMsgOpcode() != OpCodes.OP_GET_VISITOR_ORDERS) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof ArrayList)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
