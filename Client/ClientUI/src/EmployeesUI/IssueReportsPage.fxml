@@ -4,13 +4,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueReportsController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
@@ -26,13 +26,11 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <Label layoutX="262.0" layoutY="494.0" text="Report Type" />
-            <ComboBox fx:id="reportCmb" layoutX="155.0" layoutY="515.0" prefHeight="39.0" prefWidth="278.0" />
-            <ComboBox fx:id="parkCmb" layoutX="507.0" layoutY="515.0" prefHeight="39.0" prefWidth="278.0" />
+            <Label layoutX="446.0" layoutY="494.0" text="Report Type" />
+            <ComboBox fx:id="reportCmb" layoutX="338.0" layoutY="515.0" prefHeight="39.0" prefWidth="278.0" />
             <Label fx:id="generateResultMsg" layoutX="356.0" layoutY="649.0" prefHeight="17.0" prefWidth="347.0" />
             <Label fx:id="errMsg" layoutX="377.0" layoutY="567.0" prefHeight="17.0" prefWidth="305.0" styleClass="error-text" />
             <MFXButton fx:id="btnGenerateReport" layoutX="138.0" layoutY="590.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="674.0" styleClass="actButtonGreen" text="Generate Report" />
-            <Label layoutX="635.0" layoutY="494.0" text="Park" />
             <ImageView fx:id="imgLoading" fitHeight="50.0" fitWidth="50.0" layoutX="450.0" layoutY="680.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@/assets/loading.gif" />

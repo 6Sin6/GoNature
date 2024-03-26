@@ -27,9 +27,6 @@ public class IssueReportsController extends BaseController {
     private ComboBox<String> reportCmb;
 
     @FXML
-    private ComboBox<String> parkCmb;
-
-    @FXML
     private ImageView imgLoading;
 
     private boolean parkManagerPage = false;
@@ -40,8 +37,6 @@ public class IssueReportsController extends BaseController {
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
         reportCmb.getItems().clear();
-        parkCmb.getSelectionModel().clearSelection();
-        parkCmb.getItems().clear();
     }
 
     private boolean isDepartmentManager()
@@ -49,59 +44,21 @@ public class IssueReportsController extends BaseController {
         return (applicationWindowController.getUser() instanceof ParkDepartmentManager);
     }
 
-    private String getParkName_ParkManager()
-    {
-        String parkID =  ((ParkManager)applicationWindowController.getUser()).getParkID();
-        Message msg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, applicationWindowController.getUser().getUsername(), parkID);
-        ClientUI.client.accept(msg);
-
-        Message response = ClientCommunicator.msg;
-        if (response.getMsgData() == null)
-            return "";
-        return (String) response.getMsgData();
-    }
-
     public void start()
     {
         if (this.isDepartmentManager()) // Department manager connected
         {
             reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
-            parkCmb.getItems().addAll(ParkBank.getUnmodifiableMap().keySet());
-            parkCmb.setValue("All Parks");
-            parkCmb.setDisable(true);
         }
         else // Park manager connected
         {
-            parkCmb.setValue(this.getParkName_ParkManager());
+            reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
             parkManagerPage = true;
-            parkCmb.setDisable(true);
         }
-
-        reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
-        reportCmb.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            onSelectReport();
-        });
 
         reportCmb.setValue(reportCmb.getItems().get(0));
     }
 
-    void onSelectReport()
-    {
-        if (!isDepartmentManager()) // if a park manager is connected, parksCmb stays disabled.
-            return;
-
-        String selectedReport = reportCmb.getValue();
-
-        if (Utils.parkManagerReportsMap.containsKey(selectedReport))
-        {
-            parkCmb.setDisable(false);
-            parkCmb.setValue(parkCmb.getItems().get(0));
-        } else
-        {
-            parkCmb.setDisable(true);
-            parkCmb.setValue("All Parks");
-        }
-    }
 
     @FXML
     void onClickGenerateReport(ActionEvent ignoredEvent)
@@ -113,7 +70,7 @@ public class IssueReportsController extends BaseController {
         String selectedReport = reportCmb.getValue();
         String reportType;
 
-        if (!this.parkManagerPage && Utils.departmentReportsMap.get(selectedReport) != null)
+        if (!this.parkManagerPage)
             reportType = Utils.departmentReportsMap.get(selectedReport);
         else reportType = Utils.parkManagerReportsMap.get(selectedReport);
 
