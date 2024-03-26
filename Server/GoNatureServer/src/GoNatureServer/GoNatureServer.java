@@ -106,6 +106,7 @@ public class GoNatureServer extends AbstractServer {
         Workers.startClientProcessingThread(controller, this);
         Workers.SendReminderDayBeforeWorker(db, controller);
         Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
+        Workers.enterOrdersFromWaitList48HoursBeforeWorker(db,controller);
         server.controller.toggleControllers(true);
     }
 
@@ -321,7 +322,17 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws Exception {
+        if (!(message.getMsgData() instanceof Order)){
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
+            client.sendToClient(respondMsg);
+        }
         Order order = (Order) message.getMsgData();
+        if (!db.extractFromWaitList(new Order(null, order.getParkID(),null ,
+                null,null,null,order.getEnteredTime(),
+                null,null,null,0))) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
+            client.sendToClient(respondMsg);
+        }
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
         if (db.CheckAvailabilityBeforeReservationTime(order) && db.CheckAvailabilityAfterReservationTime(order)) {
             order.setOrderStatus(OrderStatus.STATUS_ACCEPTED);

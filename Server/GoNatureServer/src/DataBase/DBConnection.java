@@ -638,6 +638,7 @@ public class DBConnection {
             return "Something went wrong... Please try again later.";
         }
     }
+
     public boolean isGroupGuide(String userID) {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -822,10 +823,8 @@ public class DBConnection {
         }
     }
 
-    public String getParkIDByManagerUsername(String managerUsername)
-    {
-        try
-        {
+    public String getParkIDByManagerUsername(String managerUsername) {
+        try {
             String tableName = this.schemaName + ".park_employees";
             String whereClause = "username='" + managerUsername + "'";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkID");
@@ -1021,8 +1020,9 @@ public class DBConnection {
      * Handles the update and insertion of park reports in the database.
      * If a report for the current month already exists, the method updates the existing report.
      * If a report for the current month does not exist, the method inserts a new report.
-     * @param parkID The ID of the park for which to update or insert the report.
-     * @param reportName The name of the report to update or insert.
+     *
+     * @param parkID        The ID of the park for which to update or insert the report.
+     * @param reportName    The name of the report to update or insert.
      * @param generatedBlob The PDF blob containing the report data.
      * @return {@code true} if the report is successfully updated or inserted, {@code false} otherwise.
      * @throws SQLException If an SQL exception occurs.
@@ -1039,7 +1039,7 @@ public class DBConnection {
         }
 
         String columns = "parkID, reportType, month, year, blobData";
-        String[] values = {parkID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear()) };
+        String[] values = {parkID, reportName, String.valueOf(LocalDate.now().getMonthValue()), String.valueOf(LocalDate.now().getYear())};
         if (!dbController.insertBlobRecord(reportTableName, columns, generatedBlob, values)) {
             this.serverController.addtolog("Insert into " + reportTableName + " failed. Insert visitation report");
             return false;
@@ -1080,17 +1080,16 @@ public class DBConnection {
     }
 
 
-
     /**
      * Generates a report containing the number of visitors for a specific park and month.
      * The report contains the number of visitors for each day of the month, separated by order type (single family/group).
      * The report is generated for the current month only.
      * The report is generated for the park with the specified ID.
+     *
      * @param parkID The ID of the park for which to generate the report.
      * @return {@code true} if the report is successfully generated, {@code false} otherwise.
      */
-    public boolean generateNumOfVisitorsReport(int parkID)
-    {
+    public boolean generateNumOfVisitorsReport(int parkID) {
         try {
             // Definitions
             int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
@@ -1121,8 +1120,7 @@ public class DBConnection {
     }
 
 
-    public boolean generateUsageReport(int parkID)
-    {
+    public boolean generateUsageReport(int parkID) {
         try {
             // Definitions
             int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
@@ -1153,18 +1151,14 @@ public class DBConnection {
         }
     }
 
-    private String getParkNameByID(Integer parkID)
-    {
-        try
-        {
+    private String getParkNameByID(Integer parkID) {
+        try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID = " + parkID;
             ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
             if (rs.next())
                 return rs.getString("ParkName");
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
         }
         return null;
@@ -1248,6 +1242,38 @@ public class DBConnection {
         }
     }
 
+    public void enterOrdersInWaitlist48HoursBefore() {
+        try {
+            ArrayList<Order> Orders = new ArrayList<>();
+            String tableName = this.schemaName + ".orders";
+            String whereClause = "VisitationDate BETWEEN NOW() + INTERVAL 47 HOUR + INTERVAL 59 MINUTE AND NOW() + INTERVAL 48 HOUR + INTERVAL 1 MINUTE AND orderStatus = " + (OrderStatus.STATUS_WAITLIST.getOrderStatus());
+            try {
+                ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "EnteredTime");
+                while (rs.next()) {
+                    Orders.add(new Order(null,null,
+                            null,null,null,
+                            null,rs.getTimestamp("EnteredTime"),
+                            null,null,null,0));
+
+                }
+            } catch (SQLException e) {
+                serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+                return;
+            }
+
+            // Update the status of selected orders to pending confirmation
+            if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> WaitListOrdersEnter = new ArrayList<>();
+                for (Integer i = 1; i <= 4; i++) {
+                    extractFromWaitList(new Order(null,i.toString(),null,null,null,null,
+                            Orders.get(0).getEnteredTime(),null,null,null,0));
+                }
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
+        }
+    }
+
     public void ChangeLatePendingConfirmationToCancelled() {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1300,16 +1326,15 @@ public class DBConnection {
 
 
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
-            new Thread(() -> {
-                try {
-                    for (ArrayList<String> order : Orders) {
-                        GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
-                    }
+        new Thread(() -> {
+            try {
+                for (ArrayList<String> order : Orders) {
+                    GmailSender.sendEmail(order.get(1), Subject, "Hello Visitor " + order.get(2) + "\n" + "Your order id : " + order.get(0) + " is now " + Type);
                 }
-                catch (Exception e) {
-                    serverController.addtolog("Error sending email: " + e.getMessage());
-                }
-            }).start();
+            } catch (Exception e) {
+                serverController.addtolog("Error sending email: " + e.getMessage());
+            }
+        }).start();
 
     }
 
@@ -1339,7 +1364,6 @@ public class DBConnection {
     }
 
 
-
     public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) {
         try {
             String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
@@ -1362,10 +1386,10 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN ("+OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus()+","
-                    +OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus()+","
-                    +OrderStatus.STATUS_FULFILLED.getOrderStatus()+","
-                    +OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus()+")" +
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + ","
+                    + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ","
+                    + OrderStatus.STATUS_FULFILLED.getOrderStatus() + ","
+                    + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + ")" +
                     " AND o.ParkID = '" + parkID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
@@ -1382,7 +1406,7 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus= '"+OrderStatus.STATUS_ACCEPTED.getOrderStatus()+"' AND o.ParkID = '" + parkID + "'";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus= '" + OrderStatus.STATUS_ACCEPTED.getOrderStatus() + "' AND o.ParkID = '" + parkID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return null;

@@ -82,6 +82,26 @@ public class Workers {
         executors.add(scheduler);
     }
 
+    public static void enterOrdersFromWaitList48HoursBeforeWorker(DBConnection db, ServerUIFrameController controller) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable task = () -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.HOUR, 48);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            db.enterOrdersInWaitlist48HoursBefore();
+            controller.addtolog("Entering orders from the waitlist  " + calendar.getTime());
+        };
+
+        long initialDelay = calculateInitialDelay();
+        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.HOURS.toMillis(1), TimeUnit.MILLISECONDS);
+//        long initialDelay = 5000;
+//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
+        executors.add(scheduler);
+    }
+
     private static long calculateInitialDelay() {
         Calendar calendar = Calendar.getInstance();
         long now = calendar.getTimeInMillis();
