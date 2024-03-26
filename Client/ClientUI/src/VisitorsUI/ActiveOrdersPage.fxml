@@ -4,15 +4,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
-
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.ActiveOrdersPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+           prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="VisitorsControllers.ActiveOrdersPageController">
     <children>
         <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -21,29 +23,53 @@
         </ImageView>
         <Pane fx:id="bntHandleOrder" prefHeight="768.0" prefWidth="950.0">
             <children>
-                <Text fx:id="txtHeader" layoutX="296.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active Orders">
+                <Text fx:id="txtHeader" layoutX="296.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Active Orders">
                     <font>
-                        <Font name="System Bold" size="64.0" />
+                        <Font name="System Bold" size="64.0"/>
                     </font>
                 </Text>
                 <TableView fx:id="tableOrders" layoutX="50.0" layoutY="126.0" prefHeight="530.0" prefWidth="900.0">
                     <columns>
-                        <TableColumn fx:id="colOrderNumber" prefWidth="119.0" text="Order Number" />
-                        <TableColumn fx:id="colParkName" prefWidth="141.0" text="Park Name" />
-                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="119.0" text="Number Of Visitors" />
-                        <TableColumn fx:id="colTelephone" prefWidth="114.0" text="Telephone" />
-                        <TableColumn fx:id="colEmail" prefWidth="168.0" text="Email" />
-                        <TableColumn fx:id="colDate" prefWidth="135.0" text="Date" />
-                        <TableColumn fx:id="colTime" prefWidth="110.0" text="Time" />
+                        <TableColumn fx:id="colOrderNumber" prefWidth="119.0" text="Order Number"/>
+                        <TableColumn fx:id="colParkName" prefWidth="141.0" text="Park Name"/>
+                        <TableColumn fx:id="colNumberOfVisitors" prefWidth="119.0" text="Number Of Visitors"/>
+                        <TableColumn fx:id="colTelephone" prefWidth="114.0" text="Telephone"/>
+                        <TableColumn fx:id="colEmail" prefWidth="168.0" text="Email"/>
+                        <TableColumn fx:id="colDate" prefWidth="135.0" text="Date"/>
+                        <TableColumn fx:id="colTime" prefWidth="110.0" text="Time"/>
                     </columns>
                 </TableView>
 
-                <MFXButton fx:id="handleOrderbtn" buttonType="RAISED" layoutX="450.0" layoutY="670.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Handle Order" />
-                <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="384.0" layoutY="720.0" prefHeight="30.0" prefWidth="231.0" textAlignment="CENTER" textFill="#f20707">
+                <MFXButton fx:id="handleOrderbtn" buttonType="RAISED" layoutX="742.0" layoutY="659.0"
+                           onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="208.0"
+                           rippleColor="#adff49" text="Handle Order"/>
+                <Rectangle fx:id="errorRec" arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#485a6b" height="65.0"
+                           layoutX="297.0" layoutY="716.0" stroke="BLACK" strokeType="INSIDE" width="416.0"/>
+                <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="300.0" layoutY="729.0" prefHeight="40.0"
+                       prefWidth="401.0" textAlignment="CENTER" textFill="#f20707">
                     <font>
-                        <Font name="System Bold" size="20.0" />
+                        <Font name="System Bold" size="28.0"/>
                     </font>
                 </Label>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#a2c6e8" height="65.0" layoutX="50.0"
+                           layoutY="656.0" stroke="BLACK" strokeType="INSIDE" width="231.0"/>
+                <Text fill="#9bd38e" layoutX="68.0" layoutY="684.0" strokeType="OUTSIDE" strokeWidth="0.0" text="■ "
+                      wrappingWidth="43.3359375">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="97.0" layoutY="681.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Order confirmed and already paid " wrappingWidth="200.13671875"/>
+                <Text fill="#f8d761" layoutX="68.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text="■ "
+                      wrappingWidth="43.3359375">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Text>
+                <Text layoutX="97.0" layoutY="708.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order in wait list "
+                      wrappingWidth="200.13671875"/>
             </children>
         </Pane>
     </children>
