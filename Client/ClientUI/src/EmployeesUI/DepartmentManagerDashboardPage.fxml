@@ -1,46 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.DepartmentManagerDashboardPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.DepartmentManagerDashboardPageController">
    <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/parkEmployeeBackground.jpg" />
+         </image>
+      </ImageView>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
-            <Text layoutX="246.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department Manager Dashboard" textAlignment="CENTER">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="552.0" layoutX="53.0" layoutY="200.0" stroke="BLACK" strokeType="INSIDE" width="378.0" />
+            <Text layoutX="221.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department Manager Dashboard" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnIssueReports" layoutX="99.0" layoutY="494.0" mnemonicParsing="false" onAction="#OnClickIssueReportsButton" prefHeight="84.0" prefWidth="126.0" styleClass="actButtonGreen" text="Issue Reports" />
-            <Text layoutX="52.0" layoutY="468.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Department Reports">
+            <MFXButton fx:id="btnIssueReports" layoutX="168.0" layoutY="250.0" mnemonicParsing="false" onAction="#OnClickIssueReportsButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="Issue Reports">
+               <font>
+                  <Font size="18.0" />
+               </font></MFXButton>
+            <Text layoutX="133.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Department Reports">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text layoutX="713.0" layoutY="470.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Park Requests">
+            <Text layoutX="160.0" layoutY="613.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Park Requests" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnViewRequests" layoutX="742.0" layoutY="495.0" mnemonicParsing="false" onAction="#OnClickViewRequestsButton" prefHeight="84.0" prefWidth="126.0" styleClass="actButtonGreen" text="View Requests" />
-            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="26.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Department Manager Dashboard! Here, you can:&#10;&#10;• View Park Manager's Reports: Stay informed about park operations&#10;by accessing detailed reports prepared by the Park Manager.&#10;&#10;• View Park Manager's Requests: Review and respond to requests&#10;made by the Park Manager regarding park operations and management.&#10;&#10;Efficiently oversee park operations and collaborate effectively with the Park Manager&#10;by using these essential tools.">
+            <MFXButton fx:id="btnViewRequests" layoutX="168.0" layoutY="632.0" mnemonicParsing="false" onAction="#OnClickViewRequestsButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="View Requests">
                <font>
-                  <Font size="22.0" />
-               </font>
-            </Text>
+                  <Font size="18.0" />
+               </font></MFXButton>
             <Text fx:id="errorTxt" layoutX="463.0" layoutY="619.0" styleClass="error-text" />
-            <Text layoutX="344.0" layoutY="470.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Park and Department Reports">
+            <Text layoutX="94.0" layoutY="407.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Park and Department Reports">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnViewReports" layoutX="424.0" layoutY="494.0" mnemonicParsing="false" onAction="#OnClickViewReportsButton" prefHeight="84.0" prefWidth="126.0" styleClass="actButtonGreen" text="View Reports" />
+            <MFXButton fx:id="btnViewReports" layoutX="168.0" layoutY="430.0" mnemonicParsing="false" onAction="#OnClickViewReportsButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="View Reports">
+               <font>
+                  <Font size="18.0" />
+               </font></MFXButton>
          </children>
       </Pane>
    </children>

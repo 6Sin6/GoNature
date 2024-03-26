@@ -4,54 +4,46 @@
 <?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
 <?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.CheckAvailableSpotsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.CheckAvailableSpotsController">
    <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/parkEmployeeBackground.jpg" />
+         </image>
+      </ImageView>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="SRC_ATOP" fill="#88ddd4" height="373.0" layoutX="45.0" layoutY="207.0" stroke="BLACK" strokeType="INSIDE" width="410.0" />
             <Text layoutX="175.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Availability Information Center" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="295.0" layoutY="372.0" prefHeight="48.0" prefWidth="208.0" />
-            <MFXButton fx:id="ctnCheckAvailability" buttonType="RAISED" defaultButton="true" layoutX="529.0" layoutY="372.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Check Availability" />
-            <Text fx:id="text2" layoutX="7.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To check available spots in a park," wrappingWidth="915.5732421875">
+            <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="66.0" layoutY="259.0" prefHeight="48.0" prefWidth="208.0" />
+            <MFXButton fx:id="ctnCheckAvailability" buttonType="RAISED" defaultButton="true" layoutX="283.0" layoutY="259.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Check Availability" />
+            <MFXProgressBar fx:id="progressBar" animationSpeed="0.0" layoutX="68.0" layoutY="400.0" prefHeight="40.0" prefWidth="347.0" />
+            <Text fx:id="ParkOccupancyTxt" layoutX="68.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Occupancy" wrappingWidth="184.5732421875">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text21" layoutX="7.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" select the desired park from the list provided," wrappingWidth="915.5732421875">
+            <Text fx:id="availableSpotsTxt" fill="#f50000" layoutX="68.0" layoutY="353.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="315.57323455810547">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <Text fx:id="text11" layoutX="7.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="then click the &quot;Check Availability&quot; button to view real-time spot availability for that park." wrappingWidth="915.5732345581055">
+            <MFXButton fx:id="MakeOrderBtn" buttonType="RAISED" defaultButton="true" layoutX="170.0" layoutY="502.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Make Spontaneous Order" />
+            <Label fx:id="errorLbl" layoutX="68.0" layoutY="227.0" prefHeight="40.0" prefWidth="153.0" styleClass="error-text" text="Pick a park please:">
                <font>
-                  <Font name="System Bold" size="21.0" />
-               </font>
-            </Text>
-            <MFXProgressBar fx:id="progressBar" animationSpeed="0.0" layoutX="421.0" layoutY="480.0" prefHeight="40.0" prefWidth="347.0" />
-            <Text fx:id="ParkOccupancyTxt" layoutX="224.0" layoutY="508.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Occupancy" wrappingWidth="184.5732421875">
-               <font>
-                  <Font name="System Bold" size="21.0" />
-               </font>
-            </Text>
-            <Text fx:id="availableSpotsTxt" layoutX="224.0" layoutY="590.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="315.57323455810547">
-               <font>
-                  <Font name="System Bold" size="21.0" />
-               </font>
-            </Text>
-            <MFXButton fx:id="MakeOrderBtn" buttonType="RAISED" defaultButton="true" layoutX="579.0" layoutY="552.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Make Spontaneous Order" />
-            <Label fx:id="errorLbl" layoutX="421.0" layoutY="440.0" prefHeight="40.0" prefWidth="132.0" styleClass="error-text" text="Pick a park please">
-               <font>
-                  <Font size="14.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
          </children>

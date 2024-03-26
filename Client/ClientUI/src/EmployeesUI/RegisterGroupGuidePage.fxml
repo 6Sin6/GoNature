@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RegisterGroupGuideController">
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
-            <Text layoutX="302.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.RegisterGroupGuideController">
+   <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="/assets/parkEmployeeBackground.jpg" />
+      </image>
+   </ImageView>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="292.0" layoutX="102.0" layoutY="258.0" stroke="BLACK" strokeType="INSIDE" width="300.0" />
+            <Text layoutX="274.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register Group Guide" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="36.0" />
+                  <Font name="System Bold" size="48.0" />
                </font>
             </Text>
-            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="290.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
+            <Text layoutX="186.0" layoutY="304.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Guide ID:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="lblErrorMsgID" layoutX="450.0" layoutY="170.0" styleClass="error-text" textFill="RED">
+            <Label fx:id="lblErrorMsgID" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="393.0" prefHeight="20.0" prefWidth="300.0" textAlignment="CENTER" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text layoutX="10.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Easily register a customer as a group guide by entering his ID&#10;Ensure accuracy by verifying the ID with the customer before submitting.">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Text>
-            <MFXTextField fx:id="txtID" layoutX="450.0" layoutY="190.0" prefHeight="30.0" prefWidth="200.0" />
-            <MFXButton buttonType="RAISED" defaultButton="true" layoutX="420.0" layoutY="260.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
-            <Label fx:id="lblErrorMsgGeneral" layoutX="420.0" layoutY="315.0" styleClass="error-text" textFill="RED">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
+            <MFXButton buttonType="RAISED" defaultButton="true" layoutX="202.0" layoutY="424.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" text="Submit" />
+            <Label fx:id="lblErrorMsgGeneral" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="393.0" prefHeight="20.0" prefWidth="300.0" styleClass="error-text" textAlignment="CENTER" textFill="RED" />
+      <TextField fx:id="txtID" layoutX="152.0" layoutY="328.0" prefHeight="40.0" prefWidth="200.0" />
       </Pane>
 </StackPane>

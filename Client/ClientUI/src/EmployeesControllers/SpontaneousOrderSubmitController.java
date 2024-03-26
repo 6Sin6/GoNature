@@ -8,10 +8,10 @@ import CommonUtils.MessagePopup;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import javax.naming.CommunicationException;
@@ -27,19 +27,19 @@ public class SpontaneousOrderSubmitController extends BaseController {
     private MFXButton btnCreateOrder;
 
     @FXML
-    private MFXTextField txtFirstName;
+    private TextField txtFirstName;
 
     @FXML
-    private MFXTextField txtLastName;
+    private TextField txtLastName;
 
     @FXML
-    private MFXTextField txtNumOfVisitors;
+    private TextField txtNumOfVisitors;
 
     @FXML
-    private MFXTextField txtPhone;
+    private TextField txtPhone;
 
     @FXML
-    private MFXTextField txtEmail;
+    private TextField txtEmail;
     private Integer maxNumOfVisitors;
     private MessagePopup messageController;
     private String parkName;
