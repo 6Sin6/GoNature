@@ -1188,7 +1188,8 @@ public class DBConnection {
         }
     }*/
 
-    private String getParkNameByID(Integer parkID) throws Exception {
+    public String getParkNameByID(Integer parkID)
+    {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID = " + parkID;
@@ -1231,7 +1232,6 @@ public class DBConnection {
         catch (SQLException e)
         {
             this.serverController.addtolog(e.getMessage());
-            throw e;
         }
         return null;
     }
