@@ -171,7 +171,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
 
 
         // Add Pie Chart
-        super.addJFreeChartToDocument(document, this.createPieChart(), 700, 700);
+        super.addJFreeChartToDocument(document, this.createPieChart(), 500, 500);
 
         document.newPage();
 
@@ -296,9 +296,9 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                 String formattedDate = sdf.format(this.reportData.getTimestamp("VisitationDate"));
 
-                table.addCell(this.createCenterCell(formattedDate));
-                table.addCell(this.createCenterCell(OrderType.values()[this.reportData.getInt("OrderType") - 1].toString()));
-                table.addCell(this.createCenterCell(String.valueOf(this.reportData.getInt("NumOfVisitors"))));
+                table.addCell(super.createCenterCell(formattedDate));
+                table.addCell(super.createCenterCell(OrderType.values()[this.reportData.getInt("OrderType") - 1].toString()));
+                table.addCell(super.createCenterCell(String.valueOf(this.reportData.getInt("NumOfVisitors"))));
             }
         }
         this.reportData.beforeFirst();
