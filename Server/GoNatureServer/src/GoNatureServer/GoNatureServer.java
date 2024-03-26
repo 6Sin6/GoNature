@@ -196,6 +196,9 @@ public class GoNatureServer extends AbstractServer {
                 case OP_CREATE_SPOTANEOUS_ORDER:
                     handleCreateSpotaneousOrder(message, client);
                     break;
+                case OP_GET_DEPARTMENT_MANAGER_PARKS:
+                    handleGetDepartmentParkNames(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -578,6 +581,13 @@ public class GoNatureServer extends AbstractServer {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
             client.sendToClient(respondMsg);
         }
+    }
+
+    private void handleGetDepartmentParkNames(Message message, ConnectionToClient client) throws Exception {
+        Integer departmentID = (Integer) message.getMsgData();
+        ArrayList<String> parkNames = db.getDepartmentParkNames(departmentID);
+        Message respondMsg = new Message(OpCodes.OP_GET_DEPARTMENT_MANAGER_PARKS, message.getMsgUserName(), parkNames);
+        client.sendToClient(respondMsg);
     }
 
     /**

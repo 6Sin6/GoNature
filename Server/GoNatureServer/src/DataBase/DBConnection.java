@@ -661,6 +661,22 @@ public class DBConnection {
     //                                                                                                                 //
     //=================================================================================================================//
 
+    public ArrayList<String> getDepartmentParkNames(Integer departmentID) throws Exception {
+        try {
+            String tableName = this.schemaName + ".parks";
+            String whereClause = "departmentID=" + departmentID;
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
+            ArrayList<String> parkNames = new ArrayList<>();
+            while (results.next()) {
+                parkNames.add(results.getString("ParkName"));
+            }
+            return parkNames;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            throw e;
+        }
+    }
+
     /**
      * Retrieves requests from a park manager for a specific department.
      *

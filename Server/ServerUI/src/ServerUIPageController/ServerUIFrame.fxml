@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.image.Image?>
-<Pane prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerUIPageController.ServerUIFrameController">
+<Pane prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerUIPageController.ServerUIFrameController">
     <children>
         <MFXButton fx:id="btnStart" defaultButton="true" layoutX="34.0" layoutY="325.0" mnemonicParsing="false" onAction="#Done" prefHeight="52.0" prefWidth="307.0" text="Start GoNatureServer" />
         <TextField fx:id="portxt" layoutX="121.0" layoutY="135.0" prefHeight="25.0" prefWidth="218.0" />
