@@ -1,9 +1,12 @@
 package EmployeesControllers;
 
 import CommonClient.controllers.BaseController;
+import Entities.ParkBank;
+import Entities.ParkManager;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.text.Text;
 
 public class ParkManagerDashboardPageController extends BaseController {
 
@@ -16,8 +19,16 @@ public class ParkManagerDashboardPageController extends BaseController {
     @FXML
     private MFXButton btnViewReports;
 
+    @FXML
+    private Text parkMgrTxt;
+
+
     public void cleanup() {
-        // No cleanup required
+        parkMgrTxt.setText("");
+    }
+
+    public void start() {
+        parkMgrTxt.setText("Welcome, " + applicationWindowController.getUser().getUsername() + "! Your park: " + (ParkBank.getParkNameByID(((ParkManager) applicationWindowController.getUser()).getParkID())));
     }
 
     @FXML

@@ -13,7 +13,7 @@
    <children>
       <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/parkEmployeeBackground.jpg" />
+            <Image url="@/assets/parkEmployeeBackground.jpg" />
          </image>
       </ImageView>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
@@ -52,6 +52,16 @@
                <font>
                   <Font size="18.0" />
                </font></MFXButton>
+            <Text fx:id="depMgrWelcome" layoutX="53.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="832.0">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
+            <Text fx:id="depMgrParks" layoutX="53.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="883.640625">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

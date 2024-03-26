@@ -4,6 +4,8 @@ import CommonClient.ClientUI;
 import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
 import CommonUtils.*;
+import EmployeesControllers.DepartmentManagerDashboardPageController;
+import EmployeesControllers.ParkManagerDashboardPageController;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -143,6 +145,12 @@ public class LoginPageController extends BaseController {
             } else {
                 applicationWindowController.loadDashboardPage(user.getRole());
                 applicationWindowController.loadMenu(user);
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (user instanceof ParkManager && controller instanceof ParkManagerDashboardPageController) {
+                    ((ParkManagerDashboardPageController) controller).start();
+                } else if (user instanceof ParkDepartmentManager && controller instanceof DepartmentManagerDashboardPageController) {
+                    ((DepartmentManagerDashboardPageController) controller).start();
+                }
             }
         } else {
             ErrorMsg.setText("Invalid username or password, Please try again!");

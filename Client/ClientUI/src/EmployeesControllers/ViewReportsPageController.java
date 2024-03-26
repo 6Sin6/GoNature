@@ -127,6 +127,7 @@ public class ViewReportsPageController extends BaseController {
             parkCmb.setValue("All Parks");
         }
 
+        errMsg.setText("");
         String bodyId = "";
         // Park manager cannot select a department report, this is why the else clause is valid.
         // Nothing here is a best practice, sue me...
