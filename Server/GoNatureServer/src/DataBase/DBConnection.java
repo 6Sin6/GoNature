@@ -506,7 +506,7 @@ public class DBConnection {
             ResultSet results = dbController.selectRecords(tableName, whereClause);
             if (results.next()) {
                 String pManagerId = results.getString("ParkManagerID");
-                ResultSet managerResults = dbController.selectRecords(this.schemaName + ".park_employees", "id=" + pManagerId);
+                ResultSet managerResults = dbController.selectRecords(this.schemaName + ".park_employees", "employeeID=" + pManagerId);
                 if (managerResults.next()) {
                     return new Park(
                             results.getString("ParkID"),

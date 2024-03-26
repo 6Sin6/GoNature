@@ -96,7 +96,7 @@ public class ViewReportsPageController extends BaseController {
             return;
         }
 
-        if (Utils.parkManagerReportsMap.containsKey(selectedReport)) {
+        if (!parkManagerPage && Utils.parkManagerReportsMap.containsKey(selectedReport)) {
             parkCmb.setDisable(false);
         } else {
             parkCmb.setDisable(true);
