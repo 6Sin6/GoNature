@@ -167,7 +167,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         return true;
     }
 
-    public void OnClickCancelOrderBtn(ActionEvent actionEvent) throws CommunicationException {
+    public void OnClickCancelOrderBtn(ActionEvent actionEvent) {
         boolean flag;
         User user = applicationWindowController.getUser();
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
@@ -179,7 +179,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if (respondMsg.getMsgOpcode() != OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID) {
+        if (respondMsg.getMsgOpcode() != OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;

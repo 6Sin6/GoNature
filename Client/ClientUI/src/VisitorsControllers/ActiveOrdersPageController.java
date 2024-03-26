@@ -142,6 +142,7 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return;
         }
         populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
+        makeRowClickable();
     }
 
     @FXML
@@ -176,7 +177,6 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         }
         tableOrders.setItems(tableData);
         Timestamp orderTimeStamp = new Timestamp(System.currentTimeMillis());
-
     }
 
     private void makeRowClickable() {

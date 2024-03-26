@@ -143,13 +143,13 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(respondMsg.getMsgData() instanceof Order)) {
+        if(returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        Order cnfrmorder = (Order) respondMsg.getMsgData();
         if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
+            Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
@@ -160,7 +160,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
-            String strForPopup = "ou already have an order with these details";
+            String strForPopup = "you already have an order with these details";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
             }
