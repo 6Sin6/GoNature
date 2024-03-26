@@ -10,10 +10,10 @@ public class ParkBank implements Serializable, Iterable<Park> {
 
     static {
         Map<String, String> aMap = new HashMap<>();
-        aMap.put("Green Oasis Park", "1");
-        aMap.put("Golden Gardens", "2");
-        aMap.put("Mountain View Park", "3");
-        aMap.put("Sunset Park", "4");
+        aMap.put("Tel-Aviv Central Park", "1");
+        aMap.put("Be'er Sheva City Park", "2");
+        aMap.put("Haifa Downtown Park", "3");
+        aMap.put("Karmi'el Zoo Park", "4");
         // Additional entries can be added here
         ParkMap = Collections.unmodifiableMap(aMap);
     }

@@ -45,7 +45,7 @@ public class ClientCommunicator extends AbstractClient {
             throws IOException {
         super(host, port); //Call the superclass constructor
         this.clientUI = clientUI;
-        //openConnection();
+        openConnection();
     }
 
     //Instance methods ************************************************

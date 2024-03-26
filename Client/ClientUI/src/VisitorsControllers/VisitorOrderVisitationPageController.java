@@ -132,11 +132,24 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
-            throw new CommunicationException("Response from server is not appropriate");
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
-        Order cnfrmorder = (Order) respondMsg.getMsgData();
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && returnOpCode != OpCodes.OP_NO_AVAILABLE_SPOT && returnOpCode != OpCodes.OP_ORDER_ALREADY_EXIST) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
+            Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
@@ -147,7 +160,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
-            String strForPopup = "ou already have an order with these details";
+            String strForPopup = "you already have an order with these details";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
             }
@@ -234,6 +247,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
 
         // Reset the date picker
         datePicker.setValue(null);
+    }
+    public void navigateToHomePage() {
+        applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }
 
 }

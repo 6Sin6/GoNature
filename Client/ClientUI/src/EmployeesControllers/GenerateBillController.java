@@ -3,6 +3,8 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonClient.controllers.OrderBillPageController;
+import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
@@ -13,6 +15,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import java.util.Objects;
@@ -33,7 +36,7 @@ public class GenerateBillController extends BaseController {
     private Text successMsg;
 
     @FXML
-    private MFXTextField txtOrderID;
+    private TextField txtOrderID;
 
     private Order mostRecentOrder;
 
@@ -55,9 +58,22 @@ public class GenerateBillController extends BaseController {
         ClientUI.client.accept(msg);
 
         Message response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_MARK_ORDER_AS_PAID || !(Boolean) response.getMsgData()) {
-            lblErrorMsg.setText("Error occurred while trying to mark the order as paid");
-            successMsg.setText("");
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_MARK_ORDER_AS_PAID) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof Boolean)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 
@@ -78,10 +94,26 @@ public class GenerateBillController extends BaseController {
         ClientUI.client.accept(msg);
 
         Message response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_GET_ORDER_BY_ID || response.getMsgData() == null) {
-            lblErrorMsg.setText("An error occurred while trying to generate the bill");
+        OpCodes returnOpCode = response.getMsgOpcode();
+
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_GET_ORDER_BY_ID) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof Order)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+
 
         mostRecentOrder = (Order) response.getMsgData();
         if (Objects.equals(mostRecentOrder.getOrderID(), "")) {

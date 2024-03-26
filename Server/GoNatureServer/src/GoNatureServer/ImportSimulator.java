@@ -29,7 +29,7 @@ public class ImportSimulator {
      * This method imports all the users from the external database
      * Meticulously inserts the users into the correct tables
      */
-    public void handleImportUsers() {
+    public void handleImportUsers() throws Exception{
         try {
             String tableName = schemaName + ".users";
             ResultSet allUsers = dbController.selectRecords(tableName, "");
@@ -70,6 +70,7 @@ public class ImportSimulator {
             allUsers.beforeFirst();
         } catch (SQLException e) {
             serverController.addtolog("Error in importing users: " + e.getMessage());
+            throw e;
         }
     }
 }

@@ -116,7 +116,7 @@ public class ServerUIFrameController implements Initializable {
     }
 
     public void setDefaultValues() {
-        this.TextFieldPassword.setText("Braude");
+        this.TextFieldPassword.setText("Aa123456");
         this.TextfieldUserName.setText("root");
         this.portxt.setText("5555");
         // Set default value for the ComboBox to "localhost" if it exists in the items list

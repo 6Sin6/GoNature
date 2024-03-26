@@ -6,7 +6,6 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -14,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<!--<?import javafx.scene.image.Image?>-->
+<?import javafx.scene.image.Image?>
 
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.GroupGuideOrderVisitationPageController">
     <children>
@@ -32,7 +31,7 @@
                 </Text>
                 <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="440.0" layoutY="243.0" prefHeight="30.0" prefWidth="200.0" />
                 <MFXLegacyComboBox fx:id="timeOfVisitCmbBox" layoutX="440.0" layoutY="343.0" prefHeight="30.0" prefWidth="200.0" />
-                <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" defaultButton="true" layoutX="447.0" layoutY="582.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" text="Create Order" />
+                <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" defaultButton="true" layoutX="447.0" layoutY="594.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" text="Create Order" />
                 <DatePicker fx:id="datePicker" layoutX="440.0" layoutY="289.0" prefHeight="38.0" prefWidth="200.0">
                     <cursor>
                         <Cursor fx:constant="HAND" />
@@ -79,7 +78,11 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
-                <Label fx:id="label" alignment="CENTER" layoutX="350.0" layoutY="552.0" prefHeight="30.0" prefWidth="300.0" styleClass="error-text" textAlignment="CENTER" textFill="#ff0606" />
+                <Label fx:id="label" alignment="CENTER" layoutX="325.0" layoutY="544.0" prefHeight="70.0" prefWidth="350.0" textAlignment="CENTER" textFill="#ff0606">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Label>
             <TextField fx:id="txtFirstName" layoutX="440.0" layoutY="141.0" prefHeight="30.0" prefWidth="200.0" />
             <TextField fx:id="txtLastName" layoutX="440.0" layoutY="196.0" prefHeight="30.0" prefWidth="200.0" />
             <TextField fx:id="txtPhone" layoutX="440.0" layoutY="445.0" prefHeight="30.0" prefWidth="200.0" />

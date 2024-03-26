@@ -3,6 +3,7 @@ package VisitorsControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -85,8 +86,23 @@ public class WaitListPageController extends BaseController implements Initializa
             Object msg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, user.getUsername(), temporder);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_INSERT_VISITATION_TO_WAITLIST) {
-                throw new CommunicationException("Respond not appropriate from server");
+            OpCodes returnOpCode = respondMsg.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_INSERT_VISITATION_TO_WAITLIST) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof Order)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
@@ -103,8 +119,24 @@ public class WaitListPageController extends BaseController implements Initializa
             Object msg = new Message(OpCodes.OP_INSERT_VISITATION_TO_WAITLIST, user.getUsername(), order);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_INSERT_VISITATION_TO_WAITLIST) {
-                throw new CommunicationException("Respond not appropriate from server");
+
+            OpCodes returnOpCode = respondMsg.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_INSERT_VISITATION_TO_WAITLIST) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof Order)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
@@ -115,8 +147,6 @@ public class WaitListPageController extends BaseController implements Initializa
             }
                     , 600, 300, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
-        } else {
-            throw new CommunicationException("User not appropriate");
         }
     }
 

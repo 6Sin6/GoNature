@@ -38,6 +38,7 @@ public enum OpCodes {
     OP_CHECK_AVAILABLE_SPOT(36),
     OP_CONFIRMATION(37),
     OP_CREATE_SPOTANEOUS_ORDER(38),
+    OP_SIGN_IN_VISITOR_GROUP_GUIDE(39),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

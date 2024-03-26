@@ -23,8 +23,10 @@ public class Workers {
                     Thread[] clientConnections = server.getClientConnections();
                     controller.resetTableClients();
                     for (Thread clientThread : clientConnections) {
-                        ConnectionToClient client = (ConnectionToClient) clientThread;
-                        controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+                        if (clientThread instanceof ConnectionToClient) {
+                            ConnectionToClient client = (ConnectionToClient) clientThread;
+                            controller.addRow(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+                        }
                     }
                     try {
                         Thread.sleep(1000);
@@ -48,15 +50,18 @@ public class Workers {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
-            db.updateOrderStatusForUpcomingVisits();
-            db.cancelOrdersInWaitlist24HoursBefore();
+            try {
+                db.updateOrderStatusForUpcomingVisits();
+                db.cancelOrdersInWaitlist24HoursBefore();
+            } catch (Exception e) {
+                controller.addtolog("Sending Reminders for Orders in  " + calendar.getTime());
+            }
         };
 
         long initialDelay = calculateInitialDelay();
         scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.HOURS.toMillis(1), TimeUnit.MILLISECONDS);
 //        long initialDelay = 5000;
-//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(1), TimeUnit.MILLISECONDS);
+//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(10), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
 
@@ -64,19 +69,50 @@ public class Workers {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR, 22);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
-            db.ChangeLatePendingConfirmationToCancelled();
+            try{
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR, 22);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                db.ChangeLatePendingConfirmationToCancelled();
+                controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
+            }
+            catch (Exception e){
+                controller.addtolog("failed CancelOrdersThatDidntConfirmWorker");
+            }
+
         };
 
         long initialDelay = calculateInitialDelay();
         scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.HOURS.toMillis(1), TimeUnit.MILLISECONDS);
 //        long initialDelay = 5000;
-//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(1), TimeUnit.MILLISECONDS);
+//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
+        executors.add(scheduler);
+    }
+
+    public static void enterOrdersFromWaitList48HoursBeforeWorker(DBConnection db, ServerUIFrameController controller) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable task = () -> {
+            try {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR, 48);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                db.enterOrdersInWaitlist48HoursBefore();
+                controller.addtolog("Entering orders from the waitlist  " + calendar.getTime());
+            }
+            catch (Exception e){
+                controller.addtolog("failed enterOrdersFromWaitList48HoursBeforeWorker");
+            }
+        };
+
+        long initialDelay = calculateInitialDelay();
+        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.HOURS.toMillis(1), TimeUnit.MILLISECONDS);
+//        long initialDelay = 5000;
+//        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
 

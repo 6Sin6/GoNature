@@ -2,7 +2,9 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
+import CommonUtils.*;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.ParkBank;
@@ -69,23 +71,38 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         ClientUI.client.accept(msgToServer);
         Object answer = ClientCommunicator.msg;
         Message msgFromServer = (Message) answer;
+        OpCodes returnOpCode = msgFromServer.getMsgOpcode();
+
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_CHECK_AVAILABLE_SPOT) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         if (!(msgFromServer.getMsgData() instanceof ArrayList)) {
-            availableSpotsTxt.setText("No Avaliable Spots");
-            availableSpotsTxt.setVisible(true);
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
-        else {
-            ArrayList<Integer> msgData = (ArrayList<Integer>) msgFromServer.getMsgData();
-            Integer parkCapacity = msgData.get(1);
-            availableSpots = msgData.get(0);
-            progressBar.setProgress((double) (parkCapacity - availableSpots) / parkCapacity);
-            availableSpotsTxt.setText("Available spots right now : " + availableSpots);
-            availableSpotsTxt.setVisible(true);
-            progressBar.setVisible(true);
-            ParkOccupancyTxt.setVisible(true);
-            if (availableSpots > 0) {
-                MakeOrderBtn.setVisible(true);
-            }
+
+
+        ArrayList<Integer> msgData = (ArrayList<Integer>) msgFromServer.getMsgData();
+        Integer parkCapacity = msgData.get(1);
+        availableSpots = msgData.get(0);
+        progressBar.setProgress((double) (parkCapacity - availableSpots) / parkCapacity);
+        availableSpotsTxt.setText("Available spots right now : " + availableSpots);
+        availableSpotsTxt.setVisible(true);
+        progressBar.setVisible(true);
+        ParkOccupancyTxt.setVisible(true);
+        if (availableSpots > 0) {
+            MakeOrderBtn.setVisible(true);
         }
+
     }
 
     private void setParkCmbBox() {

@@ -4,127 +4,116 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.image.Image?>
-<Pane id="rootBillPane" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.GenerateBillForGroupGuideController">
-    <Pane fx:id="billPane" layoutX="9.0" layoutY="172.0" prefHeight="423.0" prefWidth="930.0">
-        <children>
-            <Text layoutX="26.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order type - "
-                  wrappingWidth="143.0">
-                <font>
-                    <Font name="System Bold" size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="typeDescTxt" layoutX="26.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="290.0"/>
-            <Text layoutX="124.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of visitors:"
-                  wrappingWidth="215.0">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="numVisitorsTxt" layoutX="278.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="43.4970703125">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text layoutX="125.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price per visitor:">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Separator layoutX="125.0" layoutY="292.0" prefHeight="8.0" prefWidth="232.0"/>
-            <Text layoutX="125.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Discount: ">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="discountTxt" layoutX="204.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="290.0">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text layoutX="210.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total:">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="priceAfterDiscTxt" layoutX="261.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0">
-                <font>
-                    <Font name="System Bold" size="18.0"/>
-                </font>
-            </Text>
-            <Text layoutX="125.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Estimated Cost:">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="fullPriceTxt" layoutX="253.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="78.78515625">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <Text fx:id="orderTypeTxt" layoutX="131.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="299.712890625">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-            <ImageView fitHeight="212.0" fitWidth="275.0" layoutX="647.0" layoutY="10.0" pickOnBounds="true"
-                       preserveRatio="true">
-                <image>
-                    <Image url="/assets/GoNatureLogo.png"/>
-                </image>
-            </ImageView>
-            <Text fx:id="priceTxt" layoutX="255.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  wrappingWidth="68.0">
-                <font>
-                    <Font size="18.0"/>
-                </font>
-            </Text>
-        </children>
-    </Pane>
-    <Text layoutX="381.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order ID - "
-          wrappingWidth="143.0">
+
+<Pane id="rootBillPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.GenerateBillForGroupGuideController">
+   <ImageView fitHeight="800.0" fitWidth="1005.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="/assets/payThePriceBackground.jpg" />
+      </image></ImageView>
+   <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#5e5e5e" height="433.0" layoutX="40.0" layoutY="117.0" stroke="BLACK" strokeType="INSIDE" width="921.0" />
+   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="749.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="/assets/GoNatureLogo.png" />
+      </image>
+   </ImageView>
+    <Text blendMode="SRC_OVER" layoutX="379.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order ID - " wrappingWidth="122.23828125">
         <font>
-            <Font name="System Bold" size="24.0"/>
+            <Font name="System Bold" size="24.0" />
         </font>
     </Text>
-    <Text fx:id="orderIdTxt" layoutX="500.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0"
-          wrappingWidth="78.78515625">
+    <Text fx:id="orderIdTxt" blendMode="SRC_OVER" layoutX="501.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="orderID" wrappingWidth="101.78515625">
         <font>
-            <Font name="System Bold" size="24.0"/>
+            <Font name="System Bold" size="24.0" />
         </font>
     </Text>
-    <Separator layoutX="10.0" layoutY="71.0" prefHeight="8.0" prefWidth="930.0"/>
-    <MFXButton fx:id="proceedBtn" layoutX="761.0" layoutY="676.0" onAction="#proceedToPayment" prefHeight="69.0"
-               prefWidth="159.0" styleClass="actButtonGreen" text="Pay"/>
-    <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0"
-               onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
+    <MFXButton fx:id="proceedBtn" alignment="CENTER" buttonType="RAISED" defaultButton="true" graphicTextGap="0.0" layoutX="253.0" layoutY="688.0" onAction="#proceedToPayment" prefHeight="60.0" prefWidth="500.0" text="Pay" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font></MFXButton>
+    <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
         <image>
             <Image url="/assets/backButtonWhite.png"/>
-        </image>
-    </ImageView>
-    <Text layoutX="400.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Billing"
-          wrappingWidth="150.873046875">
+        </image>    </ImageView>
+    <Text layoutX="407.0" layoutY="85.0" strokeType="OUTSIDE" blendMode="SRC_OVER" strokeWidth="0.0" text="Billing" textAlignment="CENTER" wrappingWidth="186.873046875">
         <font>
-            <Font name="System Bold" size="36.0"/>
+            <Font name="System Bold" size="48.0" />
         </font>
     </Text>
-    <Text layoutX="31.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:" wrappingWidth="41.4140625">
+    <Text blendMode="SRC_OVER" layoutX="75.0" layoutY="173.0" smooth="false" stroke="BLACK" strokeWidth="0.0" text="Date:" wrappingWidth="41.4140625">
         <font>
-            <Font size="14.0"/>
+            <Font size="14.0" />
         </font>
     </Text>
-    <Text fx:id="dateTxt" layoutX="72.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="198.0">
+    <Text fx:id="dateTxt" blendMode="SRC_OVER" layoutX="125.0" layoutY="172.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="date" wrappingWidth="274.873046875">
         <font>
-            <Font size="14.0"/>
+            <Font size="14.0" />
         </font>
     </Text>
+      <Text layoutX="76.0" layoutY="214.0" blendMode="SRC_OVER" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Order type - " underline="true" wrappingWidth="110.0">
+          <font>
+              <Font name="System Bold" size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="typeDescTxt" layoutX="75.0" layoutY="235.0" blendMode="SRC_OVER" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="orderType" wrappingWidth="290.0" />
+      <Text blendMode="SRC_OVER" layoutX="140.0" layoutY="330.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of visitors:" wrappingWidth="159.0">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="numVisitorsTxt" blendMode="SRC_OVER" layoutX="320.0" layoutY="329.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="numofvis" wrappingWidth="122.23828125">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text blendMode="SRC_OVER" layoutX="140.0" layoutY="361.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Price per visitor:">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Separator layoutX="136.0" layoutY="460.0" prefHeight="0.0" prefWidth="326.0" />
+      <Text blendMode="SRC_OVER" layoutX="140.0" layoutY="433.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Discount: ">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="discountTxt" blendMode="SRC_OVER" layoutX="320.0" layoutY="432.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="discount" wrappingWidth="193.78515625">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text blendMode="SRC_OVER" layoutX="140.0" layoutY="496.0" smooth="false" stroke="BLACK" strokeWidth="0.0" text="Total:" underline="true" wrappingWidth="78.78515625">
+          <font>
+              <Font name="System Bold" size="24.0" />
+          </font>
+      </Text>
+      <Text fx:id="priceAfterDiscTxt" blendMode="SRC_OVER" layoutX="321.0" layoutY="493.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="total" wrappingWidth="88.814453125">
+          <font>
+              <Font name="System Bold" size="14.0" />
+          </font>
+      </Text>
+      <Text blendMode="SRC_OVER" layoutX="140.0" layoutY="394.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Estimated Cost:">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="fullPriceTxt" blendMode="SRC_OVER" layoutX="320.0" layoutY="393.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="estCost" wrappingWidth="78.78515625">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="orderTypeTxt" layoutX="186.0" layoutY="213.0" blendMode="SRC_OVER" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="ordType" wrappingWidth="226.23828125">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
+      <Text fx:id="priceTxt" blendMode="SRC_OVER" layoutX="320.0" layoutY="360.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="pricePerPerson" wrappingWidth="126.3251953125">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Text>
 </Pane>

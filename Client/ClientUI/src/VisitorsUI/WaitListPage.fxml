@@ -3,102 +3,149 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.WaitListPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.WaitListPageController">
     <children>
-        <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/visitorsBackground.jpg" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#38d7a2" height="371.0" stroke="BLACK" strokeType="INSIDE" width="640.0" />
+        <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
             <children>
-                <Text fx:id="txtHeader" layoutX="336.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign-Up to Waitlist" textAlignment="CENTER">
+                <Text fx:id="txtHeader" layoutX="260.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign-Up to Waitlist" textAlignment="CENTER">
                     <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font name="System Bold" size="48.0" />
                     </font>
                 </Text>
-                <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-                <Text layoutX="252.0" layoutY="362.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full Name:">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                </Text>
-                <Text fx:id="txtDescription" layoutX="1.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Secure your spot on the waitlist by verifying your order and entering your contact details.&#10;Provide your contact details to ensure we can reach you when a spot becomes available.&#10;Don't miss out on the opportunity – sign up now!">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Text>
-                <Text layoutX="252.0" layoutY="402.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone:">
+                <Text layoutX="259.0" layoutY="444.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full Name:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Text layoutX="252.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+                <Text fx:id="txtDescription" layoutX="259.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Secure your spot!&#10;Don't miss out on the opportunity – sign up now!" textAlignment="CENTER" wrappingWidth="424.9619140625">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Text>
+                <Text layoutX="259.0" layoutY="484.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Text layoutX="252.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
+                <Text layoutX="259.0" layoutY="530.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Text layoutX="252.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number Of Visitors:">
+                <Text layoutX="259.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Name:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Text layoutX="252.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:">
+                <Text layoutX="259.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number Of Visitors:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Text layoutX="252.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time:">
+                <Text layoutX="259.0" layoutY="362.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <Label fx:id="lblParkName" layoutX="437.0" layoutY="177.0" text="lblParkName">
+                <Text layoutX="259.0" layoutY="402.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time:">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Text>
+                <Label fx:id="lblParkName" layoutX="469.0" layoutY="259.0" prefHeight="30.0" prefWidth="200.0" text="lblParkName">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblNumOfVisitors" layoutX="437.0" layoutY="217.0" prefHeight="30.0" prefWidth="174.0" text="lblNumOfVisitors">
+                <Label fx:id="lblNumOfVisitors" layoutX="469.0" layoutY="299.0" prefHeight="30.0" prefWidth="174.0" text="lblNumOfVisitors">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblDate" layoutX="437.0" layoutY="257.0" prefHeight="30.0" prefWidth="151.0" text="lblDate">
+                <Label fx:id="lblDate" layoutX="469.0" layoutY="339.0" prefHeight="30.0" prefWidth="151.0" text="lblDate">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblTime" layoutX="437.0" layoutY="297.0" prefHeight="30.0" prefWidth="151.0" text="lblTime">
+                <Label fx:id="lblTime" layoutX="469.0" layoutY="379.0" prefHeight="30.0" prefWidth="151.0" text="lblTime">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblName" layoutX="437.0" layoutY="337.0" prefHeight="30.0" prefWidth="151.0" text="lblName">
+                <Label fx:id="lblName" layoutX="469.0" layoutY="419.0" prefHeight="30.0" prefWidth="219.0" text="lblName">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblPhone" layoutX="437.0" layoutY="382.0" prefHeight="30.0" prefWidth="151.0" text="lblPhone">
+                <Label fx:id="lblPhone" layoutX="469.0" layoutY="464.0" prefHeight="30.0" prefWidth="185.0" text="lblPhone">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblEmail" layoutX="437.0" layoutY="430.0" prefHeight="30.0" prefWidth="151.0" text="lblEmail">
+                <Label fx:id="lblEmail" layoutX="469.0" layoutY="512.0" prefHeight="30.0" prefWidth="273.0" text="lblEmail">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Label>
-                <MFXButton fx:id="btnSignUp" buttonType="RAISED" layoutX="421.0" layoutY="562.0" onAction="#OnClickSignUpButton" prefHeight="50.0" prefWidth="100.0" text="Sign-Up Now!" />
-            <Label fx:id="lblError" layoutX="361.0" layoutY="633.0" prefHeight="38.0" prefWidth="229.0" textFill="#f80505">
+                <MFXButton fx:id="btnSignUp" buttonType="RAISED" layoutX="426.0" layoutY="596.0" onAction="#OnClickSignUpButton" prefHeight="60.0" prefWidth="150.0" rippleColor="#adff49" text="Sign-Up Now!" textAlignment="CENTER">
                <font>
-                  <Font size="20.0" />
+                  <Font size="14.0" />
+               </font></MFXButton>
+            <Label fx:id="lblError" layoutX="351.0" layoutY="543.0" prefHeight="38.0" prefWidth="250.0" textAlignment="CENTER" textFill="#f80505">
+               <font>
+                  <Font size="18.0" />
                </font>
             </Label>
+            <Separator layoutX="447.0" layoutY="214.0" orientation="VERTICAL" prefHeight="329.0" prefWidth="2.0" />
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="259.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/parkIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/familyIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/dateIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="379.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/timeIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="421.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/fnameIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="464.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/phoneIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="222.0" layoutY="507.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="/assets/emailIcon.png" />
+               </image>
+            </ImageView>
             </children>
         </Pane>
     </children>

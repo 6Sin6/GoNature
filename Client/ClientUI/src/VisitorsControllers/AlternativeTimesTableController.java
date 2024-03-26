@@ -2,7 +2,9 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -81,13 +83,27 @@ public class AlternativeTimesTableController extends BaseController implements I
     public void start(Order o1, String str) {
         Message send = new Message(OpCodes.OP_GET_AVAILABLE_SPOTS, applicationWindowController.getUser().getUsername(), o1);
         ClientUI.client.accept(send);
-        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_AVAILABLE_SPOTS) {
-            populateTable((ArrayList<Timestamp>) (ClientCommunicator.msg.getMsgData()), o1, str);
-            lblError.setText("");
-        } else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
-            MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
-            popup.show(applicationWindowController.getRoot());
+        Message response = ClientCommunicator.msg;
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_GET_AVAILABLE_SPOTS) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof ArrayList)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        populateTable((ArrayList<Timestamp>) (ClientCommunicator.msg.getMsgData()), o1, str);
+        lblError.setText("");
     }
 
     @FXML

@@ -62,7 +62,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
 
     public void setFields(Order o1) {
         User user = applicationWindowController.getUser();
-        if (user instanceof SingleVisitor || o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
+        if (o1.getOrderType() == OrderType.ORD_TYPE_SINGLE|| o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
             PayBtn.setVisible(false);
         } else {
             PayBtn.setVisible(true);
@@ -100,8 +100,16 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             Object msg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, user.getUsername(), arrForMsg);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
+            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             if (respondMsg.getMsgOpcode() != OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID) {
-                throw new CommunicationException("Respond not appropriate from server");
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             String strForPopup = "The order has been updated successfully";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
@@ -115,8 +123,16 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             Object msg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, user.getUsername(), arrForMsg);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
+            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             if (respondMsg.getMsgOpcode() != OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID) {
-                throw new CommunicationException("Respond not appropriate from server");
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             String strForPopup = "The order details has been updated successfully";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
@@ -151,14 +167,22 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         return true;
     }
 
-    public void OnClickCancelOrderBtn(ActionEvent actionEvent) throws CommunicationException {
+    public void OnClickCancelOrderBtn(ActionEvent actionEvent) {
         boolean flag;
         User user = applicationWindowController.getUser();
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
+        if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         if (respondMsg.getMsgOpcode() != OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER) {
-            throw new CommunicationException("Respond not appropriate from server");
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
         String strForPopup = "The order has been canceled successfully";
         if (ordersList.size() == 1 && order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {

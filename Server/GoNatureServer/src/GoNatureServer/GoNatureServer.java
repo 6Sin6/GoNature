@@ -102,11 +102,18 @@ public class GoNatureServer extends AbstractServer {
                 return;
             }
         }
-        this.controller.addtolog("Server listening for connections on port " + getPort());
-        Workers.startClientProcessingThread(controller, this);
-        Workers.SendReminderDayBeforeWorker(db, controller);
-        Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
         server.controller.toggleControllers(true);
+        try {
+            this.controller.addtolog("Server listening for connections on port " + getPort());
+            Workers.startClientProcessingThread(controller, this);
+            Workers.SendReminderDayBeforeWorker(db, controller);
+            Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
+            Workers.enterOrdersFromWaitList48HoursBeforeWorker(db,controller);
+            server.controller.toggleControllers(true);
+        }
+        catch (Exception e) {
+            controller.addtolog("Error occured on Server : " + e.getMessage());
+        }
     }
 
 
@@ -198,14 +205,21 @@ public class GoNatureServer extends AbstractServer {
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
-        } catch (Exception e) {
+        }
+        catch (SQLException e)
+        {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
             try {
                 client.sendToClient(respondMsg);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 controller.addtolog("Failed to send message to client");
             }
-            controller.addtolog("Failed to handle message: " + e.getMessage());
+        }
+        catch (IOException e) {
+            controller.addtolog("Failed to send message to client");
+        }
+        catch (Exception e) {
+            controller.addtolog("Error occured on Server : " + e.getMessage());
         }
     }
 
@@ -227,7 +241,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient("logged out successfully");
     }
 
-    private void handleSignIn(Message message, ConnectionToClient client) throws IOException {
+    private void handleSignIn(Message message, ConnectionToClient client) throws Exception {
         if (message.getMsgData() instanceof User) {
             User userCredentials = (User) message.getMsgData();
             if (signedInInstances.containsKey(userCredentials.getUsername())) {
@@ -256,6 +270,11 @@ public class GoNatureServer extends AbstractServer {
         }
         if (message.getMsgData() instanceof String) {
             String username = (String) message.getMsgData();
+            if(db.isGroupGuide(username)){
+                Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, username, username);
+                client.sendToClient(respondMsg);
+                return;
+            }
             if (signedInInstances.containsKey(username)) {
                 if (signedInInstances.get(username).getInetAddress() == null) {
                     // remove crashed client from the map and add it again with the new client.
@@ -276,7 +295,7 @@ public class GoNatureServer extends AbstractServer {
 
     }
 
-    private void handleCreateSpotaneousOrder(Message message, ConnectionToClient client) throws IOException {
+    private void handleCreateSpotaneousOrder(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         order.setVisitationDate(new Timestamp(System.currentTimeMillis()));
         order.setEnteredTime(new Timestamp(System.currentTimeMillis()));
@@ -291,7 +310,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(createOrderMsg);
     }
 
-    private void handleCheckAvailableSpot(Message message, ConnectionToClient client) throws IOException {
+    private void handleCheckAvailableSpot(Message message, ConnectionToClient client) throws Exception {
         String parkID = (String) message.getMsgData();
         Park park = db.getParkDetails(parkID);
         if (park == null) {
@@ -307,17 +326,6 @@ public class GoNatureServer extends AbstractServer {
         Integer VisitorsAfter = db.GetAvailableSpotForEntry(parkID, createExitTime(currentTime, parkEpectedVisitationTime));
 
         Integer availableSpots = Math.max(parkCapacity - Math.max(VisitorsBefore, VisitorsAfter), 0);
-        if (parkCapacity - VisitorsBefore <= 0) {
-            LocalDate currentDate = LocalDate.now();
-            int year = currentDate.getYear();
-            String month = String.format("%02d", currentDate.getMonthValue()); // 2-digit month
-            String day = String.format("%02d", currentDate.getDayOfMonth()); // 2-digit day
-            if(db.insertFullCapacity(parkID.toString(),parkCapacity.toString(),""+year,month,day)==null) {
-                Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), false);
-                client.sendToClient(respondMsg);
-                return;
-            }
-        }
         ArrayList<Integer> availableSpotsList = new ArrayList<>();
         availableSpotsList.add(availableSpots);
         availableSpotsList.add(parkCapacity);
@@ -326,7 +334,7 @@ public class GoNatureServer extends AbstractServer {
     }
 
 
-    private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetVisitorOrders(Message message, ConnectionToClient client) throws Exception {
         User visitor = (User) message.getMsgData();
         ArrayList<Order> requestedOrders;
         if (visitor instanceof AbstractVisitor) {
@@ -339,7 +347,17 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws Exception {
+        if (!(message.getMsgData() instanceof Order)){
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
+            client.sendToClient(respondMsg);
+        }
         Order order = (Order) message.getMsgData();
+        if (!db.extractFromWaitList(new Order(null, order.getParkID(),null ,
+                null,null,null,order.getEnteredTime(),
+                null,null,null,0))) {
+            Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
+            client.sendToClient(respondMsg);
+        }
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
         if (db.CheckAvailabilityBeforeReservationTime(order) && db.CheckAvailabilityAfterReservationTime(order)) {
             order.setOrderStatus(OrderStatus.STATUS_ACCEPTED);
@@ -367,63 +385,68 @@ public class GoNatureServer extends AbstractServer {
 
     }
 
-    private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws Exception {
         String[] data = (String[]) message.getMsgData();
+        if(db.isGroupGuide(data[0])){
+            Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, "", null);
+            client.sendToClient(respondMsg);
+            return;
+        }
         Order userOrder = db.getUserOrderByUserID(data[0], data[1]);
         Message getUserMsg = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", userOrder);
         client.sendToClient(getUserMsg);
     }
 
-    private void handleActivateGroupGuide(Message message, ConnectionToClient client) throws IOException {
+    private void handleActivateGroupGuide(Message message, ConnectionToClient client) throws Exception {
         String groupGuideID = (String) message.getMsgData();
         String retVal = db.activateGroupGuide(groupGuideID);
         Message registerGroupGuideMessage = new Message(OpCodes.OP_ACTIVATE_GROUP_GUIDE, null, retVal);
         client.sendToClient(registerGroupGuideMessage);
     }
 
-    private void handleGetRequestsFromParkManager(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetRequestsFromParkManager(Message message, ConnectionToClient client) throws Exception {
         Integer departmentID = (Integer) message.getMsgData();
         ArrayList<RequestChangingParkParameters> requests = db.getRequestsFromParkManager(departmentID);
         Message retrieveRequestsMsg = new Message(OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER, message.getMsgUserName(), requests);
         client.sendToClient(retrieveRequestsMsg);
     }
 
-    private void handleAuthorizeParkRequest(Message message, ConnectionToClient client) throws IOException {
+    private void handleAuthorizeParkRequest(Message message, ConnectionToClient client) throws Exception {
         RequestChangingParkParameters authRequest = (RequestChangingParkParameters) message.getMsgData();
         boolean isAuthorized = db.authorizeParkRequest(authRequest);
         Message authorizeRequestMsg = new Message(OpCodes.OP_AUTHORIZE_PARK_REQUEST, message.getMsgUserName(), isAuthorized);
         client.sendToClient(authorizeRequestMsg);
     }
 
-    private void handleDeclineParkRequest(Message message, ConnectionToClient client) throws IOException {
+    private void handleDeclineParkRequest(Message message, ConnectionToClient client) throws Exception {
         RequestChangingParkParameters unauthRequest = (RequestChangingParkParameters) message.getMsgData();
         boolean isUnauthorized = db.unauthorizeParkRequest(unauthRequest);
         Message unauthorizeRequestMsg = new Message(OpCodes.OP_DECLINE_PARK_REQUEST, message.getMsgUserName(), isUnauthorized);
         client.sendToClient(unauthorizeRequestMsg);
     }
 
-    private void handleSubmitRequestsToDepartment(Message message, ConnectionToClient client) throws IOException {
+    private void handleSubmitRequestsToDepartment(Message message, ConnectionToClient client) throws Exception {
         Map<ParkParameters, RequestChangingParkParameters> requestMap = (Map<ParkParameters, RequestChangingParkParameters>) message.getMsgData();
         boolean isSubmitted = db.submitRequestsToDepartment(requestMap);
         Message submitRequestMsg = new Message(OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT, message.getMsgUserName(), isSubmitted);
         client.sendToClient(submitRequestMsg);
     }
 
-    private void handleGetParkDetailsByParkID(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetParkDetailsByParkID(Message message, ConnectionToClient client) throws Exception {
         String ParkID = (String) message.getMsgData();
         Park park = db.getParkDetails(ParkID);
         Message submitRequestMsg = new Message(OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID, message.getMsgUserName(), park);
         client.sendToClient(submitRequestMsg);
     }
 
-    private void handleQuit(ConnectionToClient client) throws IOException {
+    private void handleQuit(ConnectionToClient client) throws Exception {
         signedInInstances.values().removeIf(value -> value == client);
         controller.addtolog("Client " + client + " Disconnected");
         controller.removeRowByIP(client.getInetAddress().getHostAddress());
         client.close();
     }
 
-    private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws IOException {
+    private void handleCancelOrderVisitation(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
         if (!db.extractFromWaitList(order)) {
@@ -439,7 +462,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleConfirmOrderVisitation(Message message, ConnectionToClient client) throws IOException {
+    private void handleConfirmOrderVisitation(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         String orderID = order.getOrderID();
         boolean isChanged;
@@ -451,47 +474,48 @@ public class GoNatureServer extends AbstractServer {
         if (!isChanged) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
+            return;
         }
         Message respondMsg = new Message(OpCodes.OP_CONFIRMATION, message.getMsgUserName(), isChanged);
         client.sendToClient(respondMsg);
     }
 
-    private void handleGetOrderByID(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetOrderByID(Message message, ConnectionToClient client) throws Exception {
         String orderID = (String) message.getMsgData();
         Order order = db.getOrderById(orderID);
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }
 
-    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws IOException {
+    private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws Exception {
         String orderID = message.getMsgData().toString();
         String answer = db.setExitTimeOfOrder(orderID);
         Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, null, answer);
         client.sendToClient(respondMsg);
     }
 
-    private void handleUpdateOrderDetailsByOrderId(Message message, ConnectionToClient client) throws IOException {
+    private void handleUpdateOrderDetailsByOrderId(Message message, ConnectionToClient client) throws Exception {
         String[] details = (String[]) message.getMsgData();
         boolean isUpdated = db.updateOrderDetails(details);
         Message respondMsg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, message.getMsgUserName(), isUpdated);
         client.sendToClient(respondMsg);
     }
 
-    private void handleMarkOrderAsPaid(Message message, ConnectionToClient client) throws IOException {
+    private void handleMarkOrderAsPaid(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         boolean isMarkedAsPaid = db.markOrderAsPaid(order);
         Message respondMsg = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, message.getMsgUserName(), isMarkedAsPaid);
         client.sendToClient(respondMsg);
     }
 
-    private void handleViewReportBlob(Message message, ConnectionToClient client) throws IOException {
+    private void handleViewReportBlob(Message message, ConnectionToClient client) throws Exception {
         String[] params = (String[]) message.getMsgData();
         byte[] pdfBlob = db.getReportBlob(Boolean.parseBoolean(params[0]), params[1], params[2], params[3], params[4]);
         Message respondMsg = new Message(OpCodes.OP_VIEW_REPORT_BLOB, message.getMsgUserName(), pdfBlob);
         client.sendToClient(respondMsg);
     }
 
-    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws IOException {
+    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws Exception {
         String reportType = (String) message.getMsgData();
         boolean isGenerated = false;
         String id = null; // used for department ID (for first 2 cases) or park ID (for other cases)
@@ -527,7 +551,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleGetAvailableSpots(Message message, ConnectionToClient client) throws IOException {
+    private void handleGetAvailableSpots(Message message, ConnectionToClient client) throws Exception {
         Order order = (Order) message.getMsgData();
         ArrayList<Timestamp> availableSpots = db.getAvailableTimeStamps(order);
         if (availableSpots.isEmpty()) {
@@ -575,6 +599,9 @@ public class GoNatureServer extends AbstractServer {
     @Override
     protected void serverStopped() {
         this.controller.addtolog("Server has stopped listening for connections.");
+        if (db != null) {
+            db.closeConnection();
+        }
         Workers.shutdownExecutors();
     }
 

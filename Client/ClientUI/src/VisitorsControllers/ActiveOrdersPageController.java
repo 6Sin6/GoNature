@@ -2,7 +2,9 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -20,7 +22,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.scene.shape.Rectangle;
 
+import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -70,6 +74,8 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     @FXML
     private Label lblStatusMsg;
+    @FXML
+    private Rectangle errorRec;
 
     private int rowIndex;
 
@@ -78,6 +84,8 @@ public class ActiveOrdersPageController extends BaseController implements Initia
     public void cleanup() {
         rowIndex = -1;
         lblStatusMsg.setText("");
+        errorRec.setVisible(false);
+
     }
 
     @FXML
@@ -85,8 +93,10 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         if (rowIndex == -1) {
             System.out.println("You must select an order");
             lblStatusMsg.setText("You must select an order");
+            errorRec.setVisible(true);
             return;
         }
+
         Order o1 = list.get(rowIndex);
         applicationWindowController.loadVisitorsPage("UpdateOrderDetailsPage");
         Object controller = applicationWindowController.getCurrentActiveController();
@@ -107,17 +117,32 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         colDate.setCellValueFactory(new MapValueFactory<>("Date"));
         colTime.setCellValueFactory(new MapValueFactory<>("Time"));
         makeRowClickable();
+        errorRec.setVisible(false);
     }
 
     public void start() {
         Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
         ClientUI.client.accept(send);
-        if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_GET_VISITOR_ORDERS) {
-            populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
-        } else if (ClientCommunicator.msg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
-            MessagePopup popup = new MessagePopup("ERROR FETCHING DATA", Duration.seconds(5), 300, 150, false);
-            popup.show(applicationWindowController.getRoot());
+        Message response = ClientCommunicator.msg;
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_GET_VISITOR_ORDERS && returnOpCode != OpCodes.OP_GET_VISITOR_GROUP_GROUP_GUIDE_ORDERS) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if (!(response.getMsgData() instanceof ArrayList)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        populateTable((ArrayList) (ClientCommunicator.msg.getMsgData()));
+        makeRowClickable();
     }
 
     @FXML
@@ -152,7 +177,6 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         }
         tableOrders.setItems(tableData);
         Timestamp orderTimeStamp = new Timestamp(System.currentTimeMillis());
-
     }
 
     private void makeRowClickable() {
@@ -167,7 +191,9 @@ public class ActiveOrdersPageController extends BaseController implements Initia
                         String orderId = item.get("Order Number");
                         Order order = findOrderById(orderId);
                         if (order != null && order.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
-                            setStyle("-fx-background-color: #ffce00;");
+                            setStyle("-fx-background-color: #F8D761;");
+                        } else if (order != null && order.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID) {
+                            setStyle("-fx-background-color:  #9BD38E;");
                         } else {
                             setStyle("");
                         }
@@ -178,6 +204,8 @@ public class ActiveOrdersPageController extends BaseController implements Initia
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                     Map<String, String> clickedRowData = row.getItem();
                     rowIndex = row.getIndex();
+                    errorRec.setVisible(false);
+                    lblStatusMsg.setText("");
                     System.out.println("Selected row data: " + clickedRowData);
                 }
             });
@@ -193,8 +221,6 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         }
         return null;
     }
-
-
 
 
 }

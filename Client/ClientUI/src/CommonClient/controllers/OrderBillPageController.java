@@ -41,8 +41,6 @@ public class OrderBillPageController extends BaseController {
     @FXML
     private Text priceAfterDiscTxt;
 
-    @FXML
-    private Text signatureTxt;
 
     @FXML
     private MFXButton proceedBtn;
@@ -65,6 +63,7 @@ public class OrderBillPageController extends BaseController {
         priceAfterDiscTxt.setText("");
         typeDescTxt.setText("");
     }
+
 
     public void setMessagePopup(MessagePopup messageController) {
         this.messageController = messageController;
@@ -90,7 +89,6 @@ public class OrderBillPageController extends BaseController {
 
     public void start(Order order, boolean referredPostOrder) {
         this.groupGuidePage = referredPostOrder;
-        signatureTxt.setVisible(!referredPostOrder);
 
 
         Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus());
@@ -129,4 +127,5 @@ public class OrderBillPageController extends BaseController {
 
         typeDescTxt.setText(orderTypeDescription);
     }
+
 }

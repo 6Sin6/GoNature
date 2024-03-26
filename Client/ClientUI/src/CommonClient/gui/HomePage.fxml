@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -71,14 +70,14 @@
                     <Image smooth="true" url="/assets/GoNatureLogo.png" />
                 </image>
             </ImageView>
-            <Text layoutX="485.0" layoutY="642.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Already booked a visit?" wrappingWidth="181.48095703125">
+            <Text layoutX="464.0" layoutY="630.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Already booked a visit?" wrappingWidth="203.48095703125">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text layoutX="666.0" layoutY="641.0" onMouseClicked="#handleExistingOrder" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="linkText" text="Handle Your Order">
+            <Text layoutX="640.0" layoutY="632.0" onMouseClicked="#handleExistingOrder" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="linkText" text="Handle Your Order" textAlignment="CENTER" wrappingWidth="244.48095703125">
                <font>
-                  <Font size="17.0" />
+                  <Font size="24.0" />
                </font>
             </Text>
          </children>

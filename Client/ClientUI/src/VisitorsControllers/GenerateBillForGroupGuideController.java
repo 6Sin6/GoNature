@@ -2,7 +2,9 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.OrderBillPageController;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -16,12 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class GenerateBillForGroupGuideController extends OrderBillPageController {
-
-    @FXML
-    private ImageView backBtn;
-
-    @FXML
-    private Pane billPane;
 
     @FXML
     private Text discountTxt;
@@ -43,12 +39,6 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
 
     @FXML
     private Text priceAfterDiscTxt;
-
-    @FXML
-    private Text signatureTxt;
-
-    @FXML
-    private MFXButton proceedBtn;
 
     @FXML
     private Text typeDescTxt;
@@ -86,6 +76,19 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
             Message msgPaid = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, applicationWindowController.getUser().getUsername(), this.o1);
             ClientUI.client.accept(msgPaid);
             Message response = ClientCommunicator.msg;
+            OpCodes returnOpCode = response.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_MARK_ORDER_AS_PAID) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof ActiveOrdersPageController) {

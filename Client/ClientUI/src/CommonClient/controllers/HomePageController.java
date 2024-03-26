@@ -2,11 +2,13 @@ package CommonClient.controllers;
 
 import CommonClient.ClientUI;
 import CommonClient.Utils;
+import CommonUtils.CommonUtils;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.InputTextPopup;
 import CommonUtils.MessagePopup;
 import Entities.*;
 import VisitorsControllers.ConfirmVisitationPageController;
-import VisitorsControllers.HandleOrderDetailsPageController;
+import VisitorsControllers.UpdateOrderDetailsPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -78,12 +80,27 @@ public class HomePageController extends BaseController implements Initializable 
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-
+        if(returnOpCode == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+            onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
+            return;
+        }
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         // Checking if the response from the server is inappropriate.
         if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
-            throw new CommunicationException("Response is inappropriate from server");
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
-
+        if(!(response.getMsgData() instanceof Order)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         Order order = (Order) response.getMsgData();
         if (order == null) {
             onAuthPopup.setErrorLabel("Invalid ID or Link! Try again");
@@ -92,8 +109,14 @@ public class HomePageController extends BaseController implements Initializable 
 
         onAuthPopup.setErrorLabel("");
         try {
-            String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/HandleOrderDetailsPage.fxml";
+            String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
+            if(order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
+                onAuthPopup.setErrorLabel("Group Orders are not allowed to be updated without sign in !");
+                return;
+            }
             applicationWindowController.setCenterPage(pathToPage);
+
+            applicationWindowController.loadMenu(new SingleVisitor(values[0]));
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof BaseController) {
                 ((BaseController) controller).setApplicationWindowController(applicationWindowController);
@@ -101,8 +124,8 @@ public class HomePageController extends BaseController implements Initializable 
 
             if (controller instanceof ConfirmVisitationPageController) {
                 ((ConfirmVisitationPageController) controller).setOrder(order);
-            } else if (controller instanceof HandleOrderDetailsPageController) {
-                ((HandleOrderDetailsPageController) controller).setOrder(order);
+            } else if (controller instanceof UpdateOrderDetailsPageController) {
+                ((UpdateOrderDetailsPageController) controller).setFields(order);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,8 +156,24 @@ public class HomePageController extends BaseController implements Initializable 
             Message signInReq = new Message(OpCodes.OP_SIGN_IN, inputID, inputID);
             ClientUI.client.accept(signInReq);
             Message respondToSignIn = ClientCommunicator.msg;
-            if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+            if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+                onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
+                return;
+            }
+            if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN) {
                 onAuthPopup.setErrorLabel("Already Signed In !");
+                return;
+            }
+            if(respondToSignIn.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
             SingleVisitor visitor = new SingleVisitor(inputID);
@@ -145,9 +184,26 @@ public class HomePageController extends BaseController implements Initializable 
                 onAuthPopup.setErrorLabel("Error getting orders");
                 return;
             }
+            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (respondMsg.getMsgOpcode() != OpCodes.OP_GET_VISITOR_ORDERS) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof ArrayList)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
             } else {
                 ArrayList<Order> activeOrders = new ArrayList<>();
                 ArrayList<Order> OrdersToConfirm = new ArrayList<>();
@@ -164,16 +220,12 @@ public class HomePageController extends BaseController implements Initializable 
                     }
                 }
                 if (activeOrders.isEmpty()) {
-                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID));
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
                 } else {
                     applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                     applicationWindowController.loadMenu(new SingleVisitor(inputID));
                     if (flag) {
-                        StringBuilder ordersToConfirm = new StringBuilder();
-                        for (Order order : OrdersToConfirm) {
-                            ordersToConfirm.append(order.getOrderID()).append(" ");
-                        }
-                        MessagePopup messagePopup = new MessagePopup("Orders : " + ordersToConfirm + "\nare pending confirmation", Duration.seconds(5), 500, 300, false);
+                        MessagePopup messagePopup = new MessagePopup("You have " + OrdersToConfirm.size() + " orders pending confirmation", Duration.seconds(5), 500, 300, false);
                         messagePopup.show(applicationWindowController.getRoot());
                     }
                 }
