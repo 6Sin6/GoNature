@@ -462,6 +462,7 @@ public class GoNatureServer extends AbstractServer {
         if (!isChanged) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
+            return;
         }
         Message respondMsg = new Message(OpCodes.OP_CONFIRMATION, message.getMsgUserName(), isChanged);
         client.sendToClient(respondMsg);

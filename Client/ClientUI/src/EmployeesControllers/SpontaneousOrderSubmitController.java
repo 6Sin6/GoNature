@@ -56,6 +56,17 @@ public class SpontaneousOrderSubmitController extends BaseController {
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(respondMsg.getMsgData() instanceof Order)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         Order cnfrmorder = (Order) respondMsg.getMsgData();
         if (returnOpCode == OpCodes.OP_CREATE_SPOTANEOUS_ORDER) {
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";

@@ -2,8 +2,11 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import CommonUtils.InputTextPopup;
 import Entities.Message;
+import Entities.OpCodes;
 import client.ClientCommunicator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,13 +25,33 @@ public abstract class GeneralEmployeeDashboard extends BaseController
     protected void onSubmit(String[] inputs)
     {
         String orderID = inputs[0];
-        if (!CommonUtils.CommonUtils.isValidOrderID(orderID))
+        if (!CommonUtils.isValidOrderID(orderID))
         {
             popup.setErrorLabel("Invalid Order ID");
             return;
         }
         Object message = new Message(OP_UPDATE_EXIT_TIME_OF_ORDER, null, orderID);
         ClientUI.client.accept(message);
+        Message response = ClientCommunicator.msg;
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof String)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+
         String answer = ClientCommunicator.msg.getMsgData().toString();
         if (answer != null)
         {

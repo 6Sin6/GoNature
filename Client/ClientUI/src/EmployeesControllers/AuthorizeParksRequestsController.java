@@ -2,6 +2,8 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -82,12 +84,27 @@ public class AuthorizeParksRequestsController extends BaseController {
         request.setStatus(RequestStatus.REQUEST_ACCEPTED);
         Object msg = new Message(opCode, applicationWindowController.getUser().getUsername(), request);
         ClientUI.client.accept(msg);
-        Message response = ClientCommunicator.msg;
 
-        if (response.getMsgOpcode() != opCode || !((Boolean) response.getMsgData())) {
-            errorTxt.setText("Something went wrong... Try again later.");
+        Message response = ClientCommunicator.msg;
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != opCode) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof Boolean)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+
 
         if (event.getSource() != authBtn) {
             requests.get(rowIndex).setStatus(RequestStatus.REQUEST_DECLINED);
@@ -136,8 +153,22 @@ public class AuthorizeParksRequestsController extends BaseController {
         ClientUI.client.accept(msg);
         Message response = ClientCommunicator.msg;
 
-        if (response.getMsgOpcode() != OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER) {
-            errorTxt.setText("Something went wrong... Try again later.");
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_GET_REQUESTS_FROM_PARK_MANAGER) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof ArrayList)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 

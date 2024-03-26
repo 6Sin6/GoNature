@@ -3,6 +3,7 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.CommonUtils;
+import CommonUtils.*;
 import Entities.Message;
 import Entities.OpCodes;
 import client.ClientCommunicator;
@@ -10,7 +11,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
+import CommonUtils.ConfirmationPopup;
 public class RegisterGroupGuideController extends BaseController {
 
     @FXML
@@ -51,6 +52,25 @@ public class RegisterGroupGuideController extends BaseController {
         ClientUI.client.accept(msg);
 
         Message response = ClientCommunicator.msg;
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_ACTIVATE_GROUP_GUIDE) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof String)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+
         String msgAnswer = (String) response.getMsgData();
 
         if (msgAnswer == null)

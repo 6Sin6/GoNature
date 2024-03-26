@@ -3,6 +3,7 @@ package VisitorsControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -82,8 +83,18 @@ public class ConfirmVisitationPageController extends BaseController {
         Object msg = new Message(OpCodes.OP_CONFIRMATION, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
-        if (respondMsg.getMsgOpcode() != OpCodes.OP_CONFIRMATION) {
-            throw new CommunicationException("Respond not appropriate from server");
+        OpCodes returnOpCode = respondMsg.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_CONFIRMATION) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
         String strForPopup = "The order has been confirmed successfully";
         ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
@@ -102,8 +113,18 @@ public class ConfirmVisitationPageController extends BaseController {
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
-        if (respondMsg.getMsgOpcode() != OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER) {
-            throw new CommunicationException("Respond not appropriate from server");
+        OpCodes returnOpCode = respondMsg.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
         }
         String strForPopup = "The order has been canceled successfully";
         if (ordersList.size() == 1 && order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {

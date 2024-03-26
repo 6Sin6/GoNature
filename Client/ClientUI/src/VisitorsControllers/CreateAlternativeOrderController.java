@@ -3,6 +3,7 @@ package VisitorsControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -75,9 +76,25 @@ public class CreateAlternativeOrderController extends BaseController implements 
         if (user instanceof SingleVisitor) {
             Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, user.getUsername(), order);
             ClientUI.client.accept(msg);
+
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_CREATE_NEW_VISITATION && respondMsg.getMsgOpcode() != OpCodes.OP_NO_AVAILABLE_SPOT) {
-                throw new CommunicationException("Respond not appropriate from server");
+            OpCodes returnOpCode = respondMsg.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof Order)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
             if (respondMsg.getMsgOpcode() == OpCodes.OP_CREATE_NEW_VISITATION) {
@@ -115,8 +132,23 @@ public class CreateAlternativeOrderController extends BaseController implements 
             Object msg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, user.getUsername(), order);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if (respondMsg.getMsgOpcode() != OpCodes.OP_CREATE_NEW_VISITATION) {
-                throw new CommunicationException("Respond not appropriate from server");
+            OpCodes returnOpCode = respondMsg.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_DB_ERR)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if(!(respondMsg.getMsgData() instanceof Order)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";

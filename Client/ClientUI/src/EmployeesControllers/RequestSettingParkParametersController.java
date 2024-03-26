@@ -2,6 +2,8 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.ConfirmationPopup;
+import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -68,8 +70,22 @@ public class RequestSettingParkParametersController extends BaseController imple
         ClientUI.client.accept(msg);
 
         response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID) {
-            lblErrorMsg.setText("Something went wrong... Try again later");
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_GET_PARK_DETAILS_BY_PARK_ID) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        if(!(response.getMsgData() instanceof Park)) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 
@@ -138,8 +154,17 @@ public class RequestSettingParkParametersController extends BaseController imple
         ClientUI.client.accept(msg);
 
         response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT) {
-            lblErrorMsg.setText("Something went wrong... Try again later");
+        OpCodes returnOpCode = response.getMsgOpcode();
+        if(returnOpCode == OpCodes.OP_DB_ERR)
+        {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (returnOpCode != OpCodes.OP_SUBMIT_REQUESTS_TO_DEPARTMENT) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 
