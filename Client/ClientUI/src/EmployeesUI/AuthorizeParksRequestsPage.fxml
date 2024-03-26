@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.AuthorizeParksRequestsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.AuthorizeParksRequestsController">
    <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/parkEmployeeBackground.jpg" />
+         </image>
+      </ImageView>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
-            <TableView fx:id="tableRequests" layoutX="10.0" layoutY="134.0" prefHeight="500.0" prefWidth="930.0">
+            <TableView fx:id="tableRequests" layoutX="14.0" layoutY="189.0" prefHeight="500.0" prefWidth="498.0">
                <columns>
-                  <TableColumn fx:id="parkMgrCol" prefWidth="149.0" text="Park Manager" />
-                  <TableColumn fx:id="parkNameCol" prefWidth="184.0" text="Park Name" />
-                  <TableColumn fx:id="statusVal" prefWidth="191.0" text="Request Status" />
-                  <TableColumn fx:id="paramCol" prefWidth="261.0" text="Parameter" />
-                  <TableColumn fx:id="newValCol" prefWidth="144.0" text="Proposed New Value" />
+                  <TableColumn fx:id="parkMgrCol" prefWidth="102.0" text="Park Manager" />
+                  <TableColumn fx:id="parkNameCol" prefWidth="109.0" text="Park Name" />
+                  <TableColumn fx:id="statusVal" prefWidth="94.0" text="Request Status" />
+                  <TableColumn fx:id="paramCol" prefWidth="68.0" text="Parameter" />
+                  <TableColumn fx:id="newValCol" prefWidth="123.0" text="Proposed New Value" />
                </columns>
             </TableView>
-            <Text layoutX="234.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Requests From Park Managers" textAlignment="CENTER">
+            <Text layoutX="159.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Requests From Park Managers" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="36.0" />
+                  <Font name="System Bold" size="48.0" />
                </font>
             </Text>
-            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text fx:id="errorTxt" layoutX="263.0" layoutY="667.0" styleClass="error-text" wrappingWidth="660.0">
+            <Text fx:id="errorTxt" fill="RED" layoutX="59.0" layoutY="704.0" styleClass="error-text" textAlignment="CENTER" wrappingWidth="408.0">
                <font>
-                  <Font size="16.0" />
+                  <Font size="14.0" />
                </font>
             </Text>
-            <MFXButton fx:id="authBtn" layoutX="285.0" layoutY="685.0" onAction="#handleRequest" prefHeight="56.0" prefWidth="128.0" styleClass="actButtonGreen" text="Authorize" />
-            <MFXButton fx:id="unAuthBtn" layoutX="584.0" layoutY="685.0" onAction="#handleRequest" prefHeight="56.0" prefWidth="128.0" styleClass="actButtonGreen" text="Unauthorize" />
+            <MFXButton fx:id="authBtn" buttonType="RAISED" layoutX="346.0" layoutY="718.0" onAction="#handleRequest" prefHeight="56.0" prefWidth="128.0" styleClass="actButtonGreen" text="Authorize" />
+            <MFXButton fx:id="unAuthBtn" layoutX="43.0" layoutY="718.0" onAction="#handleRequest" prefHeight="56.0" prefWidth="128.0" styleClass="actButtonGreen" text="Unauthorize" />
          </children>
       </Pane>
    </children>

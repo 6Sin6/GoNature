@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkManagerDashboardPageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ParkManagerDashboardPageController">
    <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="950.0">
+      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/assets/parkEmployeeBackground.jpg" />
+         </image>
+      </ImageView>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
-            <Text layoutX="298.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Manager Dashboard" textAlignment="CENTER">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="497.0" layoutX="23.0" layoutY="193.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Text layoutX="200.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Manager Dashboard" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="36.0" />
+                  <Font name="System Bold" size="48.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnChangeParkParameters" layoutX="123.0" layoutY="545.0" mnemonicParsing="false" onAction="#OnClickChangeParkParametersButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="Change Parameters&#10;" textAlignment="CENTER" />
-            <Text layoutX="46.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request to Change Park Parameters" wrappingWidth="310.462890625">
+            <MFXButton fx:id="btnChangeParkParameters" buttonType="RAISED" layoutX="153.0" layoutY="243.0" mnemonicParsing="false" onAction="#OnClickChangeParkParametersButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="Change Parameters&#10;" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <Text layoutX="430.0" layoutY="523.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Reports">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <MFXButton fx:id="btnIssueReports" layoutX="421.0" layoutY="545.0" mnemonicParsing="false" onAction="#OnClickIssueReportsButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="Issue" textAlignment="CENTER" />
-            <Separator layoutY="68.0" prefHeight="14.0" prefWidth="950.0" />
-            <Text layoutX="25.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Park Manager Dashboard!&#10;&#10;As the Park Manager, your role is vital in maintaining and enhancing our park facilities.&#10;Here's what you can do:&#10;&#10;• Easily submit requests to adjust park parameters.&#10;• Generate detailed usage and visitation reports and,&#10;send them to the Department Manager.&#10;&#10;Efficiently manage park operations and drive continuous&#10;improvement with these features.&#10;Enjoy overseeing our parks with confidence and effectiveness!" wrappingWidth="871.9940795898438">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Text>
-            <Text layoutX="729.0" layoutY="523.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports">
+                  <Font size="14.0" />
+               </font></MFXButton>
+            <Text layoutX="73.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request to Change Park Parameters" wrappingWidth="310.462890625">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnViewReports" layoutX="720.0" layoutY="541.0" mnemonicParsing="false" onAction="#OnClickViewReportsButton" prefHeight="90.0" prefWidth="130.0" styleClass="actButtonGreen" text="View" textAlignment="CENTER" />
+            <Text layoutX="170.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Issue Reports">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <MFXButton fx:id="btnIssueReports" buttonType="RAISED" layoutX="153.0" layoutY="405.0" mnemonicParsing="false" onAction="#OnClickIssueReportsButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="Issue" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font></MFXButton>
+            <Text layoutX="172.0" layoutY="550.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <MFXButton fx:id="btnViewReports" buttonType="RAISED" layoutX="153.0" layoutY="565.0" mnemonicParsing="false" onAction="#OnClickViewReportsButton" prefHeight="100.0" prefWidth="150.0" styleClass="actButtonGreen" text="View" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font></MFXButton>
          </children>
       </Pane>
    </children>

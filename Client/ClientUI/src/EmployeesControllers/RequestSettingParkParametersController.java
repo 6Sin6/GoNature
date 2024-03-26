@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.sql.Date;
@@ -34,13 +35,13 @@ public class RequestSettingParkParametersController extends BaseController imple
     private Label lblSuccessMsg;
 
     @FXML
-    private MFXTextField txtDifferenceOrdersVisitors;
+    private TextField txtDifferenceOrdersVisitors;
 
     @FXML
     private MFXLegacyComboBox<String> txtMaxVisitation;
 
     @FXML
-    private MFXTextField txtParkCapacity;
+    private TextField txtParkCapacity;
 
     private Park park;
 

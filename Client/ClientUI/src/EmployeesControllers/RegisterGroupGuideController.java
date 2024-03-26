@@ -10,6 +10,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class RegisterGroupGuideController extends BaseController {
 
@@ -20,7 +21,7 @@ public class RegisterGroupGuideController extends BaseController {
     private Label lblErrorMsgID;
 
     @FXML
-    private MFXTextField txtID;
+    private TextField txtID;
 
     public void cleanup() {
         txtID.setText("");
@@ -63,7 +64,7 @@ public class RegisterGroupGuideController extends BaseController {
     {
         lblErrorMsgGeneral.setText(msg);
         lblErrorMsgGeneral.setStyle("-fx-text-fill: " + colorCode + ";" +
-                "-fx-font-size: 20px; " +
+                "-fx-font-size: 14px; " +
                 "-fx-padding: 10px 10px; " +
                 "-fx-border-width: 2px; " +
                 "-fx-border-radius: 5px; " +
