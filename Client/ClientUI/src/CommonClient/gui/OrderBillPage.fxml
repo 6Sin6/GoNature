@@ -8,18 +8,18 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<!--<?import javafx.scene.image.Image?>-->
+<?import javafx.scene.image.Image?>
 
 <Pane id="rootBillPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CommonClient.controllers.OrderBillPageController">
    <ImageView fitHeight="800.0" fitWidth="1005.0" pickOnBounds="true" preserveRatio="true">
       <image>
-<!--         <Image url="/assets/payThePriceBackground.jpg" />-->
+         <Image url="/assets/payThePriceBackground.jpg" />
       </image>
    </ImageView>
     <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="ADD" fill="#5e5e5e" height="433.0" layoutX="40.0" layoutY="117.0" stroke="BLACK" strokeType="INSIDE" width="921.0" />
     <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="749.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
         <image>
-<!--            <Image url="/assets/GoNatureLogo.png" />-->
+            <Image url="/assets/GoNatureLogo.png" />
         </image>
     </ImageView>
     <Text blendMode="DARKEN" layoutX="379.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order ID - " wrappingWidth="122.23828125">
@@ -38,7 +38,7 @@
         </font></MFXButton>
     <ImageView fx:id="backBtn" blendMode="ADD" fitHeight="56.0" fitWidth="58.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#closePopup" pickOnBounds="true" preserveRatio="true">
         <image>
-<!--            <Image url="/assets/backNoMenu.png" />-->
+            <Image url="/assets/backNoMenu.png" />
         </image>
     </ImageView>
     <Text blendMode="SRC_OVER" layoutX="407.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Billing" textAlignment="CENTER" wrappingWidth="186.873046875">
