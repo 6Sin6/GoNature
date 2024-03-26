@@ -13,6 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+
+    public static Integer DB_ERROR = 1;
+    public static Integer SERVER_ERROR = 2;
     /**
      * Checks if the given string is a valid email address.
      *

@@ -137,7 +137,7 @@ public class DBConnection {
      * @param password The password of the user.
      * @return A User object representing the logged-in user, or null if login fails or there is an error.
      */
-    public User login(String username, String password) {
+    public User login(String username, String password) throws Exception{
         try {
             String tableName = this.schemaName + ".users";
             String whereClause = "username='" + username + "' AND password='" + password + "'";
@@ -256,7 +256,7 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -267,7 +267,7 @@ public class DBConnection {
      * @param orderID The ID of the order.
      * @return The order associated with the specified user ID and order ID, or null if not found or there is an error.
      */
-    public Order getUserOrderByUserID(String userID, String orderID) {
+    public Order getUserOrderByUserID(String userID, String orderID) throws Exception{
         try {
             ResultSet orderData = dbController.selectRecords(this.schemaName + ".orders", "VisitorID='" + userID + "' AND OrderID=' " + orderID + "'");
             if (orderData.next()) {
@@ -288,7 +288,7 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -298,7 +298,7 @@ public class DBConnection {
      * @param order The order to be added.
      * @return The added order with the assigned order ID, or null if the insertion fails or there is an error.
      */
-    public Order addOrder(Order order) {
+    public Order addOrder(Order order) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String columns = "VisitorID, ParkID, VisitationDate, ClientEmailAddress, PhoneNumber, orderStatus, EnteredTime, ExitedTime, OrderType, NumOfVisitors";
@@ -326,11 +326,11 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public boolean checkOrderPayment(Order order) {
+    public boolean checkOrderPayment(Order order) throws Exception{
         try {
             String orderID = order.getOrderID();
             String tableName1 = this.schemaName + ".payments";
@@ -341,7 +341,7 @@ public class DBConnection {
             return orderPayment.getInt("paid") == 1;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -351,7 +351,7 @@ public class DBConnection {
      * @param OrderID The ID of the order to retrieve.
      * @return The order with the specified ID, or null if the order is not found or there is an error.
      */
-    public Order getOrderById(String OrderID) {
+    public Order getOrderById(String OrderID) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "OrderID=" + OrderID;
@@ -374,7 +374,7 @@ public class DBConnection {
             return new Order("", "", null, "", "", null, null, null, "", null, 0);
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -384,7 +384,7 @@ public class DBConnection {
      * @param visitorID The ID of the visitor.
      * @return An ArrayList containing orders associated with the specified visitor, or null if there is an error.
      */
-    public ArrayList<Order> getUserOrders(String visitorID) {
+    public ArrayList<Order> getUserOrders(String visitorID) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "VisitorID=" + visitorID;
@@ -409,7 +409,7 @@ public class DBConnection {
             return orders;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -420,7 +420,7 @@ public class DBConnection {
      * @param status  The new status of the order.
      * @return True if the order status is successfully updated, false otherwise.
      */
-    public boolean updateOrderStatus(String orderID, OrderStatus status) {
+    public boolean updateOrderStatus(String orderID, OrderStatus status) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String setClause = "orderStatus=" + status.getOrderStatus();
@@ -432,7 +432,7 @@ public class DBConnection {
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -442,7 +442,7 @@ public class DBConnection {
      * @param details An array containing the order details in the following format: [orderID, phoneNumber, clientEmailAddress].
      * @return True if the order details are successfully updated, false otherwise.
      */
-    public boolean updateOrderDetails(String[] details) {
+    public boolean updateOrderDetails(String[] details) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String setClause = "ClientEmailAddress='" + details[2] + "' , PhoneNumber='" + details[1] + "'";
@@ -455,7 +455,7 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -465,7 +465,7 @@ public class DBConnection {
      * @param orderID The ID of the order to be updated.
      * @return True if the order status is successfully updated to "cancelled", false otherwise.
      */
-    public boolean updateOrderStatusAsCancelled(String orderID) {
+    public boolean updateOrderStatusAsCancelled(String orderID) throws Exception {
         return updateOrderStatus(orderID, OrderStatus.STATUS_CANCELLED);
     }
 
@@ -477,7 +477,7 @@ public class DBConnection {
      * @param visitationDate The visitation date.
      * @return True if an order exists for the specified visitor, park, and visitation date, false otherwise.
      */
-    public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) {
+    public boolean checkOrderExists(String visitorID, String parkID, Timestamp visitationDate) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "VisitorID=" + visitorID + " AND ParkID=" + parkID + " AND VisitationDate= '" + visitationDate + "'";
@@ -485,7 +485,7 @@ public class DBConnection {
             return results.next();
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -499,7 +499,7 @@ public class DBConnection {
      * Returns a new Park object with default values if no matching park is found.
      * Returns null if a SQLException is thrown.
      */
-    public Park getParkDetails(String parkID) {
+    public Park getParkDetails(String parkID) throws Exception {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID=" + parkID;
@@ -529,7 +529,7 @@ public class DBConnection {
             return new Park("", "", 0, 0, null, 0, null);
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -545,7 +545,7 @@ public class DBConnection {
      * @param order The order to be marked as paid.
      * @return True if the order is successfully marked as paid, false otherwise.
      */
-    public boolean markOrderAsPaid(Order order) {
+    public boolean markOrderAsPaid(Order order) throws Exception{
         try {
             String orderID = order.getOrderID();
             String tableName = this.schemaName + ".orders";
@@ -571,7 +571,7 @@ public class DBConnection {
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -581,7 +581,7 @@ public class DBConnection {
      * @param orderID the order ID.
      * @return a message indicating the result of the operation, null if successful.
      */
-    public String setExitTimeOfOrder(String orderID) {
+    public String setExitTimeOfOrder(String orderID) throws Exception{
         try {
             String tableName = this.schemaName + ".orders";
             String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
@@ -616,11 +616,11 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return "Something went wrong... please try again later.";
+            throw e;
         }
     }
 
-    public String activateGroupGuide(String groupGuideID) {
+    public String activateGroupGuide(String groupGuideID) throws Exception{
         try {
             String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + groupGuideID + "'";
@@ -635,10 +635,10 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return "Something went wrong... Please try again later.";
+            throw e;
         }
     }
-    public boolean isGroupGuide(String userID) {
+    public boolean isGroupGuide(String userID) throws Exception{
         try {
             String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + userID + "' AND pendingStatus = 0) THEN '1' ELSE '0' END AS Result;";
@@ -650,7 +650,7 @@ public class DBConnection {
             return resultSet.getInt("Result") == 1;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            throw new RuntimeException("Failed to check if user is a group guide.");
+            throw e;
         }
     }
 
@@ -666,7 +666,7 @@ public class DBConnection {
      * @param departmentID The ID of the department.
      * @return An ArrayList of requests from the park manager, or null if there is an error.
      */
-    public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) {
+    public ArrayList<RequestChangingParkParameters> getRequestsFromParkManager(Integer departmentID) throws Exception{
         try {
             String tableName = this.schemaName + ".park_parameters_requests";
             String whereClause = "DepartmentID=" + departmentID + " AND status=" + RequestStatus.REQUEST_PENDING.getRequestStatus();
@@ -704,7 +704,7 @@ public class DBConnection {
             return requests;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -714,7 +714,7 @@ public class DBConnection {
      * @param req The request to authorize, containing details about the park, parameter, and requested value.
      * @return {@code true} if the authorization process succeeds, {@code false} otherwise.
      */
-    public boolean authorizeParkRequest(RequestChangingParkParameters req) {
+    public boolean authorizeParkRequest(RequestChangingParkParameters req) throws Exception{
         try {
             String tableName = this.schemaName + ".park_parameters_requests";
             String setClause = "handleDate = CURRENT_TIMESTAMP(), status=" + RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
@@ -734,7 +734,7 @@ public class DBConnection {
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -744,7 +744,7 @@ public class DBConnection {
      * @param req The request to be unauthorized.
      * @return {@code true} if the request is successfully unauthorized, {@code false} otherwise.
      */
-    public boolean unauthorizeParkRequest(RequestChangingParkParameters req) {
+    public boolean unauthorizeParkRequest(RequestChangingParkParameters req) throws Exception{
         try {
             String tableName = this.schemaName + ".park_parameters_requests";
             String setClause = "Status=" + RequestStatus.REQUEST_DECLINED.getRequestStatus() + ", handleDate=CURRENT_TIMESTAMP()";
@@ -756,7 +756,7 @@ public class DBConnection {
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -766,7 +766,8 @@ public class DBConnection {
      * @param requests A map containing the park parameters to be changed and their corresponding request objects.
      * @return {@code true} if all requests were successfully submitted, {@code false} otherwise.
      */
-    public boolean submitRequestsToDepartment(Map<ParkParameters, RequestChangingParkParameters> requests) {
+    public boolean submitRequestsToDepartment(Map<ParkParameters, RequestChangingParkParameters> requests) throws Exception
+    {
         try {
             String tableName = this.schemaName + ".park_parameters_requests";
             for (RequestChangingParkParameters req : requests.values()) {
@@ -783,11 +784,11 @@ public class DBConnection {
             return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
-    public byte[] getReportBlob(boolean isDepartmentReport, String type, String month, String year, String bodyID) {
+    public byte[] getReportBlob(boolean isDepartmentReport, String type, String month, String year, String bodyID) throws Exception{
         try {
             String reportTable = isDepartmentReport ? ".department_manager_reports" : ".park_manager_reports";
             String bodyColumn = isDepartmentReport ? "departmentId" : "parkID";
@@ -803,11 +804,11 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public String getDepartmentIDByManagerUsername(String managerUsername) {
+    public String getDepartmentIDByManagerUsername(String managerUsername) throws Exception{
         try {
             String tableName = this.schemaName + ".department_managers";
             String whereClause = "username='" + managerUsername + "'";
@@ -818,11 +819,11 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public String getParkIDByManagerUsername(String managerUsername)
+    public String getParkIDByManagerUsername(String managerUsername) throws Exception
     {
         try
         {
@@ -835,7 +836,7 @@ public class DBConnection {
             return null;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -850,7 +851,7 @@ public class DBConnection {
      * @param departmentID The ID of the department for which to generate the report.
      * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
      */
-    public boolean generateVisitationReport(String departmentID) {
+    public boolean generateVisitationReport(String departmentID) throws Exception{
         try {
             String reportName = "visitations";
 
@@ -884,7 +885,7 @@ public class DBConnection {
             return this.handleInsertionDepartmentReports(departmentID, reportName, generatedBlob);
         } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -899,7 +900,7 @@ public class DBConnection {
      * @param departmentID The ID of the department for which to generate the report.
      * @return {@code true} if the report is successfully generated and stored, {@code false} otherwise.
      */
-    public boolean generateCancellationsReport(String departmentID) {
+    public boolean generateCancellationsReport(String departmentID) throws Exception{
         try {
             String reportName = "cancellations";
 
@@ -982,7 +983,7 @@ public class DBConnection {
             return this.handleInsertionDepartmentReports(departmentID, reportName, generatedBlob);
         } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
@@ -1089,7 +1090,7 @@ public class DBConnection {
      * @param parkID The ID of the park for which to generate the report.
      * @return {@code true} if the report is successfully generated, {@code false} otherwise.
      */
-    public boolean generateNumOfVisitorsReport(int parkID)
+    public boolean generateNumOfVisitorsReport(int parkID) throws Exception
     {
         try {
             // Definitions
@@ -1116,12 +1117,12 @@ public class DBConnection {
             return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
         } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
 
-    public boolean generateUsageReport(int parkID)
+    public boolean generateUsageReport(int parkID) throws Exception
     {
         try {
             // Definitions
@@ -1149,11 +1150,11 @@ public class DBConnection {
             return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
         } catch (SQLException | DocumentException | IOException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
-    private String getParkNameByID(Integer parkID)
+    private String getParkNameByID(Integer parkID) throws Exception
     {
         try
         {
@@ -1166,6 +1167,7 @@ public class DBConnection {
         catch (SQLException e)
         {
             this.serverController.addtolog(e.getMessage());
+            throw e;
         }
         return null;
     }
@@ -1176,7 +1178,7 @@ public class DBConnection {
     //                                           WORKER EXCLUSIVE METHODS                                              //
     //                                                                                                                 //
     //=================================================================================================================//
-    public void updateOrderStatusForUpcomingVisits() {
+    public void updateOrderStatusForUpcomingVisits() throws Exception{
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
@@ -1209,10 +1211,11 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void cancelOrdersInWaitlist24HoursBefore() {
+    public void cancelOrdersInWaitlist24HoursBefore() throws Exception{
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
@@ -1245,10 +1248,11 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for waitlist orders: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void ChangeLatePendingConfirmationToCancelled() {
+    public void ChangeLatePendingConfirmationToCancelled() throws Exception{
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
@@ -1280,10 +1284,11 @@ public class DBConnection {
             }
         } catch (Exception e) {
             serverController.addtolog("Error updating order status for upcoming visits: " + e.getMessage());
+            throw e;
         }
     }
 
-    public boolean checkGroupGuide(String groupGuideID) {
+    public boolean checkGroupGuide(String groupGuideID) throws Exception{
         try {
             String tableName = this.schemaName + ".group_guides";
             String whereClause = "ID='" + groupGuideID + "'";
@@ -1294,12 +1299,12 @@ public class DBConnection {
             return result == 1;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return false;
+            throw e;
         }
     }
 
 
-    private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
+    private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) throws Exception{
             new Thread(() -> {
                 try {
                     for (ArrayList<String> order : Orders) {
@@ -1308,6 +1313,7 @@ public class DBConnection {
                 }
                 catch (Exception e) {
                     serverController.addtolog("Error sending email: " + e.getMessage());
+                    throw e;
                 }
             }).start();
 
@@ -1320,7 +1326,7 @@ public class DBConnection {
     //                                                                                                                 //
     //=================================================================================================================//
 
-    public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) {
+    public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) throws Exception{
         try {
             String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
@@ -1334,13 +1340,13 @@ public class DBConnection {
             return result != 0;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
 
 
-    public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) {
+    public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) throws Exception{
         try {
             String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
@@ -1354,11 +1360,11 @@ public class DBConnection {
             return result != 0;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public Integer GetAvailableSpotForEntry(String parkID, Timestamp wantedTime) {
+    public Integer GetAvailableSpotForEntry(String parkID, Timestamp wantedTime) throws Exception{
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
@@ -1374,11 +1380,11 @@ public class DBConnection {
             return result;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public Integer GetAvailableSpotForWaitListCheck(String parkID, Timestamp wantedTime) {
+    public Integer GetAvailableSpotForWaitListCheck(String parkID, Timestamp wantedTime) throws SQLException {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
@@ -1390,11 +1396,11 @@ public class DBConnection {
             return result;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public Integer getExpectedTime(String parkID) {
+    public Integer getExpectedTime(String parkID) throws SQLException {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID='" + parkID + "'";
@@ -1404,11 +1410,11 @@ public class DBConnection {
             return resultSet.getInt("DefaultVisitationTime");
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public ArrayList<Order> getMatchingWaitlistOrders(String parkID, Timestamp startTime) {
+    public ArrayList<Order> getMatchingWaitlistOrders(String parkID, Timestamp startTime) throws Exception{
         try {
             ArrayList<Order> orders = new ArrayList<>();
             String tableName = this.schemaName + ".orders";
@@ -1433,11 +1439,11 @@ public class DBConnection {
             return orders;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return new ArrayList<>();
+            throw e;
         }
     }
 
-    private int getParkCapacity(String parkID) {
+    private int getParkCapacity(String parkID) throws Exception {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID='" + parkID + "'";
@@ -1447,11 +1453,11 @@ public class DBConnection {
             return resultSet.getInt("Capacity") - resultSet.getInt("GapVisitorsCapacity");
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
-            return 0;
+            throw e;
         }
     }
 
-    public boolean extractFromWaitList(Order order) {
+    public boolean extractFromWaitList(Order order) throws Exception{
         ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(), order.getEnteredTime());
         int capacityNow = GetAvailableSpotForWaitListCheck(order.getParkID(), order.getEnteredTime());
         List<Order> extractedOrders = findBestCombination(ordersToWorkWith, getParkCapacity(order.getParkID()) - capacityNow + order.getNumOfVisitors());
@@ -1466,7 +1472,7 @@ public class DBConnection {
         return true;
     }
 
-    public ArrayList<Timestamp> getAvailableTimeStamps(Order order) {
+    public ArrayList<Timestamp> getAvailableTimeStamps(Order order) throws Exception{
         Order WorkingOrder = order;
         List<Timestamp> availableHours = getNextWeekHours(order.getEnteredTime());
         ArrayList<Timestamp> availableTimestamps = new ArrayList<>();
@@ -1487,7 +1493,8 @@ public class DBConnection {
     //                                                                                                                 //
     //=================================================================================================================//
 
-    public void insertUser(String username, String password, int role) {
+    public void insertUser(String username, String password, int role) throws Exception{
+
         try {
             String tableName = this.schemaName + ".users";
             String columns = "username, password, role";
@@ -1496,10 +1503,11 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
+            throw e;
         }
     }
 
-    public void insertGroupGuide(String username, String ID, String email, String firstName, String lastName) {
+    public void insertGroupGuide(String username, String ID, String email, String firstName, String lastName) throws Exception{
         try {
             String tableName = this.schemaName + ".group_guides";
             String columns = "ID, username, FirstName, LastName, EmailAddress, pendingStatus";
@@ -1508,10 +1516,11 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
+            throw e;
         }
     }
 
-    public void insertParkEmployee(String username, String email, String parkID, String firstName, String lastName, boolean isParkManager, String ID) {
+    public void insertParkEmployee(String username, String email, String parkID, String firstName, String lastName, boolean isParkManager, String ID) throws Exception{
         try {
             String tableName = this.schemaName + ".park_employees";
             String columns = "username, EmailAddress, ParkID, firstName, lastName, isParkManager, employeeID";
@@ -1520,10 +1529,11 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
+            throw e;
         }
     }
 
-    public void insertDepartmentManager(String username, String email, String departmentID, String firstName, String lastName, String ID) {
+    public void insertDepartmentManager(String username, String email, String departmentID, String firstName, String lastName, String ID) throws Exception{
         try {
             String tableName = this.schemaName + ".department_managers";
             String columns = "username, EmailAddress, departmentID, firstName, lastName, employeeID";
@@ -1532,6 +1542,7 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
+            throw e;
         }
     }
 
