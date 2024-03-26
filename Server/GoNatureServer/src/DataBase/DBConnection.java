@@ -1351,11 +1351,10 @@ public class DBConnection {
 
     public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) throws Exception {
         try {
-            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
-            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
-            String whereClause = "'" + checkOrder.getEnteredTime().toString().substring(0, checkOrder.getEnteredTime().toString().length() - 2) +
-                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
-                    + checkOrder.getParkID().toString() + "';";
+            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getEnteredTime().toString().split("\\.")[0]+"' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6)";
+            String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
+
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return false;
@@ -1370,11 +1369,12 @@ public class DBConnection {
 
     public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) throws Exception {
         try {
-            String tableName = this.schemaName + ".orders o " + "JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
-            String field = "CASE WHEN SUM(o.NumOfVisitors) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
-            String whereClause = "'" + checkOrder.getExitedTime().toString().split("\\.")[0] +
-                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6) AND o.ParkID = '"
-                    + checkOrder.getParkID().toString() + "';";
+            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName +
+                    ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getExitedTime().toString().split("\\.")[0]+
+                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6)";
+            String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() +
+                    " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
+            String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return false;
