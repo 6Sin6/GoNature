@@ -203,7 +203,7 @@ public class HomePageController extends BaseController implements Initializable 
             }
             ArrayList<Order> orders = (ArrayList<Order>) respondMsg.getMsgData();
             if (orders.isEmpty()) {
-                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
+                applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID), "/CommonClient/gui/LeftBackground.fxml");
             } else {
                 ArrayList<Order> activeOrders = new ArrayList<>();
                 ArrayList<Order> OrdersToConfirm = new ArrayList<>();
@@ -220,7 +220,7 @@ public class HomePageController extends BaseController implements Initializable 
                     }
                 }
                 if (activeOrders.isEmpty()) {
-                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID),"/CommonClient/gui/leftBackground.fxml");
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", new SingleVisitor(inputID), "/CommonClient/gui/LeftBackground.fxml");
                 } else {
                     applicationWindowController.setCenterPage("/VisitorsUI/VisitorDashboardPage.fxml");
                     applicationWindowController.loadMenu(new SingleVisitor(inputID));
