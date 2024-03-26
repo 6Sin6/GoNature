@@ -300,17 +300,6 @@ public class GoNatureServer extends AbstractServer {
         Integer VisitorsAfter = db.GetAvailableSpotForEntry(parkID, createExitTime(currentTime, parkEpectedVisitationTime));
 
         Integer availableSpots = Math.max(parkCapacity - Math.max(VisitorsBefore, VisitorsAfter), 0);
-        if (parkCapacity - VisitorsBefore <= 0) {
-            LocalDate currentDate = LocalDate.now();
-            int year = currentDate.getYear();
-            String month = String.format("%02d", currentDate.getMonthValue()); // 2-digit month
-            String day = String.format("%02d", currentDate.getDayOfMonth()); // 2-digit day
-            if(db.insertFullCapacity(parkID.toString(),parkCapacity.toString(),""+year,month,day)==null) {
-                Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), false);
-                client.sendToClient(respondMsg);
-                return;
-            }
-        }
         ArrayList<Integer> availableSpotsList = new ArrayList<>();
         availableSpotsList.add(availableSpots);
         availableSpotsList.add(parkCapacity);
