@@ -122,7 +122,6 @@ public class Workers {
         Runnable task = () -> {
             try {
                 Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.HOUR, 48);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
