@@ -1193,36 +1193,6 @@ public class DBConnection {
     }
 
 
-    /*
-    public boolean generateUsageReport(int parkID)
-    {
-        try {
-            // Definitions
-            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
-
-            String tableName_Orders = this.schemaName + ".park_capacity_info";
-            String whereClause_Orders = "ParkID = " + parkID + " AND Month = " + month;
-            String orderByClause_Orders = " ORDER BY Day";
-
-            String reportName = "usage";
-            String parkName = getParkNameByID(parkID);
-            if (parkName == null)
-                return false;
-
-            // Retrieving data from DB
-            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "capacity, Day");
-
-            // Building report entity and blob.
-            UsageReport report = new UsageReport(parkID, parkName, results);
-            Blob generatedBlob = report.createPDFBlob();
-            results.close();
-
-            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
-        } catch (SQLException | DocumentException | IOException e) {
-            this.serverController.addtolog(e.getMessage());
-            throw e;
-        }
-    }*/
 
     public String getParkNameByID(Integer parkID)
     {

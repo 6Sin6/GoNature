@@ -22,7 +22,6 @@ import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,51 +34,23 @@ import java.util.Iterator;
  */
 public class UsageReport extends ParkReport implements Serializable
 {
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class MyTime
     {
         private final int day;
-        private final int month;
-        private final int year;
-        private final int minute;
         private final int hour;
 
-        private MyTime(int day, int month, int year, int minute, int hour)
-        {
-            this.day = day;
-            this.month = month;
-            this.year = year;
-            this.minute = minute;
-            this.hour = hour;
-        }
 
         private MyTime(Timestamp timestamp)
         {
             LocalDateTime dateTime = timestamp.toLocalDateTime();
             this.day = dateTime.getDayOfMonth();
-            this.month = dateTime.getMonthValue();
-            this.year = dateTime.getYear();
-            this.minute = dateTime.getMinute();
             this.hour = dateTime.getHour();
         }
 
         private int getDay()
         {
             return this.day;
-        }
-
-        private int getMonth()
-        {
-            return this.month;
-        }
-
-        private int getYear()
-        {
-            return this.year;
-        }
-
-        private int getMinute()
-        {
-            return this.minute;
         }
 
         private int getHour()
