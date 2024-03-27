@@ -1387,7 +1387,7 @@ public class DBConnection {
     public void ChangeToAbsent() throws Exception {
         ArrayList<String> Orders = new ArrayList<>();
         String tableName = this.schemaName + ".orders";
-        String whereClause = "WHERE ExitedTime < CURRENT_TIMESTAMP + INTERVAL 1 MINUTE AND AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ");";
+        String whereClause = "ExitedTime < CURRENT_TIMESTAMP + INTERVAL 1 MINUTE AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ");";
         try {
             ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID");
             while (rs.next()) {
