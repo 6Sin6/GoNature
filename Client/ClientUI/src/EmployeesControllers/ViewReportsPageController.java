@@ -247,6 +247,7 @@ public class ViewReportsPageController extends BaseController {
             viewResultMsg.setText("No " + selectedReport + " report found for the selected month and year.");
             return;
         }
+        else viewResultMsg.setText("");
 
         String reportName = selectedReport + " Report" + "_" + selectedYear + "_" + selectedMonth + "_" + parkCmb.getValue();
         File tmpFile = File.createTempFile(reportName, ".pdf");
