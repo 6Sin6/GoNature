@@ -1367,7 +1367,7 @@ public class DBConnection {
 
     public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) throws Exception {
         try {
-            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getEnteredTime().toString().split("\\.")[0]+"' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6)";
+            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getEnteredTime().toString().split("\\.")[0]+"' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
             String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
             String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
 
@@ -1387,7 +1387,7 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName +
                     ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getExitedTime().toString().split("\\.")[0]+
-                    "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus NOT IN (1, 6)";
+                    "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
             String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() +
                     " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
             String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
@@ -1406,7 +1406,7 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + ","
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + ","
                     + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ","
                     + OrderStatus.STATUS_FULFILLED.getOrderStatus() + ","
                     + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + ")" +
@@ -1426,7 +1426,7 @@ public class DBConnection {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
             String field = "SUM(o.NumOfVisitors) AS numOfVisitors";
-            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND o.ExitedTime AND o.orderStatus= '" + OrderStatus.STATUS_ACCEPTED.getOrderStatus() + "' AND o.ParkID = '" + parkID + "'";
+            String whereClause = "'" + wantedTime.toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus= '" + OrderStatus.STATUS_ACCEPTED.getOrderStatus() + "' AND o.ParkID = '" + parkID + "'";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return null;

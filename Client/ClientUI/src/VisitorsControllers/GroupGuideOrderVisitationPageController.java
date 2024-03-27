@@ -3,7 +3,6 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
-import CommonClient.controllers.OrderBillPageController;
 import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
@@ -162,8 +161,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -173,13 +171,13 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(respondMsg.getMsgData() instanceof Order)) {
+        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        Order cnfrmorder = (Order) respondMsg.getMsgData();
         if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION) {
+            Order cnfrmorder = (Order) respondMsg.getMsgData();
             String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully! Would you like to pay now and get discount or pay later ?";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () -> handleBillPresentation(cnfrmorder), () ->
             {

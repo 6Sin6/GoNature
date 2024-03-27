@@ -168,7 +168,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             confirmPopup.show(applicationWindowController.getRoot());
 
         } else {
-            String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
+            String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist or view alternative times?";
             ConfirmationPopup confirmPopup;
             String fullName = "" + txtFirstName.getText() + " " + txtLastName.getText();
             confirmPopup = new ConfirmationPopup(strForPopup, () ->
@@ -186,7 +186,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                     ((AlternativeTimesTableController) controller).start(order, fullName);
                 }
             },
-                    800, 400, false, "Yes", "No", false);
+                    850, 400, false, "WaitList", "Alternative times", false);
             confirmPopup.show(applicationWindowController.getRoot());
         }
 

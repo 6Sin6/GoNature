@@ -350,13 +350,13 @@ public class GoNatureServer extends AbstractServer {
             client.sendToClient(respondMsg);
         }
         order.setExitedTime(createExitTime(order.getEnteredTime(), db.getExpectedTime(order.getParkID())));
+        if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
+            Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
+            client.sendToClient(createOrderMsg);
+            return;
+        }
         if (db.CheckAvailabilityBeforeReservationTime(order) && db.CheckAvailabilityAfterReservationTime(order)) {
             order.setOrderStatus(OrderStatus.STATUS_ACCEPTED);
-            if (db.checkOrderExists(order.getVisitorID(), order.getParkID(), order.getVisitationDate())) {
-                Message createOrderMsg = new Message(OpCodes.OP_ORDER_ALREADY_EXIST);
-                client.sendToClient(createOrderMsg);
-                return;
-            }
             Order newOrder = db.addOrder(order);
             if (newOrder != null) {
                 Message createOrderMsg = new Message(OpCodes.OP_CREATE_NEW_VISITATION, message.getMsgUserName(), newOrder);

@@ -78,7 +78,7 @@ public class WaitListPageController extends BaseController implements Initializa
     }
 
     @FXML
-    public void OnClickSignUpButton(ActionEvent actionEvent) throws CommunicationException {
+    public void OnClickSignUpButton(ActionEvent actionEvent)  {
         User user = applicationWindowController.getUser();
         if (user instanceof SingleVisitor) {
             Order temporder = order;
@@ -87,6 +87,12 @@ public class WaitListPageController extends BaseController implements Initializa
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
             OpCodes returnOpCode = respondMsg.getMsgOpcode();
+            if(returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST)
+            {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
             if(returnOpCode == OpCodes.OP_DB_ERR)
             {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
