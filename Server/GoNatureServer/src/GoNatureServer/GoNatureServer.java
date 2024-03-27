@@ -108,11 +108,10 @@ public class GoNatureServer extends AbstractServer {
             Workers.startClientProcessingThread(controller, this);
             Workers.SendReminderDayBeforeWorker(db, controller);
             Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
-            Workers.enterOrdersFromWaitList48HoursBeforeWorker(db,controller);
+            Workers.enterOrdersFromWaitList48HoursBeforeWorker(db, controller);
             Workers.changeToAbsentOrders(db,controller);
             server.controller.toggleControllers(true);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             controller.addtolog("Error occured on Server : " + e.getMessage());
         }
     }
@@ -206,20 +205,16 @@ public class GoNatureServer extends AbstractServer {
                 default:
                     controller.addtolog("Error Unknown Opcode");
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
             try {
                 client.sendToClient(respondMsg);
             } catch (IOException ex) {
                 controller.addtolog("Failed to send message to client");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             controller.addtolog("Failed to send message to client");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             controller.addtolog("Error occured on Server : " + e.getMessage());
         }
     }
@@ -262,7 +257,7 @@ public class GoNatureServer extends AbstractServer {
         }
         if (message.getMsgData() instanceof String) {
             String username = (String) message.getMsgData();
-            if(db.isGroupGuide(username)){
+            if (db.isGroupGuide(username)) {
                 Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, username, username);
                 client.sendToClient(respondMsg);
                 return;
@@ -339,14 +334,14 @@ public class GoNatureServer extends AbstractServer {
     }
 
     private void handleCreateNewVisitation(Message message, ConnectionToClient client) throws Exception {
-        if (!(message.getMsgData() instanceof Order)){
+        if (!(message.getMsgData() instanceof Order)) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, message.getMsgUserName(), null);
             client.sendToClient(respondMsg);
         }
         Order order = (Order) message.getMsgData();
-        if (!db.extractFromWaitList(new Order(null, order.getParkID(),null ,
-                null,null,null,order.getEnteredTime(),
-                null,null,null,0))) {
+        if (!db.extractFromWaitList(new Order(null, order.getParkID(), null,
+                null, null, null, order.getEnteredTime(),
+                null, null, null, 0))) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
         }
@@ -379,7 +374,7 @@ public class GoNatureServer extends AbstractServer {
 
     private void handleGetUserOrdersByUserID(Message message, ConnectionToClient client) throws Exception {
         String[] data = (String[]) message.getMsgData();
-        if(db.isGroupGuide(data[0])){
+        if (db.isGroupGuide(data[0])) {
             Message respondMsg = new Message(OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE, "", null);
             client.sendToClient(respondMsg);
             return;
@@ -445,7 +440,7 @@ public class GoNatureServer extends AbstractServer {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);
         }
-        boolean isCanceled = db.updateOrderStatusAsCancelled(orderID);
+        boolean isCanceled = db.updateOrderStatusAsCancelled(order);
         if (!isCanceled) {
             Message respondMsg = new Message(OpCodes.OP_DB_ERR, null, null);
             client.sendToClient(respondMsg);

@@ -459,14 +459,21 @@ public class DBConnection {
         }
     }
 
-    /**
-     * Updates the status of an order to "cancelled".
-     *
-     * @param orderID The ID of the order to be updated.
-     * @return True if the order status is successfully updated to "cancelled", false otherwise.
-     */
-    public boolean updateOrderStatusAsCancelled(String orderID) throws Exception {
-        return updateOrderStatus(orderID, OrderStatus.STATUS_CANCELLED);
+
+    public boolean updateOrderStatusAsCancelled(Order order) throws Exception {
+        boolean isUpdate = updateOrderStatus(order.getOrderID(), OrderStatus.STATUS_CANCELLED);
+        if (isUpdate) {
+            new Thread(() -> {
+                try {
+                    GmailSender.sendEmail(order.getClientEmailAddress(), "Your order has been canceled", "Your order for date " + order.getVisitationDate() + " has been canceled");
+                } catch (Exception e) {
+                    serverController.addtolog("Error sending email: " + e.getMessage());
+                }
+            }).start();
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1282,6 +1289,7 @@ public class DBConnection {
 
             // Update the status of selected orders to pending confirmation
             if (!Orders.isEmpty()) {
+                ArrayList<ArrayList<String>> WaitListOrdersEnter = new ArrayList<>();
                 for (Integer i = 1; i <= 4; i++) {
                     extractFromWaitList(new Order(null, i.toString(), null, null, null, null,
                             Orders.get(0).getEnteredTime(), null, null, null, 0));
@@ -1292,37 +1300,6 @@ public class DBConnection {
             throw e;
         }
     }
-
-    public void ChangeToAbsent() throws Exception {
-        ArrayList<String> Orders = new ArrayList<>();
-        String tableName = this.schemaName + ".orders";
-        String whereClause = "WHERE ExitedTime < CURRENT_TIMESTAMP + INTERVAL 1 MINUTE AND AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ");";
-        try {
-            ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID");
-            while (rs.next()) {
-                Orders.add(rs.getString("OrderID"));
-            }
-        } catch (SQLException e) {
-            serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
-            return;
-        }
-        try {
-            // Update the status of selected orders to cancelled
-            if (!Orders.isEmpty()) {
-                for (String order : Orders) {
-                    if (!updateOrderStatus(order, OrderStatus.STATUS_CONFIRMED_AND_ABSENT)) {
-                        serverController.addtolog("Failed to update order status for OrderID: " + order);
-
-                    }
-                }
-            }
-        } catch (Exception e) {
-            serverController.addtolog("Error updating order status for absent visits: " + e.getMessage());
-            throw e;
-        }
-
-    }
-
 
     public void ChangeLatePendingConfirmationToCancelled() throws Exception {
         try {
