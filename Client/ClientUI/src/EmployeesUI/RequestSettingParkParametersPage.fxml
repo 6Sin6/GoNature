@@ -27,7 +27,7 @@
                   <Font name="System Bold" size="48.0" />
                </font>
             </Text>
-            <Text layoutX="124.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Free space in the park">
+            <Text layoutX="124.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gap for spontaneous:">
                <font>
                   <Font size="20.0" />
                </font>
@@ -43,8 +43,8 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnSubmit" buttonType="RAISED" defaultButton="true" layoutX="171.0" layoutY="517.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
-            <MFXLegacyComboBox fx:id="txtMaxVisitation" layoutX="121.0" layoutY="422.0" prefHeight="48.0" prefWidth="200.0" value="" />
+            <MFXButton buttonType="RAISED" defaultButton="true" layoutX="171.0" layoutY="517.0" onAction="#OnClickSubmitButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Submit" />
+            <MFXLegacyComboBox fx:id="cmbMaxVisitation" layoutX="121.0" layoutY="422.0" prefHeight="48.0" prefWidth="200.0" value="" />
             <Label fx:id="lblSuccessMsg" alignment="CENTER" layoutX="25.0" layoutY="575.0" prefHeight="34.0" prefWidth="393.0">
                <font>
                   <Font size="14.0" />

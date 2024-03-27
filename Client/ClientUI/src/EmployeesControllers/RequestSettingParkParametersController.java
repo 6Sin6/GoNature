@@ -6,8 +6,6 @@ import CommonUtils.ConfirmationPopup;
 import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,12 +21,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static CommonClient.Utils.*;
 import static CommonUtils.CommonUtils.*;
 
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
-    @FXML
-    private MFXButton btnSubmit;
 
     @FXML
     private Label lblErrorMsg;
@@ -40,7 +35,7 @@ public class RequestSettingParkParametersController extends BaseController imple
     private TextField txtDifferenceOrdersVisitors;
 
     @FXML
-    private MFXLegacyComboBox<String> txtMaxVisitation;
+    private MFXLegacyComboBox<String> cmbMaxVisitation;
 
     @FXML
     private TextField txtParkCapacity;
@@ -48,15 +43,19 @@ public class RequestSettingParkParametersController extends BaseController imple
     private Park park;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        txtMaxVisitation.setItems(setComboBoxHours(1, 16));
+    public void initialize(URL location, ResourceBundle resources)
+    {
+        for (int i = 1; i <= 8; i++)
+        {
+            cmbMaxVisitation.getItems().add(String.valueOf(i));
+        }
     }
 
     public void cleanup() {
         lblErrorMsg.setText("");
         lblSuccessMsg.setText("");
         txtDifferenceOrdersVisitors.setText("");
-        txtMaxVisitation.setValue("");
+        cmbMaxVisitation.setValue("");
         txtParkCapacity.setText("");
     }
 
@@ -94,20 +93,23 @@ public class RequestSettingParkParametersController extends BaseController imple
         // Might as well set the park to the user.
         user.setPark(park);
 
-        txtMaxVisitation.setValue(parseVisitTime(park.getDefaultVisitationTime()));
+        cmbMaxVisitation.setValue(parseVisitTime(park.getDefaultVisitationTime()));
         txtParkCapacity.setText(String.valueOf(park.getCapacity()));
         txtDifferenceOrdersVisitors.setText(String.valueOf(park.getGapVisitorsCapacity()));
     }
 
     @FXML
-    void OnClickSubmitButton(ActionEvent event) {
-        boolean maxVisitRequest = !Objects.equals(txtMaxVisitation.getValue(), "");
+    void OnClickSubmitButton(ActionEvent ignoredEvent)
+    {
+        lblSuccessMsg.setText("");
+        lblErrorMsg.setText("");
+        boolean maxVisitRequest = !Objects.equals(cmbMaxVisitation.getValue(), "");
         String gapOrdersAndVisitors = txtDifferenceOrdersVisitors.getText();
         Timestamp maxVisitationLongevity = null;
 
         Date tmpDate = new Date(System.currentTimeMillis());
         if (maxVisitRequest) {
-            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), txtMaxVisitation.getValue());
+            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), cmbMaxVisitation.getValue());
         }
         String parkCapacity = txtParkCapacity.getText();
 
@@ -169,7 +171,6 @@ public class RequestSettingParkParametersController extends BaseController imple
             return;
         }
 
-        lblErrorMsg.setText("");
         lblSuccessMsg.setText("Your requests have been submitted successfully!");
     }
 }
