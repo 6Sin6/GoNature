@@ -126,7 +126,7 @@ public class Workers {
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
                 db.ChangeToAbsent();
-                controller.addtolog("Update status for absent ordets  " + calendar.getTime());
+                controller.addtolog("Update status for absent orders  " + calendar.getTime());
             }
             catch (Exception e){
                 controller.addtolog("failed changeToAbsentOrders");
