@@ -1294,6 +1294,37 @@ public class DBConnection {
         }
     }
 
+    public void ChangeToAbsent() throws Exception {
+        ArrayList<String> Orders = new ArrayList<>();
+        String tableName = this.schemaName + ".orders";
+        String whereClause = "WHERE ExitedTime < CURRENT_TIMESTAMP + INTERVAL 1 MINUTE AND AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_CONFIRMED_PAID.getOrderStatus() + ");";
+        try {
+            ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "OrderID");
+            while (rs.next()) {
+                Orders.add(rs.getString("OrderID"));
+            }
+        } catch (SQLException e) {
+            serverController.addtolog("Select upcoming orders failed: " + e.getMessage());
+            return;
+        }
+        try {
+            // Update the status of selected orders to cancelled
+            if (!Orders.isEmpty()) {
+                for (String order : Orders) {
+                    if (!updateOrderStatus(order, OrderStatus.STATUS_CONFIRMED_AND_ABSENT)) {
+                        serverController.addtolog("Failed to update order status for OrderID: " + order);
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            serverController.addtolog("Error updating order status for absent visits: " + e.getMessage());
+            throw e;
+        }
+
+    }
+
+
     public void ChangeLatePendingConfirmationToCancelled() throws Exception {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1367,9 +1398,9 @@ public class DBConnection {
 
     public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) throws Exception {
         try {
-            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getEnteredTime().toString().split("\\.")[0]+"' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
+            String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '" + checkOrder.getEnteredTime().toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
             String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() + " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
-            String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
+            String whereClause = "p.ParkID = '" + checkOrder.getParkID().toString() + "' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
 
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
@@ -1386,11 +1417,11 @@ public class DBConnection {
     public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) throws Exception {
         try {
             String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName +
-                    ".orders o ON p.ParkID = o.ParkID AND '"+checkOrder.getExitedTime().toString().split("\\.")[0]+
+                    ".orders o ON p.ParkID = o.ParkID AND '" + checkOrder.getExitedTime().toString().split("\\.")[0] +
                     "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
             String field = "CASE WHEN COALESCE(SUM(o.NumOfVisitors), 0) + " + checkOrder.getNumOfVisitors().toString() +
                     " > (p.Capacity - p.GapVisitorsCapacity) THEN 0 ELSE 1 END AS IsWithinCapacity";
-            String whereClause = "p.ParkID = '"+checkOrder.getParkID().toString()+"' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
+            String whereClause = "p.ParkID = '" + checkOrder.getParkID().toString() + "' GROUP BY p.Capacity, p.GapVisitorsCapacity;";
             ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, field);
             if (!resultSet.next())
                 return false;

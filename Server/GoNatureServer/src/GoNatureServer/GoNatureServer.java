@@ -109,6 +109,7 @@ public class GoNatureServer extends AbstractServer {
             Workers.SendReminderDayBeforeWorker(db, controller);
             Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
             Workers.enterOrdersFromWaitList48HoursBeforeWorker(db,controller);
+            Workers.changeToAbsentOrders(db,controller);
             server.controller.toggleControllers(true);
         }
         catch (Exception e) {
