@@ -145,11 +145,9 @@ public class ViewReportsPageController extends BaseController {
                     cleanup();
                     return;
                 }
-                for (int i = 1; i <= map.size(); i++) {
-                    String id = String.valueOf(i);
-                    parkCmb.getItems().add(map.get(id));
-                }
+                parkCmb.getItems().addAll(map.values());
                 parkCmb.setValue("All Parks");
+                parkCmb.setDisable(true);
                 reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
             }
         } catch (Exception e) {
