@@ -1,4 +1,4 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
@@ -10,19 +10,14 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.ui.RectangleEdge;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.xy.CategoryTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.*;
-import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Blob;

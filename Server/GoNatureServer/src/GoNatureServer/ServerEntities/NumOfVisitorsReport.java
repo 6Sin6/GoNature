@@ -1,5 +1,7 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
+import Entities.OrderType;
+import Entities.ParkReport;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;

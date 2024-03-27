@@ -1,5 +1,6 @@
 package Entities;
 
+import GoNatureServer.ServerEntities.ReportConstructor;
 import com.itextpdf.text.DocumentException;
 
 import java.io.IOException;

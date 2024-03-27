@@ -1,4 +1,4 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;

@@ -1,7 +1,11 @@
 package DataBase;
 
 import Entities.*;
-import GoNatureServer.GmailSender;
+import GoNatureServer.*;
+import GoNatureServer.ServerEntities.CancellationReport;
+import GoNatureServer.ServerEntities.NumOfVisitorsReport;
+import GoNatureServer.ServerEntities.UsageReport;
+import GoNatureServer.ServerEntities.VisitationReport;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
 
