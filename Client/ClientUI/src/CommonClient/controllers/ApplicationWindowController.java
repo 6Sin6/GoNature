@@ -19,44 +19,142 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 
-public class ApplicationWindowController implements Initializable {
+/**
+ * This class is the main controller for the entire application. It is responsible for loading and managing all the other controllers and views.
+ * It also acts as the main communication hub between the client and the server.
+ */
+public class ApplicationWindowController implements Initializable
+{
+    /**
+     * The main pane of the application window. All the other controllers and views are loaded into this pane.
+     */
     @FXML
     private BorderPane mainPane;
+
+    /**
+     * A cache of all the loaded pages. The key is the FXML path of the page, and the value is a pair of the loaded page and the associated controller.
+     */
     private final Map<String, Pair<Parent, Object>> pagesCache = new HashMap<>();
+
+    /**
+     * A map of all the dashboard pages for different roles. The key is the role, and the value is the FXML path of the dashboard page.
+     */
     private final Map<Role, String> DashBoardMap = new HashMap<>();
+
+    /**
+     * A map of all the pages for employees. The key is the name of the FXML file, and the value is the FXML path of the page.
+     */
     private final Map<String, String> VisitorsPagesMap = new HashMap<>();
+
+    /**
+     * A map of all the pages for visitors. The key is the name of the FXML file, and the value is the FXML path of the page.
+     */
     private final Map<String, String> EmployeesPagesMap = new HashMap<>();
+
+    /**
+     * The menu on the left side of the application window. It is loaded from the "MenuSider.fxml" file.
+     */
     private Parent menuSider;
+
+    /**
+     * The currently logged-in user.
+     */
     private User user;
+
+    /**
+     * Any data that needs to be shared between different controllers can be stored in this field.
+     */
     private Object Data;
+
+    /**
+     * The controller for the menu on the left side of the application window.
+     */
     private MenuSiderController menuController;
 
+    /**
+     * The currently active controller. This is the controller that is currently being displayed in the center of the application window.
+     */
     private Object currentActiveController;
 
+
+
+    /**
+     * Initializes the application by setting up the dashBoardMap, employeesPagesMap, and visitorsPagesMap.
+     * Additionally, it loads the "ConnectClientPage.fxml" as the initial page.
+     *
+     * @param location Not used.
+     * @param resources Not used.
+     */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources)
+    {
         setDashBoardMap();
         setVisitorsPagesMap();
         setEmployeesPagesMap();
     }
 
-    public Object getCurrentActiveController() {
+
+
+    /**
+     * Retrieves the currently active controller.
+     *
+     * @return The currently active controller object.
+     */
+    public Object getCurrentActiveController()
+    {
         return currentActiveController;
     }
 
-    private void setUser(User user) {
+
+
+    /**
+     * Sets the currently logged-in user.
+     *
+     * @param user The user object representing the currently logged-in user.
+     */
+    private void setUser(User user)
+    {
         this.user = user;
     }
 
-    public User getUser() {
+
+
+    /**
+     * Retrieves the currently logged-in user.
+     *
+     * @return The user object representing the currently logged-in user.
+     */
+    public User getUser()
+    {
         return user;
     }
 
-    public BorderPane getRoot() {
+
+
+    /**
+     * Retrieves the root of the main pane.
+     * This is the main container for all other controllers and views.
+     *
+     * @return The root BorderPane of the main pane.
+     */
+    public BorderPane getRoot()
+    {
         return this.mainPane;
     }
 
-    private Parent loadPage(String fxmlPath) {
+
+
+    /**
+     * Loads a page from the FXML file located at the given path.
+     * If the page is not already loaded, it is loaded from the FXML file, and its associated controller is instantiated.
+     * If the page is already loaded, its associated controller is retrieved from the cache.
+     *
+     * @param fxmlPath The path to the FXML file representing the page to be loaded.
+     * @return The Parent node representing the loaded page.
+     */
+
+    private Parent loadPage(String fxmlPath)
+    {
         try {
             // If the page we're loading is not cached yet.
             if (!pagesCache.containsKey(fxmlPath)) {
@@ -82,7 +180,18 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
-    public void loadMenu(User user) {
+
+
+    /**
+     * Loads the menu for the given user.
+     * If the menu is not already loaded, it is loaded from the "MenuSider.fxml" file.
+     * The menu controller is retrieved from the loaded menu, and its properties are set based on the given user.
+     * The menu is then set as the left child of the main pane.
+     *
+     * @param user The user for whom the menu is loaded.
+     */
+    public void loadMenu(User user)
+    {
         setUser(user);
         try {
             if (menuSider == null) {
@@ -111,12 +220,30 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
+
+
+    /**
+     * Toggles the visibility of the menu buttons based on the given boolean value.
+     *
+     * @param isDisabled A boolean value indicating whether the menu buttons should be disabled (true) or enabled (false).
+     */
     public void toggleMenuButtons(boolean isDisabled)
     {
         this.menuController.toggleMenuButtons(isDisabled);
     }
 
-    public void setCenterPage(String fxmlPath) {
+
+
+    /**
+     * Sets the center page of the application window to the given FXML path.
+     * If the page is not already loaded, it is loaded from the FXML file.
+     * All other controllers and views are removed from the main pane, and the given page is set as the center child.
+     * The menu on the left side is also updated based on the FXML path.
+     *
+     * @param fxmlPath The path to the FXML file representing the page to be set as the center page.
+     */
+    public void setCenterPage(String fxmlPath)
+    {
         mainPane.getChildren().remove(mainPane.getCenter());
         // Cleanup previous controller.
         if (currentActiveController != null && currentActiveController instanceof BaseController) {
@@ -134,7 +261,17 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
-    public void setCompletePage(String centerFxmlPath, String leftFxmlPath) {
+
+
+    /**
+     * Sets the complete page of the application window, which consists of the center and left pages.
+     * The center page is set to the given FXML path, and the left page is set to the given FXML path.
+     *
+     * @param centerFxmlPath The path to the FXML file representing the center page.
+     * @param leftFxmlPath The path to the FXML file representing the left page.
+     */
+    public void setCompletePage(String centerFxmlPath, String leftFxmlPath)
+    {
         // Load center page
         Parent centerPage = loadPage(centerFxmlPath);
         if (centerPage != null) {
@@ -146,15 +283,35 @@ public class ApplicationWindowController implements Initializable {
         if (leftPage != null) {
             mainPane.setLeft(leftPage);
         }
-
     }
 
-    public void setCenterPageForNewVisitor(String fxmlPath, User user, String leftFxmlPath) {
+
+
+    /**
+     * Sets the center page for a new visitor.
+     * This consists of the given FXML path for the center page, the given user, and the FXML path for the left page.
+     * The user is set as the currently logged-in user, the center page is loaded, and the left page is loaded.
+     *
+     * @param fxmlPath The path to the FXML file representing the center page.
+     * @param user The user object representing the currently logged-in user.
+     * @param leftFxmlPath The path to the FXML file representing the left page.
+     */
+    public void setCenterPageForNewVisitor(String fxmlPath, User user, String leftFxmlPath)
+    {
         setUser(user);
         setCompletePage(fxmlPath,leftFxmlPath);
     }
 
-    public void logout() {
+
+
+    /**
+     * Logs out the current user.
+     * Sends a message to the server to log out the user, and then sets the center page to either the home page for visitors or the login page for employees.
+     * Also sets the currently logged-in user to null and removes the menu from the left side of the screen.
+     */
+
+    public void logout()
+    {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
         String pathTorRoute;
@@ -168,7 +325,15 @@ public class ApplicationWindowController implements Initializable {
         menuSider = null;
     }
 
-    public void homepage() {
+
+
+    /**
+     * Redirects the user to the home page.
+     * Sends a message to the server to log out the user and sets the center page to the home page.
+     * Also sets the currently logged-in user to null and removes the menu from the left side of the screen.
+     */
+    public void homepage()
+    {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
         String pathTorRoute = "/CommonClient/gui/HomePage.fxml";
@@ -177,7 +342,14 @@ public class ApplicationWindowController implements Initializable {
         menuSider = null;
     }
 
-    private void setDashBoardMap() {
+
+
+    /**
+     * Initializes the DashBoardMap, which contains the FXML paths of the dashboard pages for different roles.
+     * The key is the role, and the value is the FXML path of the dashboard page.
+     */
+    private void setDashBoardMap()
+    {
         DashBoardMap.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
@@ -186,12 +358,28 @@ public class ApplicationWindowController implements Initializable {
         DashBoardMap.put(Role.ROLE_VISITOR_GROUP_GUIDE, "/VisitorsUI/VisitorGroupGuideDashboardPage.fxml");
     }
 
-    public void loadDashboardPage(Role role) {
+
+
+    /**
+     * Loads the dashboard page for the given role.
+     * If the role is not present in the DashBoardMap, the login page is loaded.
+     *
+     * @param role The role of the user.
+     */
+    public void loadDashboardPage(Role role)
+    {
         String fxmlPath = DashBoardMap.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
 
-    private void setEmployeesPagesMap() {
+
+
+    /**
+     * This method initializes the EmployeesPagesMap, which contains the FXML paths of the pages for employees.
+     * The key is the name of the FXML file, and the value is the FXML path of the page.
+     */
+    private void setEmployeesPagesMap()
+    {
         EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
         EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
         EmployeesPagesMap.put("GenerateBillPage", "/EmployeesUI/GenerateBillPage.fxml");
@@ -206,6 +394,13 @@ public class ApplicationWindowController implements Initializable {
         EmployeesPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
     }
 
+
+
+    /**
+     * Loads an employee page specified by its FXML file name.
+     *
+     * @param NameOfFxml the name of the FXML file representing the employee page
+     */
     public void loadEmployeesPage(String NameOfFxml) {
         String fxmlPath = EmployeesPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {
@@ -215,6 +410,12 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
+
+
+    /**
+     * This method initializes the VisitorsPagesMap, which contains the FXML paths of the pages for visitors.
+     * The key is the name of the FXML file, and the value is the FXML path of the page.
+     */
     private void setVisitorsPagesMap() {
         VisitorsPagesMap.put("ActiveOrdersPage", "/VisitorsUI/ActiveOrdersPage.fxml");
         VisitorsPagesMap.put("ConfirmVisitationPage", "/VisitorsUI/ConfirmVisitationPage.fxml");
@@ -229,6 +430,13 @@ public class ApplicationWindowController implements Initializable {
         VisitorsPagesMap.put("WaitListPage", "/VisitorsUI/WaitListPage.fxml");
     }
 
+
+
+    /**
+     * This method loads the visitors page specified by the FXML file name.
+     *
+     * @param NameOfFxml the name of the FXML file representing the visitors page
+     */
     public void loadVisitorsPage(String NameOfFxml) {
         String fxmlPath = VisitorsPagesMap.getOrDefault(NameOfFxml, "");
         if (!fxmlPath.isEmpty()) {
@@ -239,6 +447,12 @@ public class ApplicationWindowController implements Initializable {
     }
 
 
+
+    /**
+     * Initializes and starts the main application window.
+     *
+     * @param primaryStage the primary stage representing the main application window
+     */
     public void start(Stage primaryStage) {
         try {
             // Load the main application window directly here
@@ -265,11 +479,27 @@ public class ApplicationWindowController implements Initializable {
         }
     }
 
-    public Object getData() {
+
+
+    /**
+     * Returns the data stored in the data field.
+     *
+     * @return the data stored in the data field
+     */
+    public Object getData()
+    {
         return Data;
     }
 
-    public void setData(Object data) {
+
+
+    /**
+     * Sets the data stored in the data field.
+     *
+     * @param data the data stored in the data field
+     */
+    public void setData(Object data)
+    {
         Data = data;
     }
 }
