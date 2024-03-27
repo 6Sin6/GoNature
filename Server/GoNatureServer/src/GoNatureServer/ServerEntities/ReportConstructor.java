@@ -1,4 +1,4 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
@@ -206,8 +206,8 @@ public abstract class ReportConstructor
      * @param secondBarColor the color of the second bar
      * @return the bar chart
      */
-    protected JFreeChart createBarChart(DefaultCategoryDataset dataset, double maxValue, String title,
-                                     String xAxisTitle, String yAxisTitle, Color firstBarColor, Color secondBarColor)
+    protected JFreeChart createGroupedColumnChart(DefaultCategoryDataset dataset, double maxValue, String title,
+                                                  String xAxisTitle, String yAxisTitle, Color firstBarColor, Color secondBarColor)
     {
         // Create the chart
         JFreeChart chart = ChartFactory.createBarChart(

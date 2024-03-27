@@ -1,7 +1,11 @@
 package DataBase;
 
 import Entities.*;
-import GoNatureServer.GmailSender;
+import GoNatureServer.*;
+import GoNatureServer.ServerEntities.CancellationReport;
+import GoNatureServer.ServerEntities.NumOfVisitorsReport;
+import GoNatureServer.ServerEntities.UsageReport;
+import GoNatureServer.ServerEntities.VisitationReport;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
 
@@ -553,10 +557,18 @@ public class DBConnection {
         try {
             String orderID = order.getOrderID();
             String tableName = this.schemaName + ".orders";
-            OrderStatus newOrderStatus = order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT ? OrderStatus.STATUS_SPONTANEOUS_ORDER : OrderStatus.STATUS_CONFIRMED_PAID;
-            String setClause = "orderStatus=" + newOrderStatus.getOrderStatus();
-            String whereClause = "OrderID=" + orderID;
-            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+            OrderStatus newStatus;
+            if (order.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT) {
+                newStatus = OrderStatus.STATUS_FULFILLED;
+            } else if (order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT) {
+                newStatus = OrderStatus.STATUS_SPONTANEOUS_ORDER;
+            } else {
+                return false;
+            }
+            String setClause = "orderStatus=" + newStatus.getOrderStatus();
+            String whereClause = "OrderID=" + orderID + " AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT.getOrderStatus() + ")";
+            String whereClauseTimeConstraint = " AND HOUR(VisitationDate) >= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE)";
+            if (!dbController.updateRecord(tableName, setClause, whereClause + whereClauseTimeConstraint)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
                 return false;
             }
@@ -588,7 +600,7 @@ public class DBConnection {
     public String setExitTimeOfOrder(String orderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "orderStatus <> " + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + " AND OrderID='" + orderID + "'";
+            String whereClause = "OrderID='" + orderID + "'";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
             if (!results.next()) {
                 return "Order ID does not exist.";
@@ -613,7 +625,7 @@ public class DBConnection {
                 return "Order has already been fulfilled.";
             }
 
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause)) {
                 return "Update failed. Please try again.";
             }
 
@@ -1674,6 +1686,21 @@ public class DBConnection {
             if (!dbController.insertRecord(tableName, columns, "'" + username + "'", "'" + email + "'", "'" + departmentID + "'", "'" + firstName + "'", "'" + lastName + "'", "'" + ID + "'")) {
                 this.serverController.addtolog("Insert into " + tableName + " failed. Insert department manager:" + username);
             }
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            throw e;
+        }
+    }
+
+    public boolean checkUsersAvailability() throws Exception {
+        try {
+            String tableName = this.schemaName + ".users";
+            String whereClause = "";
+            String fields = "*";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, fields);
+            if (!resultSet.next())
+                return true;
+            return false;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;

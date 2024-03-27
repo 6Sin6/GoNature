@@ -1,5 +1,6 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
+import Entities.ParkReport;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfPTable;

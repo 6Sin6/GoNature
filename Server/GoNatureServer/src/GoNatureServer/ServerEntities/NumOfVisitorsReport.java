@@ -1,5 +1,7 @@
-package Entities;
+package GoNatureServer.ServerEntities;
 
+import Entities.OrderType;
+import Entities.ParkReport;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -241,7 +243,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
             }
         }
 
-        return super.createBarChart(dataset, maxAmount, title,
+        return super.createGroupedColumnChart(dataset, maxAmount, title,
                 xAxisTitle, yAxisTitle, groupOrdersColor, singleFamilyOrdersColor);
     }
 
