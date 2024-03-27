@@ -93,7 +93,7 @@ public class RequestSettingParkParametersController extends BaseController imple
         // Might as well set the park to the user.
         user.setPark(park);
 
-        cmbMaxVisitation.setValue(parseVisitTime(park.getDefaultVisitationTime()));
+        cmbMaxVisitation.setValue((parseVisitTime(park.getDefaultVisitationTime())).substring(1, 2));
         txtParkCapacity.setText(String.valueOf(park.getCapacity()));
         txtDifferenceOrdersVisitors.setText(String.valueOf(park.getGapVisitorsCapacity()));
     }
@@ -109,7 +109,7 @@ public class RequestSettingParkParametersController extends BaseController imple
 
         Date tmpDate = new Date(System.currentTimeMillis());
         if (maxVisitRequest) {
-            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), cmbMaxVisitation.getValue());
+            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), "0" + cmbMaxVisitation.getValue() + ":00:00");
         }
         String parkCapacity = txtParkCapacity.getText();
 
