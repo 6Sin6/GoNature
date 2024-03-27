@@ -18,7 +18,7 @@
     <children>
         <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <!--            <Image url="/assets/visitorsBackground.jpg" />-->
+                <Image url="/assets/visitorsBackground.jpg"/>
             </image>
         </ImageView>
         <Pane fx:id="bntHandleOrder" prefHeight="800.0" prefWidth="1000.0">
