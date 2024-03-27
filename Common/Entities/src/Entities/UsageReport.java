@@ -209,6 +209,8 @@ public class UsageReport extends ParkReport implements Serializable
 
         Iterator<ParkCapacityDetails> iterator_ParkCapacityDetails = capacity.iterator();
         ParkCapacityDetails currCapacity = iterator_ParkCapacityDetails.next(); // It has next for sure, so no need to check
+        if (capacity.size() == 1)
+            currCapacity.setFromWhatDate(null);
 
         int[] amountToExit = new int[12]; // representing amount of people need to exit, and when (indexing like reportData hours)
         int numOfVisitors, totalInPark = 0;
