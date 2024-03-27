@@ -57,6 +57,12 @@ public class IssueReportsController extends BaseController {
         }
 
         reportCmb.setValue(reportCmb.getItems().get(0));
+        reportCmb.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onSelectReport());
+    }
+
+    private void onSelectReport()
+    {
+        generateResultMsg.setText("");
     }
 
 
