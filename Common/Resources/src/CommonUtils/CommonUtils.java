@@ -159,7 +159,7 @@ public class CommonUtils {
         List<Timestamp> validHours = new ArrayList<>();
         Calendar endTimestamp = (Calendar) cal.clone();
         endTimestamp.add(Calendar.DAY_OF_MONTH, 7);
-
+        cal.add(Calendar.HOUR_OF_DAY, 1);
         while (cal.before(endTimestamp)) {
             int hour = cal.get(Calendar.HOUR_OF_DAY);
             if (hour >= 8 && hour < 21) {

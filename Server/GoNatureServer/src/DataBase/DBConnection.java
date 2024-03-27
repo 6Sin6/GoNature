@@ -1282,7 +1282,6 @@ public class DBConnection {
 
             // Update the status of selected orders to pending confirmation
             if (!Orders.isEmpty()) {
-                ArrayList<ArrayList<String>> WaitListOrdersEnter = new ArrayList<>();
                 for (Integer i = 1; i <= 4; i++) {
                     extractFromWaitList(new Order(null, i.toString(), null, null, null, null,
                             Orders.get(0).getEnteredTime(), null, null, null, 0));
