@@ -12,38 +12,48 @@
 
 <?import javafx.scene.image.Image?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VisitorsControllers.AlternativeTimesTableController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+           prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="VisitorsControllers.AlternativeTimesTableController">
     <children>
-      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="/assets/visitorsBackground.jpg" />
-         </image>
-      </ImageView>
+        <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <!--            <Image url="/assets/visitorsBackground.jpg" />-->
+            </image>
+        </ImageView>
         <Pane fx:id="bntHandleOrder" prefHeight="800.0" prefWidth="1000.0">
             <children>
                 <TableView fx:id="tableOrders" layoutX="273.0" layoutY="110.0" prefHeight="493.0" prefWidth="457.0">
                     <columns>
-                        <TableColumn fx:id="colDate" prefWidth="228.0" text="Date" />
-                        <TableColumn fx:id="colTime" prefWidth="221.0" text="Time" />
+                        <TableColumn fx:id="colDate" prefWidth="228.0" text="Date"/>
+                        <TableColumn fx:id="colTime" prefWidth="221.0" text="Time"/>
                     </columns>
                 </TableView>
-                <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="377.0" layoutY="590.0" prefHeight="40.0" prefWidth="250.0" textAlignment="CENTER" textFill="#f20909">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-                <MFXButton fx:id="LblChooseBtn" alignment="CENTER" buttonType="RAISED" layoutX="427.0" layoutY="662.0" onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="150.0" rippleColor="#5eb972" text="Chose Visitation " textAlignment="CENTER">
-               <font>
-                  <Font size="14.0" />
-               </font></MFXButton>
-                <Text layoutX="271.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alternative Times" textAlignment="CENTER" wrappingWidth="457.13671875">
+                <Label fx:id="lblStatusMsg" alignment="CENTER" layoutX="377.0" layoutY="590.0" prefHeight="40.0"
+                       prefWidth="250.0" textAlignment="CENTER" textFill="#f20909">
                     <font>
-                        <Font name="System Bold" size="48.0" />
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <MFXButton fx:id="LblChooseBtn" alignment="CENTER" buttonType="RAISED" layoutX="427.0" layoutY="662.0"
+                           onAction="#OnClickHandleOrderButton" prefHeight="50.0" prefWidth="150.0"
+                           rippleColor="#5eb972" text="Choose Visitation " textAlignment="CENTER">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </MFXButton>
+                <Text layoutX="271.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alternative Times"
+                      textAlignment="CENTER" wrappingWidth="457.13671875">
+                    <font>
+                        <Font name="System Bold" size="48.0"/>
                     </font>
                 </Text>
-                <Label fx:id="lblError" alignment="CENTER" layoutX="377.0" layoutY="623.0" prefHeight="40.0" prefWidth="250.0" textAlignment="CENTER" textFill="#eb0808">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
+                <Label fx:id="lblError" alignment="CENTER" layoutX="377.0" layoutY="623.0" prefHeight="40.0"
+                       prefWidth="250.0" textAlignment="CENTER" textFill="#eb0808">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
             </children>
         </Pane>
     </children>
