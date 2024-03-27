@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -82,6 +83,8 @@ public class ServerUIFrameController implements Initializable {
 
     @FXML
     private TableColumn<Map, String> colStatus;
+    @FXML
+    private Text importUsersTxt;
 
     public String getPort() {
         return portxt.getText();
@@ -98,6 +101,15 @@ public class ServerUIFrameController implements Initializable {
             addtolog("Please try again");
         } else {
             ServerUI.runServer(this);
+            boolean userAvailableFlag = ServerUI.checkUsersAvailability(this);
+            if(userAvailableFlag)
+            {
+                importUsersTxt.setText("");
+                importBtn.setDisable(false);
+            }
+            else {
+                importUsersTxt.setText("Users already exist in the database");
+            }
         }
     }
 
@@ -105,8 +117,8 @@ public class ServerUIFrameController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("/ServerUIPageController/ServerUIFrame.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/ServerUIPageController/ServerUIFrame.css").toExternalForm());
-
         Image windowImage = new Image("/assets/GoNatureServerLogo.png");
+
         primaryStage.getIcons().add(windowImage);
 
         primaryStage.setTitle("GoNature - Server");
@@ -138,6 +150,7 @@ public class ServerUIFrameController implements Initializable {
     @FXML
     void stopServer(ActionEvent event) throws Exception {
         ServerUI.closeServer();
+        importUsersTxt.setText("Start server to import Users");
     }
 
     public synchronized void addtolog(String str) {
@@ -166,6 +179,7 @@ public class ServerUIFrameController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+
         setURLComboBox();
         setDefaultValues();
         colName.setCellValueFactory(new MapValueFactory<>("name"));
@@ -214,6 +228,12 @@ public class ServerUIFrameController implements Initializable {
 
     @FXML
     void importUsers(ActionEvent event) throws Exception {
-        ServerUI.initializeImportSimulator(this);
+        try {
+            ServerUI.initializeImportSimulator(this);
+            importBtn.setDisable(true);
+            importUsersTxt.setText("Users imported successfully!");
+        } catch (Exception e) {
+            addtolog(e.getMessage());
+        }
     }
 }

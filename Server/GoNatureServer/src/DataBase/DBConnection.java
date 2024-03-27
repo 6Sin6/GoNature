@@ -1684,4 +1684,19 @@ public class DBConnection {
         }
     }
 
+    public boolean checkUsersAvailability() throws Exception {
+        try {
+            String tableName = this.schemaName + ".users";
+            String whereClause = "";
+            String fields = "*";
+            ResultSet resultSet = dbController.selectRecordsFields(tableName, whereClause, fields);
+            if (!resultSet.next())
+                return true;
+            return false;
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            throw e;
+        }
+    }
+
 }
