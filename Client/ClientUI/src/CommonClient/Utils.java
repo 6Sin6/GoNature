@@ -39,7 +39,8 @@ public class Utils {
         put("Capacity Statistics", "usage");
     }};
 
-    public static int getNumberFromMonthName(String monthName) throws ParseException {
+    public static int getNumberFromMonthName(String monthName) throws ParseException
+    {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new SimpleDateFormat("MMMM", Locale.ENGLISH).parse(monthName));
         return cal.get(Calendar.MONTH) + 1;
