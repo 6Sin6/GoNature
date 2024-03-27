@@ -69,22 +69,18 @@ public class MenuSiderController extends BaseController {
     private Label usernameLabel;
 
 
-
     /**
      * Logs out the user and resets the menu.
      */
-    public void logout()
-    {
+    public void logout() {
         applicationWindowController.logout();
         userRoleLabel.setText("");
         usernameLabel.setText("");
     }
 
-    public void cleanup()
-    {
+    public void cleanup() {
         // Nothing to clean up in the menu.
     }
-
 
 
     /**
@@ -92,11 +88,9 @@ public class MenuSiderController extends BaseController {
      *
      * @param role the role of the user
      */
-    public void setRole(String role)
-    {
+    public void setRole(String role) {
         userRoleLabel.setText(role);
     }
-
 
 
     /**
@@ -104,37 +98,29 @@ public class MenuSiderController extends BaseController {
      *
      * @param username the username to display
      */
-    public void setUsername(String username)
-    {
+    public void setUsername(String username) {
         usernameLabel.setText(username);
     }
-
-
 
 
     /**
      * Handles the navigation to the dashboard page based on the user's role.
      * Retrieves the role from the userRoleLabel and loads the corresponding dashboard page.
      */
-    public void handleHomePageRoute()
-    {
+    public void handleHomePageRoute() {
         applicationWindowController.homepage();
         userRoleLabel.setText("");
         usernameLabel.setText("");
     }
 
 
-
-
     /**
      * Handles the navigation to the dashboard page based on the user's role.
      * Retrieves the role from the userRoleLabel and loads the corresponding dashboard page.
      */
-    public void handleDashboardRoute()
-    {
+    public void handleDashboardRoute() {
         applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
-
 
 
     /**
@@ -231,14 +217,12 @@ public class MenuSiderController extends BaseController {
     }
 
 
-
     /**
      * Toggles the visibility of the menu buttons based on the given boolean value.
      *
      * @param isDisabled whether the menu buttons should be disabled
      */
-    protected void toggleMenuButtons(boolean isDisabled)
-    {
+    protected void toggleMenuButtons(boolean isDisabled) {
         btnAct1.setDisable(isDisabled);
         btnAct2.setDisable(isDisabled);
         btnAct3.setDisable(isDisabled);
@@ -248,21 +232,19 @@ public class MenuSiderController extends BaseController {
     }
 
 
-
     /**
      * Toggles the visibility of the menu buttons based on the given boolean values.
      *
-     * @param homePageIsDisabled        whether the home page button should be disabled
-     * @param dashboardIsDisabled       whether the dashboard button should be disabled
-     * @param thirdButtonIsDisabled     whether the third button should be disabled
-     * @param fourthButtonIsDisabled    whether the fourth button should be disabled
-     * @param fifthButtonIsDisabled    whether the fifth button should be disabled
-     * @param logOutButtonIsDisabled    whether the log out button should be disabled
+     * @param homePageIsDisabled     whether the home page button should be disabled
+     * @param dashboardIsDisabled    whether the dashboard button should be disabled
+     * @param thirdButtonIsDisabled  whether the third button should be disabled
+     * @param fourthButtonIsDisabled whether the fourth button should be disabled
+     * @param fifthButtonIsDisabled  whether the fifth button should be disabled
+     * @param logOutButtonIsDisabled whether the log out button should be disabled
      */
     protected void toggleMenuButtons(boolean homePageIsDisabled, boolean dashboardIsDisabled,
                                      boolean thirdButtonIsDisabled, boolean fourthButtonIsDisabled,
-                                     boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled)
-    {
+                                     boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled) {
         btnAct1.setDisable(thirdButtonIsDisabled);
         btnAct2.setDisable(fourthButtonIsDisabled);
         btnAct3.setDisable(fifthButtonIsDisabled);

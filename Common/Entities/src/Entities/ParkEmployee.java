@@ -38,7 +38,7 @@ public class ParkEmployee extends User implements Serializable {
      * @param EmailAddress The email address of the park employee.
      * @param Park         The park associated with the employee.
      */
-    public ParkEmployee( String firstName, String lastName,String username, String password, String EmailAddress, Park Park) {
+    public ParkEmployee(String firstName, String lastName, String username, String password, String EmailAddress, Park Park) {
         super(username, password);
         this.firstName = firstName;
         this.lastName = lastName;

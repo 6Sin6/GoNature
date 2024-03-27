@@ -2,9 +2,9 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -20,11 +20,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;

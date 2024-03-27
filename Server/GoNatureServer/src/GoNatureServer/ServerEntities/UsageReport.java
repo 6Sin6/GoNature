@@ -12,10 +12,8 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javax.sql.rowset.serial.SerialBlob;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -23,8 +21,10 @@ import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -33,87 +33,73 @@ import java.util.Iterator;
  * The UsageReport class represents a report detailing the usage of a park.
  * It extends the ParkReport class and contains a bank of UsageReportDetail objects.
  */
-public class UsageReport extends ParkReport implements Serializable
-{
+public class UsageReport extends ParkReport implements Serializable {
     @SuppressWarnings("InnerClassMayBeStatic")
-    private class MyTime
-    {
+    private class MyTime {
         private final int day;
         private final int hour;
 
 
-        private MyTime(Timestamp timestamp)
-        {
+        private MyTime(Timestamp timestamp) {
             LocalDateTime dateTime = timestamp.toLocalDateTime();
             this.day = dateTime.getDayOfMonth();
             this.hour = dateTime.getHour();
         }
 
-        private int getDay()
-        {
+        private int getDay() {
             return this.day;
         }
 
-        private int getHour()
-        {
+        private int getHour() {
             return this.hour;
         }
 
     }
-    private class OrderDetails
-    {
+
+    private class OrderDetails {
         private final MyTime enteredTime;
         private final MyTime exitedTime;
         private final int numOfVisitors;
 
-        private OrderDetails(MyTime enteredTime, MyTime exitedTime, int numOfVisitors)
-        {
+        private OrderDetails(MyTime enteredTime, MyTime exitedTime, int numOfVisitors) {
             this.enteredTime = enteredTime;
             this.exitedTime = exitedTime;
             this.numOfVisitors = numOfVisitors;
         }
 
-        private int getNumOfVisitors()
-        {
+        private int getNumOfVisitors() {
             return this.numOfVisitors;
         }
 
-        private MyTime getEnteredTime()
-        {
+        private MyTime getEnteredTime() {
             return this.enteredTime;
         }
 
-        private MyTime getExitedTime()
-        {
+        private MyTime getExitedTime() {
             return this.exitedTime;
         }
     }
 
 
-    private class ParkCapacityDetails
-    {
+    private class ParkCapacityDetails {
         private final int parkCapacity;
 
         private MyTime fromWhatDate;
 
-        public ParkCapacityDetails(int parkCapacity, MyTime fromWhatDate)
-        {
+        public ParkCapacityDetails(int parkCapacity, MyTime fromWhatDate) {
             this.parkCapacity = parkCapacity;
             this.fromWhatDate = fromWhatDate;
         }
 
-        private int getParkCapacity()
-        {
+        private int getParkCapacity() {
             return this.parkCapacity;
         }
 
-        private MyTime getFromWhatDate()
-        {
+        private MyTime getFromWhatDate() {
             return this.fromWhatDate;
         }
 
-        private void setFromWhatDate(MyTime fromWhatDate)
-        {
+        private void setFromWhatDate(MyTime fromWhatDate) {
             this.fromWhatDate = fromWhatDate;
         }
     }
@@ -140,8 +126,7 @@ public class UsageReport extends ParkReport implements Serializable
     private int maxValue;
 
 
-    public UsageReport(Integer parkID, String parkName, ResultSet resultSet_Orders, Object parkCapacity) throws DocumentException, IOException, SQLException
-    {
+    public UsageReport(Integer parkID, String parkName, ResultSet resultSet_Orders, Object parkCapacity) throws DocumentException, IOException, SQLException {
         super(parkID, parkName);
         this.reportData = new int[31][12];
         this.wasParkFull = new boolean[31][12];
@@ -153,12 +138,11 @@ public class UsageReport extends ParkReport implements Serializable
 
         // Organization of data - Get park capacity data:
         if (parkCapacity instanceof Integer)
-            capacity.add(new ParkCapacityDetails((int)parkCapacity, null)); // null used for indicating that it's the last capacity change occurred (this case it's the only capacity).
-        else
-        {
+            capacity.add(new ParkCapacityDetails((int) parkCapacity, null)); // null used for indicating that it's the last capacity change occurred (this case it's the only capacity).
+        else {
             ResultSet resultSet_Capacity = (ResultSet) parkCapacity;
             // Collect data from result set
-            while(resultSet_Capacity.next())
+            while (resultSet_Capacity.next())
                 capacity.add(new ParkCapacityDetails(resultSet_Capacity.getInt("requestedValue"),
                         new MyTime(resultSet_Capacity.getTimestamp("handleDate"))));
         }
@@ -167,8 +151,6 @@ public class UsageReport extends ParkReport implements Serializable
         while (resultSet_Orders.next())
             orders.add(new OrderDetails(new MyTime(resultSet_Orders.getTimestamp("EnteredTime")),
                     new MyTime(resultSet_Orders.getTimestamp("ExitedTime")), resultSet_Orders.getInt("NumOfVisitors")));
-
-
 
 
         // Now calculating reportData and wasParkFull:
@@ -217,8 +199,7 @@ public class UsageReport extends ParkReport implements Serializable
                     // collect data for wasParkFull
                     if (currCapacity.getFromWhatDate() != null) // if it's null, no more changes afterwards.
                     {
-                        if (currCapacity.getFromWhatDate().getDay() <= day && currCapacity.getFromWhatDate().getHour() < hour)
-                        {
+                        if (currCapacity.getFromWhatDate().getDay() <= day && currCapacity.getFromWhatDate().getHour() < hour) {
                             if (iterator_ParkCapacityDetails.hasNext())
                                 currCapacity = iterator_ParkCapacityDetails.next();
                             else currCapacity.setFromWhatDate(null);
@@ -234,28 +215,21 @@ public class UsageReport extends ParkReport implements Serializable
         }
     }
 
-    private int getIndexForHour(int hour)
-    {
+    private int getIndexForHour(int hour) {
         return hour - 8;
     }
 
-    private int getIndexForHour(MyTime time)
-    {
+    private int getIndexForHour(MyTime time) {
         return time.getHour() - 8;
     }
 
-    private int getIndexForDay(int day)
-    {
+    private int getIndexForDay(int day) {
         return day - 1;
     }
 
 
-
-
-
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
-    {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
         String title_Document = "Usage Report - Park: " + super.getParkName();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -279,8 +253,7 @@ public class UsageReport extends ParkReport implements Serializable
             document.newPage();
             document.add(super.createPDFTitle("Statistics"));
             document.add(table);
-        }
-        else document.add(super.createPDFTitle("\n\n\nThe park wasn't full at this month at all!"));
+        } else document.add(super.createPDFTitle("\n\n\nThe park wasn't full at this month at all!"));
 
 
         document.close();
@@ -289,9 +262,7 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-    private PdfPTable createTable()
-    {
+    private PdfPTable createTable() {
         // Initializing
         String capacity = "", information = "The park was full in these time ranges: ";
         int amountOfTimes = 0;
@@ -307,12 +278,9 @@ public class UsageReport extends ParkReport implements Serializable
 
 
         // Collecting Data for table
-        for (int day = 1; day <= this.getCurrentDay(); day++)
-        {
-            for (int hour = 8; hour <= 19; hour++)
-            {
-                if (this.wasParkFull[this.getIndexForDay(day)][this.getIndexForHour(hour)])
-                {
+        for (int day = 1; day <= this.getCurrentDay(); day++) {
+            for (int hour = 8; hour <= 19; hour++) {
+                if (this.wasParkFull[this.getIndexForDay(day)][this.getIndexForHour(hour)]) {
                     amountOfTimes++;
                     information += this.getHourRange(hour) + ", ";
 
@@ -323,8 +291,7 @@ public class UsageReport extends ParkReport implements Serializable
                     else capacity += ", " + this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)];
                 }
             }
-            if (amountOfTimes != 0)
-            {
+            if (amountOfTimes != 0) {
                 information = information.substring(0, information.length() - 2);
 
                 table.addCell(super.createCenterCell(String.valueOf(day)));
@@ -342,10 +309,7 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-    private String getHourRange(int hour)
-    {
+    private String getHourRange(int hour) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
@@ -356,10 +320,7 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-    private JFreeChart createPieChart()
-    {
+    private JFreeChart createPieChart() {
         // Initialize dataset for the pie chart
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         // Initialize title
@@ -374,15 +335,11 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-    private int countDaysFull()
-    {
+    private int countDaysFull() {
         int count = 0;
-        for(int day = 1; day <= super.getCurrentDay(); day++)
-        {
-            for (int hour = 8; hour <= 19; hour++)
-            {
-                if (this.wasParkFull[this.getIndexForDay(day)][this.getIndexForHour(hour)])
-                {
+        for (int day = 1; day <= super.getCurrentDay(); day++) {
+            for (int hour = 8; hour <= 19; hour++) {
+                if (this.wasParkFull[this.getIndexForDay(day)][this.getIndexForHour(hour)]) {
                     count++;
                     break;
                 }
@@ -392,20 +349,9 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-
-
-
-
-
-
-
-
     // ******************************** Line Chart Methods ********************************
     // 31 categories in the chart
-    private JFreeChart createLineChart()
-    {
+    private JFreeChart createLineChart() {
         DefaultCategoryDataset dataset = getDataset();
 
         // Create the line chart
@@ -426,8 +372,7 @@ public class UsageReport extends ParkReport implements Serializable
         plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
 
         // Customize line thickness and colors
-        for (int i = 0; i < dataset.getRowCount(); i++)
-        {
+        for (int i = 0; i < dataset.getRowCount(); i++) {
             plot.getRenderer().setSeriesStroke(i, new BasicStroke(2.0f)); // Increase line thickness
             plot.getRenderer().setSeriesPaint(i, getRandomColor()); // Set a random color for each series
         }
@@ -443,18 +388,13 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-    private DefaultCategoryDataset getDataset()
-    {
+    private DefaultCategoryDataset getDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         // Populate dataset with relevant data for days of month and 12 hours
-        for (int day = 1; day <= super.getCurrentDay() ; day++)
-        {
+        for (int day = 1; day <= super.getCurrentDay(); day++) {
             String category = String.format("Day %d", day);
-            for (int hour = 8; hour <= 20; hour++)
-            {
+            for (int hour = 8; hour <= 20; hour++) {
                 int data;
                 if (hour != 20)
                     data = reportData[getIndexForDay(day)][getIndexForHour(hour)];
@@ -466,12 +406,7 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-
-
-    private Color getRandomColor()
-    {
+    private Color getRandomColor() {
         // Generate a random RGB color
         int r = (int) (Math.random() * 256);
         int g = (int) (Math.random() * 256);
@@ -480,11 +415,8 @@ public class UsageReport extends ParkReport implements Serializable
     }
 
 
-
-
-    private int getMaxValueAfterFactor()
-    {
-        double factor = this.maxValue*0.1;
+    private int getMaxValueAfterFactor() {
+        double factor = this.maxValue * 0.1;
         if (factor <= 5)
             return this.maxValue + 5;
         if (factor <= 10)
@@ -494,7 +426,7 @@ public class UsageReport extends ParkReport implements Serializable
         return this.maxValue + 20;
     }
 
-    
+
 // Line chart graph, per day:
 /*
     public JFreeChart createLineChart(int day)

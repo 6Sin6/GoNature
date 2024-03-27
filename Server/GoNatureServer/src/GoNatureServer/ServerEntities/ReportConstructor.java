@@ -1,9 +1,9 @@
 package GoNatureServer.ServerEntities;
 
-import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -34,8 +34,7 @@ import java.util.Calendar;
 /**
  * A class that constructs PDF reports based on data retrieved from a database.
  */
-public abstract class ReportConstructor
-{
+public abstract class ReportConstructor {
     private final Font titleFont;
 
 
@@ -43,10 +42,9 @@ public abstract class ReportConstructor
      * Creates a new ReportConstructor instance.
      *
      * @throws DocumentException If an error occurs while loading the custom font.
-     * @throws IOException If an error occurs while reading the font file.
+     * @throws IOException       If an error occurs while reading the font file.
      */
-    protected ReportConstructor() throws DocumentException, IOException
-    {
+    protected ReportConstructor() throws DocumentException, IOException {
         String customFontPath = "/fonts/Roboto-Regular.ttf";
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         this.titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
@@ -54,13 +52,13 @@ public abstract class ReportConstructor
 
     /**
      * Creates a PDF file based on the data in the specified ResultSet.
+     *
      * @return A Blob object representing the PDF file.
      * @throws DocumentException If an error occurs during the creation of the PDF document.
-     * @throws SQLException If an error occurs while accessing the database.
-     * @throws IOException If an error occurs while reading the data.
+     * @throws SQLException      If an error occurs while accessing the database.
+     * @throws IOException       If an error occurs while reading the data.
      */
     public abstract Blob createPDFBlob() throws DocumentException, SQLException, IOException;
-
 
 
     /**
@@ -72,8 +70,7 @@ public abstract class ReportConstructor
      * @param includeDate Whether to include the current date in the paragraph.
      * @return The Paragraph object representing the paragraph.
      */
-    protected Paragraph createPDFTitle(String text, Font font, int spacing, boolean includeDate)
-    {
+    protected Paragraph createPDFTitle(String text, Font font, int spacing, boolean includeDate) {
         text = includeDate ? text + " - " + LocalDate.now() : text;
         Paragraph title = new Paragraph(text, font);
         title.setAlignment(Element.ALIGN_CENTER);
@@ -82,20 +79,15 @@ public abstract class ReportConstructor
     }
 
 
-
     /**
      * Creates a PDF title with the specified text.
      *
      * @param title The text of the title.
      * @return A Paragraph object representing the PDF title.
      */
-    protected Paragraph createPDFTitle(String title)
-    {
+    protected Paragraph createPDFTitle(String title) {
         return (this.createPDFTitle(title, titleFont, 25, false));
     }
-
-
-
 
 
     /**
@@ -111,18 +103,15 @@ public abstract class ReportConstructor
     }
 
 
-
-
     /**
      * Creates a PDF document based on the data in the specified ResultSet.
      *
      * @param documentTitle The title of the PDF document.
-     * @param outputStream The output stream to write the PDF document to.
+     * @param outputStream  The output stream to write the PDF document to.
      * @return The PDF document.
      * @throws DocumentException If an error occurs while creating the PDF document.
      */
-    protected Document createPDFDocument(String documentTitle, ByteArrayOutputStream outputStream) throws DocumentException
-    {
+    protected Document createPDFDocument(String documentTitle, ByteArrayOutputStream outputStream) throws DocumentException {
         // Create PDF document
         Document document = new Document(PageSize.A2.rotate());
         PdfWriter.getInstance(document, outputStream);
@@ -136,28 +125,23 @@ public abstract class ReportConstructor
     }
 
 
-
-
     /**
      * Adds a JFreeChart to the specified PDF document.
      *
      * @param document The PDF document.
-     * @param chart The JFreeChart to add.
-     * @param width The width of the chart.
-     * @param height The height of the chart.
-     * @throws IOException If an error occurs while writing the chart to a byte array.
+     * @param chart    The JFreeChart to add.
+     * @param width    The width of the chart.
+     * @param height   The height of the chart.
+     * @throws IOException       If an error occurs while writing the chart to a byte array.
      * @throws DocumentException If an error occurs while adding the chart to the PDF document.
      */
-    protected void addJFreeChartToDocument(Document document, JFreeChart chart, int width, int height) throws IOException, DocumentException
-    {
+    protected void addJFreeChartToDocument(Document document, JFreeChart chart, int width, int height) throws IOException, DocumentException {
         ByteArrayOutputStream chartOutputStream = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(chartOutputStream, chart, width, height);
         Image chartImage = Image.getInstance(chartOutputStream.toByteArray());
         chartImage.setAlignment(Element.ALIGN_CENTER);
         document.add(chartImage);
     }
-
-
 
 
     /**
@@ -167,8 +151,7 @@ public abstract class ReportConstructor
      * @param title The title of the table.
      * @return The PdfPCell object representing the cell.
      */
-    protected PdfPCell createSingleCellWithTitleAndTable(PdfPTable table, String title)
-    {
+    protected PdfPCell createSingleCellWithTitleAndTable(PdfPTable table, String title) {
         PdfPCell singleCell = new PdfPCell();
         singleCell.addElement(this.createPDFTitle(title, titleFont, 25, false));
         singleCell.addElement(table);
@@ -177,16 +160,13 @@ public abstract class ReportConstructor
     }
 
 
-
-
     /**
      * Creates a cell with a title.
      *
      * @param text The text to display in the title.
      * @return The PdfPCell object representing the cell.
      */
-    protected PdfPCell createSingleCellWithTitle(String text)
-    {
+    protected PdfPCell createSingleCellWithTitle(String text) {
         PdfPCell titleCell = new PdfPCell();
         titleCell.addElement(this.createPDFTitle(text, this.titleFont, 0, true));
         titleCell.setBorder(Rectangle.NO_BORDER);
@@ -197,18 +177,17 @@ public abstract class ReportConstructor
     /**
      * Creates a bar chart with the specified dataset, title, axis labels, colors, and maximum value.
      *
-     * @param dataset the dataset for the chart
-     * @param maxValue the maximum value for the Y-axis
-     * @param title the title of the chart
-     * @param xAxisTitle the title of the X-axis
-     * @param yAxisTitle the title of the Y-axis
-     * @param firstBarColor the color of the first bar
+     * @param dataset        the dataset for the chart
+     * @param maxValue       the maximum value for the Y-axis
+     * @param title          the title of the chart
+     * @param xAxisTitle     the title of the X-axis
+     * @param yAxisTitle     the title of the Y-axis
+     * @param firstBarColor  the color of the first bar
      * @param secondBarColor the color of the second bar
      * @return the bar chart
      */
     protected JFreeChart createGroupedColumnChart(DefaultCategoryDataset dataset, double maxValue, String title,
-                                                  String xAxisTitle, String yAxisTitle, Color firstBarColor, Color secondBarColor)
-    {
+                                                  String xAxisTitle, String yAxisTitle, Color firstBarColor, Color secondBarColor) {
         // Create the chart
         JFreeChart chart = ChartFactory.createBarChart(
                 title, // Chart title
@@ -244,17 +223,14 @@ public abstract class ReportConstructor
     }
 
 
-
-
     /**
      * Creates a pie chart with the specified dataset and title.
      *
      * @param dataset the dataset for the chart
-     * @param title the title of the chart
+     * @param title   the title of the chart
      * @return the pie chart
      */
-    protected JFreeChart createPieChart(DefaultPieDataset<?> dataset, String title)
-    {
+    protected JFreeChart createPieChart(DefaultPieDataset<?> dataset, String title) {
         JFreeChart chart = ChartFactory.createPieChart(
                 title, // Chart title
                 dataset, // Dataset
@@ -275,17 +251,14 @@ public abstract class ReportConstructor
     }
 
 
-
-
     /**
      * Creates a table with the specified columns and width percentage.
      *
-     * @param columns a list of column titles
+     * @param columns         a list of column titles
      * @param widthPercentage the width of the table as a percentage of the page width
      * @return a PdfPTable object representing the table
      */
-    protected PdfPTable createTable(ArrayList<String> columns, int widthPercentage)
-    {
+    protected PdfPTable createTable(ArrayList<String> columns, int widthPercentage) {
         PdfPTable table = new PdfPTable(columns.size());
         table.setWidthPercentage(widthPercentage);
 
@@ -303,17 +276,14 @@ public abstract class ReportConstructor
     }
 
 
-
     /**
      * Returns the current month as a two-digit string, padded with leading zeros if necessary.
      *
      * @return the current month as a two-digit string
      */
-    protected String getCurrentMonth()
-    {
+    protected String getCurrentMonth() {
         return String.format("%02d", Calendar.getInstance().get(Calendar.MONTH) + 1);
     }
-
 
 
     /**
@@ -321,8 +291,7 @@ public abstract class ReportConstructor
      *
      * @return the current day of the month as an integer
      */
-    protected int getCurrentDay()
-    {
+    protected int getCurrentDay() {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 

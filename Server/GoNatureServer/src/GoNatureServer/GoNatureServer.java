@@ -12,8 +12,10 @@ import ServerUIPageController.ServerUIFrameController;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -106,7 +108,7 @@ public class GoNatureServer extends AbstractServer {
             Workers.SendReminderDayBeforeWorker(db, controller);
             Workers.CancelOrdersThatDidntConfirmWorker(db, controller);
             Workers.enterOrdersFromWaitList48HoursBeforeWorker(db, controller);
-            Workers.changeToAbsentOrders(db,controller);
+            Workers.changeToAbsentOrders(db, controller);
             server.controller.toggleControllers(true);
         } catch (Exception e) {
             controller.addtolog("Error occured on Server : " + e.getMessage());
@@ -222,8 +224,7 @@ public class GoNatureServer extends AbstractServer {
         }
     }
 
-    private void handleGetParksByDepartment(Message message, ConnectionToClient client) throws SQLException, IOException
-    {
+    private void handleGetParksByDepartment(Message message, ConnectionToClient client) throws SQLException, IOException {
         String departmentID = (String) message.getMsgData();
         Map<String, String> parks = db.getParksByDepartment(Integer.parseInt(departmentID));
         Message respondMsg = new Message(OpCodes.OP_GET_PARKS_BY_DEPARTMENT, message.getMsgUserName(), parks);
@@ -231,8 +232,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleGetParkNameByParkID(Message message, ConnectionToClient client) throws IOException
-    {
+    private void handleGetParkNameByParkID(Message message, ConnectionToClient client) throws IOException {
         String parkID = (String) message.getMsgData();
         String parkName = db.getParkNameByID(Integer.parseInt(parkID));
         Message respondMsg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, message.getMsgUserName(), parkName);
@@ -523,8 +523,7 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws Exception
-    {
+    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws Exception {
         String reportType = (String) message.getMsgData();
         boolean isGenerated = false;
         String id = null; // used for department ID (for first 2 cases) or park ID (for other cases)

@@ -82,7 +82,6 @@ public class DBController {
     }
 
 
-
     /**
      * Updates records in the specified table and logs the action.
      *
@@ -109,9 +108,9 @@ public class DBController {
     /**
      * Updates an existing record in the specified table with the provided blob data and where clause, and logs the action.
      *
-     * @param tableName  The name of the table where the record will be updated.
-     * @param blobColumn The name of the column containing the blob data.
-     * @param blob       The new blob data to update in the table.
+     * @param tableName   The name of the table where the record will be updated.
+     * @param blobColumn  The name of the column containing the blob data.
+     * @param blob        The new blob data to update in the table.
      * @param whereClause The WHERE clause to specify which record(s) to update. Assumes a prepared statement format.
      * @return true if the update operation was successful, false otherwise.
      */
@@ -134,7 +133,6 @@ public class DBController {
         }
         return false;
     }
-
 
 
     /**

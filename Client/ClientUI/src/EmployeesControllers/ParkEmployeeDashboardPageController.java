@@ -1,6 +1,5 @@
 package EmployeesControllers;
 
-public class ParkEmployeeDashboardPageController extends GeneralEmployeeDashboard
-{
+public class ParkEmployeeDashboardPageController extends GeneralEmployeeDashboard {
 
 }

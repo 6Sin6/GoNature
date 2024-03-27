@@ -1,7 +1,6 @@
 package Entities;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 
@@ -31,7 +30,7 @@ public class Order implements Serializable {
      * @param visitationDate     The date and time of the order.
      * @param clientEmailAddress The email address of the client who made the order.
      * @param phoneNumber        The phone number of the client who made the order.
-     * @param orderStatus             The status of the order.
+     * @param orderStatus        The status of the order.
      * @param enteredTime        The time the client entered the park.
      * @param exitedTime         The time the client exited the park.
      * @param orderID            The unique ID of the order.

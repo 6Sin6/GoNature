@@ -13,9 +13,9 @@ public class Message implements Serializable {
     /**
      * Constructs a new Message object with the specified opcode, username, and data.
      *
-     * @param opcode   The operation code indicating the type of message.
+     * @param opcode     The operation code indicating the type of message.
      * @param identifier The username associated with the message.
-     * @param data     The data contained within the message.
+     * @param data       The data contained within the message.
      */
     public Message(OpCodes opcode, String identifier, Object data) {
         this.identifier = identifier;

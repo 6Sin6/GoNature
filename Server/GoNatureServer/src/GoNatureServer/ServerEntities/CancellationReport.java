@@ -1,8 +1,8 @@
 package GoNatureServer.ServerEntities;
 
-import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.jfree.chart.ChartFactory;
@@ -19,7 +19,9 @@ import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,12 +38,11 @@ public class CancellationReport extends DepartmentReport implements Serializable
     /**
      * Constructs a new VisitationReport object with the specified date and department.
      *
-     * @param departmentID The ID of the department associated with the report.
-     * @param departmentData   The data associated with the report.
-     * The data is stored as a HashMap String, ResultSet.
+     * @param departmentID   The ID of the department associated with the report.
+     * @param departmentData The data associated with the report.
+     *                       The data is stored as a HashMap String, ResultSet.
      */
-    public CancellationReport(Integer departmentID, HashMap<String, ResultSet> departmentData) throws DocumentException, IOException
-    {
+    public CancellationReport(Integer departmentID, HashMap<String, ResultSet> departmentData) throws DocumentException, IOException {
         super(departmentID);
         this.departmentData = departmentData;
     }
@@ -84,7 +85,8 @@ public class CancellationReport extends DepartmentReport implements Serializable
 
     /**
      * Adds a ResultSet to the report data.
-     * @param statName The name of the statistic.
+     *
+     * @param statName   The name of the statistic.
      * @param reportData The ResultSet to add.
      */
     public void addDepartmentReportData(String statName, ResultSet reportData) {
@@ -107,8 +109,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
      * @return A Blob object representing the PDF file.
      */
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
-    {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
         String customFontPath = "/fonts/Roboto-Regular.ttf";
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -138,9 +139,9 @@ public class CancellationReport extends DepartmentReport implements Serializable
             totalCount.set(0);
 
             if (key.contains("distribution")) {
-                handleChartCreation("", totalCount, median, document, baseFont, true,false);
+                handleChartCreation("", totalCount, median, document, baseFont, true, false);
             } else if (key.contains("average")) {
-                handleChartCreation("", totalCount, null, document, baseFont, true,true);
+                handleChartCreation("", totalCount, null, document, baseFont, true, true);
             }
             document.newPage();
         }
@@ -151,9 +152,9 @@ public class CancellationReport extends DepartmentReport implements Serializable
             totalCount.set(0);
 
             if (key.contains("distribution")) {
-                handleChartCreation(key.split("distribution")[1], totalCount, median, document, baseFont, false,false);
+                handleChartCreation(key.split("distribution")[1], totalCount, median, document, baseFont, false, false);
             } else if (key.contains("average")) {
-                handleChartCreation(key.split("average")[1], totalCount, null, document, baseFont, false,true);
+                handleChartCreation(key.split("average")[1], totalCount, null, document, baseFont, false, true);
             }
             document.newPage();
         }

@@ -6,15 +6,16 @@ import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import Entities.*;
 import client.ClientCommunicator;
-
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import javax.naming.CommunicationException;
 import java.net.URL;
@@ -132,8 +133,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -143,7 +143,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
+        if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -248,6 +248,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         // Reset the date picker
         datePicker.setValue(null);
     }
+
     public void navigateToHomePage() {
         applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }

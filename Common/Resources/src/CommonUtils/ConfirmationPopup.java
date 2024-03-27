@@ -4,7 +4,6 @@ import CommonClient.ClientUI;
 import CommonClient.controllers.ApplicationWindowController;
 import Entities.Message;
 import Entities.OpCodes;
-import Entities.SingleVisitor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 

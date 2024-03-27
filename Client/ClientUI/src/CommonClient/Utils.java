@@ -9,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 public class Utils {
@@ -39,8 +37,7 @@ public class Utils {
         put("Capacity Statistics", "usage");
     }};
 
-    public static int getNumberFromMonthName(String monthName) throws ParseException
-    {
+    public static int getNumberFromMonthName(String monthName) throws ParseException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new SimpleDateFormat("MMMM", Locale.ENGLISH).parse(monthName));
         return cal.get(Calendar.MONTH) + 1;

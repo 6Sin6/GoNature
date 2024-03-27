@@ -60,6 +60,7 @@ public enum Discount {
     /**
      * Applies the discount value associated with the enum constant
      * to the provided price.
+     *
      * @param price The price to apply the discount to.
      * @return The price after the discount.
      */

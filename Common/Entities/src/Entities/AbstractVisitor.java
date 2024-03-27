@@ -125,7 +125,7 @@ public abstract class AbstractVisitor extends User implements Serializable {
         orders = new OrderBank(order);
     }
 
-    
+
     public void setOrders(OrderBank orders) {
         this.orders = orders;
     }

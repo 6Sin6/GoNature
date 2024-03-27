@@ -48,7 +48,7 @@ public class ServerUI extends Application {
         }
     }
 
-    public static void initializeImportSimulator(ServerUIFrameController guiController) throws Exception{
+    public static void initializeImportSimulator(ServerUIFrameController guiController) throws Exception {
         try {
             GoNatureServer server = GoNatureServer.getInstance(5555, guiController);
             DBConnection db = server.getDBConnection(guiController);
@@ -66,10 +66,10 @@ public class ServerUI extends Application {
             GoNatureServer server = GoNatureServer.getInstance(5555, guiController);
             DBConnection db = server.getDBConnection(guiController);
             boolean usersAvailability = db.checkUsersAvailability();
-            return  usersAvailability;
+            return usersAvailability;
         } catch (Exception e) {
             guiController.addtolog(e.getMessage());
-            return  false;
+            return false;
         }
     }
 

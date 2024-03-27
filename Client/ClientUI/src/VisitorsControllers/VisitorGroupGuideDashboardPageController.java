@@ -73,6 +73,7 @@ public class VisitorGroupGuideDashboardPageController extends GeneralVisitorDash
             ((ActiveOrdersPageController) controller).start();
         }
     }
+
     @FXML
     public void OnClickViewConfirmationsOrdersButton(ActionEvent event) {
         applicationWindowController.loadVisitorsPage("OrdersWaitingConfirmation");

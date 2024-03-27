@@ -2,18 +2,14 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.OrderBillPageController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import javax.naming.CommunicationException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -77,8 +73,7 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
             ClientUI.client.accept(msgPaid);
             Message response = ClientCommunicator.msg;
             OpCodes returnOpCode = response.getMsgOpcode();
-            if(returnOpCode == OpCodes.OP_DB_ERR)
-            {
+            if (returnOpCode == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;

@@ -2,7 +2,6 @@ package GoNatureServer;
 
 import DataBase.DBConnection;
 import DataBase.DBController;
-import Entities.Role;
 import ServerUIPageController.ServerUIFrameController;
 
 import java.sql.ResultSet;
@@ -16,7 +15,8 @@ public class ImportSimulator {
 
     /**
      * Constructor
-     * @param controller - the database controller
+     *
+     * @param controller   - the database controller
      * @param dbConnection - the database connection
      */
     public ImportSimulator(ServerUIFrameController controller, DBConnection dbConnection) {
@@ -29,7 +29,7 @@ public class ImportSimulator {
      * This method imports all the users from the external database
      * Meticulously inserts the users into the correct tables
      */
-    public void handleImportUsers() throws Exception{
+    public void handleImportUsers() throws Exception {
         try {
             String tableName = schemaName + ".users";
             ResultSet allUsers = dbController.selectRecords(tableName, "");

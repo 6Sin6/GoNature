@@ -1,7 +1,10 @@
 package CommonClient.controllers;
 
 import CommonUtils.MessagePopup;
-import Entities.*;
+import Entities.Discount;
+import Entities.Order;
+import Entities.OrderStatus;
+import Entities.OrderType;
 import VisitorsControllers.ActiveOrdersPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;

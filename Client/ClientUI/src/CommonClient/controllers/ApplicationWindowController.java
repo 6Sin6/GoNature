@@ -23,8 +23,7 @@ import java.util.ResourceBundle;
  * This class is the main controller for the entire application. It is responsible for loading and managing all the other controllers and views.
  * It also acts as the main communication hub between the client and the server.
  */
-public class ApplicationWindowController implements Initializable
-{
+public class ApplicationWindowController implements Initializable {
     /**
      * The main pane of the application window. All the other controllers and views are loaded into this pane.
      */
@@ -77,22 +76,19 @@ public class ApplicationWindowController implements Initializable
     private Object currentActiveController;
 
 
-
     /**
      * Initializes the application by setting up the dashBoardMap, employeesPagesMap, and visitorsPagesMap.
      * Additionally, it loads the "ConnectClientPage.fxml" as the initial page.
      *
-     * @param location Not used.
+     * @param location  Not used.
      * @param resources Not used.
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
+    public void initialize(URL location, ResourceBundle resources) {
         setDashBoardMap();
         setVisitorsPagesMap();
         setEmployeesPagesMap();
     }
-
 
 
     /**
@@ -100,11 +96,9 @@ public class ApplicationWindowController implements Initializable
      *
      * @return The currently active controller object.
      */
-    public Object getCurrentActiveController()
-    {
+    public Object getCurrentActiveController() {
         return currentActiveController;
     }
-
 
 
     /**
@@ -112,11 +106,9 @@ public class ApplicationWindowController implements Initializable
      *
      * @param user The user object representing the currently logged-in user.
      */
-    private void setUser(User user)
-    {
+    private void setUser(User user) {
         this.user = user;
     }
-
 
 
     /**
@@ -124,11 +116,9 @@ public class ApplicationWindowController implements Initializable
      *
      * @return The user object representing the currently logged-in user.
      */
-    public User getUser()
-    {
+    public User getUser() {
         return user;
     }
-
 
 
     /**
@@ -137,11 +127,9 @@ public class ApplicationWindowController implements Initializable
      *
      * @return The root BorderPane of the main pane.
      */
-    public BorderPane getRoot()
-    {
+    public BorderPane getRoot() {
         return this.mainPane;
     }
-
 
 
     /**
@@ -153,8 +141,7 @@ public class ApplicationWindowController implements Initializable
      * @return The Parent node representing the loaded page.
      */
 
-    private Parent loadPage(String fxmlPath)
-    {
+    private Parent loadPage(String fxmlPath) {
         try {
             // If the page we're loading is not cached yet.
             if (!pagesCache.containsKey(fxmlPath)) {
@@ -172,14 +159,12 @@ public class ApplicationWindowController implements Initializable
 
             currentActiveController = pagesCache.get(fxmlPath).getValue();
             return pagesCache.get(fxmlPath).getKey();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             //noinspection CallToPrintStackTrace
             e.printStackTrace();
             return null; // or load an error page
         }
     }
-
 
 
     /**
@@ -190,8 +175,7 @@ public class ApplicationWindowController implements Initializable
      *
      * @param user The user for whom the menu is loaded.
      */
-    public void loadMenu(User user)
-    {
+    public void loadMenu(User user) {
         setUser(user);
         try {
             if (menuSider == null) {
@@ -221,38 +205,32 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Toggles the visibility of the menu buttons based on the given boolean value.
      *
      * @param isDisabled A boolean value indicating whether the menu buttons should be disabled (true) or enabled (false).
      */
-    public void toggleMenuButtons(boolean isDisabled)
-    {
+    public void toggleMenuButtons(boolean isDisabled) {
         this.menuController.toggleMenuButtons(isDisabled);
     }
-
-
 
 
     /**
      * Toggles the visibility of menu buttons based on the specified parameters.
      *
-     * @param homePageIsDisabled       True to disable the home page button, false otherwise.
-     * @param dashboardIsDisabled      True to disable the dashboard button, false otherwise.
-     * @param thirdButtonIsDisabled    True to disable the third button, false otherwise.
-     * @param fourthButtonIsDisabled   True to disable the fourth button, false otherwise.
-     * @param fifthButtonIsDisabled    True to disable the fifth button, false otherwise.
-     * @param logOutButtonIsDisabled   True to disable the logout button, false otherwise.
+     * @param homePageIsDisabled     True to disable the home page button, false otherwise.
+     * @param dashboardIsDisabled    True to disable the dashboard button, false otherwise.
+     * @param thirdButtonIsDisabled  True to disable the third button, false otherwise.
+     * @param fourthButtonIsDisabled True to disable the fourth button, false otherwise.
+     * @param fifthButtonIsDisabled  True to disable the fifth button, false otherwise.
+     * @param logOutButtonIsDisabled True to disable the logout button, false otherwise.
      */
     public void toggleMenuButtons(boolean homePageIsDisabled, boolean dashboardIsDisabled,
                                   boolean thirdButtonIsDisabled, boolean fourthButtonIsDisabled,
-                                  boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled)
-    {
+                                  boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled) {
         this.menuController.toggleMenuButtons(homePageIsDisabled, dashboardIsDisabled, thirdButtonIsDisabled,
                 fourthButtonIsDisabled, fifthButtonIsDisabled, logOutButtonIsDisabled);
     }
-
 
 
     /**
@@ -263,8 +241,7 @@ public class ApplicationWindowController implements Initializable
      *
      * @param fxmlPath The path to the FXML file representing the page to be set as the center page.
      */
-    public void setCenterPage(String fxmlPath)
-    {
+    public void setCenterPage(String fxmlPath) {
         mainPane.getChildren().remove(mainPane.getCenter());
         // Cleanup previous controller.
         if (currentActiveController != null && currentActiveController instanceof BaseController) {
@@ -283,16 +260,14 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Sets the complete page of the application window, which consists of the center and left pages.
      * The center page is set to the given FXML path, and the left page is set to the given FXML path.
      *
      * @param centerFxmlPath The path to the FXML file representing the center page.
-     * @param leftFxmlPath The path to the FXML file representing the left page.
+     * @param leftFxmlPath   The path to the FXML file representing the left page.
      */
-    public void setCompletePage(String centerFxmlPath, String leftFxmlPath)
-    {
+    public void setCompletePage(String centerFxmlPath, String leftFxmlPath) {
         // Load center page
         Parent centerPage = loadPage(centerFxmlPath);
         if (centerPage != null) {
@@ -307,22 +282,19 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Sets the center page for a new visitor.
      * This consists of the given FXML path for the center page, the given user, and the FXML path for the left page.
      * The user is set as the currently logged-in user, the center page is loaded, and the left page is loaded.
      *
-     * @param fxmlPath The path to the FXML file representing the center page.
-     * @param user The user object representing the currently logged-in user.
+     * @param fxmlPath     The path to the FXML file representing the center page.
+     * @param user         The user object representing the currently logged-in user.
      * @param leftFxmlPath The path to the FXML file representing the left page.
      */
-    public void setCenterPageForNewVisitor(String fxmlPath, User user, String leftFxmlPath)
-    {
+    public void setCenterPageForNewVisitor(String fxmlPath, User user, String leftFxmlPath) {
         setUser(user);
-        setCompletePage(fxmlPath,leftFxmlPath);
+        setCompletePage(fxmlPath, leftFxmlPath);
     }
-
 
 
     /**
@@ -331,8 +303,7 @@ public class ApplicationWindowController implements Initializable
      * Also sets the currently logged-in user to null and removes the menu from the left side of the screen.
      */
 
-    public void logout()
-    {
+    public void logout() {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
         String pathTorRoute;
@@ -347,14 +318,12 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Redirects the user to the home page.
      * Sends a message to the server to log out the user and sets the center page to the home page.
      * Also sets the currently logged-in user to null and removes the menu from the left side of the screen.
      */
-    public void homepage()
-    {
+    public void homepage() {
         Object msg = new Message(OpCodes.OP_LOGOUT, user.getUsername(), null);
         ClientUI.client.accept(msg);
         String pathTorRoute = "/CommonClient/gui/HomePage.fxml";
@@ -364,13 +333,11 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Initializes the DashBoardMap, which contains the FXML paths of the dashboard pages for different roles.
      * The key is the role, and the value is the FXML path of the dashboard page.
      */
-    private void setDashBoardMap()
-    {
+    private void setDashBoardMap() {
         DashBoardMap.put(Role.ROLE_PARK_DEPARTMENT_MGR, "/EmployeesUI/DepartmentManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_MGR, "/EmployeesUI/ParkManagerDashboardPage.fxml");
         DashBoardMap.put(Role.ROLE_PARK_EMPLOYEE, "/EmployeesUI/ParkEmployeeDashboardPage.fxml");
@@ -380,27 +347,23 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Loads the dashboard page for the given role.
      * If the role is not present in the DashBoardMap, the login page is loaded.
      *
      * @param role The role of the user.
      */
-    public void loadDashboardPage(Role role)
-    {
+    public void loadDashboardPage(Role role) {
         String fxmlPath = DashBoardMap.getOrDefault(role, "/CommonClient/gui/LoginPage.fxml");
         setCenterPage(fxmlPath);
     }
-
 
 
     /**
      * This method initializes the EmployeesPagesMap, which contains the FXML paths of the pages for employees.
      * The key is the name of the FXML file, and the value is the FXML path of the page.
      */
-    private void setEmployeesPagesMap()
-    {
+    private void setEmployeesPagesMap() {
         EmployeesPagesMap.put("AuthorizeParksRequestsPage", "/EmployeesUI/AuthorizeParksRequestsPage.fxml");
         EmployeesPagesMap.put("CheckAvailableSpotsPage", "/EmployeesUI/CheckAvailableSpotsPage.fxml");
         EmployeesPagesMap.put("GenerateBillPage", "/EmployeesUI/GenerateBillPage.fxml");
@@ -416,7 +379,6 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Loads an employee page specified by its FXML file name.
      *
@@ -430,7 +392,6 @@ public class ApplicationWindowController implements Initializable
             System.out.println("Error");
         }
     }
-
 
 
     /**
@@ -452,7 +413,6 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * This method loads the visitors page specified by the FXML file name.
      *
@@ -466,7 +426,6 @@ public class ApplicationWindowController implements Initializable
             System.out.println("Error");
         }
     }
-
 
 
     /**
@@ -501,17 +460,14 @@ public class ApplicationWindowController implements Initializable
     }
 
 
-
     /**
      * Returns the data stored in the data field.
      *
      * @return the data stored in the data field
      */
-    public Object getData()
-    {
+    public Object getData() {
         return Data;
     }
-
 
 
     /**
@@ -519,8 +475,7 @@ public class ApplicationWindowController implements Initializable
      *
      * @param data the data stored in the data field
      */
-    public void setData(Object data)
-    {
+    public void setData(Object data) {
         Data = data;
     }
 }

@@ -69,7 +69,7 @@ public class Workers {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable task = () -> {
-            try{
+            try {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.HOUR, 22);
                 calendar.set(Calendar.MINUTE, 0);
@@ -77,8 +77,7 @@ public class Workers {
                 calendar.set(Calendar.MILLISECOND, 0);
                 db.ChangeLatePendingConfirmationToCancelled();
                 controller.addtolog("Checking Confirmation for Orders in  " + calendar.getTime());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 controller.addtolog("failed CancelOrdersThatDidntConfirmWorker");
             }
 
@@ -103,8 +102,7 @@ public class Workers {
                 calendar.set(Calendar.MILLISECOND, 0);
                 db.enterOrdersInWaitlist48HoursBefore();
                 controller.addtolog("Entering orders from the waitlist  " + calendar.getTime());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 controller.addtolog("failed enterOrdersFromWaitList48HoursBeforeWorker");
             }
         };
@@ -127,8 +125,7 @@ public class Workers {
                 calendar.set(Calendar.MILLISECOND, 0);
                 db.ChangeToAbsent();
                 controller.addtolog("Update status for absent orders  " + calendar.getTime());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 controller.addtolog("failed changeToAbsentOrders");
             }
         };

@@ -1,9 +1,6 @@
 package ServerUIPageController;
 
-import GoNatureServer.GoNatureServer;
-import GoNatureServer.ImportSimulator;
 import ServerUIPage.ServerUI;
-
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -102,12 +99,10 @@ public class ServerUIFrameController implements Initializable {
         } else {
             ServerUI.runServer(this);
             boolean userAvailableFlag = ServerUI.checkUsersAvailability(this);
-            if(userAvailableFlag)
-            {
+            if (userAvailableFlag) {
                 importUsersTxt.setText("");
                 importBtn.setDisable(false);
-            }
-            else {
+            } else {
                 importUsersTxt.setText("Users already exist in the database");
             }
         }
@@ -141,6 +136,7 @@ public class ServerUIFrameController implements Initializable {
             System.err.println("Default URL not found in the list: " + defaultURL);
         }
     }
+
     @FXML
     public void getExitBtn(ActionEvent event) throws Exception {
         addtolog("Exit Server");
@@ -157,6 +153,7 @@ public class ServerUIFrameController implements Initializable {
         System.out.println(str);
         Platform.runLater(() -> loggerTextArea.appendText(str + "\n"));
     }
+
     private void setURLComboBox() {
         ArrayList<String> UrlComboList = new ArrayList<>();
         UrlComboList.add("localhost");
@@ -197,6 +194,7 @@ public class ServerUIFrameController implements Initializable {
             return row;
         });
     }
+
     public void resetTableClients() {
         tableClients.getItems().clear();
     }

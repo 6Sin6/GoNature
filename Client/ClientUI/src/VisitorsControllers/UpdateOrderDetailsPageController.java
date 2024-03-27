@@ -3,23 +3,18 @@ package VisitorsControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.CommonUtils;
-import Entities.*;
 import CommonUtils.ConfirmationPopup;
+import CommonUtils.MessagePopup;
+import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
-import CommonUtils.MessagePopup;
 
 import javax.naming.CommunicationException;
-
-import javafx.event.ActionEvent;
-
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -62,7 +57,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
 
     public void setFields(Order o1) {
         User user = applicationWindowController.getUser();
-        if (o1.getOrderType() == OrderType.ORD_TYPE_SINGLE|| o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
+        if (o1.getOrderType() == OrderType.ORD_TYPE_SINGLE || o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
             PayBtn.setVisible(false);
         } else {
             PayBtn.setVisible(true);
@@ -100,8 +95,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             Object msg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, user.getUsername(), arrForMsg);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
-            {
+            if (respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -123,8 +117,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
             Object msg = new Message(OpCodes.OP_UPDATE_ORDER_DETAILS_BY_ORDERID, user.getUsername(), arrForMsg);
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
-            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
-            {
+            if (respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -173,8 +166,7 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
-        if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
-        {
+        if (respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;

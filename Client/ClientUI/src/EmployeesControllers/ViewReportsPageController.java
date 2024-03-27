@@ -4,24 +4,30 @@ import CommonClient.ClientUI;
 import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import CommonUtils.ConfirmationPopup;
-import Entities.*;
+import Entities.Message;
+import Entities.OpCodes;
+import Entities.ParkDepartmentManager;
+import Entities.ParkManager;
 import client.ClientCommunicator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import java.time.LocalDate;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static CommonClient.Utils.getNumberFromMonthName;
 
-public class ViewReportsPageController extends BaseController
-{
+public class ViewReportsPageController extends BaseController {
 
     @FXML
     private Label errMsg;
@@ -57,18 +63,15 @@ public class ViewReportsPageController extends BaseController
         parkManagerPage = false;
     }
 
-    private Integer getDepartmentID()
-    {
-        return ((ParkDepartmentManager)this.applicationWindowController.getUser()).getDepartmentID();
+    private Integer getDepartmentID() {
+        return ((ParkDepartmentManager) this.applicationWindowController.getUser()).getDepartmentID();
     }
 
-    private String getParkID()
-    {
+    private String getParkID() {
         return ((ParkManager) applicationWindowController.getUser()).getParkID();
     }
 
-    private String getParkName()
-    {
+    private String getParkName() {
         String parkID = this.getParkID();
         Message message = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, applicationWindowController.getUser().getUsername(), parkID);
         ClientUI.client.accept(message);
@@ -81,17 +84,15 @@ public class ViewReportsPageController extends BaseController
     }
 
     private HashMap<String, String> parkNamesMap = null;
-    private Map<String, String> getParksNames()
-    {
-        if (parkNamesMap == null)
-        {
+
+    private Map<String, String> getParksNames() {
+        if (parkNamesMap == null) {
             String departmentID = String.valueOf(this.getDepartmentID());
             Message msg = new Message(OpCodes.OP_GET_PARKS_BY_DEPARTMENT, applicationWindowController.getUser().getUsername(), departmentID);
             ClientUI.client.accept(msg);
 
             Message response = ClientCommunicator.msg;
-            if (response.getMsgOpcode() == OpCodes.OP_DB_ERR)
-            {
+            if (response.getMsgOpcode() == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return null;
@@ -106,18 +107,16 @@ public class ViewReportsPageController extends BaseController
         return parkNamesMap;
     }
 
-    private void updateMonthComboBox(int lastMonth)
-    {
+    private void updateMonthComboBox(int lastMonth) {
         monthCmb.getItems().clear();
-        String[] monthNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+        String[] monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September",
                 "October", "November", "December"};
         ArrayList<String> months = new ArrayList<>(Arrays.asList(monthNames).subList(0, lastMonth));
         monthCmb.getItems().addAll(months);
         monthCmb.setValue(monthCmb.getItems().get(0));
     }
 
-    public void start()
-    {
+    public void start() {
         // Definitions
         ArrayList<String> years = new ArrayList<>();
         int earliestYear = 2021;
@@ -136,30 +135,24 @@ public class ViewReportsPageController extends BaseController
 
 
         try {
-            if (applicationWindowController.getUser() instanceof ParkManager)
-            {
+            if (applicationWindowController.getUser() instanceof ParkManager) {
                 parkManagerPage = true;
                 parkCmb.setValue(this.getParkName());
                 parkCmb.setDisable(true);
-            } else
-            {
+            } else {
                 Map<String, String> map = this.getParksNames();
-                if (map == null)
-                {
+                if (map == null) {
                     cleanup();
                     return;
                 }
-                for (int i = 1; i <= map.size(); i++)
-                {
+                for (int i = 1; i <= map.size(); i++) {
                     String id = String.valueOf(i);
                     parkCmb.getItems().add(map.get(id));
                 }
                 parkCmb.setValue("All Parks");
                 reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             errMsg.setText("Something went wrong... Please try again later");
             this.cleanup();
             return;
@@ -170,34 +163,28 @@ public class ViewReportsPageController extends BaseController
         yearCmb.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onSelectYear(oldVal, newVal));
     }
 
-    private void onSelectYear(String oldValue, String newValue)
-    {
+    private void onSelectYear(String oldValue, String newValue) {
         if (oldValue == null || newValue == null)
             return;
         int oldVal = Integer.parseInt(oldValue), newVal = Integer.parseInt(newValue);
         int currentYear = java.time.Year.now().getValue();
         if (oldVal == newVal || (oldVal != currentYear && newVal != currentYear))
             return;
-        if (newVal == currentYear)
-        {
+        if (newVal == currentYear) {
             updateMonthComboBox(LocalDate.now().getMonthValue());
             monthCmb.getSelectionModel().selectLast();
-        }
-        else updateMonthComboBox(12);
+        } else updateMonthComboBox(12);
     }
 
-    void onSelectReport(String oldVal, String newVal)
-    {
+    void onSelectReport(String oldVal, String newVal) {
         if (parkManagerPage ||
                 (Utils.parkManagerReportsMap.containsKey(newVal) && Utils.parkManagerReportsMap.containsKey(oldVal)))
             return;
 
-        if (Utils.parkManagerReportsMap.containsKey(newVal))
-        { // park reports
+        if (Utils.parkManagerReportsMap.containsKey(newVal)) { // park reports
             parkCmb.setValue(parkCmb.getItems().get(0));
             parkCmb.setDisable(false);
-        } else
-        { // department reports
+        } else { // department reports
             parkCmb.setDisable(true);
             parkCmb.setValue("All Parks");
         }
@@ -217,13 +204,10 @@ public class ViewReportsPageController extends BaseController
 
         // Park manager cannot select a department report, this is why the else clause is valid.
         // Nothing here is a best practice, sue me...
-        if (!parkManagerPage && isDepartmentReport)
-        {
+        if (!parkManagerPage && isDepartmentReport) {
             bodyId = String.valueOf(((ParkDepartmentManager) applicationWindowController.getUser()).getDepartmentID());
-        } else if (!isDepartmentReport)
-        {
-            if (!parkManagerPage)
-            {
+        } else if (!isDepartmentReport) {
+            if (!parkManagerPage) {
                 Map<String, String> map = this.getParksNames();
                 if (map == null) {
                     cleanup();
@@ -231,9 +215,7 @@ public class ViewReportsPageController extends BaseController
                     return;
                 }
                 bodyId = this.getKeyFromValue(map, parkCmb.getValue());
-            }
-
-            else bodyId = this.getParkID();
+            } else bodyId = this.getParkID();
         }
 
         String[] params;
@@ -245,8 +227,7 @@ public class ViewReportsPageController extends BaseController
                     selectedYear,
                     bodyId
             };
-        } catch (ParseException e)
-        {
+        } catch (ParseException e) {
             errMsg.setText("Error");
             this.cleanup();
             return;
@@ -263,8 +244,7 @@ public class ViewReportsPageController extends BaseController
         if (pdfBlob == null) {
             viewResultMsg.setText("No " + selectedReport + " report found for the selected month and year.");
             return;
-        }
-        else viewResultMsg.setText("");
+        } else viewResultMsg.setText("");
 
         String reportName = selectedReport + " Report" + "_" + selectedYear + "_" + selectedMonth + "_" + parkCmb.getValue();
         File tmpFile;
@@ -278,12 +258,9 @@ public class ViewReportsPageController extends BaseController
         tmpFile.deleteOnExit();
 
         // Write the PDF content to the temp file
-        try (FileOutputStream fos = new FileOutputStream(tmpFile))
-        {
+        try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
             fos.write(pdfBlob);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             this.cleanup();
             errMsg.setText("Error writing to file");
             return;
@@ -297,8 +274,7 @@ public class ViewReportsPageController extends BaseController
         }
     }
 
-    private String getKeyFromValue(Map<String, String> map, String value)
-    {
+    private String getKeyFromValue(Map<String, String> map, String value) {
         for (Map.Entry<String, String> entry : map.entrySet())
             if (entry.getValue().equals(value))
                 return entry.getKey();

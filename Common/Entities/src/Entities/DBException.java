@@ -2,20 +2,15 @@ package Entities;
 
 /**
  * This class is used to represent database exceptions.
- *
  */
-public class DBException extends Exception
-{
+public class DBException extends Exception {
 
     /**
      * Creates a new instance of DBException.
      */
-    public DBException()
-    {
+    public DBException() {
         super();
     }
-
-
 
 
     /**
@@ -23,26 +18,20 @@ public class DBException extends Exception
      *
      * @param message The message for the exception
      */
-    public DBException(String message)
-    {
+    public DBException(String message) {
         super(message);
     }
-
-
 
 
     /**
      * Creates a new instance of DBException with the specified message and cause.
      *
      * @param message The message for the exception
-     * @param cause The cause of the exception
+     * @param cause   The cause of the exception
      */
-    public DBException(String message, Throwable cause)
-    {
+    public DBException(String message, Throwable cause) {
         super(message, cause);
     }
-
-
 
 
     /**
@@ -50,8 +39,7 @@ public class DBException extends Exception
      *
      * @param cause The cause of the exception
      */
-    public DBException(Throwable cause)
-    {
+    public DBException(Throwable cause) {
         super(cause);
     }
 }

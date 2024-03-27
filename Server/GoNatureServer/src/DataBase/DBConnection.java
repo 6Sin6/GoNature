@@ -1,7 +1,7 @@
 package DataBase;
 
 import Entities.*;
-import GoNatureServer.*;
+import GoNatureServer.GmailSender;
 import GoNatureServer.ServerEntities.CancellationReport;
 import GoNatureServer.ServerEntities.NumOfVisitorsReport;
 import GoNatureServer.ServerEntities.UsageReport;
@@ -12,7 +12,10 @@ import com.itextpdf.text.DocumentException;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 import static CommonUtils.CommonUtils.getNextWeekHours;
@@ -1086,26 +1089,22 @@ public class DBConnection {
      * @return A ResultSet containing all park IDs associated with the specified department.
      * Returns null if there is an error.
      */
-    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException
-    {
+    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException {
         String parkTableName = this.schemaName + ".parks";
         String parkWhereClause = "departmentID='" + departmentID + "'";
         return dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
     }
 
-    public Map<String, String> getParksByDepartment(Integer departmentID) throws SQLException
-    {
+    public Map<String, String> getParksByDepartment(Integer departmentID) throws SQLException {
         String parkTableName = this.schemaName + ".parks";
         String parkWhereClause = "departmentID='" + departmentID + "'";
         ResultSet results = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID, ParkName");
         Map<String, String> parks = new HashMap<>();
-        while (results.next())
-        {
+        while (results.next()) {
             parks.put(results.getString("ParkID"), results.getString("ParkName"));
         }
         return parks;
     }
-
 
 
     /**
@@ -1168,9 +1167,7 @@ public class DBConnection {
     }
 
 
-
-    public boolean generateUsageReport(int parkID)
-    {
+    public boolean generateUsageReport(int parkID) {
         try {
             // Definitions
             int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
@@ -1205,28 +1202,22 @@ public class DBConnection {
     }
 
 
-
-    public String getParkNameByID(Integer parkID)
-    {
+    public String getParkNameByID(Integer parkID) {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID = " + parkID;
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
             if (results.next())
                 return results.getString("ParkName");
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
         }
         return null;
     }
 
 
-    private Object getParkMaxCapacityInSpecificMonth(Integer parkID, int month)
-    {
-        try
-        {
+    private Object getParkMaxCapacityInSpecificMonth(Integer parkID, int month) {
+        try {
             String tableName = this.schemaName + ".park_parameters_requests";
             int parameter = ParkParameters.PARK_CAPACITY.getParameterVal();
             int status = RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
@@ -1234,22 +1225,17 @@ public class DBConnection {
             String orderByClause = " ORDER BY handleDate";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause + orderByClause, "requestedValue, handleDate");
 
-            if (results.next())
-            {
+            if (results.next()) {
                 results.beforeFirst();
                 return results;
-            }
-            else
-            {
+            } else {
                 tableName = this.schemaName + ".parks";
                 whereClause = "ParkID = " + parkID;
                 results = dbController.selectRecordsFields(tableName, whereClause, "Capacity");
                 results.next();
                 return Integer.valueOf(results.getInt("Capacity"));
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
         }
         return null;

@@ -2,7 +2,6 @@ package CommonUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ public class CommonUtils {
 
     public static Integer DB_ERROR = 1;
     public static Integer SERVER_ERROR = 2;
+
     /**
      * Checks if the given string is a valid email address.
      *

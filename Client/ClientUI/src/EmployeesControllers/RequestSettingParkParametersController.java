@@ -2,8 +2,8 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static CommonUtils.CommonUtils.*;
+import static CommonUtils.CommonUtils.convertStringToTimestamp;
+import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
 
@@ -43,16 +44,13 @@ public class RequestSettingParkParametersController extends BaseController imple
     private Park park;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
-        for (int i = 1; i <= 8; i++)
-        {
+    public void initialize(URL location, ResourceBundle resources) {
+        for (int i = 1; i <= 8; i++) {
             cmbMaxVisitation.getItems().add(String.valueOf(i));
         }
     }
 
-    public void cleanup()
-    {
+    public void cleanup() {
         lblErrorMsg.setText("");
         lblSuccessMsg.setText("");
         txtDifferenceOrdersVisitors.setText("");
@@ -72,8 +70,7 @@ public class RequestSettingParkParametersController extends BaseController imple
 
         response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -84,7 +81,7 @@ public class RequestSettingParkParametersController extends BaseController imple
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof Park)) {
+        if (!(response.getMsgData() instanceof Park)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -102,8 +99,7 @@ public class RequestSettingParkParametersController extends BaseController imple
     }
 
     @FXML
-    void OnClickSubmitButton(ActionEvent ignoredEvent)
-    {
+    void OnClickSubmitButton(ActionEvent ignoredEvent) {
         lblSuccessMsg.setText("");
         lblErrorMsg.setText("");
         boolean maxVisitRequest = !Objects.equals(cmbMaxVisitation.getValue(), "");
@@ -161,8 +157,7 @@ public class RequestSettingParkParametersController extends BaseController imple
 
         response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;

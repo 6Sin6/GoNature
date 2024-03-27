@@ -117,6 +117,7 @@ public class RequestChangingParkParameters implements Serializable {
     /**
      * Constructs a String in a format that represents the request to change park parameter,
      * Used in table view, for the requests table column.
+     *
      * @return A string that represents the request to change park parameter.
      */
     @Override

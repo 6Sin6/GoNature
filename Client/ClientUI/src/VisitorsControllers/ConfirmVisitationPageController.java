@@ -2,8 +2,8 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
 import javax.naming.CommunicationException;
-
 import java.util.ArrayList;
 
 import static CommonUtils.CommonUtils.parseVisitDate;
@@ -56,12 +55,12 @@ public class ConfirmVisitationPageController extends BaseController {
     private Order order;
 
 
-
     private ArrayList<Order> ordersList;
 
     public void setOrdersList(ArrayList<Order> ordersList) {
         this.ordersList = ordersList;
     }
+
     public void cleanup() {
         order = null;
     }
@@ -84,8 +83,7 @@ public class ConfirmVisitationPageController extends BaseController {
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -114,8 +112,7 @@ public class ConfirmVisitationPageController extends BaseController {
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
         OpCodes returnOpCode = respondMsg.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -128,7 +125,7 @@ public class ConfirmVisitationPageController extends BaseController {
         }
         String strForPopup = "The order has been canceled successfully";
         if (ordersList.size() == 1 && order.getOrderType() == OrderType.ORD_TYPE_SINGLE) {
-            strForPopup  = "Your only order has been cancelled you are getting redirected to home page";
+            strForPopup = "Your only order has been cancelled you are getting redirected to home page";
             flag = true;
         } else {
             flag = false;

@@ -3,7 +3,9 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
-import Entities.*;
+import Entities.Message;
+import Entities.OpCodes;
+import Entities.ParkDepartmentManager;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
@@ -52,12 +54,10 @@ public class IssueReportsController extends BaseController {
     private boolean parkManagerPage = false;
 
 
-
     /**
      * Cleans up the UI elements of the IssueReportsController.
      */
-    public void cleanup()
-    {
+    public void cleanup() {
         errMsg.setText("");
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
@@ -65,17 +65,14 @@ public class IssueReportsController extends BaseController {
     }
 
 
-
     /**
      * Checks if the currently connected user is a Department Manager.
      *
      * @return true if the user is a Department Manager, false otherwise
      */
-    private boolean isDepartmentManager()
-    {
+    private boolean isDepartmentManager() {
         return (applicationWindowController.getUser() instanceof ParkDepartmentManager);
     }
-
 
 
     /**
@@ -84,13 +81,11 @@ public class IssueReportsController extends BaseController {
      * If the user is a park manager, park manager reports are loaded into the combo box.
      * Also sets the default selected report and adds a listener to handle report selection changes.
      */
-    public void start()
-    {
+    public void start() {
         if (this.isDepartmentManager()) // Department manager connected
         {
             reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
-        }
-        else // Park manager connected
+        } else // Park manager connected
         {
             reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
             parkManagerPage = true;
@@ -101,18 +96,14 @@ public class IssueReportsController extends BaseController {
     }
 
 
-
     /**
      * This method is called when the user selects a report from the combo box.
      * It sets the generateResultMsg label to an empty string and clears the
      * selected item in the combo box.
      */
-    private void onSelectReport()
-    {
+    private void onSelectReport() {
         generateResultMsg.setText("");
     }
-
-
 
 
     /**
@@ -121,8 +112,7 @@ public class IssueReportsController extends BaseController {
      * Displays relevant UI elements during the report generation process and updates them accordingly upon completion.
      */
     @FXML
-    void onClickGenerateReport(ActionEvent ignoredEvent)
-    {
+    void onClickGenerateReport(ActionEvent ignoredEvent) {
         btnGenerateReport.setDisable(true);
         generateResultMsg.setText("Generating report...");
         imgLoading.setVisible(true);

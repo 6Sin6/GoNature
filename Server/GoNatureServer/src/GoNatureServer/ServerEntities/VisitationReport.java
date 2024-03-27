@@ -1,7 +1,8 @@
 package GoNatureServer.ServerEntities;
 
 import Entities.OrderType;
-import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import org.jfree.chart.JFreeChart;
@@ -10,7 +11,9 @@ import org.jfree.data.general.DefaultPieDataset;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,24 +30,19 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     private HashMap<String, ResultSet> reportData;
 
 
-
-
     /**
      * Constructs a new VisitationReport object with the specified date and department.
      *
      * @param departmentID The ID of the department associated with the report.
-     * @param statName    The name of the statistic.
+     * @param statName     The name of the statistic.
      * @param reportData   The data associated with the report.
-     * The data is stored as a HashMap String, ResultSet .
+     *                     The data is stored as a HashMap String, ResultSet .
      */
-    public VisitationReport(Integer departmentID, String statName, ResultSet reportData) throws DocumentException, IOException
-    {
+    public VisitationReport(Integer departmentID, String statName, ResultSet reportData) throws DocumentException, IOException {
         super(departmentID);
         this.reportData = new HashMap<>();
         this.reportData.put(statName, reportData);
     }
-
-
 
 
     /**
@@ -57,8 +55,6 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Sets the data associated with the report.
      *
@@ -69,18 +65,15 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Adds a ResultSet to the report data.
-     * @param statName The name of the statistic.
+     *
+     * @param statName   The name of the statistic.
      * @param reportData The ResultSet to add.
      */
     public void addReportData(String statName, ResultSet reportData) {
         this.reportData.put(statName, reportData);
     }
-
-
 
 
     /**
@@ -93,21 +86,17 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
-
     /**
      * This method is intended to create a PDF Blob for the VisitationReport.
      * Creates a PDF file based on the data in the specified ResultSet.
      *
      * @return A Blob object representing the PDF file.
      * @throws DocumentException If there is an error while creating the PDF document.
-     * @throws SQLException If there is an error while converting the PDF to a Blob.
-     * @throws IOException If there is an error while handling the PDF file.
+     * @throws SQLException      If there is an error while converting the PDF to a Blob.
+     * @throws IOException       If there is an error while handling the PDF file.
      */
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
-    {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
         String title_Document = "Visitations Report - Department: " + super.getDepartmentID();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -159,15 +148,12 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Creates a chart with JFreeChart based on the data in the specified ResultSet.
      *
      * @return The JFreeChart object representing the chart.
      */
-    protected JFreeChart createBarChart() throws SQLException
-    {
+    protected JFreeChart createBarChart() throws SQLException {
         // Definitions
         double maxTimeSpent = 0;
         // Initialize dataset for the pie chart
@@ -203,15 +189,12 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Creates a pie chart with JFreeChart based on the data in the specified ResultSet.
      *
      * @return The JFreeChart object representing the pie chart.
      */
-    protected JFreeChart createPieChart() throws SQLException
-    {
+    protected JFreeChart createPieChart() throws SQLException {
         // Initialize dataset for the pie chart
         DefaultPieDataset dataset = new DefaultPieDataset();
         // Initialize title
@@ -229,15 +212,13 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Creates a table with the data in the specified ResultSet.
+     *
      * @param orderType The order type to display in the table.
      * @return The PdfPTable object representing the table.
      */
-    private PdfPTable createTable(int orderType) throws SQLException
-    {
+    private PdfPTable createTable(int orderType) throws SQLException {
         // Columns of table
         ArrayList<String> columns = new ArrayList<>();
         columns.add("Park ID");
@@ -268,26 +249,21 @@ public class VisitationReport extends DepartmentReport implements Serializable {
     }
 
 
-
-
     /**
      * Creates a table with the data in the specified ResultSet.
+     *
      * @param orderType The order type to display in the table.
      * @return The PdfPTable object representing the table.
      */
-    private PdfPTable createTable(OrderType orderType) throws SQLException
-    {
+    private PdfPTable createTable(OrderType orderType) throws SQLException {
         return this.createTable(orderType.getOrderType());
     }
-
-
-
 
 
     /**
      * Retrieves the average time spent for the specified date and order type.
      *
-     * @param date The date to retrieve the time spent for.
+     * @param date            The date to retrieve the time spent for.
      * @param orderTypeSuffix The suffix for the order type.
      * @return The average time spent for the specified date and order type.
      */
@@ -307,8 +283,6 @@ public class VisitationReport extends DepartmentReport implements Serializable {
         }
         return 0.0; // Return 0 if data for the date is not found
     }
-
-
 
 
     /**

@@ -11,8 +11,6 @@ import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -71,8 +69,7 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     }
 
     @FXML
-    public void OnClickIssueReportsButton(ActionEvent event)
-    {
+    public void OnClickIssueReportsButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("IssueReportsPage");
         if (applicationWindowController.getCurrentActiveController() instanceof IssueReportsController) {
             ((IssueReportsController) applicationWindowController.getCurrentActiveController()).start();
@@ -80,8 +77,7 @@ public class DepartmentManagerDashboardPageController extends BaseController {
     }
 
     @FXML
-    public void OnClickViewReportsButton(ActionEvent event)
-    {
+    public void OnClickViewReportsButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("ViewReportsPage");
         if (applicationWindowController.getCurrentActiveController() instanceof ViewReportsPageController) {
             ((ViewReportsPageController) applicationWindowController.getCurrentActiveController()).start();

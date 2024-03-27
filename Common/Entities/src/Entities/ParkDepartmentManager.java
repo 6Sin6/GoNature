@@ -12,11 +12,12 @@ public class ParkDepartmentManager extends ParkEmployee implements Serializable 
 
     /**
      * Constructs a ParkDepartmentManager object with the specified parameters.
+     *
      * @param firstName    The first name of the department manager.
      * @param lastName     The last name of the department manager.
      * @param username     The username of the department manager.
      * @param password     The password of the department manager.
-     * @param emailAddress  The email address of the department manager.
+     * @param emailAddress The email address of the department manager.
      * @param park         The park associated with the department manager.
      * @param parks        The ParkBank object containing park access information.
      * @param departmentID The ID of the department managed by the department manager.
@@ -33,7 +34,7 @@ public class ParkDepartmentManager extends ParkEmployee implements Serializable 
      * Constructs a ParkDepartmentManager object with the specified parameters.
      *
      * @param user         The user object representing the department manager.
-     * @param emailAddress  The email address of the department manager.
+     * @param emailAddress The email address of the department manager.
      * @param park         The park associated with the department manager.
      * @param parks        The ParkBank object containing park access information.
      * @param departmentID The ID of the department managed by the department manager.

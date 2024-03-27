@@ -2,8 +2,8 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
-import CommonUtils.*;
 import CommonUtils.InputTextPopup;
 import Entities.Message;
 import Entities.OpCodes;
@@ -13,20 +13,16 @@ import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
-public abstract class GeneralEmployeeDashboard extends BaseController
-{
+public abstract class GeneralEmployeeDashboard extends BaseController {
     protected InputTextPopup popup;
 
-    public void cleanup()
-    {
+    public void cleanup() {
         // No cleanup required
     }
 
-    protected void onSubmit(String[] inputs)
-    {
+    protected void onSubmit(String[] inputs) {
         String orderID = inputs[0];
-        if (!CommonUtils.isValidOrderID(orderID))
-        {
+        if (!CommonUtils.isValidOrderID(orderID)) {
             popup.setErrorLabel("Invalid Order ID");
             return;
         }
@@ -34,8 +30,7 @@ public abstract class GeneralEmployeeDashboard extends BaseController
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -46,40 +41,35 @@ public abstract class GeneralEmployeeDashboard extends BaseController
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof String)) {
+        if (!(response.getMsgData() instanceof String)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 
         String answer = ClientCommunicator.msg.getMsgData().toString();
-        if (answer != null)
-        {
+        if (answer != null) {
             popup.setLabelColor("#FF0000");
             popup.setErrorLabel(answer);
-        }
-        else {
+        } else {
             popup.setLabelColor("#00FF00");
             popup.setErrorLabel("Order Exited Successfully!");
         }
     }
 
     @FXML
-    public void OnClickAvailableSpotButton(ActionEvent ignoredEvent)
-    {
+    public void OnClickAvailableSpotButton(ActionEvent ignoredEvent) {
         applicationWindowController.loadEmployeesPage("CheckAvailableSpotsPage");
     }
 
     @FXML
-    public void OnClickGenerateBillButton(ActionEvent ignoredEvent)
-    {
+    public void OnClickGenerateBillButton(ActionEvent ignoredEvent) {
         applicationWindowController.loadEmployeesPage("GenerateBillPage");
     }
 
 
     @FXML
-    void OnClickExitButton(ActionEvent ignoredEvent)
-    {
+    void OnClickExitButton(ActionEvent ignoredEvent) {
         popup = new InputTextPopup(new String[]{"Enter Order ID"}, this::onSubmit, 0, 0, true, true, false);
         popup.show(applicationWindowController.getRoot());
     }

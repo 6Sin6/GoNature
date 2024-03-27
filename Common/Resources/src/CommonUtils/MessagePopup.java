@@ -1,6 +1,5 @@
 package CommonUtils;
 
-import CommonClient.controllers.BaseController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;

@@ -2,12 +2,11 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,8 +18,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -64,7 +61,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
 
     private int rowIndex;
 
-    private ArrayList<Order> list= new ArrayList<>();
+    private ArrayList<Order> list = new ArrayList<>();
 
     public void cleanup() {
         rowIndex = -1;
@@ -105,8 +102,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
         ClientUI.client.accept(send);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -117,7 +113,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof ArrayList)) {
+        if (!(response.getMsgData() instanceof ArrayList)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -176,7 +172,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
     private ArrayList<Order> filterOrders(ArrayList<Order> orders) {
         ArrayList<Order> filteredOrders = new ArrayList<>();
         for (Order order : orders) {
-            if (order.getOrderStatus() ==OrderStatus.STATUS_PENDING_CONFIRMATION) {
+            if (order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION) {
                 filteredOrders.add(order);
             }
         }

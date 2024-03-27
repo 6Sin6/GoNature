@@ -3,15 +3,13 @@ package EmployeesControllers;
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
 import CommonUtils.CommonUtils;
-import CommonUtils.*;
+import CommonUtils.ConfirmationPopup;
 import Entities.Message;
 import Entities.OpCodes;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import CommonUtils.ConfirmationPopup;
 import javafx.scene.control.TextField;
 
 public class RegisterGroupGuideController extends BaseController {
@@ -31,21 +29,17 @@ public class RegisterGroupGuideController extends BaseController {
         lblErrorMsgID.setText("");
     }
 
-    private boolean isDetailsValid(String id)
-    {
+    private boolean isDetailsValid(String id) {
         return (CommonUtils.isValidID(id));
     }
 
-    private String getID()
-    {
+    private String getID() {
         return txtID.getText();
     }
 
     @FXML
-    void OnClickSubmitButton(ActionEvent ignoredEvent)
-    {
-        if (!isDetailsValid(getID()))
-        {
+    void OnClickSubmitButton(ActionEvent ignoredEvent) {
+        if (!isDetailsValid(getID())) {
             lblErrorMsgID.setText("Invalid ID");
             return;
         }
@@ -55,8 +49,7 @@ public class RegisterGroupGuideController extends BaseController {
 
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -67,7 +60,7 @@ public class RegisterGroupGuideController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof String)) {
+        if (!(response.getMsgData() instanceof String)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -81,8 +74,7 @@ public class RegisterGroupGuideController extends BaseController {
             updateMsg(msgAnswer, "#FF0000");
     }
 
-    private void updateMsg(String msg, String colorCode)
-    {
+    private void updateMsg(String msg, String colorCode) {
         lblErrorMsgGeneral.setText(msg);
         lblErrorMsgGeneral.setStyle("-fx-text-fill: " + colorCode + ";" +
                 "-fx-font-size: 14px; " +

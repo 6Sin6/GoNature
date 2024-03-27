@@ -2,8 +2,8 @@ package EmployeesControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -87,8 +87,7 @@ public class AuthorizeParksRequestsController extends BaseController {
 
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -99,7 +98,7 @@ public class AuthorizeParksRequestsController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof Boolean)) {
+        if (!(response.getMsgData() instanceof Boolean)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -154,8 +153,7 @@ public class AuthorizeParksRequestsController extends BaseController {
         Message response = ClientCommunicator.msg;
 
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -166,7 +164,7 @@ public class AuthorizeParksRequestsController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof ArrayList)) {
+        if (!(response.getMsgData() instanceof ArrayList)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;

@@ -80,12 +80,11 @@ public class HomePageController extends BaseController implements Initializable 
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
         OpCodes returnOpCode = response.getMsgOpcode();
-        if(returnOpCode == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+        if (returnOpCode == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
             onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
             return;
         }
-        if(returnOpCode == OpCodes.OP_DB_ERR)
-        {
+        if (returnOpCode == OpCodes.OP_DB_ERR) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -96,7 +95,7 @@ public class HomePageController extends BaseController implements Initializable 
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if(!(response.getMsgData() instanceof Order)) {
+        if (!(response.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -110,7 +109,7 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.setErrorLabel("");
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
-            if(order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
+            if (order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
                 onAuthPopup.setErrorLabel("Group Orders are not allowed to be updated without sign in !");
                 return;
             }
@@ -164,8 +163,7 @@ public class HomePageController extends BaseController implements Initializable 
                 onAuthPopup.setErrorLabel("Already Signed In !");
                 return;
             }
-            if(respondToSignIn.getMsgOpcode() == OpCodes.OP_DB_ERR)
-            {
+            if (respondToSignIn.getMsgOpcode() == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -184,8 +182,7 @@ public class HomePageController extends BaseController implements Initializable 
                 onAuthPopup.setErrorLabel("Error getting orders");
                 return;
             }
-            if(respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR)
-            {
+            if (respondMsg.getMsgOpcode() == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -196,7 +193,7 @@ public class HomePageController extends BaseController implements Initializable 
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
-            if(!(respondMsg.getMsgData() instanceof ArrayList)) {
+            if (!(respondMsg.getMsgData() instanceof ArrayList)) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;

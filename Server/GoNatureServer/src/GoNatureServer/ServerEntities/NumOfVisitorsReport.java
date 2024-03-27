@@ -2,7 +2,8 @@ package GoNatureServer.ServerEntities;
 
 import Entities.OrderType;
 import Entities.ParkReport;
-import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import org.jfree.chart.JFreeChart;
@@ -25,23 +26,19 @@ import java.util.ArrayList;
  * The NumOfVisitorsReport class represents a report detailing the number of visitors to a park.
  * It extends the ParkReport class and contains information about group and single orders.
  */
-public class NumOfVisitorsReport extends ParkReport implements Serializable
-{
+public class NumOfVisitorsReport extends ParkReport implements Serializable {
     private final ResultSet reportData;
     private final int[][] amountPerDay; // total per day of each order type
     private final int[] totalPerType; // total of visitors per order type.
 
 
-
-
     /**
      * Constructs a new NumOfVisitorsReport with the specified park ID and report data.
      *
-     * @param parkID The ID of the park.
+     * @param parkID    The ID of the park.
      * @param resultSet The report data.
      */
-    public NumOfVisitorsReport(Integer parkID, String parkName, ResultSet resultSet) throws DocumentException, IOException, SQLException
-    {
+    public NumOfVisitorsReport(Integer parkID, String parkName, ResultSet resultSet) throws DocumentException, IOException, SQLException {
         super(parkID, parkName);
         this.amountPerDay = new int[this.getAmountOfOrderTypes()][31];
         this.totalPerType = new int[this.getAmountOfOrderTypes()];
@@ -64,31 +61,25 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
     /**
      * Returns the number of order types in the system.
      *
      * @return the number of order types
      */
-    private int getAmountOfOrderTypes()
-    {
+    private int getAmountOfOrderTypes() {
         return OrderType.values().length;
     }
-
-
 
 
     /**
      * Returns the data for the specified order type and day of the month.
      *
-     * @param orderType The order type.
+     * @param orderType  The order type.
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
      */
-    private int getData(int orderType, int dayOfOrder)
-    {
+    private int getData(int orderType, int dayOfOrder) {
         if (orderType < 1 || orderType > this.getAmountOfOrderTypes() || dayOfOrder < 1 || dayOfOrder > 31)
             throw new IllegalArgumentException("Invalid order type or day");
 
@@ -96,22 +87,17 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
     /**
      * Returns the data for the specified order type and day of the month.
      *
-     * @param orderType The order type.
+     * @param orderType  The order type.
      * @param dayOfOrder The day of the month.
      * @return The number of visitors for the specified order type and day.
      * @throws IllegalArgumentException If the order type or day is invalid.
      */
-    private int getData(OrderType orderType, int dayOfOrder)
-    {
+    private int getData(OrderType orderType, int dayOfOrder) {
         return this.getData(orderType.getOrderType(), dayOfOrder);
     }
-
-
 
 
     /**
@@ -121,8 +107,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @return The total number of visitors for the specified order type.
      * @throws IllegalArgumentException If the order type is invalid.
      */
-    private int getTotalPerType(int orderType)
-    {
+    private int getTotalPerType(int orderType) {
         if (orderType < 1 || orderType > this.getAmountOfOrderTypes())
             throw new IllegalArgumentException("Invalid order type or day");
 
@@ -130,8 +115,6 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
     /**
      * Returns the total number of visitors for the specified order type.
      *
@@ -139,13 +122,9 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @return The total number of visitors for the specified order type.
      * @throws IllegalArgumentException If the order type is invalid.
      */
-    private int getTotalPerType(OrderType orderType)
-    {
+    private int getTotalPerType(OrderType orderType) {
         return this.getTotalPerType(orderType.getOrderType());
     }
-
-
-
 
 
     /**
@@ -154,12 +133,11 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      *
      * @return A Blob object representing the PDF version of the report.
      * @throws DocumentException If there is an error while creating the PDF document.
-     * @throws SQLException If there is an error while converting the PDF to a Blob.
-     * @throws IOException If there is an error while handling the PDF file.
-     * */
+     * @throws SQLException      If there is an error while converting the PDF to a Blob.
+     * @throws IOException       If there is an error while handling the PDF file.
+     */
     @Override
-    public Blob createPDFBlob() throws DocumentException, SQLException, IOException
-    {
+    public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
         String title_Document = "Number of Visitors Report - Park: " + super.getParkName();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -211,15 +189,12 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
     /**
      * Creates a  grouped column chart with JFreeChart based on the data in the specified reportData 2D int array.
      *
      * @return The JFreeChart object representing the chart.
      */
-    private JFreeChart createBarChart()
-    {
+    private JFreeChart createBarChart() {
         // Definitions
         int data, maxAmount = 0;
         // Initialize dataset for the pie chart
@@ -233,10 +208,8 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         String yAxisTitle = "Amount of Visitors";
 
         // Iterate through the days of the current month
-        for (int day = 1; day <= 31; day++)
-        {
-            for (OrderType orderType : OrderType.values())
-            {
+        for (int day = 1; day <= 31; day++) {
+            for (OrderType orderType : OrderType.values()) {
                 data = this.getData(orderType, day); // Retrieve data
                 dataset.addValue(data, orderType.toString(), String.valueOf(day)); // Add to dataset
                 maxAmount = Math.max(maxAmount, data); // Get max
@@ -248,16 +221,12 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
-
     /**
      * Creates a pie chart with JFreeChart based on the data in the specified reportData 2D int array.
      *
      * @return The JFreeChart object representing the pie chart.
      */
-    private JFreeChart createPieChart()
-    {
+    private JFreeChart createPieChart() {
         // Initialize dataset for the pie chart
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         // Initialize title
@@ -271,15 +240,13 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
-
     /**
      * Creates a table with the data in the specified ResultSet.
+     *
      * @param orderType The order type to display in the table.
      * @return The PdfPTable object representing the table.
      */
-    private PdfPTable createTable(int orderType) throws SQLException
-    {
+    private PdfPTable createTable(int orderType) throws SQLException {
         // Columns of table
         ArrayList<String> columns = new ArrayList<>();
         columns.add("Visitation Date");
@@ -290,8 +257,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
         PdfPTable table = super.createTable(columns, 100);
 
         // Collecting Data for table
-        while (this.reportData.next())
-        {
+        while (this.reportData.next()) {
             int orderTypeRes = reportData.getInt("OrderType");
             if (orderTypeRes == orderType) // Checking if it's the right order type.
             {
@@ -309,7 +275,6 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
     }
 
 
-
     /**
      * Creates a table with the data in the specified ResultSet.
      *
@@ -317,8 +282,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
      * @return The PdfPTable object representing the table.
      * @throws SQLException If there is an error while retrieving the data.
      */
-    private PdfPTable createTable(OrderType orderType) throws SQLException
-    {
+    private PdfPTable createTable(OrderType orderType) throws SQLException {
         return this.createTable(orderType.getOrderType());
     }
 }

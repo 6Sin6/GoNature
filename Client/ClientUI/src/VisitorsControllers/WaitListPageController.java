@@ -2,8 +2,8 @@ package VisitorsControllers;
 
 import CommonClient.ClientUI;
 import CommonClient.controllers.BaseController;
+import CommonUtils.CommonUtils;
 import CommonUtils.ConfirmationPopup;
-import CommonUtils.*;
 import Entities.*;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-import javax.naming.CommunicationException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
@@ -78,7 +77,7 @@ public class WaitListPageController extends BaseController implements Initializa
     }
 
     @FXML
-    public void OnClickSignUpButton(ActionEvent actionEvent)  {
+    public void OnClickSignUpButton(ActionEvent actionEvent) {
         User user = applicationWindowController.getUser();
         if (user instanceof SingleVisitor) {
             Order temporder = order;
@@ -87,14 +86,12 @@ public class WaitListPageController extends BaseController implements Initializa
             ClientUI.client.accept(msg);
             Message respondMsg = ClientCommunicator.msg;
             OpCodes returnOpCode = respondMsg.getMsgOpcode();
-            if(returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST)
-            {
+            if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
-            if(returnOpCode == OpCodes.OP_DB_ERR)
-            {
+            if (returnOpCode == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -105,7 +102,7 @@ public class WaitListPageController extends BaseController implements Initializa
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
-            if(!(respondMsg.getMsgData() instanceof Order)) {
+            if (!(respondMsg.getMsgData() instanceof Order)) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -127,8 +124,7 @@ public class WaitListPageController extends BaseController implements Initializa
             Message respondMsg = ClientCommunicator.msg;
 
             OpCodes returnOpCode = respondMsg.getMsgOpcode();
-            if(returnOpCode == OpCodes.OP_DB_ERR)
-            {
+            if (returnOpCode == OpCodes.OP_DB_ERR) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
@@ -139,7 +135,7 @@ public class WaitListPageController extends BaseController implements Initializa
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
             }
-            if(!(respondMsg.getMsgData() instanceof Order)) {
+            if (!(respondMsg.getMsgData() instanceof Order)) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;

@@ -14,11 +14,11 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Constructs a VisitorGroupGuide with the provided user information.
      * Initializes the OrderBank for group orders.
      *
-     * @param user        The user information.
+     * @param user         The user information.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
      */
     public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName) {
         super(user, emailAddress, ID, firstName, lastName);
@@ -30,12 +30,12 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Constructs a VisitorGroupGuide with the provided user information and existing orders.
      * Validates if the provided orders are for group type orders.
      *
-     * @param user        The user information.
+     * @param user         The user information.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
-     * @param orders      The existing orders to be associated with the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
+     * @param orders       The existing orders to be associated with the group guide.
      * @throws IllegalArgumentException if the provided orders are not for group type orders.
      */
     public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
@@ -51,12 +51,12 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Constructs a VisitorGroupGuide with the provided user information and a group order.
      * Validates if the provided order is for a group type order.
      *
-     * @param user        The user information.
+     * @param user         The user information.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
-     * @param order       The group order associated with the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
+     * @param order        The group order associated with the group guide.
      * @throws IllegalArgumentException if the provided order is not for a group type order.
      */
     public VisitorGroupGuide(User user, String emailAddress, String ID, String firstName, String lastName, Order order) {
@@ -71,12 +71,12 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
     /**
      * Constructs a VisitorGroupGuide with the provided user credentials and initializes an OrderBank for group orders.
      *
-     * @param username    The username of the group guide.
-     * @param password    The password of the group guide.
+     * @param username     The username of the group guide.
+     * @param password     The password of the group guide.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
      */
     public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName) {
         super(username, password, emailAddress, ID, firstName, lastName);
@@ -89,13 +89,13 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Constructs a VisitorGroupGuide with the provided user credentials and existing orders.
      * Validates if the provided orders are for group type orders.
      *
-     * @param username    The username of the group guide.
-     * @param password    The password of the group guide.
+     * @param username     The username of the group guide.
+     * @param password     The password of the group guide.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
-     * @param orders      The existing orders to be associated with the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
+     * @param orders       The existing orders to be associated with the group guide.
      * @throws IllegalArgumentException if the provided orders are not for group type orders.
      */
     public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName, OrderBank orders) {
@@ -111,13 +111,13 @@ public class VisitorGroupGuide extends AbstractVisitor implements Serializable {
      * Constructs a VisitorGroupGuide with the provided user credentials and a group order.
      * Validates if the provided order is for a group type order.
      *
-     * @param username    The username of the group guide.
-     * @param password    The password of the group guide.
+     * @param username     The username of the group guide.
+     * @param password     The password of the group guide.
      * @param emailAddress The email address of the group guide.
-     * @param ID          The ID of the group guide.
-     * @param firstName   The first name of the group guide.
-     * @param lastName    The last name of the group guide.
-     * @param order       The group order associated with the group guide.
+     * @param ID           The ID of the group guide.
+     * @param firstName    The first name of the group guide.
+     * @param lastName     The last name of the group guide.
+     * @param order        The group order associated with the group guide.
      * @throws IllegalArgumentException if the provided order is not for a group type order.
      */
     public VisitorGroupGuide(String username, String password, String emailAddress, String ID, String firstName, String lastName, Order order) {

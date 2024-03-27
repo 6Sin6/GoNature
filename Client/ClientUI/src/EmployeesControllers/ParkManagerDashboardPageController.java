@@ -32,8 +32,7 @@ public class ParkManagerDashboardPageController extends BaseController {
     }
 
     @FXML
-    public void OnClickChangeParkParametersButton(ActionEvent event)
-    {
+    public void OnClickChangeParkParametersButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("RequestSettingParkParametersPage");
         if (applicationWindowController.getCurrentActiveController() instanceof RequestSettingParkParametersController) {
             ((RequestSettingParkParametersController) applicationWindowController.getCurrentActiveController()).getParkParameters();
@@ -41,16 +40,15 @@ public class ParkManagerDashboardPageController extends BaseController {
     }
 
     @FXML
-    public void OnClickIssueReportsButton(ActionEvent event)
-    {
+    public void OnClickIssueReportsButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("IssueReportsPage");
         if (applicationWindowController.getCurrentActiveController() instanceof IssueReportsController) {
             ((IssueReportsController) applicationWindowController.getCurrentActiveController()).start();
         }
     }
+
     @FXML
-    public void OnClickViewReportsButton(ActionEvent event)
-    {
+    public void OnClickViewReportsButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("ViewReportsPage");
         if (applicationWindowController.getCurrentActiveController() instanceof ViewReportsPageController) {
             ((ViewReportsPageController) applicationWindowController.getCurrentActiveController()).start();
