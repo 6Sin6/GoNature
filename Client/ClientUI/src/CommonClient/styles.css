@@ -135,3 +135,40 @@
 #billPane Text, #rootBillPane Text {
     -fx-fill: #000000;
 }
+
+
+
+
+.combo-box {
+    -fx-background-color: #8ad597; /* Lighter background color */
+    -fx-border-color: #2C8052FF; /* Border color */
+    -fx-border-radius: 3px; /* Border radius */
+    -fx-padding: 5px; /* Padding */
+    -fx-text-fill: white; /* Text color */
+}
+
+.combo-box .arrow {
+    -fx-background-color: #ffffff; /* Arrow background color */
+    -fx-shape: "M 0 0 L 5 5 L 10 0 Z"; /* Default arrow shape */
+    -fx-rotate: 0; /* Initial rotation angle */
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent; /* Arrow button background color */
+}
+
+.combo-box .list-cell {
+    -fx-padding: 5px; /* Padding for list cells */
+}
+
+.combo-box .list-view {
+    -fx-background-color: #77c97f; /* Background color for the dropdown */
+    -fx-border-color: #53c157; /* Border color for the dropdown */
+    -fx-border-radius: 10px; /* Border radius for the dropdown */
+}
+
+
+
+
+
+
