@@ -8,10 +8,7 @@ import com.itextpdf.text.DocumentException;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 import static CommonUtils.CommonUtils.getNextWeekHours;
@@ -1054,11 +1051,27 @@ public class DBConnection {
      * @return A ResultSet containing all park IDs associated with the specified department.
      * Returns null if there is an error.
      */
-    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException {
+    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException
+    {
         String parkTableName = this.schemaName + ".parks";
         String parkWhereClause = "departmentID='" + departmentID + "'";
         return dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
     }
+
+    public Map<String, String> getParksByDepartment(Integer departmentID) throws SQLException
+    {
+        String parkTableName = this.schemaName + ".parks";
+        String parkWhereClause = "departmentID='" + departmentID + "'";
+        ResultSet results = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID, ParkName");
+        Map<String, String> parks = new HashMap<>();
+        while (results.next())
+        {
+            parks.put(results.getString("ParkID"), results.getString("ParkName"));
+        }
+        return parks;
+    }
+
+
 
     /**
      * Retrieves all park IDs associated with a specific department.
