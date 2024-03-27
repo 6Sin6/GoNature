@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -197,6 +194,12 @@ public class GoNatureServer extends AbstractServer {
                 case OP_CREATE_SPOTANEOUS_ORDER:
                     handleCreateSpotaneousOrder(message, client);
                     break;
+                case OP_GET_PARK_NAME_BY_PARK_ID:
+                    handleGetParkNameByParkID(message, client);
+                    break;
+                case OP_GET_PARKS_BY_DEPARTMENT:
+                    handleGetParksByDepartment(message, client);
+                    break;
                 case OP_GET_DEPARTMENT_MANAGER_PARKS:
                     handleGetDepartmentParkNames(message, client);
                     break;
@@ -222,6 +225,24 @@ public class GoNatureServer extends AbstractServer {
         catch (Exception e) {
             controller.addtolog("Error occured on Server : " + e.getMessage());
         }
+    }
+
+    private void handleGetParksByDepartment(Message message, ConnectionToClient client) throws SQLException, IOException
+    {
+        String departmentID = (String) message.getMsgData();
+        Map<String, String> parks = db.getParksByDepartment(Integer.parseInt(departmentID));
+        Message respondMsg = new Message(OpCodes.OP_GET_PARKS_BY_DEPARTMENT, message.getMsgUserName(), parks);
+
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleGetParkNameByParkID(Message message, ConnectionToClient client) throws IOException
+    {
+        String parkID = (String) message.getMsgData();
+        String parkName = db.getParkNameByID(Integer.parseInt(parkID));
+        Message respondMsg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, message.getMsgUserName(), parkName);
+
+        client.sendToClient(respondMsg);
     }
 
     private void handleSyncHandshake(Message message, ConnectionToClient client) throws IOException {

@@ -8,10 +8,7 @@ import com.itextpdf.text.DocumentException;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 import static CommonUtils.CommonUtils.getNextWeekHours;
@@ -1070,11 +1067,27 @@ public class DBConnection {
      * @return A ResultSet containing all park IDs associated with the specified department.
      * Returns null if there is an error.
      */
-    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException {
+    private ResultSet getDepartmentParkIDs(String departmentID) throws SQLException
+    {
         String parkTableName = this.schemaName + ".parks";
         String parkWhereClause = "departmentID='" + departmentID + "'";
         return dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
     }
+
+    public Map<String, String> getParksByDepartment(Integer departmentID) throws SQLException
+    {
+        String parkTableName = this.schemaName + ".parks";
+        String parkWhereClause = "departmentID='" + departmentID + "'";
+        ResultSet results = dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID, ParkName");
+        Map<String, String> parks = new HashMap<>();
+        while (results.next())
+        {
+            parks.put(results.getString("ParkID"), results.getString("ParkName"));
+        }
+        return parks;
+    }
+
+
 
     /**
      * Retrieves all park IDs associated with a specific department.
@@ -1136,11 +1149,49 @@ public class DBConnection {
     }
 
 
-    public boolean generateUsageReport(int parkID) throws Exception {
+
+    public boolean generateUsageReport(int parkID)
+    {
         try {
             // Definitions
             int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
             String orderStatus = "'" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "'";
+
+            String tableName_Orders = this.schemaName + ".orders";
+            String whereClause_Orders = "MONTH (EnteredTime) = " + month + " AND orderStatus IN (" + orderStatus + ") AND ParkID = " + parkID;
+            String orderByClause_Orders = " ORDER BY EnteredTime";
+
+            String reportName = "usage";
+            String parkName = getParkNameByID(parkID);
+            if (parkName == null)
+                return false;
+
+            Object capacityInfo = this.getParkMaxCapacityInSpecificMonth(parkID, month);
+            if (capacityInfo == null)
+                return false;
+
+            // Retrieving data from DB
+            ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "EnteredTime, ExitedTime, NumOfVisitors");
+
+            // Building report entity and blob.
+            UsageReport report = new UsageReport(parkID, parkName, results, capacityInfo);
+            Blob generatedBlob = report.createPDFBlob();
+            results.close();
+
+            return handleInsertionParkReports(String.valueOf(parkID), reportName, generatedBlob);
+        } catch (SQLException | DocumentException | IOException e) {
+            this.serverController.addtolog(e.getMessage());
+            return false;
+        }
+    }
+
+
+    /*
+    public boolean generateUsageReport(int parkID)
+    {
+        try {
+            // Definitions
+            int month = LocalDate.now().getMonthValue(), year = LocalDate.now().getYear();
 
             String tableName_Orders = this.schemaName + ".park_capacity_info";
             String whereClause_Orders = "ParkID = " + parkID + " AND Month = " + month;
@@ -1155,7 +1206,6 @@ public class DBConnection {
             ResultSet results = dbController.selectRecordsFields(tableName_Orders, whereClause_Orders + orderByClause_Orders, "capacity, Day");
 
             // Building report entity and blob.
-
             UsageReport report = new UsageReport(parkID, parkName, results);
             Blob generatedBlob = report.createPDFBlob();
             results.close();
@@ -1165,18 +1215,52 @@ public class DBConnection {
             this.serverController.addtolog(e.getMessage());
             throw e;
         }
-    }
+    }*/
 
-    private String getParkNameByID(Integer parkID) throws Exception {
+    public String getParkNameByID(Integer parkID)
+    {
         try {
             String tableName = this.schemaName + ".parks";
             String whereClause = "ParkID = " + parkID;
-            ResultSet rs = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
-            if (rs.next())
-                return rs.getString("ParkName");
-        } catch (SQLException e) {
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ParkName");
+            if (results.next())
+                return results.getString("ParkName");
+        }
+        catch (SQLException e)
+        {
             this.serverController.addtolog(e.getMessage());
-            throw e;
+        }
+        return null;
+    }
+
+
+    private Object getParkMaxCapacityInSpecificMonth(Integer parkID, int month)
+    {
+        try
+        {
+            String tableName = this.schemaName + ".park_parameters_requests";
+            int parameter = ParkParameters.PARK_CAPACITY.getParameterVal();
+            int status = RequestStatus.REQUEST_ACCEPTED.getRequestStatus();
+            String whereClause = "ParkID = " + parkID + " AND parameter = " + parameter + " AND status = " + status + " AND MONTH(handleDate) = " + month;
+            String orderByClause = " ORDER BY handleDate";
+            ResultSet results = dbController.selectRecordsFields(tableName, whereClause + orderByClause, "requestedValue, handleDate");
+
+            if (results.next())
+            {
+                results.beforeFirst();
+                return results;
+            }
+            else
+            {
+                tableName = this.schemaName + ".parks";
+                whereClause = "ParkID = " + parkID;
+                results = dbController.selectRecordsFields(tableName, whereClause, "Capacity");
+                return Integer.valueOf(results.getInt("Capacity"));
+            }
+        }
+        catch (SQLException e)
+        {
+            this.serverController.addtolog(e.getMessage());
         }
         return null;
     }

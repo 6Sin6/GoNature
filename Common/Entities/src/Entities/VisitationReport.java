@@ -256,11 +256,11 @@ public class VisitationReport extends DepartmentReport implements Serializable {
             if (orderTypeRes != orderType) {
                 continue;
             }
-            table.addCell(this.createCenterCell(String.valueOf(entranceData.getInt("ParkID"))));
-            table.addCell(this.createCenterCell(entranceData.getString("ParkName")));
-            table.addCell(this.createCenterCell(String.valueOf(entranceData.getTimestamp("EntranceTime"))));
-            table.addCell(this.createCenterCell(String.valueOf(entranceData.getTimestamp("ReservationTime"))));
-            table.addCell(this.createCenterCell(parseVisitTime(entranceData.getTimestamp("TimeSpent"))));
+            table.addCell(super.createCenterCell(String.valueOf(entranceData.getInt("ParkID"))));
+            table.addCell(super.createCenterCell(entranceData.getString("ParkName")));
+            table.addCell(super.createCenterCell(String.valueOf(entranceData.getTimestamp("EntranceTime"))));
+            table.addCell(super.createCenterCell(String.valueOf(entranceData.getTimestamp("ReservationTime"))));
+            table.addCell(super.createCenterCell(parseVisitTime(entranceData.getTimestamp("TimeSpent"))));
         }
 
         return table;

@@ -27,9 +27,6 @@ public class IssueReportsController extends BaseController {
     private ComboBox<String> reportCmb;
 
     @FXML
-    private ComboBox<String> parkCmb;
-
-    @FXML
     private ImageView imgLoading;
 
     private boolean parkManagerPage = false;
@@ -40,8 +37,6 @@ public class IssueReportsController extends BaseController {
         generateResultMsg.setText("");
         reportCmb.getSelectionModel().clearSelection();
         reportCmb.getItems().clear();
-        parkCmb.getSelectionModel().clearSelection();
-        parkCmb.getItems().clear();
     }
 
     private boolean isDepartmentManager()
@@ -54,15 +49,16 @@ public class IssueReportsController extends BaseController {
         if (this.isDepartmentManager()) // Department manager connected
         {
             reportCmb.getItems().addAll(Utils.departmentReportsMap.keySet());
-            parkCmb.setVisible(false);
-        } else { // Park manager connected
-            parkCmb.setValue(ParkBank.getParkNameByID(((ParkManager) applicationWindowController.getUser()).getParkID()));
-            parkManagerPage = true;
-            parkCmb.setDisable(true);
-            reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
         }
+        else // Park manager connected
+        {
+            reportCmb.getItems().addAll(Utils.parkManagerReportsMap.keySet());
+            parkManagerPage = true;
+        }
+
         reportCmb.setValue(reportCmb.getItems().get(0));
     }
+
 
     @FXML
     void onClickGenerateReport(ActionEvent ignoredEvent)
@@ -74,7 +70,7 @@ public class IssueReportsController extends BaseController {
         String selectedReport = reportCmb.getValue();
         String reportType;
 
-        if (!this.parkManagerPage && Utils.departmentReportsMap.get(selectedReport) != null)
+        if (!this.parkManagerPage)
             reportType = Utils.departmentReportsMap.get(selectedReport);
         else reportType = Utils.parkManagerReportsMap.get(selectedReport);
 

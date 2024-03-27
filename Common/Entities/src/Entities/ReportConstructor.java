@@ -9,8 +9,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
@@ -28,6 +30,7 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 /**
@@ -45,7 +48,7 @@ public abstract class ReportConstructor
      * @throws DocumentException If an error occurs while loading the custom font.
      * @throws IOException If an error occurs while reading the font file.
      */
-    public ReportConstructor() throws DocumentException, IOException
+    protected ReportConstructor() throws DocumentException, IOException
     {
         customFontPath = "/fonts/Roboto-Regular.ttf";
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -73,7 +76,7 @@ public abstract class ReportConstructor
      * @param includeDate Whether to include the current date in the paragraph.
      * @return The Paragraph object representing the paragraph.
      */
-    public Paragraph createPDFTitle(String text, Font font, boolean center, int spacing, boolean includeDate)
+    protected Paragraph createPDFTitle(String text, Font font, boolean center, int spacing, boolean includeDate)
     {
         text = includeDate ? text + " - " + LocalDate.now() : text;
         Paragraph title = new Paragraph(text, font);
@@ -82,6 +85,11 @@ public abstract class ReportConstructor
         }
         title.setSpacingAfter(spacing);
         return title;
+    }
+
+    protected Paragraph createPDFTitle(String title)
+    {
+        return (this.createPDFTitle(title, titleFont, true, 25, false));
     }
 
 
@@ -94,7 +102,7 @@ public abstract class ReportConstructor
      * @param text The text to display in the cell.
      * @return The PdfPCell object representing the cell.
      */
-    public PdfPCell createCenterCell(String text) {
+    protected PdfPCell createCenterCell(String text) {
         PdfPCell cell = new PdfPCell(new Phrase(text));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
@@ -112,7 +120,7 @@ public abstract class ReportConstructor
      * @throws DocumentException If an error occurs while creating the PDF document.
      * @throws IOException If an error occurs while writing to the output stream.
      */
-    public Document createPDFDocument(String documentTitle, ByteArrayOutputStream outputStream) throws DocumentException
+    protected Document createPDFDocument(String documentTitle, ByteArrayOutputStream outputStream) throws DocumentException
     {
         // Create PDF document
         Document document = new Document(PageSize.A2.rotate());
@@ -139,7 +147,7 @@ public abstract class ReportConstructor
      * @throws IOException If an error occurs while writing the chart to a byte array.
      * @throws DocumentException If an error occurs while adding the chart to the PDF document.
      */
-    public void addJFreeChartToDocument(Document document, JFreeChart chart, int width, int height) throws IOException, DocumentException
+    protected void addJFreeChartToDocument(Document document, JFreeChart chart, int width, int height) throws IOException, DocumentException
     {
         ByteArrayOutputStream chartOutputStream = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(chartOutputStream, chart, width, height);
@@ -158,7 +166,7 @@ public abstract class ReportConstructor
      * @param title The title of the table.
      * @return The PdfPCell object representing the cell.
      */
-    public PdfPCell createSingleCellWithTitleAndTable(PdfPTable table, String title)
+    protected PdfPCell createSingleCellWithTitleAndTable(PdfPTable table, String title)
     {
         PdfPCell singleCell = new PdfPCell();
         singleCell.addElement(this.createPDFTitle(title, titleFont, true, 25, false));
@@ -176,7 +184,7 @@ public abstract class ReportConstructor
      * @param text The text to display in the title.
      * @return The PdfPCell object representing the cell.
      */
-    public PdfPCell createSingleCellWithTitle(String text)
+    protected PdfPCell createSingleCellWithTitle(String text)
     {
         PdfPCell titleCell = new PdfPCell();
         titleCell.addElement(this.createPDFTitle(text, this.titleFont, true, 0, true));
@@ -197,7 +205,7 @@ public abstract class ReportConstructor
      * @param secondBarColor the color of the second bar
      * @return the bar chart
      */
-    public JFreeChart createBarChart(DefaultCategoryDataset dataset, double maxValue, String title,
+    protected JFreeChart createBarChart(DefaultCategoryDataset dataset, double maxValue, String title,
                                      String xAxisTitle, String yAxisTitle, Color firstBarColor, Color secondBarColor)
     {
         // Create the chart
@@ -244,7 +252,7 @@ public abstract class ReportConstructor
      * @param title the title of the chart
      * @return the pie chart
      */
-    public JFreeChart createPieChart(DefaultPieDataset dataset, String title)
+    protected JFreeChart createPieChart(DefaultPieDataset dataset, String title)
     {
         JFreeChart chart = ChartFactory.createPieChart(
                 title, // Chart title
@@ -275,7 +283,7 @@ public abstract class ReportConstructor
      * @param widthPercentage the width of the table as a percentage of the page width
      * @return a PdfPTable object representing the table
      */
-    public PdfPTable createTable(ArrayList<String> columns, int widthPercentage)
+    protected PdfPTable createTable(ArrayList<String> columns, int widthPercentage)
     {
         PdfPTable table = new PdfPTable(columns.size());
         table.setWidthPercentage(widthPercentage);
@@ -292,4 +300,29 @@ public abstract class ReportConstructor
 
         return table;
     }
+
+
+
+    /**
+     * Returns the current month as a two-digit string, padded with leading zeros if necessary.
+     *
+     * @return the current month as a two-digit string
+     */
+    protected String getCurrentMonth()
+    {
+        return String.format("%02d", Calendar.getInstance().get(Calendar.MONTH) + 1);
+    }
+
+
+
+    /**
+     * Returns the current day of the month as an integer.
+     *
+     * @return the current day of the month as an integer
+     */
+    protected int getCurrentDay()
+    {
+        return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+    }
+
 }
