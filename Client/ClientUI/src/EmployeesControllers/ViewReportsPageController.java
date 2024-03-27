@@ -214,13 +214,7 @@ public class ViewReportsPageController extends BaseController
 
         errMsg.setText("");
         String bodyId = "";
-        Map<String, String> map = this.getParksNames();
-        if (map == null)
-        {
-            cleanup();
-            errMsg.setText("error getting park names");
-            return;
-        }
+
         // Park manager cannot select a department report, this is why the else clause is valid.
         // Nothing here is a best practice, sue me...
         if (!parkManagerPage && isDepartmentReport)
@@ -229,7 +223,15 @@ public class ViewReportsPageController extends BaseController
         } else if (!isDepartmentReport)
         {
             if (!parkManagerPage)
+            {
+                Map<String, String> map = this.getParksNames();
+                if (map == null) {
+                    cleanup();
+                    errMsg.setText("error getting park names");
+                    return;
+                }
                 bodyId = this.getKeyFromValue(map, parkCmb.getValue());
+            }
 
             else bodyId = this.getParkID();
         }

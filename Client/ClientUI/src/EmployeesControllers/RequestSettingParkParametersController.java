@@ -51,7 +51,8 @@ public class RequestSettingParkParametersController extends BaseController imple
         }
     }
 
-    public void cleanup() {
+    public void cleanup()
+    {
         lblErrorMsg.setText("");
         lblSuccessMsg.setText("");
         txtDifferenceOrdersVisitors.setText("");
@@ -93,7 +94,9 @@ public class RequestSettingParkParametersController extends BaseController imple
         // Might as well set the park to the user.
         user.setPark(park);
 
-        cmbMaxVisitation.setValue(parseVisitTime(park.getDefaultVisitationTime()));
+
+        int localDateTime = park.getDefaultVisitationTime().toLocalDateTime().getHour();
+        cmbMaxVisitation.setValue(String.valueOf(localDateTime));
         txtParkCapacity.setText(String.valueOf(park.getCapacity()));
         txtDifferenceOrdersVisitors.setText(String.valueOf(park.getGapVisitorsCapacity()));
     }
