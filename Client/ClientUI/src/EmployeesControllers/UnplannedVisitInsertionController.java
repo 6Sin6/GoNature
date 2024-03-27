@@ -4,10 +4,10 @@ import CommonClient.controllers.BaseController;
 import CommonUtils.CommonUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class UnplannedVisitInsertionController extends BaseController {
@@ -22,7 +22,7 @@ public class UnplannedVisitInsertionController extends BaseController {
     private Label lblErrorMsg;
 
     @FXML
-    private MFXTextField txtNumOfVisitors;
+    private TextField txtNumOfVisitors;
 
     @FXML
     private Text txtResult;

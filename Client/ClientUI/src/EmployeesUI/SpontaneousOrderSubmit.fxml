@@ -12,11 +12,11 @@
 
 <Pane id="rootBillPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.SpontaneousOrderSubmitController">
     <children>
-      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="/assets/parkEmployeeBackground.jpg" />
-         </image>
-      </ImageView>
+        <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@../../../../Common/Resources/src/assets/parkEmployeeBackground.jpg" />
+        </image>
+        </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="339.0" layoutX="42.0" layoutY="191.0" stroke="BLACK" strokeType="INSIDE" width="407.0" />
         <Text layoutX="252.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spontaneous Order" textAlignment="CENTER" wrappingWidth="496.873046875">
             <font>
