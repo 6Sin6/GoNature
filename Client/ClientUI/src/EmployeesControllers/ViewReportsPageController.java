@@ -5,7 +5,6 @@ import CommonClient.Utils;
 import CommonClient.controllers.BaseController;
 import Entities.*;
 import client.ClientCommunicator;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -18,13 +17,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.List;
 
 import static CommonClient.Utils.getNumberFromMonthName;
 
-public class ViewReportsPageController extends BaseController {
-    @FXML
-    private MFXButton btnViewReport;
+public class ViewReportsPageController extends BaseController
+{
 
     @FXML
     private Label errMsg;
@@ -77,10 +74,9 @@ public class ViewReportsPageController extends BaseController {
         ClientUI.client.accept(message);
 
         Message response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() != OpCodes.OP_GET_PARK_NAME_BY_PARK_ID) {
+        if (response.getMsgOpcode() != OpCodes.OP_GET_PARK_NAME_BY_PARK_ID)
             viewResultMsg.setText("Something went wrong... Please try again later");
-            throw new CommunicationException("Failed to load report.");
-        }
+
         return (String) response.getMsgData();
     }
 
@@ -94,10 +90,9 @@ public class ViewReportsPageController extends BaseController {
             ClientUI.client.accept(msg);
 
             Message response = ClientCommunicator.msg;
-            if (response.getMsgOpcode() != OpCodes.OP_GET_PARKS_BY_DEPARTMENT) {
+            if (response.getMsgOpcode() != OpCodes.OP_GET_PARKS_BY_DEPARTMENT)
                 viewResultMsg.setText("Something went wrong... Please try again later");
-                throw new CommunicationException("Failed to load report.");
-            }
+
             parkNamesMap = (HashMap<String, String>) response.getMsgData();
         }
 

@@ -51,7 +51,7 @@
                   <Font size="14.0" />
                </font></Label>
             <ComboBox fx:id="monthCmb" layoutX="80.0" layoutY="330.0" prefHeight="40.0" prefWidth="150.0" />
-            <MFXButton fx:id="btnViewReport" buttonType="RAISED" layoutX="80.0" layoutY="400.0" onAction="#onClickViewReport" prefHeight="50.0" prefWidth="332.0" styleClass="actButtonGreen" text="View Report">
+            <MFXButton buttonType="RAISED" layoutX="80.0" layoutY="400.0" onAction="#onClickViewReport" prefHeight="50.0" prefWidth="332.0" styleClass="actButtonGreen" text="View Report">
                <font>
                   <Font size="18.0" />
                </font></MFXButton>
