@@ -72,6 +72,7 @@ public class IssueReportsController extends BaseController {
         btnGenerateReport.setDisable(true);
         generateResultMsg.setText("Generating report...");
         imgLoading.setVisible(true);
+        applicationWindowController.toggleMenuButtons(true);
 
         String selectedReport = reportCmb.getValue();
         String reportType;
@@ -96,7 +97,7 @@ public class IssueReportsController extends BaseController {
 
         generateReportTask.setOnSucceeded(event -> {
             btnGenerateReport.setDisable(false);
-
+            applicationWindowController.toggleMenuButtons(false);
             imgLoading.setVisible(false);
 
             Message response = ClientCommunicator.msg;
@@ -113,6 +114,21 @@ public class IssueReportsController extends BaseController {
                 }
             }
         });
+
+        generateReportTask.setOnFailed(event ->
+        {
+            generateResultMsg.setText("");
+            errMsg.setText("Failed to generate report");
+            applicationWindowController.toggleMenuButtons(false);
+        });
+
+        generateReportTask.setOnCancelled(event ->
+        {
+            generateResultMsg.setText("");
+            errMsg.setText("Failed to generate report");
+            applicationWindowController.toggleMenuButtons(false);
+        });
+
         new Thread(generateReportTask).start();
     }
 }

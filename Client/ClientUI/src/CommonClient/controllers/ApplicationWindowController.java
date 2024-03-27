@@ -29,6 +29,7 @@ public class ApplicationWindowController implements Initializable {
     private Parent menuSider;
     private User user;
     private Object Data;
+    private MenuSiderController menuController;
 
     private Object currentActiveController;
 
@@ -89,6 +90,8 @@ public class ApplicationWindowController implements Initializable {
 
                 // Now retrieve the controller
                 MenuSiderController menuController = loader.getController();
+                this.menuController = menuController;
+
                 if (menuController != null) {
                     ((BaseController) menuController).setApplicationWindowController(this);
                 }
@@ -103,6 +106,11 @@ public class ApplicationWindowController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void toggleMenuButtons(boolean isDisabled)
+    {
+        this.menuController.toggleMenuButtons(isDisabled);
     }
 
     public void setCenterPage(String fxmlPath) {

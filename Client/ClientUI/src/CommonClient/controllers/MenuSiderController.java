@@ -17,6 +17,12 @@ import java.io.IOException;
 public class MenuSiderController extends BaseController {
 
     @FXML
+    public MFXButton homePageBtn;
+    @FXML
+    public MFXButton dashboardBtn;
+    @FXML
+    public MFXButton logoutBtnMenu;
+    @FXML
     private MFXButton btnAct1;
 
     @FXML
@@ -49,7 +55,8 @@ public class MenuSiderController extends BaseController {
         usernameLabel.setText(username);
     }
 
-    public void handleHomePageRoute() {
+    public void handleHomePageRoute()
+    {
         applicationWindowController.homepage();
         userRoleLabel.setText("");
         usernameLabel.setText("");
@@ -136,5 +143,15 @@ public class MenuSiderController extends BaseController {
                 btnAct3.setOnAction(visitorController::OnClickViewConfirmationsOrdersButton);
                 break;
         }
+    }
+
+    protected void toggleMenuButtons(boolean isDisabled)
+    {
+        btnAct1.setDisable(isDisabled);
+        btnAct2.setDisable(isDisabled);
+        btnAct3.setDisable(isDisabled);
+        dashboardBtn.setDisable(isDisabled);
+        homePageBtn.setDisable(isDisabled);
+        logoutBtnMenu.setDisable(isDisabled);
     }
 }
