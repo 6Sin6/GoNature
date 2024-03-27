@@ -22,10 +22,10 @@ import java.util.ResourceBundle;
 public class ApplicationWindowController implements Initializable {
     @FXML
     private BorderPane mainPane;
-    private Map<String, Pair<Parent, Object>> pagesCache = new HashMap<>();
-    private Map<Role, String> DashBoardMap = new HashMap<>();
-    private Map<String, String> VisitorsPagesMap = new HashMap<>();
-    private Map<String, String> EmployeesPagesMap = new HashMap<>();
+    private final Map<String, Pair<Parent, Object>> pagesCache = new HashMap<>();
+    private final Map<Role, String> DashBoardMap = new HashMap<>();
+    private final Map<String, String> VisitorsPagesMap = new HashMap<>();
+    private final Map<String, String> EmployeesPagesMap = new HashMap<>();
     private Parent menuSider;
     private User user;
     private Object Data;
@@ -74,7 +74,9 @@ public class ApplicationWindowController implements Initializable {
 
             currentActiveController = pagesCache.get(fxmlPath).getValue();
             return pagesCache.get(fxmlPath).getKey();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             return null; // or load an error page
         }
@@ -93,7 +95,7 @@ public class ApplicationWindowController implements Initializable {
                 this.menuController = menuController;
 
                 if (menuController != null) {
-                    ((BaseController) menuController).setApplicationWindowController(this);
+                    (menuController).setApplicationWindowController(this);
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
@@ -104,6 +106,7 @@ public class ApplicationWindowController implements Initializable {
             }
             mainPane.setLeft(menuSider);
         } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }
@@ -246,7 +249,7 @@ public class ApplicationWindowController implements Initializable {
             ApplicationWindowController controller = loader.getController();
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/CommonClient/styles.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CommonClient/styles.css")).toExternalForm());
 
             Image logo = new Image("/assets/GoNatureLogo.png");
             primaryStage.getIcons().add(logo);
@@ -257,6 +260,7 @@ public class ApplicationWindowController implements Initializable {
 
             controller.setCenterPage("/CommonClient/gui/ConnectClientPage.fxml");
         } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }
