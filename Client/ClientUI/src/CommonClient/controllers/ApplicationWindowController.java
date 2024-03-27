@@ -208,7 +208,7 @@ public class ApplicationWindowController implements Initializable
                 }
                 if (menuController != null) { // This check is technically redundant if load() succeeded without exception
                     menuController.setRole(Role.roleToString(user.getRole()));
-                    String prefix = user instanceof SingleVisitor ? "Visitor ID: " : "User: ";
+                    String prefix = user instanceof SingleVisitor ? "Visitor ID: " : "Welcome ";
                     menuController.setUsername(prefix + user.getUsername());
                     menuController.buildMenuItems(this);
                 }
@@ -230,6 +230,27 @@ public class ApplicationWindowController implements Initializable
     public void toggleMenuButtons(boolean isDisabled)
     {
         this.menuController.toggleMenuButtons(isDisabled);
+    }
+
+
+
+
+    /**
+     * Toggles the visibility of menu buttons based on the specified parameters.
+     *
+     * @param homePageIsDisabled       True to disable the home page button, false otherwise.
+     * @param dashboardIsDisabled      True to disable the dashboard button, false otherwise.
+     * @param thirdButtonIsDisabled    True to disable the third button, false otherwise.
+     * @param fourthButtonIsDisabled   True to disable the fourth button, false otherwise.
+     * @param fifthButtonIsDisabled    True to disable the fifth button, false otherwise.
+     * @param logOutButtonIsDisabled   True to disable the logout button, false otherwise.
+     */
+    public void toggleMenuButtons(boolean homePageIsDisabled, boolean dashboardIsDisabled,
+                                  boolean thirdButtonIsDisabled, boolean fourthButtonIsDisabled,
+                                  boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled)
+    {
+        this.menuController.toggleMenuButtons(homePageIsDisabled, dashboardIsDisabled, thirdButtonIsDisabled,
+                fourthButtonIsDisabled, fifthButtonIsDisabled, logOutButtonIsDisabled);
     }
 
 

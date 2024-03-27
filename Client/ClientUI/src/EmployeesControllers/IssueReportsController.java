@@ -16,23 +16,46 @@ import javafx.scene.image.ImageView;
 
 
 public class IssueReportsController extends BaseController {
+    /**
+     * The button that triggers the generation of a report.
+     */
     @FXML
     private MFXButton btnGenerateReport;
 
+    /**
+     * A label that displays any error messages.
+     */
     @FXML
     private Label errMsg;
 
+    /**
+     * A label that displays the result of the report generation process.
+     */
     @FXML
     private Label generateResultMsg;
 
+    /**
+     * A combo box that contains the available reports.
+     */
     @FXML
     private ComboBox<String> reportCmb;
 
+    /**
+     * An image view that is displayed while the report is being generated.
+     */
     @FXML
     private ImageView imgLoading;
 
+    /**
+     * A boolean indicating whether the page is displaying park manager reports or department reports.
+     */
     private boolean parkManagerPage = false;
 
+
+
+    /**
+     * Cleans up the UI elements of the IssueReportsController.
+     */
     public void cleanup()
     {
         errMsg.setText("");
@@ -41,11 +64,26 @@ public class IssueReportsController extends BaseController {
         reportCmb.getItems().clear();
     }
 
+
+
+    /**
+     * Checks if the currently connected user is a Department Manager.
+     *
+     * @return true if the user is a Department Manager, false otherwise
+     */
     private boolean isDepartmentManager()
     {
         return (applicationWindowController.getUser() instanceof ParkDepartmentManager);
     }
 
+
+
+    /**
+     * Initializes the report combo box and sets up its event listeners based on the user's role.
+     * If the user is a department manager, department reports are loaded into the combo box.
+     * If the user is a park manager, park manager reports are loaded into the combo box.
+     * Also sets the default selected report and adds a listener to handle report selection changes.
+     */
     public void start()
     {
         if (this.isDepartmentManager()) // Department manager connected
@@ -62,6 +100,13 @@ public class IssueReportsController extends BaseController {
         reportCmb.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onSelectReport());
     }
 
+
+
+    /**
+     * This method is called when the user selects a report from the combo box.
+     * It sets the generateResultMsg label to an empty string and clears the
+     * selected item in the combo box.
+     */
     private void onSelectReport()
     {
         generateResultMsg.setText("");
@@ -70,14 +115,18 @@ public class IssueReportsController extends BaseController {
 
 
 
-
+    /**
+     * Handles the action event triggered when the "Generate Report" button is clicked.
+     * Initiates the process of generating a report based on the selected report type from the combo box.
+     * Displays relevant UI elements during the report generation process and updates them accordingly upon completion.
+     */
     @FXML
     void onClickGenerateReport(ActionEvent ignoredEvent)
     {
         btnGenerateReport.setDisable(true);
         generateResultMsg.setText("Generating report...");
         imgLoading.setVisible(true);
-        applicationWindowController.toggleMenuButtons(true);
+        applicationWindowController.toggleMenuButtons(true, true, true, false, true, true);
 
         String selectedReport = reportCmb.getValue();
         String reportType;
@@ -101,7 +150,7 @@ public class IssueReportsController extends BaseController {
             }
         };
 
-        generateReportTask.setOnSucceeded(event -> Platform.runLater(() -> { // Update UI on JavaFX Application Thread
+        generateReportTask.setOnSucceeded(event -> Platform.runLater(() -> {
             btnGenerateReport.setDisable(false);
             applicationWindowController.toggleMenuButtons(false);
             imgLoading.setVisible(false);
@@ -118,13 +167,13 @@ public class IssueReportsController extends BaseController {
             }
         }));
 
-        generateReportTask.setOnFailed(event -> Platform.runLater(() -> { // Update UI on JavaFX Application Thread
+        generateReportTask.setOnFailed(event -> Platform.runLater(() -> {
             generateResultMsg.setText("");
             errMsg.setText("Failed to generate report");
             applicationWindowController.toggleMenuButtons(false);
         }));
 
-        generateReportTask.setOnCancelled(event -> Platform.runLater(() -> { // Update UI on JavaFX Application Thread
+        generateReportTask.setOnCancelled(event -> Platform.runLater(() -> {
             generateResultMsg.setText("");
             errMsg.setText("Failed to generate report");
             applicationWindowController.toggleMenuButtons(false);

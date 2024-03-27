@@ -14,47 +14,108 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
+/**
+ * This class is the controller for the side menu of the application.
+ * It contains the buttons for navigating to different pages and the user's role and username.
+ */
 public class MenuSiderController extends BaseController {
 
+    /**
+     * The button for navigating to the home page.
+     */
     @FXML
     public MFXButton homePageBtn;
+
+    /**
+     * The button for navigating to the dashboard page.
+     */
     @FXML
     public MFXButton dashboardBtn;
+
+    /**
+     * The button for logging out the user.
+     */
     @FXML
     public MFXButton logoutBtnMenu;
+
+    /**
+     * The first menu button. Depending on the user's role, this button may be used to perform different actions.
+     */
     @FXML
     private MFXButton btnAct1;
 
+    /**
+     * The second menu button. Depending on the user's role, this button may be used to perform different actions.
+     */
     @FXML
     private MFXButton btnAct2;
 
+    /**
+     * The third menu button. Depending on the user's role, this button may be used to perform different actions.
+     */
     @FXML
     private MFXButton btnAct3;
 
+    /**
+     * The label for displaying the user's role.
+     */
     @FXML
     private Label userRoleLabel;
 
+    /**
+     * The label for displaying the user's username.
+     */
     @FXML
     private Label usernameLabel;
 
-    public void logout() {
+
+
+    /**
+     * Logs out the user and resets the menu.
+     */
+    public void logout()
+    {
         applicationWindowController.logout();
         userRoleLabel.setText("");
         usernameLabel.setText("");
     }
 
-    public void cleanup() {
+    public void cleanup()
+    {
         // Nothing to clean up in the menu.
     }
 
-    public void setRole(String role) {
+
+
+    /**
+     * Sets the role of the user.
+     *
+     * @param role the role of the user
+     */
+    public void setRole(String role)
+    {
         userRoleLabel.setText(role);
     }
 
-    public void setUsername(String username) {
+
+
+    /**
+     * Sets the username displayed in the menu.
+     *
+     * @param username the username to display
+     */
+    public void setUsername(String username)
+    {
         usernameLabel.setText(username);
     }
 
+
+
+
+    /**
+     * Handles the navigation to the dashboard page based on the user's role.
+     * Retrieves the role from the userRoleLabel and loads the corresponding dashboard page.
+     */
     public void handleHomePageRoute()
     {
         applicationWindowController.homepage();
@@ -62,16 +123,40 @@ public class MenuSiderController extends BaseController {
         usernameLabel.setText("");
     }
 
-    public void handleDashboardRoute() {
+
+
+
+    /**
+     * Handles the navigation to the dashboard page based on the user's role.
+     * Retrieves the role from the userRoleLabel and loads the corresponding dashboard page.
+     */
+    public void handleDashboardRoute()
+    {
         applicationWindowController.loadDashboardPage(Role.stringToRole(userRoleLabel.getText()));
     }
 
+
+
+    /**
+     * Returns an instance of the controller associated with the given FXML file.
+     *
+     * @param fxmlPath the path to the FXML file
+     * @return an instance of the controller associated with the given FXML file
+     * @throws IOException if there is an error loading the FXML file
+     */
     private Object getController(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        /*Parent root = */loader.load();
+        loader.load();
         return loader.getController();
     }
 
+
+    /**
+     * Builds the menu items for the side menu based on the user's role.
+     *
+     * @param appController the main application controller
+     * @throws IOException if there is an error loading the FXML files
+     */
     public void buildMenuItems(ApplicationWindowController appController) throws IOException {
         switch (userRoleLabel.getText()) {
             case "Park Manager":
@@ -145,6 +230,13 @@ public class MenuSiderController extends BaseController {
         }
     }
 
+
+
+    /**
+     * Toggles the visibility of the menu buttons based on the given boolean value.
+     *
+     * @param isDisabled whether the menu buttons should be disabled
+     */
     protected void toggleMenuButtons(boolean isDisabled)
     {
         btnAct1.setDisable(isDisabled);
@@ -153,5 +245,29 @@ public class MenuSiderController extends BaseController {
         dashboardBtn.setDisable(isDisabled);
         homePageBtn.setDisable(isDisabled);
         logoutBtnMenu.setDisable(isDisabled);
+    }
+
+
+
+    /**
+     * Toggles the visibility of the menu buttons based on the given boolean values.
+     *
+     * @param homePageIsDisabled        whether the home page button should be disabled
+     * @param dashboardIsDisabled       whether the dashboard button should be disabled
+     * @param thirdButtonIsDisabled     whether the third button should be disabled
+     * @param fourthButtonIsDisabled    whether the fourth button should be disabled
+     * @param fifthButtonIsDisabled    whether the fifth button should be disabled
+     * @param logOutButtonIsDisabled    whether the log out button should be disabled
+     */
+    protected void toggleMenuButtons(boolean homePageIsDisabled, boolean dashboardIsDisabled,
+                                     boolean thirdButtonIsDisabled, boolean fourthButtonIsDisabled,
+                                     boolean fifthButtonIsDisabled, boolean logOutButtonIsDisabled)
+    {
+        btnAct1.setDisable(thirdButtonIsDisabled);
+        btnAct2.setDisable(fourthButtonIsDisabled);
+        btnAct3.setDisable(fifthButtonIsDisabled);
+        homePageBtn.setDisable(homePageIsDisabled);
+        dashboardBtn.setDisable(dashboardIsDisabled);
+        logoutBtnMenu.setDisable(logOutButtonIsDisabled);
     }
 }
