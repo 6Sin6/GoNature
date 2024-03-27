@@ -9,10 +9,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
@@ -38,7 +36,6 @@ import java.util.Calendar;
  */
 public abstract class ReportConstructor
 {
-    private final String customFontPath;
     private final Font titleFont;
 
 
@@ -50,7 +47,7 @@ public abstract class ReportConstructor
      */
     protected ReportConstructor() throws DocumentException, IOException
     {
-        customFontPath = "/fonts/Roboto-Regular.ttf";
+        String customFontPath = "/fonts/Roboto-Regular.ttf";
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         this.titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
     }
@@ -69,27 +66,32 @@ public abstract class ReportConstructor
     /**
      * Creates a paragraph with the specified text and font.
      *
-     * @param text The text to display in the paragraph.
-     * @param font The font to use for the paragraph.
-     * @param center Whether to center the paragraph.
-     * @param spacing The spacing after the paragraph.
+     * @param text        The text to display in the paragraph.
+     * @param font        The font to use for the paragraph.
+     * @param spacing     The spacing after the paragraph.
      * @param includeDate Whether to include the current date in the paragraph.
      * @return The Paragraph object representing the paragraph.
      */
-    protected Paragraph createPDFTitle(String text, Font font, boolean center, int spacing, boolean includeDate)
+    protected Paragraph createPDFTitle(String text, Font font, int spacing, boolean includeDate)
     {
         text = includeDate ? text + " - " + LocalDate.now() : text;
         Paragraph title = new Paragraph(text, font);
-        if (center) {
-            title.setAlignment(Element.ALIGN_CENTER);
-        }
+        title.setAlignment(Element.ALIGN_CENTER);
         title.setSpacingAfter(spacing);
         return title;
     }
 
+
+
+    /**
+     * Creates a PDF title with the specified text.
+     *
+     * @param title The text of the title.
+     * @return A Paragraph object representing the PDF title.
+     */
     protected Paragraph createPDFTitle(String title)
     {
-        return (this.createPDFTitle(title, titleFont, true, 25, false));
+        return (this.createPDFTitle(title, titleFont, 25, false));
     }
 
 
@@ -118,7 +120,6 @@ public abstract class ReportConstructor
      * @param outputStream The output stream to write the PDF document to.
      * @return The PDF document.
      * @throws DocumentException If an error occurs while creating the PDF document.
-     * @throws IOException If an error occurs while writing to the output stream.
      */
     protected Document createPDFDocument(String documentTitle, ByteArrayOutputStream outputStream) throws DocumentException
     {
@@ -130,7 +131,7 @@ public abstract class ReportConstructor
         document.open();
 
         // Add title to document
-        document.add(this.createPDFTitle(documentTitle, titleFont, true, 50, true));
+        document.add(this.createPDFTitle(documentTitle, titleFont, 50, true));
         return document;
     }
 
@@ -169,7 +170,7 @@ public abstract class ReportConstructor
     protected PdfPCell createSingleCellWithTitleAndTable(PdfPTable table, String title)
     {
         PdfPCell singleCell = new PdfPCell();
-        singleCell.addElement(this.createPDFTitle(title, titleFont, true, 25, false));
+        singleCell.addElement(this.createPDFTitle(title, titleFont, 25, false));
         singleCell.addElement(table);
         singleCell.setBorder(Rectangle.NO_BORDER);
         return singleCell;
@@ -187,7 +188,7 @@ public abstract class ReportConstructor
     protected PdfPCell createSingleCellWithTitle(String text)
     {
         PdfPCell titleCell = new PdfPCell();
-        titleCell.addElement(this.createPDFTitle(text, this.titleFont, true, 0, true));
+        titleCell.addElement(this.createPDFTitle(text, this.titleFont, 0, true));
         titleCell.setBorder(Rectangle.NO_BORDER);
         return titleCell;
     }
@@ -252,7 +253,7 @@ public abstract class ReportConstructor
      * @param title the title of the chart
      * @return the pie chart
      */
-    protected JFreeChart createPieChart(DefaultPieDataset dataset, String title)
+    protected JFreeChart createPieChart(DefaultPieDataset<?> dataset, String title)
     {
         JFreeChart chart = ChartFactory.createPieChart(
                 title, // Chart title
@@ -265,7 +266,7 @@ public abstract class ReportConstructor
         // Customize chart appearance
         chart.setBackgroundPaint(Color.WHITE);
         chart.getTitle().setPaint(Color.BLACK);
-        PiePlot plot = (PiePlot) chart.getPlot();
+        PiePlot<?> plot = (PiePlot<?>) chart.getPlot();
         plot.setLabelBackgroundPaint(Color.WHITE);
         plot.setLabelOutlinePaint(null);
         plot.setLabelShadowPaint(null);

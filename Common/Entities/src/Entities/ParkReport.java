@@ -20,7 +20,7 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
      *
      * @param parkID The park id associated with the report.
      */
-    public ParkReport(Integer parkID, String parkName) throws DocumentException, IOException
+    protected ParkReport(Integer parkID, String parkName) throws DocumentException, IOException
     {
         super();
         this.parkID = parkID;
@@ -34,7 +34,7 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
      *
      * @return The park id associated with the report.
      */
-    public Integer getParkID() {
+    protected Integer getParkID() {
         return parkID;
     }
 
@@ -47,7 +47,7 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
      *
      * @return the name of the park associated with the report
      */
-    public String getParkName()
+    protected String getParkName()
     {
         return parkName;
     }

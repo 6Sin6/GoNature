@@ -119,7 +119,7 @@ public class CancellationReport extends DepartmentReport implements Serializable
         // Add title
         BaseFont baseFont = BaseFont.createFont(customFontPath, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         Font titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
-        document.add(this.createPDFTitle("Cancellations Report - Department: " + super.getDepartmentID(), titleFont, true, 50, true));
+        document.add(this.createPDFTitle("Cancellations Report - Department: " + super.getDepartmentID(), titleFont, 50, true));
 
         // Create histogram chart
         AtomicInteger totalCount = new AtomicInteger(0); // Must be a reference to update the value in createDistributionSeries

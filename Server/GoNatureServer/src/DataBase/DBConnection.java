@@ -1262,6 +1262,7 @@ public class DBConnection {
                 tableName = this.schemaName + ".parks";
                 whereClause = "ParkID = " + parkID;
                 results = dbController.selectRecordsFields(tableName, whereClause, "Capacity");
+                results.next();
                 return Integer.valueOf(results.getInt("Capacity"));
             }
         }
