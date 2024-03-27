@@ -181,7 +181,7 @@ public class UsageReport extends ParkReport implements Serializable
 
         // Organization of data - Get park capacity data:
         if (parkCapacity instanceof Integer)
-            capacity.add((int)parkCapacity, null); // null used for indicating that it's the last capacity change occurred (this case it's the only capacity).
+            capacity.add(new ParkCapacityDetails((int)parkCapacity, null)); // null used for indicating that it's the last capacity change occurred (this case it's the only capacity).
         else
         {
             ResultSet resultSet_Capacity = (ResultSet) parkCapacity;

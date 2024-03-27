@@ -523,7 +523,8 @@ public class GoNatureServer extends AbstractServer {
         client.sendToClient(respondMsg);
     }
 
-    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws Exception {
+    private void handleGenerateReportBlob(Message message, ConnectionToClient client) throws Exception
+    {
         String reportType = (String) message.getMsgData();
         boolean isGenerated = false;
         String id = null; // used for department ID (for first 2 cases) or park ID (for other cases)
