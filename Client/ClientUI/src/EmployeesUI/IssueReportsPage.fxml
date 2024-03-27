@@ -3,7 +3,6 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -11,7 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueReportsController">
+<?import javafx.scene.image.Image?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.IssueReportsController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -20,18 +21,17 @@
       </ImageView>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="263.0" layoutX="40.0" layoutY="194.0" stroke="BLACK" strokeType="INSIDE" width="490.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="263.0" layoutX="111.0" layoutY="197.0" stroke="BLACK" strokeType="INSIDE" width="350.0" />
             <Text layoutX="322.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports Issuance" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="48.0" />
                </font>
             </Text>
-            <Label layoutX="112.0" layoutY="242.0" text="Report Type">
+            <Label layoutX="235.0" layoutY="228.0" text="Report Type:">
                <font>
                   <Font size="18.0" />
                </font></Label>
-            <ComboBox fx:id="reportCmb" layoutX="60.0" layoutY="268.0" prefHeight="39.0" prefWidth="200.0" />
-            <ComboBox fx:id="parkCmb" layoutX="311.0" layoutY="268.0" prefHeight="40.0" prefWidth="200.0" />
+            <ComboBox fx:id="reportCmb" layoutX="185.0" layoutY="262.0" prefHeight="39.0" prefWidth="200.0" />
             <Label fx:id="errMsg" alignment="CENTER" layoutX="111.0" layoutY="390.0" prefWidth="350.0" styleClass="error-text" textAlignment="CENTER" textFill="RED" wrapText="true">
                <font>
                   <Font size="14.0" />
@@ -41,14 +41,10 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <MFXButton fx:id="btnGenerateReport" buttonType="RAISED" layoutX="60.0" layoutY="332.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="452.0" styleClass="actButtonGreen" text="Generate Report">
+            <MFXButton fx:id="btnGenerateReport" buttonType="RAISED" layoutX="186.0" layoutY="332.0" onAction="#onClickGenerateReport" prefHeight="50.0" prefWidth="200.0" styleClass="actButtonGreen" text="Generate Report">
                <font>
                   <Font size="18.0" />
                </font></MFXButton>
-            <Label layoutX="394.0" layoutY="242.0" text="Park">
-               <font>
-                  <Font size="18.0" />
-               </font></Label>
             <ImageView fx:id="imgLoading" fitHeight="50.0" fitWidth="50.0" layoutX="160.0" layoutY="410.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="/assets/loading.gif" />
