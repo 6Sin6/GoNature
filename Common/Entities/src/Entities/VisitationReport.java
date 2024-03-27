@@ -197,7 +197,7 @@ public class VisitationReport extends DepartmentReport implements Serializable {
             maxTimeSpent = Math.max(maxTimeSpent, Math.max(averageTimeSpentGroup, averageTimeSpentSingleFamily));
         }
 
-        return super.createBarChart(dataset, maxTimeSpent, title,
+        return super.createGroupedColumnChart(dataset, maxTimeSpent, title,
                 xAxisTitle, yAxisTitle, groupOrdersColor, singleFamilyOrdersColor);
     }
 
@@ -283,13 +283,13 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
 
-        /**
-         * Retrieves the average time spent for the specified date and order type.
-         *
-         * @param date The date to retrieve the time spent for.
-         * @param orderTypeSuffix The suffix for the order type.
-         * @return The average time spent for the specified date and order type.
-         */
+    /**
+     * Retrieves the average time spent for the specified date and order type.
+     *
+     * @param date The date to retrieve the time spent for.
+     * @param orderTypeSuffix The suffix for the order type.
+     * @return The average time spent for the specified date and order type.
+     */
     private double getTimeSpentForDate(String date, String orderTypeSuffix) throws SQLException {
         ResultSet timeSpentData = this.reportData.get("timespent");
         timeSpentData.beforeFirst();

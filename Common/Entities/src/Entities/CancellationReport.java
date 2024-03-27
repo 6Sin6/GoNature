@@ -7,14 +7,22 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.xy.CategoryTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.*;
+import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Blob;
@@ -162,17 +170,18 @@ public class CancellationReport extends DepartmentReport implements Serializable
     }
 
     private void handleChartCreation(String suffix, AtomicInteger totalCount, AtomicInteger median, Document document, BaseFont baseFont, boolean departmentDistribution, boolean averageDistribution) throws IOException, DocumentException, SQLException {
-        JFreeChart chart = createDistributionHistogram(suffix, totalCount, median, departmentDistribution, averageDistribution);
+        JFreeChart chart = averageDistribution ? createAverageLineChart(suffix, departmentDistribution) : createDistributionHistogram(suffix, totalCount, median, departmentDistribution);
+
         BufferedImage bufferedImage = chart.createBufferedImage(1300, 800);
         ByteArrayOutputStream chartOutputStream = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", chartOutputStream);
         chartOutputStream.flush();
 
         // Embed histogram image into the PDF
-        Image histogramImage = Image.getInstance(chartOutputStream.toByteArray());
-        histogramImage.scaleToFit(PageSize.A3.rotate());
-        histogramImage.setAlignment(Element.ALIGN_CENTER);
-        document.add(histogramImage);
+        Image chartImage = Image.getInstance(chartOutputStream.toByteArray());
+        chartImage.scaleToFit(PageSize.A3.rotate());
+        chartImage.setAlignment(Element.ALIGN_CENTER);
+        document.add(chartImage);
 
         if (!averageDistribution) {
             Paragraph totalCountTitle = new Paragraph("Total Cancelled Orders: " + totalCount, new Font(baseFont, 16, Font.NORMAL, BaseColor.BLACK));
@@ -185,28 +194,85 @@ public class CancellationReport extends DepartmentReport implements Serializable
         }
     }
 
-    private JFreeChart createDistributionHistogram(String suffix, AtomicInteger totalCount, AtomicInteger median, boolean departmentDistribution, boolean averageDistribution) throws SQLException {
-        XYSeries series = null;
-        if (averageDistribution) {
-            series = createDepartmentAverageHistogram(suffix, departmentDistribution);
-        } else {
-            series = createDepartmentDistributionSeries(totalCount, median, suffix, departmentDistribution);
+    private JFreeChart createAverageLineChart(String suffix, boolean departmentDistribution) throws SQLException {
+        XYSeriesCollection dataset = createAverageLineChartSeries(suffix, departmentDistribution);
+
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                departmentDistribution ? "Department Average Cancellations" : "Park" + suffix + " Average Cancellations", // Chart title
+                "Day", // X-axis label
+                "Percentage", // Y-axis label
+                dataset, // Dataset
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getXYPlot().setBackgroundPaint(Color.WHITE);
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        chart.getXYPlot().setRenderer(renderer);
+
+        return chart;
+    }
+
+    private XYSeriesCollection createAverageLineChartSeries(String keySuffix, boolean departmentReports) throws SQLException {
+        XYSeries series = new XYSeries("Cancelled Orders");
+
+        ResultSet resultSet = departmentReports ? departmentData.get("average" + keySuffix) : parksData.get("average" + keySuffix);
+
+        float[] cancelledOrders = new float[31];
+        for (int i = 0; i < 31; i++) {
+            cancelledOrders[i] = 0;
         }
+
+        resultSet.beforeFirst();
+        while (resultSet.next()) {
+            int day = resultSet.getInt("date");
+            float totalCancelledOrders = resultSet.getFloat("AverageCancelledOrders");
+
+            // Store total cancelled orders for the corresponding day
+            cancelledOrders[day - 1] = totalCancelledOrders;
+        }
+
+        // Calculate the maximum cancelled orders to normalize percentages
+        float maxCancelledOrders = getMax(cancelledOrders);
+
+        // Add data to the series whilst normalizing percentages
+        for (int i = 0; i < 31; i++) {
+            float percentageCancelled = (cancelledOrders[i] / maxCancelledOrders) * 100;
+            series.add(i + 1, percentageCancelled);
+        }
+
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
-        String chartTitle;
-        if (departmentDistribution) {
-            chartTitle = averageDistribution ? "Department Average Distribution Histogram" : "Department Distribution Histogram";
-        } else {
-            chartTitle = averageDistribution ? "Park" + suffix + " Average Distribution Histogram" : "Park" + suffix + " Distribution Histogram";
-        }
+        return dataset;
+    }
 
-        JFreeChart chart = ChartFactory.createXYBarChart(
+    private float getMax(float[] array) {
+        float max = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        return max;
+    }
+
+    private JFreeChart createDistributionHistogram(String suffix, AtomicInteger totalCount, AtomicInteger median, boolean departmentDistribution) throws SQLException {
+        XYSeries series = createDepartmentDistributionSeries(totalCount, median, suffix, departmentDistribution);
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+
+        String chartTitle = departmentDistribution ? "Department Distribution Histogram" : "Park" + suffix + " Distribution Histogram";
+
+        JFreeChart chart = ChartFactory.createHistogram(
                 chartTitle,
                 "Day",
-                false,
-                averageDistribution ? "Average Cancelled Orders Of All Orders" : "Total Cancelled Orders",
+                "Total Cancelled Orders",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -223,36 +289,17 @@ public class CancellationReport extends DepartmentReport implements Serializable
 
         // Set colors for the bars
         XYPlot plot = chart.getXYPlot();
-        plot.getRenderer().setSeriesPaint(0, new Color(12, 36, 58));
+
+
+        // Set a minimum value for the y-axis range
+        // Adjust bar renderer to display a tiny portion for 0 values
+        plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+        XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(12, 36, 58)); // Dark blue color...
+
 
         return chart;
-    }
-
-    private XYSeries createDepartmentAverageHistogram(String keySuffix, boolean departmentReports) throws SQLException {
-        XYSeries series = new XYSeries("Cancelled Orders");
-        ResultSet resultSet = departmentReports ? departmentData.get("average" + keySuffix) : parksData.get("average" + keySuffix);
-
-        // Initialize arrays to store total cancelled orders for each day
-        float[] cancelledOrders = new float[31];
-        for (int i = 0; i < 31; i++) {
-            cancelledOrders[i] = 0;
-        }
-
-        // Iterate through ResultSet to populate cancelledOrders array
-        while (resultSet.next()) {
-            int day = resultSet.getInt("date");
-            float totalCancelledOrders = resultSet.getFloat("AverageCancelledOrders");
-
-            // Store total cancelled orders for the corresponding day
-            cancelledOrders[day - 1] = totalCancelledOrders;
-        }
-
-        // Add data to the series
-        for (int i = 0; i < 31; i++) {
-            series.add(i + 1, cancelledOrders[i]);
-        }
-
-        return series;
     }
 
     private XYSeries createDepartmentDistributionSeries(AtomicInteger totalCount, AtomicInteger median, String keySuffix, boolean departmentReports) throws SQLException {
@@ -260,21 +307,22 @@ public class CancellationReport extends DepartmentReport implements Serializable
         ResultSet resultSet = departmentReports ? departmentData.get("distribution" + keySuffix) : parksData.get("distribution" + keySuffix);
 
         // Initialize arrays to store total cancelled orders for each day
-        int[] cancelledOrders = new int[31];
-        ArrayList<Integer> cancelledOrdersDataCp = new ArrayList<>();
+        double[] cancelledOrders = new double[31];
+        ArrayList<Double> cancelledOrdersDataCp = new ArrayList<>();
         for (int i = 0; i < 31; i++) {
-            cancelledOrders[i] = 0;
+            cancelledOrders[i] = 0.02;
         }
 
         // Iterate through ResultSet to populate cancelledOrders array
+        resultSet.beforeFirst();
         while (resultSet.next()) {
             int day = resultSet.getInt("date");
-            int totalCancelledOrders = resultSet.getInt("TotalCancelledOrders");
+            double totalCancelledOrders = (double) resultSet.getInt("TotalCancelledOrders");
 
             // Store total cancelled orders for the corresponding day
             cancelledOrders[day - 1] = totalCancelledOrders;
             cancelledOrdersDataCp.add(totalCancelledOrders);
-            totalCount.addAndGet(totalCancelledOrders);
+            totalCount.addAndGet((int) totalCancelledOrders);
         }
 
         // If the median is an atomic integer, then calculate the median by sorting the array and getting the middle element. Proof was given during Data Structures course.
@@ -283,17 +331,17 @@ public class CancellationReport extends DepartmentReport implements Serializable
 
             if (cancelledOrdersDataCp.size() % 2 == 0) {
                 int middleIndex = cancelledOrdersDataCp.size() / 2;
-                median.set((cancelledOrdersDataCp.get(middleIndex) + cancelledOrdersDataCp.get(middleIndex - 1)) / 2);
+                median.set((int) ((cancelledOrdersDataCp.get(middleIndex) + cancelledOrdersDataCp.get(middleIndex - 1)) / 2));
             } else {
                 int middleIndex = cancelledOrdersDataCp.size() / 2;
-                median.set(cancelledOrdersDataCp.get(middleIndex));
+                median.set(cancelledOrdersDataCp.get(middleIndex).intValue());
             }
         }
 
 
         // Add data to the series
-        for (int i = 0; i < 31; i++) {
-            series.add(i + 1, cancelledOrders[i]);
+        for (int i = 1; i <= 31; i++) {
+            series.add(i, cancelledOrders[i - 1]);
         }
 
         return series;

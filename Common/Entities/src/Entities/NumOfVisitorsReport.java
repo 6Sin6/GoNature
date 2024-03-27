@@ -241,7 +241,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable
             }
         }
 
-        return super.createBarChart(dataset, maxAmount, title,
+        return super.createGroupedColumnChart(dataset, maxAmount, title,
                 xAxisTitle, yAxisTitle, groupOrdersColor, singleFamilyOrdersColor);
     }
 
