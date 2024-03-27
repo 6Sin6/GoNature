@@ -171,7 +171,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if (returnOpCode != OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
+        if (returnOpCode == OpCodes.OP_CREATE_NEW_VISITATION && !(respondMsg.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -188,13 +188,22 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
                     , 950, 500, false, "Pay now!", "Later", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else if (returnOpCode == OpCodes.OP_ORDER_ALREADY_EXIST) {
-            String strForPopup = "You already have an order with these details";
+            String strForPopup = "You already have an order with these details...\nWould you like to view alternatives times?";
+            String fullName = "" + txtFirstName.getText() + " " + txtLastName.getText();
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
+                applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
+                Object controller = applicationWindowController.getCurrentActiveController();
+                if (controller instanceof AlternativeTimesTableController) {
+                    ((AlternativeTimesTableController) controller).start(order, fullName);
+                }
+            }, () ->
+            {
+                applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
+                applicationWindowController.loadMenu(applicationWindowController.getUser());
             }
-                    , 600, 300, false, "OK", false);
+                    , 600, 300, false, "Alternative Time", "Dashboard", false);
             confirmPopup.show(applicationWindowController.getRoot());
-
         } else {
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist?";
             ConfirmationPopup confirmPopup;

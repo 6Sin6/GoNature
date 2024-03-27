@@ -456,14 +456,21 @@ public class DBConnection {
         }
     }
 
-    /**
-     * Updates the status of an order to "cancelled".
-     *
-     * @param orderID The ID of the order to be updated.
-     * @return True if the order status is successfully updated to "cancelled", false otherwise.
-     */
-    public boolean updateOrderStatusAsCancelled(String orderID) throws Exception {
-        return updateOrderStatus(orderID, OrderStatus.STATUS_CANCELLED);
+
+    public boolean updateOrderStatusAsCancelled(Order order) throws Exception {
+        boolean isUpdate = updateOrderStatus(order.getOrderID(), OrderStatus.STATUS_CANCELLED);
+        if (isUpdate) {
+            new Thread(() -> {
+                try {
+                    GmailSender.sendEmail(order.getClientEmailAddress(), "Your order has been canceled", "Your order for date " + order.getVisitationDate() + " has been canceled");
+                } catch (Exception e) {
+                    serverController.addtolog("Error sending email: " + e.getMessage());
+                }
+            }).start();
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1703,4 +1710,3 @@ public class DBConnection {
     }
 
 }
-
