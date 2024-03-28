@@ -570,7 +570,7 @@ public class DBConnection {
             }
             String setClause = "orderStatus=" + newStatus.getOrderStatus();
             String whereClause = "OrderID=" + orderID + " AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT.getOrderStatus() + ")";
-            String whereClauseTimeConstraint = " AND HOUR(VisitationDate) >= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE)";
+            String whereClauseTimeConstraint = "AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE)";
             if (!dbController.updateRecord(tableName, setClause, whereClause + whereClauseTimeConstraint)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
                 return false;
