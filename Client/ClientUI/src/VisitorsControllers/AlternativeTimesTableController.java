@@ -8,8 +8,11 @@ import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
+import Entities.SingleVisitor;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -111,8 +114,17 @@ public class AlternativeTimesTableController extends BaseController implements I
     public void populateTable(ArrayList<Timestamp> dataList, Order o1, String fullName) {
         list.clear();
         if (dataList.isEmpty()) {
+            LblChooseBtn.setDisable(true);
             MessagePopup popup = new MessagePopup("No another alternative time", Duration.seconds(5), 300, 150, false);
             popup.show(applicationWindowController.getRoot());
+            if(applicationWindowController.isMenuSlider())
+            {
+                new Timeline(new KeyFrame(Duration.seconds(5), ae -> applicationWindowController.setCenterPage("/VisitorsUI/VisitorOrderVisitationPage.fxml"))).play();
+            }
+            else
+            {
+                new Timeline(new KeyFrame(Duration.seconds(5), ae -> applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/VisitorOrderVisitationPage.fxml", applicationWindowController.getUser(), "/CommonClient/gui/LeftBackground.fxml"))).play();
+            }
         }
         tempfullName = fullName;
         tempOrder = o1;

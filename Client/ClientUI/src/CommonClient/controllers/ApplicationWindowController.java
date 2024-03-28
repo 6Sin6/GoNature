@@ -99,7 +99,9 @@ public class ApplicationWindowController implements Initializable {
     public Object getCurrentActiveController() {
         return currentActiveController;
     }
-
+    public boolean isMenuSlider() {
+        return menuSider != null;
+    }
 
     /**
      * Sets the currently logged-in user.
@@ -268,16 +270,16 @@ public class ApplicationWindowController implements Initializable {
      * @param leftFxmlPath   The path to the FXML file representing the left page.
      */
     public void setCompletePage(String centerFxmlPath, String leftFxmlPath) {
-        // Load center page
-        Parent centerPage = loadPage(centerFxmlPath);
-        if (centerPage != null) {
-            mainPane.setCenter(centerPage);
-        }
-
         // Load left page
         Parent leftPage = loadPage(leftFxmlPath);
         if (leftPage != null) {
             mainPane.setLeft(leftPage);
+        }
+
+        // Load center page
+        Parent centerPage = loadPage(centerFxmlPath);
+        if (centerPage != null) {
+            mainPane.setCenter(centerPage);
         }
     }
 

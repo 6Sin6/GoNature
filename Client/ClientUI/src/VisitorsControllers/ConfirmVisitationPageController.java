@@ -77,7 +77,7 @@ public class ConfirmVisitationPageController extends BaseController {
     }
 
     @FXML
-    void OnClickConfirmVisitationButton(ActionEvent event) throws CommunicationException {
+    void OnClickConfirmVisitationButton(ActionEvent event)  {
         User user = applicationWindowController.getUser();
         Object msg = new Message(OpCodes.OP_CONFIRMATION, user.getUsername(), this.order);
         ClientUI.client.accept(msg);

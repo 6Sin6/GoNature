@@ -7,6 +7,7 @@ import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
 import Entities.*;
 import client.ClientCommunicator;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -60,6 +61,9 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
     private Label lblStatusMsg;
 
     private int rowIndex;
+
+    @FXML
+    private MFXButton handleOrderbtn;
 
     private ArrayList<Order> list = new ArrayList<>();
 
@@ -125,6 +129,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
     public void populateTable(ArrayList<Order> dataList) {
         list.clear();
         if (dataList.isEmpty()) {
+            handleOrderbtn.setDisable(true);
             MessagePopup popup = new MessagePopup("There are no orders awaiting confirmation", Duration.seconds(5), 600, 150, false);
             popup.show(applicationWindowController.getRoot());
         }
