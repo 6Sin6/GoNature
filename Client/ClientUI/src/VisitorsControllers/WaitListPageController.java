@@ -108,13 +108,13 @@ public class WaitListPageController extends BaseController implements Initializa
                 return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
-            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully and you entered to wait list  ";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
                 applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                 applicationWindowController.loadMenu(applicationWindowController.getUser());
             }
-                    , 600, 300, false, "OK", false);
+                    , 800, 400, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
         } else if (user instanceof VisitorGroupGuide) {
             Order temporder = order;
@@ -141,13 +141,13 @@ public class WaitListPageController extends BaseController implements Initializa
                 return;
             }
             Order cnfrmorder = (Order) respondMsg.getMsgData();
-            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully";
+            String strForPopup = "The order " + cnfrmorder.getOrderID() + " has been created successfully and you entered to wait list";
             ConfirmationPopup confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
                 applicationWindowController.loadDashboardPage(applicationWindowController.getUser().getRole());
                 applicationWindowController.loadMenu(applicationWindowController.getUser());
             }
-                    , 600, 300, false, "OK", false);
+                    , 800, 400, false, "OK", false);
             confirmPopup.show(applicationWindowController.getRoot());
         }
     }

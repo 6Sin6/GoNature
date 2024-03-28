@@ -11,51 +11,66 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.ViewReportsPageController">
-   <children>
-      <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="/assets/parkEmployeeBackground.jpg" />
-         </image>
-      </ImageView>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="340.0" layoutX="46.0" layoutY="191.0" stroke="BLACK" strokeType="INSIDE" width="407.0" />
-            <Text layoutX="363.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Text>
-            <Label layoutX="117.0" layoutY="204.0" text="Report Type">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-            <ComboBox fx:id="reportCmb" layoutX="80.0" layoutY="231.0" prefHeight="40.0" prefWidth="150.0" />
-            <ComboBox fx:id="parkCmb" layoutX="260.0" layoutY="231.0" prefHeight="40.0" prefWidth="150.0" />
-            <Label fx:id="viewResultMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" layoutY="460.0" prefHeight="48.0" prefWidth="407.0" textAlignment="CENTER" textOverrun="CLIP">
-               <font>
-                  <Font size="11.0" />
-               </font></Label>
-            <Label layoutX="322.0" layoutY="204.0" text="Park">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-            <Label fx:id="errMsg" alignment="CENTER" layoutX="46.0" layoutY="500.0" prefHeight="20.0" prefWidth="407.0" styleClass="error-text" textAlignment="CENTER" textFill="#ff0101" wrapText="true" />
-            <ComboBox fx:id="yearCmb" layoutX="260.0" layoutY="330.0" prefHeight="40.0" prefWidth="150.0" />
-            <Label layoutX="323.0" layoutY="303.0" text="Year">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-            <Label layoutX="134.0" layoutY="303.0" text="Month">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-            <ComboBox fx:id="monthCmb" layoutX="80.0" layoutY="330.0" prefHeight="40.0" prefWidth="150.0" />
-            <MFXButton buttonType="RAISED" layoutX="80.0" layoutY="400.0" onAction="#onClickViewReport" prefHeight="50.0" prefWidth="332.0" styleClass="actButtonGreen" text="View Report">
-               <font>
-                  <Font size="18.0" />
-               </font></MFXButton>
-         </children>
-      </Pane>
-   </children>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+           prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="EmployeesControllers.ViewReportsPageController">
+    <children>
+        <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="/assets/parkEmployeeBackground.jpg"/>
+            </image>
+        </ImageView>
+        <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+              prefWidth="1000.0">
+            <children>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="340.0" layoutX="46.0" layoutY="191.0"
+                           stroke="BLACK" strokeType="INSIDE" width="407.0"/>
+                <Text layoutX="363.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Reports"
+                      textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="36.0"/>
+                    </font>
+                </Text>
+                <Label layoutX="117.0" layoutY="204.0" text="Report Type">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <ComboBox fx:id="reportCmb" layoutX="80.0" layoutY="231.0" prefHeight="40.0" prefWidth="150.0"/>
+                <ComboBox fx:id="parkCmb" layoutX="260.0" layoutY="231.0" prefHeight="40.0" prefWidth="150.0"/>
+                <Label fx:id="viewResultMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" layoutY="460.0"
+                       prefHeight="48.0" prefWidth="407.0" textAlignment="CENTER" textOverrun="CLIP">
+                    <font>
+                        <Font size="11.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="322.0" layoutY="204.0" text="Park">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="errMsg" alignment="CENTER" layoutX="46.0" layoutY="500.0" prefHeight="20.0"
+                       prefWidth="407.0" styleClass="error-text" textAlignment="CENTER" textFill="#ff0101"
+                       wrapText="true"/>
+                <ComboBox fx:id="yearCmb" layoutX="260.0" layoutY="330.0" prefHeight="40.0" prefWidth="150.0"/>
+                <Label layoutX="323.0" layoutY="303.0" text="Year">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="134.0" layoutY="303.0" text="Month">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <ComboBox fx:id="monthCmb" layoutX="80.0" layoutY="330.0" prefHeight="40.0" prefWidth="150.0"/>
+                <MFXButton buttonType="RAISED" layoutX="80.0" layoutY="400.0" onAction="#onClickViewReport"
+                           prefHeight="50.0" prefWidth="332.0" styleClass="actButtonGreen" text="View Report">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </MFXButton>
+            </children>
+        </Pane>
+    </children>
 </StackPane>
