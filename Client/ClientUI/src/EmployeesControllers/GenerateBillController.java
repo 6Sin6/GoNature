@@ -133,13 +133,18 @@ public class GenerateBillController extends BaseController {
             controller.setMessagePopup(msg);
             controller.start(order, false);
         } catch (Exception e) {
-            e.printStackTrace();
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
         }
     }
 
     public void GenerateBillSpontaneousOrder(String orderID) {
         txtOrderID.setText(orderID);
         OnClickGenerateBillButton(null);
+    }
+
+    public void setOrderNum(String orderID) {
+        txtOrderID.setText(orderID);
     }
 
 }

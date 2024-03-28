@@ -105,6 +105,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         setParkCmbBox();
         timeOfVisitCmbBox.setItems(setComboBoxHours(8, 20));
         setDatePicker();
+        clearFields();
     }
 
     /**
@@ -171,20 +172,36 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             String strForPopup = "The park is at full capacity. Would you like to signup to the waitlist or view alternative times?";
             ConfirmationPopup confirmPopup;
             String fullName = "" + txtFirstName.getText() + " " + txtLastName.getText();
+            boolean menuSliderActivatedFlag = applicationWindowController.isMenuSlider();
             confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
-                applicationWindowController.loadVisitorsPage("WaitListPage");
+                if(menuSliderActivatedFlag)
+                {
+                    applicationWindowController.loadVisitorsPage("WaitListPage");
+                }
+                else
+                {
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/WaitListPage.fxml", applicationWindowController.getUser(), "/CommonClient/gui/LeftBackground.fxml");
+                }
                 Object controller = applicationWindowController.getCurrentActiveController();
                 if (controller instanceof WaitListPageController) {
                     ((WaitListPageController) controller).setFields(order, fullName);
                 }
                 clearFields();
             }, () -> {
-                applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
+                if(menuSliderActivatedFlag)
+                {
+                    applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
+                }
+                else
+                {
+                    applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/AlternativeTimesTable.fxml", applicationWindowController.getUser(), "/CommonClient/gui/LeftBackground.fxml");
+                }
                 Object controller = applicationWindowController.getCurrentActiveController();
                 if (controller instanceof AlternativeTimesTableController) {
                     ((AlternativeTimesTableController) controller).start(order, fullName);
                 }
+                clearFields();
             },
                     850, 400, false, "WaitList", "Alternative times", false);
             confirmPopup.show(applicationWindowController.getRoot());
@@ -225,11 +242,10 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         }
         return true;
     }
-
     /**
      * Clears all input fields and resets the form to its initial state.
      */
-    private void clearFields() {
+    public void clearFields() {
         // Clear text fields
         txtEmail.clear();
         txtFirstName.clear();

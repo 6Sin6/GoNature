@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-
+import EmployeesControllers.GenerateBillController;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,6 +56,7 @@ public class OrderBillPageController extends BaseController {
 
     private MessagePopup messageController;
     private boolean groupGuidePage;
+    private String orderID;
 
     public void cleanup() {
         discountTxt.setText("");
@@ -80,6 +81,10 @@ public class OrderBillPageController extends BaseController {
         messageController.closePopup(true);
         if (!groupGuidePage) {
             applicationWindowController.loadEmployeesPage("GenerateBillPage");
+            Object controller = applicationWindowController.getCurrentActiveController();
+            if (controller instanceof GenerateBillController) {
+                ((GenerateBillController) controller).setOrderNum(orderID);
+            }
         } else {
             applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
             Object controller = applicationWindowController.getCurrentActiveController();
@@ -92,7 +97,7 @@ public class OrderBillPageController extends BaseController {
 
     public void start(Order order, boolean referredPostOrder) {
         this.groupGuidePage = referredPostOrder;
-
+        this.orderID = order.getOrderID();
 
         Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus());
         Double fullPrice = discountType !=

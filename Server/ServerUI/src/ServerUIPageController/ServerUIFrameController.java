@@ -147,6 +147,7 @@ public class ServerUIFrameController implements Initializable {
     void stopServer(ActionEvent event) throws Exception {
         ServerUI.closeServer();
         importUsersTxt.setText("Start server to import Users");
+        importBtn.setDisable(true);
     }
 
     public synchronized void addtolog(String str) {
