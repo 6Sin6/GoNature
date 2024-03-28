@@ -203,7 +203,9 @@ public class GoNatureServer extends AbstractServer {
                     break;
                 case OP_GET_DEPARTMENT_MANAGER_PARKS:
                     handleGetDepartmentParkNames(message, client);
-                    break;
+                    break; 
+                case OP_MARK_GROUP_GUIDE_ORDER_AS_PAID :
+                    handleMarkGroupGuideOrderAsPaid(message, client);
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -567,6 +569,13 @@ public class GoNatureServer extends AbstractServer {
             client.sendToClient(respondMsg);
         }
         Message respondMsg = new Message(OpCodes.OP_GET_AVAILABLE_SPOTS, message.getMsgUserName(), availableSpots);
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleMarkGroupGuideOrderAsPaid(Message message, ConnectionToClient client) throws Exception {
+        Order order = (Order) message.getMsgData();
+        boolean isMarkedAsPaid = db.updateOrderStatus(order.getOrderID(), OrderStatus.STATUS_CONFIRMED_PAID);
+        Message respondMsg = new Message(OpCodes.OP_MARK_GROUP_GUIDE_ORDER_AS_PAID, message.getMsgUserName(), isMarkedAsPaid);
         client.sendToClient(respondMsg);
     }
 

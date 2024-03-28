@@ -69,7 +69,7 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
         if (!groupGuidePage) {
             applicationWindowController.loadEmployeesPage("GenerateBillPage");
         } else {
-            Message msgPaid = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, applicationWindowController.getUser().getUsername(), this.o1);
+            Message msgPaid = new Message(OpCodes.OP_MARK_GROUP_GUIDE_ORDER_AS_PAID, applicationWindowController.getUser().getUsername(), this.o1);
             ClientUI.client.accept(msgPaid);
             Message response = ClientCommunicator.msg;
             OpCodes returnOpCode = response.getMsgOpcode();
@@ -79,7 +79,7 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
                 return;
             }
             // Checking if the response from the server is inappropriate.
-            if (returnOpCode != OpCodes.OP_MARK_ORDER_AS_PAID) {
+            if (returnOpCode != OpCodes.OP_MARK_GROUP_GUIDE_ORDER_AS_PAID) {
                 ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
                 confirmationPopup.show(applicationWindowController.getRoot());
                 return;
