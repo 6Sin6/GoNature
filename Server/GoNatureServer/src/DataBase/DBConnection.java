@@ -628,7 +628,7 @@ public class DBConnection {
                 return "Update failed. Please try again.";
             }
 
-            return "Success";
+            return "";
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;
