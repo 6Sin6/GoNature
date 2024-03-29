@@ -355,41 +355,27 @@ public class DBConnection {
      * @param orderId The ID of the order to retrieve.
      * @return A Map with the items: "isPaid" - payment status of the order. "order" The order with the specified ID, if the order is found, or empty data if the order is not found. null if there is an error.
      */
-    public Map<String, Object> getOrderById(String orderId) throws Exception {
+    public Order getOrderById(String OrderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID=" + orderId;
+            String whereClause = "OrderID=" + OrderID;
             ResultSet results = dbController.selectRecords(tableName, whereClause);
-            ResultSet paidResults = dbController.selectRecordsFields(this.schemaName + ".payments", "OrderID=" + orderId, "paid");
-
-            Map<String, Object> orderDetails = new HashMap<>();
-
             if (results.next()) {
-                if (paidResults.next()) {
-                    boolean isPaid = paidResults.getBoolean("paid");
-                    Order order = new Order(
-                            results.getString("VisitorID"),
-                            results.getString("ParkID"),
-                            results.getTimestamp("VisitationDate"),
-                            results.getString("ClientEmailAddress"),
-                            results.getString("PhoneNumber"),
-                            OrderStatus.values()[results.getInt("orderStatus") - 1],
-                            results.getTimestamp("EnteredTime"),
-                            results.getTimestamp("ExitedTime"),
-                            results.getString("OrderID"),
-                            OrderType.values()[results.getInt("OrderType") - 1],
-                            results.getInt("NumOfVisitors")
-                    );
-                    orderDetails.put("isPaid", isPaid);
-                    orderDetails.put("order", order);
-                    return orderDetails;
-                }
+                return new Order(
+                        results.getString("VisitorID"),
+                        results.getString("ParkID"),
+                        results.getTimestamp("VisitationDate"),
+                        results.getString("ClientEmailAddress"),
+                        results.getString("PhoneNumber"),
+                        OrderStatus.values()[results.getInt("orderStatus") - 1],
+                        results.getTimestamp("EnteredTime"),
+                        results.getTimestamp("ExitedTime"),
+                        results.getString("OrderID"),
+                        OrderType.values()[results.getInt("OrderType") - 1],
+                        results.getInt("NumOfVisitors")
+                );
             }
-
-            // If order not found or not paid, return with isPaid=false and an empty order
-            orderDetails.put("isPaid", false);
-            orderDetails.put("order", new Order("", "", null, "", "", null, null, null, "", null, 0));
-            return orderDetails;
+            return new Order("", "", null, "", "", null, null, null, "", null, 0);
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;
@@ -577,7 +563,7 @@ public class DBConnection {
             String tableName = this.schemaName + ".orders";
             OrderStatus newStatus;
             if (order.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT) {
-                newStatus = OrderStatus.STATUS_FULFILLED;
+                newStatus = OrderStatus.STATUS_CONFIRMED_PAID;
             } else if (order.getOrderStatus() == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT) {
                 newStatus = OrderStatus.STATUS_SPONTANEOUS_ORDER;
             } else {
@@ -629,6 +615,29 @@ public class DBConnection {
             }
 
             return "Success";
+        } catch (SQLException e) {
+            this.serverController.addtolog(e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the exit time of an order to now.
+     *
+     * @param orderID the order ID.
+     * @return a message indicating the result of the operation, null if successful.
+     */
+    public boolean setEnterTimeOfOrder(String orderID, OrderStatus status) throws Exception {
+        try {
+            String tableName = this.schemaName + ".orders";
+            OrderStatus newStatus = status == OrderStatus.STATUS_SPONTANEOUS_ORDER ? status : OrderStatus.STATUS_FULFILLED;
+            String setClause = "`orderStatus` = " + newStatus.getOrderStatus() + ", `EnteredTime` = CURRENT_TIMESTAMP()";
+            String whereClause = "(`OrderID` = '" + orderID + "')";
+            if (!dbController.updateRecord(tableName, setClause, whereClause)) {
+                this.serverController.addtolog("Update in " + tableName + " failed. setEnterTimeOfOrder:" + orderID);
+                return false;
+            }
+            return true;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;

@@ -41,6 +41,7 @@ public enum OpCodes {
     OP_CREATE_SPOTANEOUS_ORDER(38),
     OP_SIGN_IN_VISITOR_GROUP_GUIDE(39),
     OP_MARK_GROUP_GUIDE_ORDER_AS_PAID(40),
+    OP_ENTER_VISITORS_TO_PARK(41),
     OP_DB_ERR(999);
 
     private final int opCodeValue;

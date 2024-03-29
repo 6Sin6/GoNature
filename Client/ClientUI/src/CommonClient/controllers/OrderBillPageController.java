@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import EmployeesControllers.GenerateBillController;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -119,12 +119,12 @@ public class OrderBillPageController extends BaseController {
         }
     }
 
-    public void start(Order order, boolean referredPostOrder, boolean prepaid) {
+    public void start(Order order, boolean referredPostOrder) {
         mostRecentOrder = order;
         this.groupGuidePage = referredPostOrder;
         this.orderID = order.getOrderID();
 
-        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus(), prepaid);
+        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus(), false);
         Double fullPrice = discountType !=
                 Discount.PREPAID_PREORDERED_GROUP_DISCOUNT && discountType != Discount.PREORDERED_GROUP_DISCOUNT ?
                 order.getNumOfVisitors() * Order.pricePerVisitor :

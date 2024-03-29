@@ -8,7 +8,6 @@ import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
 import Entities.*;
 import ServerUIPageController.ServerUIFrameController;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -204,9 +203,11 @@ public class GoNatureServer extends AbstractServer {
                     break;
                 case OP_GET_DEPARTMENT_MANAGER_PARKS:
                     handleGetDepartmentParkNames(message, client);
-                    break; 
-                case OP_MARK_GROUP_GUIDE_ORDER_AS_PAID :
+                    break;
+                case OP_MARK_GROUP_GUIDE_ORDER_AS_PAID:
                     handleMarkGroupGuideOrderAsPaid(message, client);
+                case OP_ENTER_VISITORS_TO_PARK:
+                    handleEnterVisitorsToPark(message, client);
                 case OP_QUIT:
                     handleQuit(client);
                     break;
@@ -239,6 +240,14 @@ public class GoNatureServer extends AbstractServer {
         String parkID = (String) message.getMsgData();
         String parkName = db.getParkNameByID(Integer.parseInt(parkID));
         Message respondMsg = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, message.getMsgUserName(), parkName);
+
+        client.sendToClient(respondMsg);
+    }
+
+    private void handleEnterVisitorsToPark(Message message, ConnectionToClient client) throws Exception {
+        Order order = (Order) message.getMsgData();
+        boolean result = db.setEnterTimeOfOrder(order.getOrderID(), order.getOrderStatus());
+        Message respondMsg = new Message(OpCodes.OP_ENTER_VISITORS_TO_PARK, message.getMsgUserName(), result);
 
         client.sendToClient(respondMsg);
     }
@@ -493,7 +502,7 @@ public class GoNatureServer extends AbstractServer {
 
     private void handleGetOrderByID(Message message, ConnectionToClient client) throws Exception {
         String orderID = (String) message.getMsgData();
-        Map<String, Object> order = db.getOrderById(orderID);
+        Order order = db.getOrderById(orderID);
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }
