@@ -157,6 +157,20 @@ public class GenerateBillController extends BaseController {
                 }
                 break;
             case STATUS_SPONTANEOUS_ORDER:
+                if (mostRecentOrder.getVisitorID().equals("SPONTANEOUS_IN_PARK")) {
+                    EnterParkButton.setDisable(true);
+                    lblErrorMsg.setText("Order has been already redeemed.");
+                } else {
+                    if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
+                        EnterParkButton.setDisable(false);
+                        btnGenerateBill.setDisable(true);
+                        lblErrorMsg.setText("Order is already paid and the visitor/s can enter the park.");
+                    } else {
+                        EnterParkButton.setDisable(true);
+                        lblErrorMsg.setText("Order is already paid and but the reservation time is not now.");
+                    }
+                }
+                break;
             case STATUS_CONFIRMED_PAID:
                 if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
                     EnterParkButton.setDisable(false);

@@ -10,6 +10,7 @@ import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -45,13 +46,17 @@ public class SpontaneousOrderSubmitController extends BaseController {
     private String parkName;
 
     @FXML
+    private CheckBox groupGuideCheckBox;
+
+    @FXML
     void OnClickCreateOrderButton(ActionEvent event) throws CommunicationException {
 
         if (!validateFields()) {
             return;
         }
         errorLbl.setText("");
-        Order order = new Order("SPONTANEOUS", ParkBank.getUnmodifiableMap().get(parkName), null, txtEmail.getText(), txtPhone.getText(), OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT, null, null, null, OrderType.ORD_TYPE_SINGLE, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
+        OrderType orderType = groupGuideCheckBox.isSelected() ? OrderType.ORD_TYPE_GROUP : OrderType.ORD_TYPE_SINGLE;
+        Order order = new Order("SPONTANEOUS", ParkBank.getUnmodifiableMap().get(parkName), null, txtEmail.getText(), txtPhone.getText(), OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT, null, null, null, orderType, (CommonUtils.convertStringToInt(txtNumOfVisitors.getText())));
         Object msg = new Message(OpCodes.OP_CREATE_SPOTANEOUS_ORDER, applicationWindowController.getUser().getUsername(), order);
         ClientUI.client.accept(msg);
         Message respondMsg = ClientCommunicator.msg;
