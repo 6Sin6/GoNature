@@ -159,9 +159,10 @@ public class UsageReport extends ParkReport implements Serializable {
         }
 
         /**
-         * Getter for the fromWhatDate field.
+         * This method sets the date from which the park's capacity is valid.
+         * It takes a MyTime object representing the date and assigns it to the fromWhatDate field.
          *
-         * @return A MyTime object representing the date from which the capacity is valid.
+         * @param fromWhatDate A MyTime object representing the date from which the park's capacity is valid.
          */
         private void setFromWhatDate(MyTime fromWhatDate) {
             this.fromWhatDate = fromWhatDate;

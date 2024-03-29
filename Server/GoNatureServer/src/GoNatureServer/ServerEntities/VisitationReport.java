@@ -31,12 +31,17 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Constructs a new VisitationReport object with the specified date and department.
+     * Constructor for the VisitationReport class.
      *
-     * @param departmentID The ID of the department associated with the report.
-     * @param statName     The name of the statistic.
-     * @param reportData   The data associated with the report.
-     *                     The data is stored as a HashMap String, ResultSet .
+     * This constructor initializes a new instance of the VisitationReport class with the specified department ID, statistic name, and report data.
+     * It first calls the superclass constructor with the department ID.
+     * Then, it initializes the reportData field as a new HashMap and adds the statistic name and report data to it.
+     *
+     * @param departmentID The ID of the department associated with the report. This should be an Integer.
+     * @param statName The name of the statistic associated with the report. This should be a String.
+     * @param reportData The data associated with the report. This should be a ResultSet.
+     * @throws DocumentException If an error occurs while creating the PDF document in the superclass constructor.
+     * @throws IOException If an error occurs while handling the PDF file in the superclass constructor.
      */
     public VisitationReport(Integer departmentID, String statName, ResultSet reportData) throws DocumentException, IOException {
         super(departmentID);
@@ -270,10 +275,14 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Creates a table with the data in the specified ResultSet.
+     * This method creates a table with data from a specified order type.
+     * It acts as a wrapper for the overloaded createTable method that takes an integer as a parameter.
+     * The method first retrieves the integer value of the specified order type by calling the getOrderType method.
+     * Then, it calls the createTable method with the retrieved integer value and returns the resulting PdfPTable.
      *
-     * @param orderType The order type to display in the table.
-     * @return The PdfPTable object representing the table.
+     * @param orderType The order type to display in the table. It should be an instance of the OrderType enum.
+     * @return A PdfPTable object representing the table. Each row in the table corresponds to a record in the ResultSet that matches the specified order type.
+     * @throws SQLException If an error occurs while creating the table.
      */
     private PdfPTable createTable(OrderType orderType) throws SQLException {
         return this.createTable(orderType.getOrderType());
