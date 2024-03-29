@@ -9,6 +9,7 @@ import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
+import Entities.OrderStatus;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -16,7 +17,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static CommonUtils.CommonUtils.isAllDigits;
@@ -75,6 +78,11 @@ public class GenerateBillController extends BaseController {
             return;
         }
 
+        if (!(Boolean) response.getMsgData()) {
+            lblErrorMsg.setText("Failure. Order paid, expired or ineligible to be paid.");
+            successMsg.setText("");
+            return;
+        }
         lblErrorMsg.setText("");
         successMsg.setText("Order marked as paid successfully");
     }
@@ -105,14 +113,24 @@ public class GenerateBillController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if (!(response.getMsgData() instanceof Order)) {
+        Map<String, Object> results = (Map<String, Object>) response.getMsgData();
+        Order order = (Order) results.get("order");
+        if (!(order instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
 
+        OrderStatus orderStatus = order.getOrderStatus();
+        if (orderStatus != OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT && orderStatus != OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT) {
+            lblErrorMsg.setText("Order not confirmed, no bill to present yet.");
+            successMsg.setText("");
+            return;
+        }
 
-        mostRecentOrder = (Order) response.getMsgData();
+        boolean isPrepaid = (boolean) results.get("isPaid");
+
+        mostRecentOrder = order;
         if (Objects.equals(mostRecentOrder.getOrderID(), "")) {
             lblErrorMsg.setText("Order not found");
             successMsg.setText("");
@@ -120,10 +138,10 @@ public class GenerateBillController extends BaseController {
         }
         lblErrorMsg.setText("");
         successMsg.setText("Bill generated successfully");
-        handleBillPresentation(mostRecentOrder);
+        handleBillPresentation(mostRecentOrder, isPrepaid);
     }
 
-    private void handleBillPresentation(Order order) {
+    private void handleBillPresentation(Order order, boolean prepaid) {
         try {
             MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true, false);
             OrderBillPageController controller = (OrderBillPageController) msg.getController();
@@ -131,7 +149,7 @@ public class GenerateBillController extends BaseController {
             msg.show(applicationWindowController.getRoot());
 
             controller.setMessagePopup(msg);
-            controller.start(order, false);
+            controller.start(order, false, prepaid);
         } catch (Exception e) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());

@@ -14,7 +14,7 @@ public enum OpCodes {
     OP_GET_AVAILABLE_SPOTS(10),
     OP_HANDLE_VISITATION_STATUS(11), /* Expect: String - OrderID, OrderStatus status. Returns: boolean indicator*/
     OP_HANDLE_GROUP_VISITATION_STATUS(12), /* Same method as above */
-    OP_GET_ORDER_BY_ID(13), /* Expect: String - OrderID, Returns: Order with data if order is found. Order with null data if order is not found. Null if exception was thrown */
+    OP_GET_ORDER_BY_ID(13), /* Expect: String - OrderID, Returns: Map<String, Order> - "isPaid" - payment status, "order" - Order. Order with null data if order is not found. Null if exception was thrown */
     OP_GET_GROUP_VISITATION_BY_ID(14), /* Same method as above */
     OP_GET_PARK_DETAILS_BY_PARK_ID(15), /* Expect: String - ParkID, Returns: Park instance with data if park is found. Park with null data if park is not found. Null if exception was thrown */
     OP_SIGN_IN(16), /* Expect: String - username, String - password. Returns: User with data if success. User with null data if failure. Null if exception was thrown */

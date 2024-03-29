@@ -8,6 +8,7 @@ import CommonServer.ocsf.ConnectionToClient;
 import DataBase.DBConnection;
 import Entities.*;
 import ServerUIPageController.ServerUIFrameController;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -492,7 +493,7 @@ public class GoNatureServer extends AbstractServer {
 
     private void handleGetOrderByID(Message message, ConnectionToClient client) throws Exception {
         String orderID = (String) message.getMsgData();
-        Order order = db.getOrderById(orderID);
+        Map<String, Object> order = db.getOrderById(orderID);
         Message respondMsg = new Message(OpCodes.OP_GET_ORDER_BY_ID, message.getMsgUserName(), order);
         client.sendToClient(respondMsg);
     }

@@ -47,12 +47,14 @@ public enum Discount {
         this.discount = discount;
     }
 
-    public static Discount getDiscountType(OrderType type, OrderStatus status) {
+    public static Discount getDiscountType(OrderType type, OrderStatus status, boolean prepaid) {
         switch (type) {
             case ORD_TYPE_SINGLE:
-                return status != OrderStatus.STATUS_SPONTANEOUS_ORDER ? Discount.PREORDERED_SINGLE_DISCOUNT : Discount.SPONTANEOUS_SINGLE_DISCOUNT;
+                return status != OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT ? Discount.PREORDERED_SINGLE_DISCOUNT : Discount.SPONTANEOUS_SINGLE_DISCOUNT;
             case ORD_TYPE_GROUP:
-                return status != OrderStatus.STATUS_SPONTANEOUS_ORDER ? Discount.PREORDERED_GROUP_DISCOUNT : Discount.SPONTANEOUS_GROUP_DISCOUNT;
+                if (status != OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT)
+                    return prepaid ? Discount.PREPAID_PREORDERED_GROUP_DISCOUNT : Discount.PREORDERED_GROUP_DISCOUNT;
+                return Discount.SPONTANEOUS_GROUP_DISCOUNT;
         }
         return null;
     }
@@ -72,7 +74,7 @@ public enum Discount {
             case PREORDERED_GROUP_DISCOUNT:
                 return price - price * 0.25;
             case PREPAID_PREORDERED_GROUP_DISCOUNT:
-                return applyDiscount(price, discount) - price * 0.12;
+                return applyDiscount(price, PREORDERED_GROUP_DISCOUNT) - price * 0.12;
             case SPONTANEOUS_SINGLE_DISCOUNT:
             case SPONTANEOUS_FAMILY_DISCOUNT:
                 return price;

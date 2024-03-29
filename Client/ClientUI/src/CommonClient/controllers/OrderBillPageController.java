@@ -95,13 +95,13 @@ public class OrderBillPageController extends BaseController {
         }
     }
 
-    public void start(Order order, boolean referredPostOrder) {
+    public void start(Order order, boolean referredPostOrder, boolean prepaid) {
         this.groupGuidePage = referredPostOrder;
         this.orderID = order.getOrderID();
 
-        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus());
+        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus(), prepaid);
         Double fullPrice = discountType !=
-                Discount.PREPAID_PREORDERED_GROUP_DISCOUNT ?
+                Discount.PREPAID_PREORDERED_GROUP_DISCOUNT && discountType != Discount.PREORDERED_GROUP_DISCOUNT ?
                 order.getNumOfVisitors() * Order.pricePerVisitor :
                 (order.getNumOfVisitors() - 1) * Order.pricePerVisitor;
         fullPriceTxt.setText(String.format("%.2f", fullPrice));

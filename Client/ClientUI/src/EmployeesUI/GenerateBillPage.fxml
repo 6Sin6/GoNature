@@ -11,16 +11,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.GenerateBillController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.GenerateBillController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/parkEmployeeBackground.jpg" />
+            <Image url="@/assets/parkEmployeeBackground.jpg" />
          </image>
       </ImageView>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="340.0" layoutX="71.0" layoutY="230.0" stroke="BLACK" strokeType="INSIDE" width="324.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="390.0" layoutX="71.0" layoutY="230.0" stroke="BLACK" strokeType="INSIDE" width="324.0" />
             <Text layoutX="283.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Generate Order Bill" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="48.0" />
@@ -32,7 +32,7 @@
                </font>
             </Text>
             <TextField fx:id="txtOrderID" layoutX="133.0" layoutY="295.0" prefHeight="40.0" prefWidth="200.0" />
-            <Label fx:id="lblErrorMsg" alignment="CENTER" layoutX="106.0" layoutY="335.0" prefHeight="20.0" prefWidth="251.0" styleClass="error-text" textAlignment="CENTER" textFill="RED">
+            <Label fx:id="lblErrorMsg" alignment="CENTER" layoutX="83.0" layoutY="536.0" prefHeight="71.0" prefWidth="300.0" styleClass="error-text" textAlignment="CENTER" textFill="RED" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></Label>

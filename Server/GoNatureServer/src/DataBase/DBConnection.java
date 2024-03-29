@@ -8,6 +8,7 @@ import GoNatureServer.ServerEntities.UsageReport;
 import GoNatureServer.ServerEntities.VisitationReport;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.*;
@@ -352,35 +353,50 @@ public class DBConnection {
     /**
      * Retrieves an order by its ID.
      *
-     * @param OrderID The ID of the order to retrieve.
-     * @return The order with the specified ID, or null if the order is not found or there is an error.
+     * @param orderId The ID of the order to retrieve.
+     * @return A Map with the items: "isPaid" - payment status of the order. "order" The order with the specified ID, if the order is found, or empty data if the order is not found. null if there is an error.
      */
-    public Order getOrderById(String OrderID) throws Exception {
+    public Map<String, Object> getOrderById(String orderId) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID=" + OrderID;
+            String whereClause = "OrderID=" + orderId;
             ResultSet results = dbController.selectRecords(tableName, whereClause);
+            ResultSet paidResults = dbController.selectRecordsFields(this.schemaName + ".payments", "OrderID=" + orderId, "paid");
+
+            Map<String, Object> orderDetails = new HashMap<>();
+
             if (results.next()) {
-                return new Order(
-                        results.getString("VisitorID"),
-                        results.getString("ParkID"),
-                        results.getTimestamp("VisitationDate"),
-                        results.getString("ClientEmailAddress"),
-                        results.getString("PhoneNumber"),
-                        OrderStatus.values()[results.getInt("orderStatus") - 1],
-                        results.getTimestamp("EnteredTime"),
-                        results.getTimestamp("ExitedTime"),
-                        results.getString("OrderID"),
-                        OrderType.values()[results.getInt("OrderType") - 1],
-                        results.getInt("NumOfVisitors")
-                );
+                if (paidResults.next()) {
+                    boolean isPaid = paidResults.getBoolean("paid");
+                    Order order = new Order(
+                            results.getString("VisitorID"),
+                            results.getString("ParkID"),
+                            results.getTimestamp("VisitationDate"),
+                            results.getString("ClientEmailAddress"),
+                            results.getString("PhoneNumber"),
+                            OrderStatus.values()[results.getInt("orderStatus") - 1],
+                            results.getTimestamp("EnteredTime"),
+                            results.getTimestamp("ExitedTime"),
+                            results.getString("OrderID"),
+                            OrderType.values()[results.getInt("OrderType") - 1],
+                            results.getInt("NumOfVisitors")
+                    );
+                    orderDetails.put("isPaid", isPaid);
+                    orderDetails.put("order", order);
+                    return orderDetails;
+                }
             }
-            return new Order("", "", null, "", "", null, null, null, "", null, 0);
+
+            // If order not found or not paid, return with isPaid=false and an empty order
+            orderDetails.put("isPaid", false);
+            orderDetails.put("order", new Order("", "", null, "", "", null, null, null, "", null, 0));
+            return orderDetails;
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;
         }
     }
+
 
     /**
      * Retrieves all orders associated with a specific visitor.
@@ -570,7 +586,7 @@ public class DBConnection {
             }
             String setClause = "orderStatus=" + newStatus.getOrderStatus();
             String whereClause = "OrderID=" + orderID + " AND orderStatus IN (" + OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT.getOrderStatus() + "," + OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT.getOrderStatus() + ")";
-            String whereClauseTimeConstraint = " AND HOUR(VisitationDate) >= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE)";
+            String whereClauseTimeConstraint = " AND HOUR(ExitedTime) >= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE)";
             if (!dbController.updateRecord(tableName, setClause, whereClause + whereClauseTimeConstraint)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. Mark order as paid:" + orderID);
                 return false;
@@ -603,32 +619,13 @@ public class DBConnection {
     public String setExitTimeOfOrder(String orderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "'";
+            String whereClause = "OrderID='" + orderID + "' AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus();
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
             if (!results.next()) {
-                return "Order ID does not exist.";
+                return "Order ineligible to be updated.";
             }
 
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            Timestamp exitTime = results.getTimestamp("ExitedTime");
-            // Extract year and month components from the current time
-            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
-            int currentYear = currentDate.getYear();
-            int currentMonth = currentDate.getMonthValue();
-
-            // Extract year and month components from the exit time
-            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
-            int exitYear = exitDate.getYear();
-            int exitMonth = exitDate.getMonthValue();
-            if (currentYear != exitYear || currentMonth != exitMonth) {
-                return "Order is not for today.";
-            }
-
-            if (currentTime.compareTo(exitTime) > 0) {
-                return "Order has already been fulfilled.";
-            }
-
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause)) {
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
                 return "Update failed. Please try again.";
             }
 

@@ -97,7 +97,7 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
         this.groupGuidePage = referredPostOrder;
         o1 = order;
 
-        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus());
+        Discount discountType = Discount.getDiscountType(order.getOrderType(), order.getOrderStatus(), true);
         Double fullPrice = discountType !=
                 Discount.PREPAID_PREORDERED_GROUP_DISCOUNT ?
                 order.getNumOfVisitors() * Order.pricePerVisitor :
