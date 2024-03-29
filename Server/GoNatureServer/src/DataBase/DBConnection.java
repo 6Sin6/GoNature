@@ -604,7 +604,7 @@ public class DBConnection {
     public String setExitTimeOfOrder(String orderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "' AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus();
+            String whereClause = "OrderID='" + orderID + "' AND HOUR(ExitedTime) >= HOUR(CURRENT_TIMESTAMP()) AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus IN ('" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "')";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
             if (!results.next()) {
                 return "Order ineligible to be updated.";
@@ -614,7 +614,7 @@ public class DBConnection {
                 return "Update failed. Please try again.";
             }
 
-            return "Success";
+            return "";
         } catch (SQLException e) {
             this.serverController.addtolog(e.getMessage());
             throw e;

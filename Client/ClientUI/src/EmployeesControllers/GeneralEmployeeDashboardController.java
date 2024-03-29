@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
-public abstract class GeneralEmployeeDashboard extends BaseController {
+public abstract class GeneralEmployeeDashboardController extends BaseController {
     protected InputTextPopup popup;
 
     public void cleanup() {
@@ -41,6 +41,7 @@ public abstract class GeneralEmployeeDashboard extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
+
         if (!(response.getMsgData() instanceof String)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
@@ -48,7 +49,7 @@ public abstract class GeneralEmployeeDashboard extends BaseController {
         }
 
         String answer = ClientCommunicator.msg.getMsgData().toString();
-        if (answer != null) {
+        if (!answer.equals("")) {
             popup.setLabelColor("#FF0000");
             popup.setErrorLabel(answer);
         } else {

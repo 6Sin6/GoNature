@@ -22,6 +22,7 @@
         <MFXButton fx:id="btnAct1" buttonType="RAISED" layoutX="37.0" layoutY="397.0" prefHeight="34.0" prefWidth="225.0" styleClass="menu-item" />
         <MFXButton fx:id="btnAct2" buttonType="RAISED" layoutX="37.0" layoutY="472.0" prefHeight="34.0" prefWidth="225.0" styleClass="menu-item" />
         <MFXButton fx:id="btnAct3" layoutX="37.0" layoutY="547.0" prefHeight="34.0" prefWidth="225.0" styleClass="menu-item" text="Button" visible="false" />
+        <MFXButton fx:id="btnAct4" layoutX="37.0" layoutY="622.0" prefHeight="34.0" prefWidth="225.0" styleClass="menu-item" text="Button" visible="false" />
         <MFXButton fx:id="logoutBtnMenu" layoutX="39.0" layoutY="697.0" onAction="#logout" prefHeight="34.0" prefWidth="225.0" text="Logout" />
     </children>
 </Pane>
