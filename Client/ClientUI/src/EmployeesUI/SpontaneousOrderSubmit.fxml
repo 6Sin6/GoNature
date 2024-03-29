@@ -66,27 +66,27 @@
       <TextField fx:id="txtEmail" layoutX="230.0" layoutY="406.0" prefHeight="30.0" prefWidth="200.0" promptText="israelwins@mail.com" />
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/fNameIcon.gif" />
+            <Image url="@/assets/fNameIcon.gif" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/fNameIcon.gif" />
+            <Image url="@/assets/fNameIcon.gif" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/familyIcon.gif" />
+            <Image url="@/assets/familyIcon.gif" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/phoneIcon.gif" />
+            <Image url="@/assets/phoneIcon.gif" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="406.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="/assets/emailIcon.gif" />
+            <Image url="@/assets/emailIcon.gif" />
          </image>
       </ImageView>
     </children>

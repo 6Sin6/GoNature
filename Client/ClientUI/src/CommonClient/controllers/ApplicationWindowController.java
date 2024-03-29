@@ -376,7 +376,6 @@ public class ApplicationWindowController implements Initializable {
         EmployeesPagesMap.put("PrepareUsageReportPage", "/EmployeesUI/PrepareUsageReportPage.fxml");
         EmployeesPagesMap.put("RegisterGroupGuidePage", "/EmployeesUI/RegisterGroupGuidePage.fxml");
         EmployeesPagesMap.put("RequestSettingParkParametersPage", "/EmployeesUI/RequestSettingParkParametersPage.fxml");
-        EmployeesPagesMap.put("UnplannedVisitInsertionPage", "/EmployeesUI/UnplannedVisitInsertionPage.fxml");
         EmployeesPagesMap.put("OrderBillPage", "/CommonClient/gui/OrderBillPage.fxml");
     }
 
