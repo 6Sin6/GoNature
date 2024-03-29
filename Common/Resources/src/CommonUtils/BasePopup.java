@@ -8,6 +8,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+
+/**
+ * Base class for all popups in the application.
+ */
 public abstract class BasePopup {
     protected BorderPane root;
     protected VBox popup = new VBox(15);
@@ -17,7 +21,13 @@ public abstract class BasePopup {
     protected int popupWidth;
     protected int popupHeight;
 
-
+    /**
+     * Constructor for BasePopup class. This constructor is used to create a popup with default width and height.
+     *
+     * @param fullScreen - If true, the popup will be displayed in full screen mode.
+     * @param width      - Width of the popup.
+     * @param height     - Height of the popup.
+     */
     public BasePopup(boolean fullScreen, int width, int height) {
         this.fullScreenMode = fullScreen;
         this.popupWidth = fullScreen ? 1500 : width;
@@ -25,6 +35,9 @@ public abstract class BasePopup {
         setupPopup();
     }
 
+    /**
+     * Sets up the visual components of the popup.
+     */
     private void setupPopup() {
         popup.setMaxSize(popupWidth, popupHeight);
         popup.setPrefSize(popupWidth, popupHeight);
@@ -37,6 +50,11 @@ public abstract class BasePopup {
         popup.setTranslateY(-1200); // Initially off-screen
     }
 
+    /**
+     * Displays the popup within the specified parent BorderPane.
+     *
+     * @param parent The parent BorderPane where the popup will be shown.
+     */
     public void show(BorderPane parent) {
         this.root = parent;
         if (!parent.getChildren().contains(modalLayer)) {
@@ -54,6 +72,11 @@ public abstract class BasePopup {
         transition.play();
     }
 
+    /**
+     * Closes the popup.
+     *
+     * @param onCloseNavigateToPage Whether the popup is being closed due to navigation.
+     */
     public void closePopup(boolean onCloseNavigateToPage) {
         TranslateTransition closeTransition = new TranslateTransition(Duration.seconds(0.3), popup);
         closeTransition.setToY(-1200);

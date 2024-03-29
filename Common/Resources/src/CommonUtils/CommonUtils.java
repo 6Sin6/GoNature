@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * CommonUtils provides utility methods for various tasks.
+ */
 public class CommonUtils {
 
     public static Integer DB_ERROR = 1;
@@ -20,8 +24,8 @@ public class CommonUtils {
     /**
      * Checks if the given string is a valid email address.
      *
-     * @param email - the email address to check
-     * @return true if the string is a valid email address false otherwise
+     * @param email The email address to check.
+     * @return True if the string is a valid email address, false otherwise.
      */
     public static boolean isEmailAddressValid(String email) {
         if (email == null)
@@ -35,15 +39,21 @@ public class CommonUtils {
     }
 
     /**
-     * Checks if the given order id is valid.
+     * Checks if the given order ID is valid.
      *
-     * @param orderID - string of the order id.
-     * @return true if the order id is valid (positive integer), false otherwise
+     * @param orderID String representation of the order ID.
+     * @return True if the order ID is valid (positive integer), false otherwise.
      */
     public static boolean isValidOrderID(String orderID) {
         return (isAllDigits(orderID) && Integer.parseInt(orderID) > 0);
     }
 
+    /**
+     * Converts a string to an integer.
+     *
+     * @param str The string to convert.
+     * @return The integer value of the string, or 0 if not a valid integer.
+     */
     public static int convertStringToInt(String str) {
         try {
             // Convert the string to an int
@@ -154,6 +164,12 @@ public class CommonUtils {
         return Timestamp.valueOf(dateFormat.format(date) + " " + hours + ":" + mins + ":00");
     }
 
+    /**
+     * Retrieves a list of valid hours within the next week starting from the given timestamp.
+     *
+     * @param startTimestamp The starting timestamp.
+     * @return A list of valid hours (within 8:00 AM to 8:59 PM) for the next week.
+     */
     public static List<Timestamp> getNextWeekHours(Timestamp startTimestamp) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(startTimestamp.getTime());
@@ -172,6 +188,13 @@ public class CommonUtils {
         return validHours;
     }
 
+    /**
+     * Converts a combined date and time string to a java.sql.Timestamp.
+     *
+     * @param date The date string (ISO format: yyyy-MM-dd).
+     * @param time The time string (ISO format: HH:mm:ss).
+     * @return The corresponding java.sql.Timestamp.
+     */
     public static Timestamp convertStringToTimestamp(String date, String time) {
         // Combine Date and Time Strings
         String dateTimeString = date + "T" + time;
@@ -188,6 +211,12 @@ public class CommonUtils {
         return timestamp;
     }
 
+    /**
+     * Parses the visit date from a Timestamp object.
+     *
+     * @param visitTime The Timestamp object representing the visit date and time.
+     * @return The visit date as a string in "yyyy-MM-dd" format.
+     */
     public static String parseVisitDate(Timestamp visitTime) {
         // Convert the Timestamp to a Date object
         Date date = new Date(visitTime.getTime());
@@ -199,6 +228,12 @@ public class CommonUtils {
         return dateFormat.format(date);
     }
 
+    /**
+     * Parses the visit time from a Timestamp object.
+     *
+     * @param visitTime The Timestamp object representing the visit date and time.
+     * @return The visit time as a string in "HH:mm:ss" format.
+     */
     public static String parseVisitTime(Timestamp visitTime) {
         // Create a SimpleDateFormat instance with "yyyy-MM-dd" format
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -207,6 +242,13 @@ public class CommonUtils {
         return dateFormat.format(visitTime);
     }
 
+    /**
+     * Checks if the current time is between the given start and end times.
+     *
+     * @param startTime The start time.
+     * @param endTime   The end time.
+     * @return True if the current time is between the start and end times, false otherwise.
+     */
     public static boolean isTimeBetween(Timestamp startTime, Timestamp endTime) {
         // Generate the current timestamp
         Timestamp currentTime = Timestamp.from(Instant.now());

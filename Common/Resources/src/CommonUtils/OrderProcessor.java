@@ -1,21 +1,35 @@
 package CommonUtils;
 
 import Entities.Order;
-import Entities.OrderStatus;
-import Entities.OrderType;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OrderProcessor {
-
+    /**
+     * Returns the best combination of orders that sum up to the target number of visitors.
+     *
+     * @param orders The list of orders to filter.
+     * @param target The target number of visitors.
+     * @return The filtered list of orders.
+     */
     public static List<Order> findBestCombination(List<Order> orders, int target) {
         Result result = findBestCombination(orders, 0, target, new ArrayList<>(), 0, 0, new ArrayList<>());
         return result.bestCombination;
     }
 
+    /**
+     * Finds the best combination of orders that sum up to the target number of visitors.
+     *
+     * @param orders             The list of orders to consider.
+     * @param start              The index to start from in the list of orders.
+     * @param target             The target number of visitors.
+     * @param currentCombination The current combination of orders.
+     * @param currentSum         The current sum of visitors in the combination.
+     * @param closestSum         The closest sum of visitors to the target.
+     * @param bestCombination    The best combination of orders found so far.
+     * @return The best combination of orders that sum up to the target number of visitors.
+     */
     private static Result findBestCombination(List<Order> orders, int start, int target, List<Order> currentCombination, int currentSum, int closestSum, List<Order> bestCombination) {
         if (currentSum > target) {
             return new Result(closestSum, bestCombination);
@@ -35,33 +49,22 @@ public class OrderProcessor {
         return new Result(closestSum, bestCombination);
     }
 
+    /**
+     * Represents the result of the findBestCombination method.
+     */
     private static class Result {
         int closestSum;
         List<Order> bestCombination;
 
+        /**
+         * Constructs a new Result object.
+         *
+         * @param closestSum      The closest sum of visitors to the target.
+         * @param bestCombination The best combination of orders found so far.
+         */
         Result(int closestSum, List<Order> bestCombination) {
             this.closestSum = closestSum;
             this.bestCombination = bestCombination;
-        }
-    }
-
-    // Example usage
-    public static void main(String[] args) {
-        List<Order> orders = Arrays.asList(
-                new Order("2", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "O2", OrderType.ORD_TYPE_SINGLE, 2),
-                new Order("1", "Park1", new Timestamp(System.currentTimeMillis()), "email1@test.com", "111", OrderStatus.STATUS_WAITLIST, null, null, "O1", OrderType.ORD_TYPE_SINGLE, 5),
-                new Order("4", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "O5", OrderType.ORD_TYPE_SINGLE, 2),
-                new Order("5", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "7", OrderType.ORD_TYPE_SINGLE, 3),
-                new Order("6", "Park2", new Timestamp(System.currentTimeMillis()), "email2@test.com", "222", OrderStatus.STATUS_WAITLIST, null, null, "9", OrderType.ORD_TYPE_SINGLE, 2),
-                new Order("3", "Park3", new Timestamp(System.currentTimeMillis()), "email3@test.com", "333", OrderStatus.STATUS_WAITLIST, null, null, "O3", OrderType.ORD_TYPE_SINGLE, 2),
-                new Order("9", "Park1", new Timestamp(System.currentTimeMillis()), "email1@test.com", "111", OrderStatus.STATUS_WAITLIST, null, null, "O6", OrderType.ORD_TYPE_SINGLE, 5)
-        );
-
-        int target = 10;
-        List<Order> bestCombination = findBestCombination(orders, target);
-        System.out.println("Best combination of orders:");
-        for (Order order : bestCombination) {
-            System.out.println("OrderID: " + order.getOrderID() + ", NumOfVisitors: " + order.getNumOfVisitors());
         }
     }
 }
