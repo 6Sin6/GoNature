@@ -630,8 +630,17 @@ public class DBConnection {
     public boolean setEnterTimeOfOrder(String orderID, OrderStatus status) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            OrderStatus newStatus = status == OrderStatus.STATUS_SPONTANEOUS_ORDER ? status : OrderStatus.STATUS_FULFILLED;
-            String setClause = "`orderStatus` = " + newStatus.getOrderStatus() + ", `EnteredTime` = CURRENT_TIMESTAMP()";
+            OrderStatus newStatus = status == OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT ? OrderStatus.STATUS_SPONTANEOUS_ORDER : OrderStatus.STATUS_FULFILLED;
+            String newVisitorID = "";
+            if (newStatus == OrderStatus.STATUS_SPONTANEOUS_ORDER) {
+                newVisitorID = "SPONTANEOUS_IN_PARK";
+            }
+            String setClause;
+            if (newVisitorID.isEmpty()) {
+                setClause = "`orderStatus` = " + newStatus.getOrderStatus() + ", `EnteredTime` = CURRENT_TIMESTAMP()";
+            } else {
+                setClause = "`orderStatus` = " + newStatus.getOrderStatus() + ", `EnteredTime` = CURRENT_TIMESTAMP(), VisitorID = '" + newVisitorID + "'";
+            }
             String whereClause = "(`OrderID` = '" + orderID + "')";
             if (!dbController.updateRecord(tableName, setClause, whereClause)) {
                 this.serverController.addtolog("Update in " + tableName + " failed. setEnterTimeOfOrder:" + orderID);
