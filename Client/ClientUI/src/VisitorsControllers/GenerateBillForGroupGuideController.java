@@ -15,37 +15,80 @@ import java.util.Date;
 
 public class GenerateBillForGroupGuideController extends OrderBillPageController {
 
+    /**
+     * Reference to the Text node representing the discount in the UI.
+     */
     @FXML
     private Text discountTxt;
 
+    /**
+     * Reference to the Text node representing the full price in the UI.
+     */
     @FXML
     private Text fullPriceTxt;
 
+    /**
+     * Reference to the Text node representing the date in the UI.
+     */
     @FXML
     private Text dateTxt;
 
+    /**
+     * Reference to the Text node representing the number of visitors in the UI.
+     */
     @FXML
     private Text numVisitorsTxt;
 
+    /**
+     * Reference to the Text node representing the order ID in the UI.
+     */
     @FXML
     private Text orderIdTxt;
 
+    /**
+     * Reference to the Text node representing the order type in the UI.
+     */
     @FXML
     private Text orderTypeTxt;
 
+    /**
+     * Reference to the Text node representing the price after discount in the UI.
+     */
     @FXML
     private Text priceAfterDiscTxt;
 
+    /**
+     * Reference to the Text node representing the type description in the UI.
+     */
     @FXML
     private Text typeDescTxt;
 
+    /**
+     * Reference to the Text node representing the price in the UI.
+     */
     @FXML
     private Text priceTxt;
 
+    /**
+     * Reference to the controller for the message popup.
+     */
     private MessagePopup messageController;
+
+    /**
+     * Flag indicating whether the controller is for a group guide page.
+     */
     private boolean groupGuidePage;
+
+    /**
+     * The Order object associated with the controller.
+     */
     private Order o1;
 
+
+    /**
+     * Cleans up the UI by resetting the text content of various Text nodes to empty strings.
+     * This method is typically called to reset the UI state before displaying new data.
+     */
     public void cleanup() {
         discountTxt.setText("");
         fullPriceTxt.setText("");
@@ -56,14 +99,32 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
         typeDescTxt.setText("");
     }
 
+
+    /**
+     * Sets the message popup controller associated with this controller.
+     *
+     * @param messageController The MessagePopup controller to be associated with this controller.
+     *                          This controller will use the provided message popup controller for operations such as closing the popup.
+     */
     public void setMessagePopup(MessagePopup messageController) {
         this.messageController = messageController;
     }
 
+    /**
+     * Closes the message popup without further action.
+     * This method is called when the user wants to close the popup without taking any action.
+     */
     public void closePopup() {
         messageController.closePopup(false);
     }
 
+
+    /**
+     * Proceeds to the payment process.
+     * This method is called when the user clicks on a button to proceed to payment.
+     * It closes the current message popup, loads the appropriate page for payment,
+     * and handles the payment process for group guide orders.
+     */
     public void proceedToPayment() {
         messageController.closePopup(true);
         if (!groupGuidePage) {
@@ -93,6 +154,14 @@ public class GenerateBillForGroupGuideController extends OrderBillPageController
         }
     }
 
+
+    /**
+     * Initializes the UI with information related to the provided order.
+     *
+     * @param order             The order for which the UI should be initialized.
+     * @param referredPostOrder Flag indicating whether the UI initialization is for a post-order scenario.
+     *                          If true, the UI will be tailored accordingly for post-order processing.
+     */
     public void start(Order order, boolean referredPostOrder) {
         this.groupGuidePage = referredPostOrder;
         o1 = order;

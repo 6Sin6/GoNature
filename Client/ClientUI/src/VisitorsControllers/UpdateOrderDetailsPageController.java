@@ -26,37 +26,74 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class UpdateOrderDetailsPageController extends BaseController implements Initializable {
 
+    /**
+     * Label to display the date related to an order or event.
+     */
     @FXML
     private Label DateLabel;
 
+    /**
+     * Text field for inputting or displaying an email address associated with the order.
+     */
     @FXML
     private TextField EmailText;
 
+    /**
+     * Label to display the Order ID, uniquely identifying each order.
+     */
     @FXML
     private Label OrderIDText;
 
+    /**
+     * Label to display the name of the park or location associated with the order.
+     */
     @FXML
     private Label ParkName;
 
+    /**
+     * Text field for inputting or displaying the phone number associated with the order.
+     */
     @FXML
     private TextField PhoneText;
 
+    /**
+     * Label to display the time related to an order or event.
+     */
     @FXML
     private Label TimeLabel;
 
+    /**
+     * Label used for displaying error messages related to UI input or order processing.
+     */
     @FXML
     private Label errorLabel;
 
+    /**
+     * A button in the UI that, when clicked, triggers the payment process for an order.
+     */
     @FXML
     private MFXButton PayBtn;
 
-
+    /**
+     * A list to store multiple orders, potentially for processing or display in the UI.
+     */
     private ArrayList<Order> ordersList;
+
+    /**
+     * Represents a single order, potentially the current one being processed or viewed.
+     */
     private Order order;
 
 
+    /**
+     * Sets the fields of the ConfirmVisitationPageController with the details of the provided order.
+     * This method updates the UI elements with the details of the given order, such as order ID, park name, email, phone number,
+     * visitation date, and visitation time. It also adjusts the visibility of the "Pay" button based on the order type and status.
+     *
+     * @param o1 The Order object containing the details to be displayed on the ConfirmVisitationPage.
+     */
+
     public void setFields(Order o1) {
-        //User user = applicationWindowController.getUser();
         if (o1.getOrderType() == OrderType.ORD_TYPE_SINGLE || o1.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_PAID || o1.getOrderStatus() == OrderStatus.STATUS_WAITLIST) {
             PayBtn.setVisible(false);
         } else {
@@ -81,6 +118,19 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         this.ordersList = ordersList;
     }
 
+
+    /**
+     * Handles the action event when the "Update" button is clicked.
+     * This method validates the input fields for email and phone number.
+     * If the fields are valid, it constructs a message containing the updated order details
+     * and sends it to the server to update the order information in the database.
+     * It then processes the response from the server to display appropriate confirmation messages.
+     * If the update is successful, it displays a confirmation popup indicating the success.
+     * If there is an error during the update process, it displays an error popup.
+     *
+     * @param actionEvent The ActionEvent representing the user's click on the "Update" button.
+     * @throws CommunicationException If there is an issue with communication during the update process.
+     */
     @FXML
     public void OnClickUpdateBtn(ActionEvent actionEvent) throws CommunicationException {
         if (!validateFields()) {
@@ -144,6 +194,16 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+
+    /**
+     * Validates the input fields for email and phone number.
+     * This method checks if the email and phone number fields are empty and if they contain valid values.
+     * If any field is empty or contains an invalid value, it sets an appropriate error message on the errorLabel
+     * and returns false indicating validation failure.
+     * If all fields are filled and contain valid values, it returns true indicating validation success.
+     *
+     * @return True if all fields are filled and contain valid values, false otherwise.
+     */
     private boolean validateFields() {
         if (EmailText.getText().isEmpty() || PhoneText.getText().isEmpty()) {
             errorLabel.setText("Please fill all the fields");
@@ -160,6 +220,17 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         return true;
     }
 
+
+    /**
+     * Handles the action event when the "Cancel Order" button is clicked.
+     * This method initiates the cancellation of the current order by sending a message to the server.
+     * It then processes the response from the server to display appropriate confirmation messages.
+     * If the cancellation is successful, it displays a confirmation popup indicating the success.
+     * If there is an error during the cancellation process, it displays an error popup.
+     * If the canceled order is the only order and it's a single visitation order, the method redirects the user to the home page.
+     *
+     * @param actionEvent The ActionEvent representing the user's click on the "Cancel Order" button.
+     */
     public void OnClickCancelOrderBtn(ActionEvent actionEvent) {
         boolean flag;
         User user = applicationWindowController.getUser();
@@ -196,15 +267,28 @@ public class UpdateOrderDetailsPageController extends BaseController implements 
         confirmPopup.show(applicationWindowController.getRoot());
     }
 
-    @Override//need to check if we need it or not.
-    public void cleanup() {
-        super.cleanup();
-    }
 
+    /**
+     * Handles the action event when the "Pay Order" button is clicked.
+     * This method initiates the presentation of the bill for the current order
+     * by calling the handleBillPresentation method with the current order.
+     *
+     * @param actionEvent The ActionEvent representing the user's click on the "Pay Order" button.
+     */
     public void OnClickPayOrderBtn(ActionEvent actionEvent) {
         handleBillPresentation(this.order);
     }
 
+
+    /**
+     * Handles the presentation of the bill for a group guide's order.
+     * This method creates a message popup to display the bill using the GenerateBillForGroupGuide.fxml layout.
+     * It retrieves the controller associated with the popup, sets the applicationWindowController,
+     * and starts the presentation by invoking the start method of the controller with the provided order.
+     * If an exception occurs during the process, it prints the stack trace.
+     *
+     * @param order The order for which the bill is to be presented.
+     */
     private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);

@@ -14,29 +14,63 @@ import javafx.scene.control.TextField;
 
 public class RegisterGroupGuideController extends BaseController {
 
+    /**
+     * Represents a JavaFX label used for displaying general error messages.
+     */
     @FXML
     private Label lblErrorMsgGeneral;
 
+    /**
+     * Represents a JavaFX label used for displaying error messages related to the ID field.
+     */
     @FXML
     private Label lblErrorMsgID;
 
+    /**
+     * Represents a JavaFX text field used for entering an ID.
+     */
     @FXML
     private TextField txtID;
 
+
+    /**
+     * Resets the text fields and error message labels to their default states.
+     * This method clears the text in the ID text field and resets the error messages displayed in two error message labels.
+     * It is typically used to clean up the UI after a form submission or when resetting the input fields.
+     */
     public void cleanup() {
         txtID.setText("");
         lblErrorMsgGeneral.setText("");
         lblErrorMsgID.setText("");
     }
 
+    /**
+     * Checks whether the provided ID is valid.
+     *
+     * @param id The ID to be validated.
+     * @return {@code true} if the ID is valid, {@code false} otherwise.
+     */
     private boolean isDetailsValid(String id) {
         return (CommonUtils.isValidID(id));
     }
 
+    /**
+     * Retrieves the ID entered in a text field.
+     *
+     * @return The ID entered in the associated text field.
+     */
     private String getID() {
         return txtID.getText();
     }
 
+    /**
+     * Handles the action event triggered by clicking the "SubmitButton".
+     * This method validates the details entered, sends a message to activate a group guide with the provided ID,
+     * and processes the server response accordingly. It updates the error message label based on the response received.
+     * If the activation is successful, it displays a success message in green; otherwise, it displays an error message in red.
+     *
+     * @param ignoredEvent The ActionEvent triggered by clicking the "SubmitButton".
+     */
     @FXML
     void OnClickSubmitButton(ActionEvent ignoredEvent) {
         if (!isDetailsValid(getID())) {
@@ -66,16 +100,23 @@ public class RegisterGroupGuideController extends BaseController {
             return;
         }
 
-        if ( response.getMsgData()==null){
+        if (response.getMsgData() == null) {
             updateMsg("Group guide has successfully registered!", "#008000");
-        }
-        else{
+        } else {
             updateMsg((String) response.getMsgData(), "#FF0000");
         }
 
 
     }
 
+
+    /**
+     * Updates the error message displayed in a label with custom styling.
+     *
+     * @param msg       The message to be displayed.
+     * @param colorCode The color code to be applied to the text.
+     *                  It should be in the hexadecimal format, e.g., "#FF0000" for red.
+     */
     private void updateMsg(String msg, String colorCode) {
         lblErrorMsgGeneral.setText(msg);
         lblErrorMsgGeneral.setStyle("-fx-text-fill: " + colorCode + ";" +

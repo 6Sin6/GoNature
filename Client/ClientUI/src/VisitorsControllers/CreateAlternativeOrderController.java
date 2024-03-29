@@ -22,37 +22,72 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class CreateAlternativeOrderController extends BaseController implements Initializable {
 
+    /**
+     * Button for signing up.
+     */
     @FXML
     private MFXButton btnSignUp;
 
+    /**
+     * Label for displaying the date.
+     */
     @FXML
     private Label lblDate;
 
+    /**
+     * Label for displaying the email address.
+     */
     @FXML
     private Label lblEmail;
 
+    /**
+     * Label for displaying the name.
+     */
     @FXML
     private Label lblName;
 
+    /**
+     * Label for displaying the number of visitors.
+     */
     @FXML
     private Label lblNumOfVisitors;
 
+    /**
+     * Label for displaying the park name.
+     */
     @FXML
     private Label lblParkName;
 
+    /**
+     * Label for displaying the phone number.
+     */
     @FXML
     private Label lblPhone;
 
-
+    /**
+     * Label for displaying the time.
+     */
     @FXML
     private Label lblTime;
 
+    /**
+     * Label for displaying error messages.
+     */
     @FXML
     private Label lblError;
 
+    /**
+     * The order associated with this controller.
+     */
     private Order order;
 
 
+    /**
+     * Sets the fields with the provided order details and full name.
+     *
+     * @param o1           The order object containing visitation details.
+     * @param tempfullName The full name to be displayed.
+     */
     public void setFields(Order o1, String tempfullName) {
         lblError.setText("");
         this.order = o1;
@@ -68,6 +103,13 @@ public class CreateAlternativeOrderController extends BaseController implements 
         lblTime.setText(time);
     }
 
+
+    /**
+     * Handles the action event triggered by clicking the sign-up button.
+     * This method is typically associated with an action event listener in a JavaFX application.
+     *
+     * @param actionEvent The ActionEvent object generated when the sign-up button is clicked.
+     */
     @FXML
     public void OnClickSignUpButton(ActionEvent actionEvent) {
         User user = applicationWindowController.getUser();
@@ -213,11 +255,26 @@ public class CreateAlternativeOrderController extends BaseController implements 
         }
     }
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is called automatically by the FXMLLoader when loading the FXML file.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
 
+
+    /**
+     * Handles the presentation of a bill for the given order.
+     * This method displays a message popup containing the bill generation UI.
+     * It sets up the controller for generating the bill and starts the process.
+     *
+     * @param order The order for which the bill needs to be generated.
+     */
     private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);

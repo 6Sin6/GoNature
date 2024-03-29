@@ -24,23 +24,49 @@ import java.util.Objects;
 import static CommonUtils.CommonUtils.isAllDigits;
 
 public class GenerateBillController extends BaseController {
+    /**
+     * The button used to generate a bill.
+     */
     @FXML
     private MFXButton btnGenerateBill;
 
+    /**
+     * A label to display error messages.
+     */
     @FXML
     private Label lblErrorMsg;
 
+    /**
+     * The button used to enter a park.
+     */
     @FXML
     private MFXButton EnterParkButton;
 
+    /**
+     * A text element to display success messages.
+     */
     @FXML
     private Text successMsg;
 
+    /**
+     * A text field for entering an order ID.
+     */
     @FXML
     private TextField txtOrderID;
 
+    /**
+     * Represents the most recent order.
+     */
     private Order mostRecentOrder;
 
+
+    /**
+     * Performs cleanup tasks by resetting various GUI components to their default states.
+     * This method clears the text in the order ID text field, resets error messages displayed in the error label,
+     * clears success messages displayed in the success text element, and updates the state of two buttons:
+     * - Disables the "EnterParkButton".
+     * - Enables the "btnGenerateBill".
+     */
     public void cleanup() {
         txtOrderID.clear();
         lblErrorMsg.setText("");
@@ -49,6 +75,21 @@ public class GenerateBillController extends BaseController {
         btnGenerateBill.setDisable(false);
     }
 
+
+    /**
+     * Handles the action event triggered by clicking the "EnterParkButton".
+     * This method sends a message to the server to enter visitors to the park based on the most recent order.
+     * If there is no recent order, it displays an error message.
+     * Upon receiving a response from the server, it handles various scenarios:
+     * - If there is a database error, it displays an appropriate error message.
+     * - If there is an inappropriate response from the server, it displays a generic server error message.
+     * - If the operation is successful, it displays a success message.
+     * - If the operation fails, it displays an error message.
+     * This method utilizes confirmation and message popups for displaying messages to the user.
+     * After handling the response, it calls the 'cleanup' method to reset GUI components to their default states.
+     *
+     * @param event The ActionEvent triggered by clicking the "EnterParkButton".
+     */
     @FXML
     void OnClickEnterParkButton(ActionEvent event) {
         if (mostRecentOrder == null) {
@@ -88,6 +129,18 @@ public class GenerateBillController extends BaseController {
         popup.show(applicationWindowController.getRoot());
         cleanup();
     }
+
+
+    /**
+     * Handles the action event triggered by clicking the "GenerateBillButton".
+     * This method validates the input order ID, retrieves the order details from the server, and processes the response.
+     * It handles various scenarios based on the order status:
+     * - Displays appropriate error messages if the order ID is invalid, not found, or if there are database/server errors.
+     * - Disables the "EnterParkButton" and displays relevant messages if the order status is not valid for generating a bill or entering the park.
+     * - Handles specific cases for different order statuses, enabling or disabling the "EnterParkButton" accordingly.
+     * - Calls the 'handleBillPresentation' method to present the bill if the order status allows.
+     * This method utilizes confirmation and message popups for displaying messages to the user.
+     */
 
     @FXML
     void OnClickGenerateBillButton(ActionEvent event) {
@@ -185,6 +238,13 @@ public class GenerateBillController extends BaseController {
         }
     }
 
+    /**
+     * Handles the presentation of the bill for the given order.
+     * This method opens a message popup to display the order bill page, passing the order details to the controller.
+     * If an exception occurs during the process, it displays a generic server error message.
+     *
+     * @param order The Order for which the bill is to be presented.
+     */
     private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true, false);
@@ -200,15 +260,37 @@ public class GenerateBillController extends BaseController {
         }
     }
 
+    /**
+     * Generates a bill for a spontaneous order identified by the given order ID.
+     * This method sets the order ID in the order ID text field, simulating a click on the "GenerateBillButton",
+     * which triggers the generation of the bill for the corresponding order.
+     *
+     * @param orderID The ID of the spontaneous order for which the bill is to be generated.
+     */
     public void GenerateBillSpontaneousOrder(String orderID) {
         txtOrderID.setText(orderID);
         OnClickGenerateBillButton(null);
     }
 
+    /**
+     * Sets the order number in the order ID text field.
+     *
+     * @param orderID The ID of the order to be set in the order ID text field.
+     */
     public void setOrderNum(String orderID) {
         txtOrderID.setText(orderID);
     }
 
+
+    /**
+     * Displays a popup message after bill generation indicating the status of the process.
+     * This method sets the order number, prepares a message prompt based on whether the bill generation was successful,
+     * and displays a message popup with the appropriate message.
+     * It also adjusts the state of the "EnterParkButton" and "btnGenerateBill" based on the bill generation status.
+     *
+     * @param isBillGenerated A boolean indicating whether the bill generation was successful.
+     * @param orderID         The ID of the order for which the bill was generated.
+     */
     public void showPopUpAfterBillGeneration(boolean isBillGenerated, String orderID) {
         setOrderNum(orderID);
         String msgToPrompt;

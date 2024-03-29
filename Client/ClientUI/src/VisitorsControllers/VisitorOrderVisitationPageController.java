@@ -29,35 +29,65 @@ import static CommonClient.Utils.setComboBoxHours;
 
 public class VisitorOrderVisitationPageController extends BaseController implements Initializable {
 
+    /**
+     * Observable list for storing strings.
+     */
     ObservableList<String> list;
 
-
+    /**
+     * Label for displaying error messages.
+     */
     @FXML
     private Label errorLbl;
 
+    /**
+     * DatePicker for selecting the date of visit.
+     */
     @FXML
     private DatePicker datePicker;
 
+    /**
+     * ComboBox for selecting the park.
+     */
     @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
 
+    /**
+     * ComboBox for selecting the time of visit.
+     */
     @FXML
     private MFXLegacyComboBox<String> timeOfVisitCmbBox;
 
+    /**
+     * TextField for entering the visitor's email.
+     */
     @FXML
     private TextField txtEmail;
 
+    /**
+     * TextField for entering the visitor's first name.
+     */
     @FXML
     private TextField txtFirstName;
 
+    /**
+     * TextField for entering the visitor's last name.
+     */
     @FXML
     private TextField txtLastName;
 
+    /**
+     * TextField for entering the number of visitors.
+     */
     @FXML
     private TextField txtNumOfVisitors;
 
+    /**
+     * TextField for entering the visitor's phone number.
+     */
     @FXML
     private TextField txtPhone;
+
 
     public void cleanup() {
         clearFields();
@@ -175,12 +205,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
             boolean menuSliderActivatedFlag = applicationWindowController.isMenuSlider();
             confirmPopup = new ConfirmationPopup(strForPopup, () ->
             {
-                if(menuSliderActivatedFlag)
-                {
+                if (menuSliderActivatedFlag) {
                     applicationWindowController.loadVisitorsPage("WaitListPage");
-                }
-                else
-                {
+                } else {
                     applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/WaitListPage.fxml", applicationWindowController.getUser(), "/CommonClient/gui/LeftBackground.fxml");
                 }
                 Object controller = applicationWindowController.getCurrentActiveController();
@@ -189,12 +216,9 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
                 }
                 clearFields();
             }, () -> {
-                if(menuSliderActivatedFlag)
-                {
+                if (menuSliderActivatedFlag) {
                     applicationWindowController.loadVisitorsPage("AlternativeTimesTable");
-                }
-                else
-                {
+                } else {
                     applicationWindowController.setCenterPageForNewVisitor("/VisitorsUI/AlternativeTimesTable.fxml", applicationWindowController.getUser(), "/CommonClient/gui/LeftBackground.fxml");
                 }
                 Object controller = applicationWindowController.getCurrentActiveController();
@@ -242,6 +266,7 @@ public class VisitorOrderVisitationPageController extends BaseController impleme
         }
         return true;
     }
+
     /**
      * Clears all input fields and resets the form to its initial state.
      */
