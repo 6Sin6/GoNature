@@ -12,7 +12,7 @@ public class GroupOrder extends Order implements Serializable {
 
     /**
      * Constructs a new GroupOrder object with the specified attributes.
-     *
+     * @param visitorID         The ID of the visitor associated with the order.
      * @param parkID             The ID of the park associated with the order.
      * @param date               The date and time of the order.
      * @param clientEmailAddress The email address of the client who made the order.

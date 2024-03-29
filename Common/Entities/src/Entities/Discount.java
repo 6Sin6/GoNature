@@ -1,5 +1,11 @@
 package Entities;
 
+/**
+ * The Discount enum represents the different types of discounts that can be applied to an order.
+ * Each enum constant represents a specific type of discount and is associated with a unique integer value.
+ * The enum also provides methods to get the discount type based on the order type, order status, and whether the order is prepaid,
+ * apply the discount to a price, and get a string representation of the discount.
+ */
 public enum Discount {
     /**
      * Represents the discount of a single visitor order.
@@ -61,10 +67,10 @@ public enum Discount {
     }
 
     /**
-     * Applies the discount value associated with the enum constant
-     * to the provided price.
+     * Applies the discount value associated with the enum constant to the provided price.
      *
      * @param price The price to apply the discount to.
+     * @param discount The discount to apply.
      * @return The price after the discount.
      */
     public static double applyDiscount(Double price, Discount discount) {
@@ -85,6 +91,12 @@ public enum Discount {
         return 0;
     }
 
+    /**
+     * Returns a string representation of the discount.
+     *
+     * @param discount The discount to represent as a string.
+     * @return A string representation of the discount.
+     */
     public static String displayString(Discount discount) {
         switch (discount) {
             case PREORDERED_SINGLE_DISCOUNT:

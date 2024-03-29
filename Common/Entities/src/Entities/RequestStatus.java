@@ -42,7 +42,7 @@ public enum RequestStatus {
 
     /**
      * Retrieves the String representation value associated with the status.
-     *
+     * @param status The status to convert to a String.
      * @return The String representation value associated with the status.
      */
     public static String statusToString(RequestStatus status) {

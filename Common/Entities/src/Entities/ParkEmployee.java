@@ -20,6 +20,8 @@ public class ParkEmployee extends User implements Serializable {
      * @param user         The user object containing username and password.
      * @param EmailAddress The email address of the park employee.
      * @param Park         The park associated with the employee.
+     * @param firstName    The first name of the park employee.
+     * @param lastName     The last name of the park employee.
      */
     public ParkEmployee(User user, String EmailAddress, Park Park, String firstName, String lastName) {
         super(user.getUsername(), user.getPassword());
@@ -32,7 +34,8 @@ public class ParkEmployee extends User implements Serializable {
 
     /**
      * Constructs a new ParkEmployee object with the provided username, password, email address, and park.
-     *
+     * @param firstName    The first name of the park employee.
+     * @param lastName     The last name of the park employee.
      * @param username     The username of the park employee.
      * @param password     The password of the park employee.
      * @param EmailAddress The email address of the park employee.

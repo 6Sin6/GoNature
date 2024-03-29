@@ -17,8 +17,10 @@ public abstract class ParkReport extends ReportConstructor implements Serializab
 
     /**
      * Constructs a ParkReport object with the specified parameters.
-     *
      * @param parkID The park id associated with the report.
+     * @param parkName The name of the park associated with the report.
+     * @throws DocumentException If an error occurs while creating the report.
+     * @throws IOException If an error occurs while creating the report.
      */
     protected ParkReport(Integer parkID, String parkName) throws DocumentException, IOException {
         super();

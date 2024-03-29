@@ -60,7 +60,7 @@ public enum ParkParameters {
 
     /**
      * Retrieves the String representation value associated with the parameter.
-     *
+     * @param parameter The parameter to convert to a String.
      * @return The String representation value associated with the parameter.
      */
     public static String parameterToString(ParkParameters parameter) {

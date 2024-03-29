@@ -23,6 +23,13 @@ public class User implements Serializable {
         this.role = Role.ROLE_GUEST;
     }
 
+    /**
+     * Constructs a new User object with the given username, password, and role.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param role The role of the user.
+     */
     public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;

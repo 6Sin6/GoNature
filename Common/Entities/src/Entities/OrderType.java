@@ -35,6 +35,16 @@ public enum OrderType {
     }
 
 
+    /**
+     * Returns a string representation of the order type.
+     * This method overrides the toString method in the Object class.
+     * It uses a switch statement to determine the string representation based on the enum constant.
+     * If the enum constant is ORD_TYPE_SINGLE, it returns "Single/Family-Sized".
+     * If the enum constant is ORD_TYPE_GROUP, it returns "Group".
+     * If the enum constant is not recognized, it returns an empty string.
+     *
+     * @return A string representation of the order type.
+     */
     @Override
     public String toString() {
         switch (this) {
