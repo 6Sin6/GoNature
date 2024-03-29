@@ -9,7 +9,6 @@ import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
-import Entities.OrderStatus;
 import Entities.OrderType;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -20,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static CommonUtils.CommonUtils.isAllDigits;
@@ -59,7 +57,7 @@ public class GenerateBillController extends BaseController {
             return;
         }
 
-        Message msg = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, applicationWindowController.getUser().getUsername(), mostRecentOrder);
+        Message msg = new Message(OpCodes.OP_ENTER_VISITORS_TO_PARK, applicationWindowController.getUser().getUsername(), mostRecentOrder);
         ClientUI.client.accept(msg);
 
         Message response = ClientCommunicator.msg;
@@ -70,7 +68,7 @@ public class GenerateBillController extends BaseController {
             return;
         }
         // Checking if the response from the server is inappropriate.
-        if (returnOpCode != OpCodes.OP_MARK_ORDER_AS_PAID) {
+        if (returnOpCode != OpCodes.OP_ENTER_VISITORS_TO_PARK) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
@@ -80,14 +78,15 @@ public class GenerateBillController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-
+        String msgToPrompt;
         if (!(Boolean) response.getMsgData()) {
-            lblErrorMsg.setText("Failure. Order paid, expired or ineligible to be paid.");
-            successMsg.setText("");
-            return;
+            msgToPrompt = "Something went wrong. Please try again.";
+        } else {
+            msgToPrompt = "Visitors written in the park successfully";
         }
-        lblErrorMsg.setText("");
-        successMsg.setText("Order marked as paid successfully");
+        MessagePopup popup = new MessagePopup(msgToPrompt, Duration.seconds(5), 350, 200, false);
+        popup.show(applicationWindowController.getRoot());
+        cleanup();
     }
 
     @FXML
@@ -116,25 +115,19 @@ public class GenerateBillController extends BaseController {
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        Map<String, Object> results = (Map<String, Object>) response.getMsgData();
-        Order order = (Order) results.get("order");
-        if (!(order instanceof Order)) {
+        if (!(response.getMsgData() instanceof Order)) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-
-        boolean isPrepaid = (boolean) results.get("isPaid");
-
-        mostRecentOrder = order;
+        mostRecentOrder = (Order) response.getMsgData();
         if (Objects.equals(mostRecentOrder.getOrderID(), "")) {
             lblErrorMsg.setText("Order not found");
             successMsg.setText("");
             return;
         }
         lblErrorMsg.setText("");
-        successMsg.setText("Bill generated successfully");
-        handleBillPresentation(mostRecentOrder, isPrepaid);
+        successMsg.setText("");
         switch (mostRecentOrder.getOrderStatus()) {
             case STATUS_WAITLIST:
             case STATUS_FULFILLED:
@@ -157,7 +150,7 @@ public class GenerateBillController extends BaseController {
             case STATUS_CONFIRMED_PENDING_PAYMENT:
             case STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT:
                 if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
-                    handleBillPresentation(mostRecentOrder, isPrepaid);
+                    handleBillPresentation(mostRecentOrder);
                 } else {
                     EnterParkButton.setDisable(true);
                     lblErrorMsg.setText("Reservation time is not now.");
@@ -167,6 +160,7 @@ public class GenerateBillController extends BaseController {
             case STATUS_CONFIRMED_PAID:
                 if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
                     EnterParkButton.setDisable(false);
+                    btnGenerateBill.setDisable(true);
                     lblErrorMsg.setText("Order is already paid and the visitor/s can enter the park.");
                 } else {
                     EnterParkButton.setDisable(true);
@@ -177,7 +171,7 @@ public class GenerateBillController extends BaseController {
         }
     }
 
-    private void handleBillPresentation(Order order, boolean prepaid) {
+    private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/CommonClient/gui/OrderBillPage.fxml", 0, 0, true, false);
             OrderBillPageController controller = (OrderBillPageController) msg.getController();
@@ -185,7 +179,7 @@ public class GenerateBillController extends BaseController {
             msg.show(applicationWindowController.getRoot());
 
             controller.setMessagePopup(msg);
-            controller.start(order, false, prepaid);
+            controller.start(order, false);
         } catch (Exception e) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
@@ -209,7 +203,7 @@ public class GenerateBillController extends BaseController {
         } else {
             msgToPrompt = "Something went wrong. Please try again.";
         }
-        MessagePopup popup = new MessagePopup(msgToPrompt, Duration.seconds(5), 300, 150, false);
+        MessagePopup popup = new MessagePopup(msgToPrompt, Duration.seconds(5), 350, 200, false);
         popup.show(applicationWindowController.getRoot());
         EnterParkButton.setDisable(!isBillGenerated);
         btnGenerateBill.setDisable(isBillGenerated);
