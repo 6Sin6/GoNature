@@ -206,8 +206,10 @@ public class GoNatureServer extends AbstractServer {
                     break;
                 case OP_MARK_GROUP_GUIDE_ORDER_AS_PAID:
                     handleMarkGroupGuideOrderAsPaid(message, client);
+                    break;
                 case OP_ENTER_VISITORS_TO_PARK:
                     handleEnterVisitorsToPark(message, client);
+                    break;
                 case OP_QUIT:
                     handleQuit(client);
                     break;

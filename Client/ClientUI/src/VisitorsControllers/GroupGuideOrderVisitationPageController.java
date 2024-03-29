@@ -120,7 +120,7 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
 
     private void setNumOfVisitorsCmbBox() {
         ArrayList<String> al = new ArrayList<String>();
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 2; i <= 15; i++) {
             al.add(String.valueOf(i));
         }
         list = FXCollections.observableArrayList(al);
