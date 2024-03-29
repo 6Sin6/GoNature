@@ -1,9 +1,9 @@
 package CommonClient.controllers;
 
 import EmployeesControllers.DepartmentManagerDashboardPageController;
-import EmployeesControllers.ParkEmployeeDashboardPageController;
+import EmployeesControllers.ParkEmployeeDashboardControllerPageController;
 import EmployeesControllers.ParkManagerDashboardPageController;
-import EmployeesControllers.SupportRepresentativeDashboardPageController;
+import EmployeesControllers.SupportRepresentativeDashboardControllerPageController;
 import Entities.Role;
 import VisitorsControllers.VisitorDashboardPageController;
 import VisitorsControllers.VisitorGroupGuideDashboardPageController;
@@ -52,9 +52,17 @@ public class MenuSiderController extends BaseController {
 
     /**
      * The third menu button. Depending on the user's role, this button may be used to perform different actions.
+     * Hidden by default
      */
     @FXML
     private MFXButton btnAct3;
+
+    /**
+     * The fourth menu button. Depending on the user's role, this button may be used to perform different actions.
+     * Hidden by default
+     */
+    @FXML
+    public MFXButton btnAct4;
 
     /**
      * The label for displaying the user's role.
@@ -170,16 +178,19 @@ public class MenuSiderController extends BaseController {
                 break;
 
             case "Park Employee":
-                ParkEmployeeDashboardPageController parkEmployeeController = (ParkEmployeeDashboardPageController) getController("/EmployeesUI/ParkEmployeeDashboardPage.fxml");
+                ParkEmployeeDashboardControllerPageController parkEmployeeController = (ParkEmployeeDashboardControllerPageController) getController("/EmployeesUI/ParkEmployeeDashboardPage.fxml");
                 parkEmployeeController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Order Bill");
                 btnAct1.setOnAction(parkEmployeeController::OnClickGenerateBillButton);
                 btnAct2.setText("Check Park Availability");
                 btnAct2.setOnAction(parkEmployeeController::OnClickAvailableSpotButton);
+                btnAct3.setVisible(true);
+                btnAct3.setText("Update Exit Time of Order");
+                btnAct3.setOnAction(parkEmployeeController::OnClickUpdateExitTime);
                 break;
 
             case "Support Representative":
-                SupportRepresentativeDashboardPageController supportRepresentativeController = (SupportRepresentativeDashboardPageController) getController("/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
+                SupportRepresentativeDashboardControllerPageController supportRepresentativeController = (SupportRepresentativeDashboardControllerPageController) getController("/EmployeesUI/SupportRepresentativeDashboardPage.fxml");
                 supportRepresentativeController.setApplicationWindowController(appController);
                 btnAct1.setText("Issue Order Bill");
                 btnAct1.setOnAction(supportRepresentativeController::OnClickGenerateBillButton);
@@ -188,6 +199,9 @@ public class MenuSiderController extends BaseController {
                 btnAct3.setVisible(true);
                 btnAct3.setText("Register a Group Guide");
                 btnAct3.setOnAction(supportRepresentativeController::OnClickRegisterGuideButton);
+                btnAct4.setVisible(true);
+                btnAct4.setText("Update Exit Time of Order");
+                btnAct4.setOnAction(supportRepresentativeController::OnClickUpdateExitTime);
                 break;
 
             case "Visitor Group Guide":

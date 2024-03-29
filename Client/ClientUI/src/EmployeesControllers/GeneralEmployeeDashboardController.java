@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
-public abstract class GeneralEmployeeDashboard extends BaseController {
+public abstract class GeneralEmployeeDashboardController extends BaseController {
     protected InputTextPopup popup;
 
     public void cleanup() {
