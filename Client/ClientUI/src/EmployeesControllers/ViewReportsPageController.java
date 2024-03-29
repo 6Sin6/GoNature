@@ -47,6 +47,8 @@ public class ViewReportsPageController extends BaseController {
     @FXML
     private ComboBox<String> yearCmb;
 
+    private HashMap<String, String> parkNamesMap = null;
+
     private boolean parkManagerPage = false;
 
     public void cleanup() {
@@ -61,6 +63,7 @@ public class ViewReportsPageController extends BaseController {
         monthCmb.getItems().clear();
         yearCmb.getItems().clear();
         parkManagerPage = false;
+        parkNamesMap = null;
     }
 
     private Integer getDepartmentID() {
@@ -82,8 +85,6 @@ public class ViewReportsPageController extends BaseController {
 
         return (String) response.getMsgData();
     }
-
-    private HashMap<String, String> parkNamesMap = null;
 
     private Map<String, String> getParksNames() {
         if (parkNamesMap == null) {
