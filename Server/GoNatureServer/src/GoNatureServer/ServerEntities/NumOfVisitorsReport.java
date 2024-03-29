@@ -190,7 +190,7 @@ public class NumOfVisitorsReport extends ParkReport implements Serializable {
 
 
     /**
-     * Creates a  grouped column chart with JFreeChart based on the data in the specified reportData 2D int array.
+     * Creates a grouped column chart with JFreeChart based on the data in the specified reportData 2D int array.
      *
      * @return The JFreeChart object representing the chart.
      */

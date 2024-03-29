@@ -7,12 +7,29 @@ import Entities.OpCodes;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+/**
+ * ConfirmationPopup represents a custom popup for displaying confirmation messages.
+ * This popup extends the BasePopup class.
+ */
 public class ConfirmationPopup extends BasePopup {
     private Button yesButton = new Button();
     private Button noButton = new Button();
     private final String DB_ERROR_MSG = "An error occurred while trying to connect to the database. Please try again later.";
     private final String SERVER_ERROR_MSG = "An error occurred while trying to connect to the server. Please try again later.";
 
+    /**
+     * Constructs a ConfirmationPopup with custom buttons and behavior.
+     *
+     * @param question       The confirmation question to display.
+     * @param onConfirm      The action to execute when the user confirms.
+     * @param onCancel       The action to execute when the user cancels.
+     * @param width          The width of the popup.
+     * @param height         The height of the popup.
+     * @param fullScreenMode Whether the popup should be in full-screen mode.
+     * @param FirstBtn       Label for the first button.
+     * @param SecondBtn      Label for the second button.
+     * @param exitOnOut      Whether clicking outside the popup should close it.
+     */
     public ConfirmationPopup(String question, Runnable onConfirm, Runnable onCancel, int width, int height, boolean fullScreenMode, String FirstBtn, String SecondBtn, boolean exitOnOut) {
         super(fullScreenMode, width, height);
         yesButton.setText(FirstBtn);
@@ -41,6 +58,17 @@ public class ConfirmationPopup extends BasePopup {
         }
     }
 
+    /**
+     * Constructs a ConfirmationPopup with a single confirmation button.
+     *
+     * @param question       The confirmation question to display.
+     * @param onConfirm      The action to execute when the user confirms.
+     * @param width          The width of the popup.
+     * @param height         The height of the popup.
+     * @param fullScreenMode Whether the popup should be in full-screen mode.
+     * @param FirstBtn       Label for the confirmation button.
+     * @param exitOnOut      Whether clicking outside the popup should close it.
+     */
     public ConfirmationPopup(String question, Runnable onConfirm, int width, int height, boolean fullScreenMode, String FirstBtn, boolean exitOnOut) {
         super(fullScreenMode, width, height);
         yesButton.setText(FirstBtn);
@@ -62,6 +90,17 @@ public class ConfirmationPopup extends BasePopup {
         }
     }
 
+    /**
+     * Constructs a ConfirmationPopup with customizable parameters.
+     *
+     * @param ErrorMsg       An integer representing the type of error (1 for database error, 2 for server error).
+     * @param appController  The ApplicationWindowController instance.
+     * @param width          Width of the popup.
+     * @param height         Height of the popup.
+     * @param fullScreenMode Whether the popup should be in full-screen mode.
+     * @param FirstBtn       Label for the "yes" button.
+     * @param exitOnOut      Whether the popup should close when clicked outside.
+     */
     public ConfirmationPopup(Integer ErrorMsg, ApplicationWindowController appController, int width, int height, boolean fullScreenMode, String FirstBtn, boolean exitOnOut) {
         super(fullScreenMode, width, height);
         String question = "";

@@ -26,7 +26,9 @@ import static GoNatureServer.GoNatureServer.createExitTime;
  * Manages the database connection for the application.
  * This class is responsible for initializing the JDBC driver,
  * establishing a connection to the database, and providing access
- * to the established connection via a singleton pattern.
+ * to the established connection via a singleton pattern. Additionally,
+ * it contains methods that facilitate communication with the SQL database,
+ * allowing for the execution of queries, updates, and other database operations.
  */
 public class DBConnection {
     private Connection conn;
@@ -110,13 +112,32 @@ public class DBConnection {
         }
     }
 
-    // Utility method to log SQL exceptions
+
+    /**
+     * Logs the details of an SQLException.
+     *
+     * This method captures the message, SQL state, and error code of an SQLException and
+     * logs these details using the serverController's logging mechanism. It is typically
+     * used to provide a more detailed context in the application's logs when an SQL
+     * exception occurs.
+     *
+     * @param ex The SQLException that occurred and needs to be logged.
+     */
     private void logSQLException(SQLException ex) {
         this.serverController.addtolog("SQLException: " + ex.getMessage());
         this.serverController.addtolog("SQLState: " + ex.getSQLState());
         this.serverController.addtolog("VendorError: " + ex.getErrorCode());
     }
 
+    /**
+     * Closes the database connection.
+     *
+     * This method attempts to close the current database connection. If an exception
+     * occurs during the closing process, it is ignored. After attempting to close
+     * the connection, a log entry is made to indicate that the SQL connection has been
+     * closed. The method also sets the connection and dbConnection objects to null,
+     * indicating that the connection is no longer active.
+     */
     public void closeConnection() {
         try {
             this.conn.close();
@@ -334,6 +355,18 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Checks if the payment for a given order has been completed.
+     *
+     * This method queries the payments table in the database to determine whether
+     * the specified order has been marked as paid. It returns true if the payment
+     * status is 'paid' (represented as 1 in the database), and false otherwise.
+     *
+     * @param order The order for which the payment status needs to be checked.
+     * @return boolean True if the payment for the order is complete (paid status is 1), false otherwise.
+     * @throws Exception Throws an SQLException if there is a problem executing the database query.
+     *                   The exception is logged to the server log before being rethrown.
+     */
     public boolean checkOrderPayment(Order order) throws Exception {
         try {
             String orderID = order.getOrderID();
@@ -464,7 +497,20 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Updates the status of an order to 'cancelled' and sends an email notification to the client.
+     *
+     * This method first updates the status of the specified order to 'cancelled' in the database.
+     * If the update is successful, it spawns a new thread to send an email to the client informing
+     * them that their order has been canceled. The email sending process is executed in a separate
+     * thread to prevent blocking the main execution flow.
+     *
+     * @param order The order whose status is to be updated to 'cancelled'.
+     * @return boolean True if the order status is successfully updated and the email notification is initiated,
+     *                 false if the order status update fails in the database.
+     * @throws Exception Throws an SQLException if there is a problem executing the database update.
+     *                   Any exception during the email sending process is logged but not thrown.
+     */
     public boolean updateOrderStatusAsCancelled(Order order) throws Exception {
         boolean isUpdate = updateOrderStatus(order.getOrderID(), OrderStatus.STATUS_CANCELLED);
         if (isUpdate) {
@@ -653,6 +699,22 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Activates a group guide by changing its pending status to authorized.
+     *
+     * This method checks if the group guide with the specified ID exists and whether it is
+     * in a pending status. If the group guide exists and is pending, it updates the record
+     * to set the pending status to false, effectively authorizing the group guide. It returns
+     * null if the operation is successful, indicating the group guide has been activated. If
+     * the group guide does not exist or is already authorized, or if the update operation fails,
+     * an appropriate message is returned.
+     *
+     * @param groupGuideID The ID of the group guide to be activated.
+     * @return A string indicating the outcome of the operation. Returns null if the group guide
+     *         has been successfully activated, or an error message if the operation failed.
+     * @throws Exception Throws an SQLException if there is a problem executing the database operations.
+     *                   The exception is logged before being thrown.
+     */
     public String activateGroupGuide(String groupGuideID) throws Exception {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -672,6 +734,19 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Checks if a user is an authorized group guide.
+     *
+     * This method queries the group_guides table to determine if the user with the given
+     * ID is an authorized group guide. A user is considered an authorized group guide if
+     * their record exists in the table and their pending status is set to 0 (false).
+     * The method returns true if the user is an authorized group guide, and false otherwise.
+     *
+     * @param userID The ID of the user to check for group guide status.
+     * @return boolean True if the user is an authorized group guide, false otherwise.
+     * @throws Exception Throws an SQLException if there is a problem executing the database query.
+     *                   The exception is logged before being thrown.
+     */
     public boolean isGroupGuide(String userID) throws Exception {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -694,6 +769,16 @@ public class DBConnection {
     //                                                                                                                 //
     //=================================================================================================================//
 
+    /**
+     * Retrieves the names of parks in a specified department.
+     *
+     * This method queries the parks table to find all parks that belong to the given
+     * department ID. It returns a list of park names.
+     *
+     * @param departmentID The ID of the department whose parks' names are to be retrieved.
+     * @return ArrayList<String> A list of park names in the specified department.
+     * @throws Exception If a database access error occurs, the exception is logged and then thrown.
+     */
     public ArrayList<String> getDepartmentParkNames(Integer departmentID) throws Exception {
         try {
             String tableName = this.schemaName + ".parks";
@@ -836,7 +921,17 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Retrieves the binary data of a report as a byte array.
+     *
+     * @param isDepartmentReport Specifies if the report is for a department.
+     * @param type The type of the report.
+     * @param month The month of the report.
+     * @param year The year of the report.
+     * @param bodyID The department or park ID, depending on the report type.
+     * @return The report's binary data as a byte array, or null if the report is not found.
+     * @throws Exception If a database access error occurs, it is logged and thrown.
+     */
     public byte[] getReportBlob(boolean isDepartmentReport, String type, String month, String year, String bodyID) throws Exception {
         try {
             String reportTable = isDepartmentReport ? ".department_manager_reports" : ".park_manager_reports";
@@ -856,7 +951,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Gets the department ID associated with a manager's username.
+     *
+     * @param managerUsername The username of the manager.
+     * @return The department ID, or null if not found.
+     * @throws Exception If a database access error occurs, it is logged and thrown.
+     */
     public String getDepartmentIDByManagerUsername(String managerUsername) throws Exception {
         try {
             String tableName = this.schemaName + ".department_managers";
@@ -871,7 +972,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Gets the park ID associated with a manager's username.
+     *
+     * @param managerUsername The username of the manager.
+     * @return The park ID, or null if not found.
+     * @throws Exception If a database access error occurs, it is logged and thrown.
+     */
     public String getParkIDByManagerUsername(String managerUsername) throws Exception {
         try {
             String tableName = this.schemaName + ".park_employees";
@@ -1108,7 +1215,13 @@ public class DBConnection {
         String parkWhereClause = "departmentID='" + departmentID + "'";
         return dbController.selectRecordsFields(parkTableName, parkWhereClause, "ParkID");
     }
-
+    /**
+     * Retrieves a map of park IDs and names within a specific department.
+     *
+     * @param departmentID The ID of the department whose parks are to be retrieved.
+     * @return A map where each key-value pair consists of a park ID and its corresponding park name.
+     * @throws SQLException If a database access error occurs.
+     */
     public Map<String, String> getParksByDepartment(Integer departmentID) throws SQLException {
         String parkTableName = this.schemaName + ".parks";
         String parkWhereClause = "departmentID='" + departmentID + "'";
@@ -1180,7 +1293,12 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Generates a monthly usage report for a specific park.
+     *
+     * @param parkID The ID of the park for which the report is generated.
+     * @return true if the report was successfully generated and saved, false otherwise.
+     */
     public boolean generateUsageReport(int parkID) {
         try {
             // Definitions
@@ -1215,7 +1333,12 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Retrieves the name of a park based on its ID.
+     *
+     * @param parkID The ID of the park whose name is to be retrieved.
+     * @return The name of the park, or null if not found.
+     */
     public String getParkNameByID(Integer parkID) {
         try {
             String tableName = this.schemaName + ".parks";
@@ -1229,7 +1352,13 @@ public class DBConnection {
         return null;
     }
 
-
+    /**
+     * Gets the maximum capacity for a park in a specific month, considering any approved changes.
+     *
+     * @param parkID The ID of the park.
+     * @param month The month for which the maximum capacity is queried.
+     * @return The maximum capacity as an Object, which can be either a ResultSet or an Integer.
+     */
     private Object getParkMaxCapacityInSpecificMonth(Integer parkID, int month) {
         try {
             String tableName = this.schemaName + ".park_parameters_requests";
@@ -1261,6 +1390,13 @@ public class DBConnection {
     //                                           WORKER EXCLUSIVE METHODS                                              //
     //                                                                                                                 //
     //=================================================================================================================//
+    /**
+     * Updates the order status to pend confirmation for visits happening in the next 24 hours.
+     * This method identifies orders for upcoming visits and updates their status to pending confirmation,
+     * then sends email notifications to the respective clients.
+     *
+     * @throws Exception If there is an error during database access or email sending, the error is logged and thrown.
+     */
     public void updateOrderStatusForUpcomingVisits() throws Exception {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1297,7 +1433,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Cancels orders that are on the waitlist and are scheduled for the next 24 hours.
+     * This method finds orders on the waitlist for visits occurring within the next 24 hours,
+     * updates their status to cancelled, and sends cancellation notifications to the clients.
+     *
+     * @throws Exception If there is an error during database access or email sending, the error is logged and thrown.
+     */
     public void cancelOrdersInWaitlist24HoursBefore() throws Exception {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1334,7 +1476,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Enters orders into the waitlist for visits happening in the next 48 hours.
+     * This method identifies orders for visits occurring within the next 48 hours and attempts to
+     * move them from the waitlist to confirmed status based on availability and other criteria.
+     *
+     * @throws Exception If there is an error during database access, the error is logged and thrown.
+     */
     public void enterOrdersInWaitlist48HoursBefore() throws Exception {
         try {
             ArrayList<Order> Orders = new ArrayList<>();
@@ -1366,7 +1514,12 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Changes the status of orders to 'absent' if the exit time is past the current time.
+     * This method identifies orders where visitors have exited before their scheduled time and marks them as absent.
+     *
+     * @throws Exception If a database or logging error occurs, the error is logged and thrown.
+     */
     public void ChangeToAbsent() throws Exception {
         ArrayList<String> Orders = new ArrayList<>();
         String tableName = this.schemaName + ".orders";
@@ -1397,7 +1550,12 @@ public class DBConnection {
 
     }
 
-
+    /**
+     * Changes the status of orders from 'pending confirmation' to 'cancelled' if the visitation date is in 22hours.
+     * This method looks for orders that are still pending confirmation that didn't confirm the order in 2 hours.
+     *
+     * @throws Exception If a database or logging error occurs, the error is logged and thrown.
+     */
     public void ChangeLatePendingConfirmationToCancelled() throws Exception {
         try {
             ArrayList<ArrayList<String>> Orders = new ArrayList<>();
@@ -1434,6 +1592,13 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Checks if a group guide is activated.
+     *
+     * @param groupGuideID The ID of the group guide to check.
+     * @return true if the guide's status is pending, false otherwise.
+     * @throws Exception If a database access error occurs, the error is logged and thrown.
+     */
     public boolean checkGroupGuide(String groupGuideID) throws Exception {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -1449,7 +1614,14 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Sends emails to a list of orders with a specific subject and body content.
+     * with a thread so it won't interfere the main flow
+     *
+     * @param Orders The list of orders to send emails to.
+     * @param Subject The subject of the email.
+     * @param Type The type or status to mention in the email body.
+     */
     private void sendMails(ArrayList<ArrayList<String>> Orders, String Subject, String Type) {
         new Thread(() -> {
             try {
@@ -1465,10 +1637,17 @@ public class DBConnection {
 
     //=================================================================================================================//
     //                                                                                                                 //
-    //                                           END OF WORKER EXCLUSIVE METHODS                                       //
+    //                                           Wait list and spot control methods                                    //
     //                                                                                                                 //
     //=================================================================================================================//
 
+    /**
+     * Checks if adding an order's visitors to a park before the reservation time exceeds its available capacity.
+     *
+     * @param checkOrder The order to check availability for.
+     * @return True if the park can accommodate the additional visitors, false otherwise.
+     * @throws Exception If a database access error occurs, the error is logged and thrown.
+     */
     public Boolean CheckAvailabilityBeforeReservationTime(Order checkOrder) throws Exception {
         try {
             String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName + ".orders o ON p.ParkID = o.ParkID AND '" + checkOrder.getEnteredTime().toString().split("\\.")[0] + "' BETWEEN o.EnteredTime AND DATE_SUB(o.ExitedTime, INTERVAL 1 SECOND) AND o.orderStatus NOT IN (1, 6)";
@@ -1486,7 +1665,13 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Checks if adding an order's visitors to a park after the reservation time exceeds its available capacity.
+     *
+     * @param checkOrder The order to check availability for.
+     * @return True if the park can accommodate the additional visitors, false otherwise.
+     * @throws Exception If a database access error occurs, the error is logged and thrown.
+     */
     public Boolean CheckAvailabilityAfterReservationTime(Order checkOrder) throws Exception {
         try {
             String tableName = this.schemaName + ".parks p " + "LEFT JOIN " + this.schemaName +
@@ -1505,7 +1690,14 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Calculates the total number of visitors in a park at a specific time, considering confirmed and paid orders.
+     *
+     * @param parkID The ID of the park.
+     * @param wantedTime The time at which availability is checked.
+     * @return The number of visitors or null if no data is found.
+     * @throws Exception If a database access error occurs, the error is logged and thrown.
+     */
     public Integer GetAvailableSpotForEntry(String parkID, Timestamp wantedTime) throws Exception {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
@@ -1525,7 +1717,15 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Determines the total number of visitors in a park at a given time, specifically for waitlisted orders.
+     * used when wanting to extarct order from the waitlist to the active orders
+     *
+     * @param parkID The ID of the park.
+     * @param wantedTime The time at which availability is checked.
+     * @return The number of visitors or null if no data is found.
+     * @throws SQLException If a database access error occurs, the error is logged.
+     */
     public Integer GetAvailableSpotForWaitListCheck(String parkID, Timestamp wantedTime) throws SQLException {
         try {
             String tableName = this.schemaName + ".orders o JOIN " + this.schemaName + ".parks p ON o.ParkID = p.ParkID";
@@ -1541,7 +1741,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Retrieves the default visitation time for a specific park.
+     *
+     * @param parkID The ID of the park.
+     * @return The default visitation time in minutes, or null if not found.
+     * @throws SQLException If a database access error occurs.
+     */
     public Integer getExpectedTime(String parkID) throws SQLException {
         try {
             String tableName = this.schemaName + ".parks";
@@ -1555,7 +1761,14 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Fetches orders from the waitlist that match a specific park and start time.
+     *
+     * @param parkID The ID of the park to match.
+     * @param startTime The specific start time to match.
+     * @return A list of matching orders.
+     * @throws Exception If a database access error occurs.
+     */
     public ArrayList<Order> getMatchingWaitlistOrders(String parkID, Timestamp startTime) throws Exception {
         try {
             ArrayList<Order> orders = new ArrayList<>();
@@ -1584,7 +1797,13 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Calculates the available capacity of a park considering the gap for visitors' capacity.
+     *
+     * @param parkID The ID of the park.
+     * @return The net available capacity of the park.
+     * @throws Exception If a database access error occurs.
+     */
     private int getParkCapacity(String parkID) throws Exception {
         try {
             String tableName = this.schemaName + ".parks";
@@ -1598,7 +1817,14 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Processes and potentially accepts orders from the waitlist based on available capacity and order details.
+     * sends a mail via thread for the extracted orders from the waitlist that their order has been accepted
+     *
+     * @param order The order to use as a reference for extraction.
+     * @return true if any orders are successfully extracted and accepted from the waitlist, false otherwise.
+     * @throws Exception If a database or email sending error occurs.
+     */
     public boolean extractFromWaitList(Order order) throws Exception {
         ArrayList<Order> ordersToWorkWith = getMatchingWaitlistOrders(order.getParkID(), order.getEnteredTime());
         int capacityNow = GetAvailableSpotForWaitListCheck(order.getParkID(), order.getEnteredTime());
@@ -1617,7 +1843,13 @@ public class DBConnection {
         }
         return true;
     }
-
+    /**
+     * Finds available timestamps for an order within the next week based on park capacity.
+     *
+     * @param order The order to check availability for.
+     * @return A list of available timestamps.
+     * @throws Exception If a database access error occurs.
+     */
     public ArrayList<Timestamp> getAvailableTimeStamps(Order order) throws Exception {
         Order WorkingOrder = order;
         List<Timestamp> availableHours = getNextWeekHours(order.getEnteredTime());
@@ -1638,7 +1870,14 @@ public class DBConnection {
     //                                           IMPORT SIMULATOR METHODS                                              //
     //                                                                                                                 //
     //=================================================================================================================//
-
+    /**
+     * Inserts a new user record into the database.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param role The role of the user.
+     * @throws Exception If a database access error occurs.
+     */
     public void insertUser(String username, String password, int role) throws Exception {
 
         try {
@@ -1652,7 +1891,16 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Inserts a new group guide record into the database.
+     *
+     * @param username The username of the group guide.
+     * @param ID The ID of the group guide.
+     * @param email The email of the group guide.
+     * @param firstName The first name of the group guide.
+     * @param lastName The last name of the group guide.
+     * @throws Exception If a database access error occurs.
+     */
     public void insertGroupGuide(String username, String ID, String email, String firstName, String lastName) throws Exception {
         try {
             String tableName = this.schemaName + ".group_guides";
@@ -1665,7 +1913,18 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Inserts a new park employee record into the database.
+     *
+     * @param username The username of the park employee.
+     * @param email The email of the park employee.
+     * @param parkID The park ID where the employee works.
+     * @param firstName The first name of the park employee.
+     * @param lastName The last name of the park employee.
+     * @param isParkManager Indicates if the employee is a park manager.
+     * @param ID The ID of the park employee.
+     * @throws Exception If a database access error occurs.
+     */
     public void insertParkEmployee(String username, String email, String parkID, String firstName, String lastName, boolean isParkManager, String ID) throws Exception {
         try {
             String tableName = this.schemaName + ".park_employees";
@@ -1678,7 +1937,17 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Inserts a new department manager record into the database.
+     *
+     * @param username The username of the department manager.
+     * @param email The email of the department manager.
+     * @param departmentID The department ID where the manager works.
+     * @param firstName The first name of the department manager.
+     * @param lastName The last name of the department manager.
+     * @param ID The ID of the department manager.
+     * @throws Exception If a database access error occurs.
+     */
     public void insertDepartmentManager(String username, String email, String departmentID, String firstName, String lastName, String ID) throws Exception {
         try {
             String tableName = this.schemaName + ".department_managers";
@@ -1691,7 +1960,12 @@ public class DBConnection {
             throw e;
         }
     }
-
+    /**
+     * Checks if there are any users in the users table.
+     *
+     * @return true if no users are found, false otherwise.
+     * @throws Exception If a database access error occurs.
+     */
     public boolean checkUsersAvailability() throws Exception {
         try {
             String tableName = this.schemaName + ".users";
