@@ -23,44 +23,85 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 public class WaitListPageController extends BaseController implements Initializable {
 
 
+    /**
+     * Button for signing up.
+     */
     @FXML
     private MFXButton btnSignUp;
 
+    /**
+     * Label for displaying the visitation date.
+     */
     @FXML
     private Label lblDate;
 
+    /**
+     * Label for displaying the visitor's email.
+     */
     @FXML
     private Label lblEmail;
 
+    /**
+     * Label for displaying the visitor's name.
+     */
     @FXML
     private Label lblName;
 
+    /**
+     * Label for displaying the number of visitors.
+     */
     @FXML
     private Label lblNumOfVisitors;
 
+    /**
+     * Label for displaying the park's name.
+     */
     @FXML
     private Label lblParkName;
 
+    /**
+     * Label for displaying the visitor's phone number.
+     */
     @FXML
     private Label lblPhone;
 
-
+    /**
+     * Label for displaying the visitation time.
+     */
     @FXML
     private Label lblTime;
 
+    /**
+     * Text for displaying description.
+     */
     @FXML
     private Text txtDescription;
 
+    /**
+     * Text for displaying header.
+     */
     @FXML
     private Text txtHeader;
 
-
+    /**
+     * Label for displaying any error messages.
+     */
     @FXML
     private Label lblError;
 
+    /**
+     * The order associated with the UI elements.
+     */
     private Order order;
 
 
+    /**
+     * Sets the fields of the UI elements based on the provided order and visitor's full name.
+     * Clears any previous error message.
+     *
+     * @param o1           The order object containing the order details.
+     * @param tempfullName The full name of the visitor associated with the order.
+     */
     public void setFields(Order o1, String tempfullName) {
         lblError.setText("");
         this.order = o1;
@@ -76,6 +117,16 @@ public class WaitListPageController extends BaseController implements Initializa
         lblTime.setText(time);
     }
 
+
+    /**
+     * Handles the action event when the "Sign Up" button is clicked.
+     * Retrieves the current user from the application window controller and processes the order accordingly.
+     * If the user is a single visitor, sets the order status to waitlist, sends a message to the server, and handles the response.
+     * If the user is a visitor group guide, follows similar steps as for single visitors.
+     * Shows appropriate confirmation popups based on the server response.
+     *
+     * @param actionEvent The action event triggered by clicking the button.
+     */
     @FXML
     public void OnClickSignUpButton(ActionEvent actionEvent) {
         User user = applicationWindowController.getUser();

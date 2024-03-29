@@ -27,35 +27,72 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GroupGuideOrderVisitationPageController extends BaseController implements Initializable {
+    /**
+     * ObservableList to hold data for combo boxes or other UI components.
+     */
     ObservableList<String> list;
 
+    /**
+     * Reference to the TextField node for entering email.
+     */
     @FXML
     private TextField txtEmail;
 
+    /**
+     * Reference to the TextField node for entering first name.
+     */
     @FXML
     private TextField txtFirstName;
 
+    /**
+     * Reference to the TextField node for entering last name.
+     */
     @FXML
     private TextField txtLastName;
 
+    /**
+     * Reference to the TextField node for entering phone number.
+     */
     @FXML
     private TextField txtPhone;
 
+    /**
+     * Reference to the DatePicker node for selecting date.
+     */
     @FXML
     private DatePicker datePicker;
 
+    /**
+     * Reference to the MFXLegacyComboBox node for selecting the number of visitors.
+     */
     @FXML
     private MFXLegacyComboBox<String> numOfVisitorsCmbBox;
 
+    /**
+     * Reference to the MFXLegacyComboBox node for selecting the park.
+     */
     @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
 
+    /**
+     * Reference to the MFXLegacyComboBox node for selecting the time of visit.
+     */
     @FXML
     private MFXLegacyComboBox<String> timeOfVisitCmbBox;
 
+    /**
+     * Reference to the Label node for displaying information.
+     */
     @FXML
     private Label label;
 
+
+    /**
+     * Resets the input fields and selections in the UI to their default state.
+     * This method clears the text fields for email, first name, last name, and phone number,
+     * clears selections in combo boxes for the number of visitors, park, and time of visit,
+     * and resets the date picker to null.
+     */
     public void cleanup() {
         txtEmail.clear();
         txtFirstName.clear();
@@ -118,6 +155,13 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
         });
     }
 
+
+    /**
+     * Sets up the options for the number of visitors combo box.
+     * This method populates the combo box with values ranging from 2 to 15.
+     * It creates an observable list from an array list containing string representations of numbers,
+     * then sets this list as the items of the combo box.
+     */
     private void setNumOfVisitorsCmbBox() {
         ArrayList<String> al = new ArrayList<String>();
         for (int i = 2; i <= 15; i++) {
@@ -144,6 +188,17 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
 
     }
 
+
+    /**
+     * Handles the action event when the "Create Order" button is clicked.
+     * This method validates the input fields, creates a new order based on the provided information,
+     * sends a message to the server to create a new visitation order, and handles the response accordingly.
+     * If successful, it prompts the user to pay now or later. If the order already exists or the park is at full capacity,
+     * it provides options to view alternative times or sign up for the waitlist.
+     *
+     * @param event The ActionEvent representing the user's click on the "Create Order" button.
+     * @throws CommunicationException If an error occurs during communication with the server.
+     */
     @FXML
     void OnClickCreateOrderButton(ActionEvent event) throws CommunicationException {
         if (!validateFields()) {
@@ -286,6 +341,13 @@ public class GroupGuideOrderVisitationPageController extends BaseController impl
     }
 
 
+    /**
+     * Handles the presentation of a bill for the given order.
+     * This method displays a message popup containing the bill generation UI.
+     * It sets up the controller for generating the bill and starts the process.
+     *
+     * @param order The order for which the bill needs to be generated.
+     */
     private void handleBillPresentation(Order order) {
         try {
             MessagePopup msg = new MessagePopup("/VisitorsUI/GenerateBillForGroupGuide.fxml", 0, 0, true, false);

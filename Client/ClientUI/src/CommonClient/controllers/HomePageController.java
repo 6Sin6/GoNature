@@ -23,23 +23,49 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController extends BaseController implements Initializable {
+    /**
+     * The button used for booking actions.
+     */
     @FXML
     private MFXButton bookBtn;
 
+    /**
+     * The central image displayed on the home page.
+     */
     @FXML
     private ImageView centerImg;
 
+    /**
+     * An additional image displayed on the home page.
+     */
     @FXML
     private ImageView img1;
 
+    /**
+     * Another additional image displayed on the home page.
+     */
     @FXML
     private ImageView img2;
 
+    /**
+     * The button used for signing in actions.
+     */
     @FXML
     private MFXButton signInBtn;
 
+    /**
+     * Popup used for authentication and input actions.
+     */
     private InputTextPopup onAuthPopup;
 
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the FXML file has been loaded. Applies a {@link DropShadow} effect
+     * to the images on the home page.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if unknown.
+     * @param resources The resources used to localize the root object, or null if not available.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         centerImg.toFront();
@@ -48,10 +74,17 @@ public class HomePageController extends BaseController implements Initializable 
         img2.setEffect(new DropShadow());
     }
 
+    /**
+     * Cleans up resources or UI states if necessary. Currently, this method does not perform any cleanup.
+     */
     public void cleanup() {
         // Nothing to clean up
     }
 
+    /**
+     * Handles button click events on the home page. Depending on the user's
+     * authentication status, it either logs out the user or redirects them to the dashboard page.
+     */
     public void onButtonClicked() {
         if (applicationWindowController.getUser() != null) {
             applicationWindowController.logout();
@@ -60,6 +93,13 @@ public class HomePageController extends BaseController implements Initializable 
         applicationWindowController.loadDashboardPage(Role.ROLE_GUEST);
     }
 
+    /**
+     * Handles the authentication with ID and order ID. Validates the input and communicates
+     * with the server to retrieve order details or display errors accordingly.
+     *
+     * @param values The input values from the user, expected to contain the user ID and order ID.
+     * @throws CommunicationException If communication with the server fails.
+     */
     private void onAuthWithID(String... values) throws CommunicationException {
         if (values == null) {
             onAuthPopup.setErrorLabel("Invalid Inputs! Try again");
@@ -100,7 +140,7 @@ public class HomePageController extends BaseController implements Initializable 
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if (response.getMsgData()==null){
+        if (response.getMsgData() == null) {
             onAuthPopup.setErrorLabel("Invalid ID or Link! Try again");
             return;
         }
@@ -136,6 +176,10 @@ public class HomePageController extends BaseController implements Initializable 
         }
     }
 
+    /**
+     * Invoked when handling existing orders. Triggers a popup for the user to input their ID and
+     * order ID, and processes the authentication and order retrieval.
+     */
     public void handleExistingOrder() {
         if (applicationWindowController.getUser() != null) {
             applicationWindowController.logout();
@@ -150,6 +194,15 @@ public class HomePageController extends BaseController implements Initializable 
         onAuthPopup.show(applicationWindowController.getRoot());
     }
 
+    /**
+     * Processes user authentication based on a given ID. This method validates the ID, attempts to sign in,
+     * and retrieves the user's orders based on the ID. Depending on the response from the server and the
+     * status of the orders, it navigates to different pages or displays appropriate error messages.
+     *
+     * @param inputID The ID provided by the user for authentication.
+     *                It checks if the ID is valid, if the user is already logged in, or if any other error occurs
+     *                during the sign-in process. It then proceeds to fetch the user's orders and navigates accordingly.
+     */
     protected void onAuth(String inputID) {
         String strToPrint = "";
         if (!Utils.isIDValid(inputID)) {
@@ -237,6 +290,15 @@ public class HomePageController extends BaseController implements Initializable 
         }
     }
 
+    /**
+     * Handles the action triggered when the book button is clicked by the user. This method initiates
+     * an authentication process by displaying an input popup where the user is prompted to enter their ID.
+     * Upon entering the ID and submitting it, the {@code onAuth} method is called with the entered ID to
+     * process the authentication and potentially proceed with the booking process.
+     * <p>
+     * The popup is configured with specific dimensions and flags to make it modal, ensuring the user's
+     * attention is focused on the authentication step before proceeding.
+     */
     public void onBookButtonClicked() {
         onAuthPopup = new InputTextPopup(new String[]{"Enter Your ID Please : "}, (inputText) -> this.onAuth(inputText[0]), 500, 300, true, true, true);
         onAuthPopup.show(applicationWindowController.getRoot());

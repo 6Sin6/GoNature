@@ -25,36 +25,102 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class CheckAvailableSpotsController extends BaseController implements Initializable {
-    ObservableList<String> list;
+    /**
+     * A list that holds the names of parks. This is observable, meaning UI components
+     * can listen and react to its changes.
+     */
+    private ObservableList<String> list;
+
+    /**
+     * The number of available parking spots. This value is updated based on the selected
+     * park and current occupancy.
+     */
     private Integer availableSpots;
 
+    /**
+     * ComboBox for selecting a park. Populated with park names from {@code list}.
+     * Uses the JFoenix MFXLegacyComboBox component for enhanced UI features.
+     */
     @FXML
     private MFXLegacyComboBox<String> parkCmbBox;
 
+    /**
+     * Button to initiate the check for parking spot availability.
+     * Uses the JFoenix MFXButton component for a stylized button.
+     */
     @FXML
     private MFXButton ctnCheckAvailability;
 
+    /**
+     * Text field for displaying miscellaneous information. Specific usage may vary.
+     */
     @FXML
     private Text text2;
 
+    /**
+     * An additional text field for displaying miscellaneous information. Usage and content
+     * depend on specific application requirements.
+     */
     @FXML
     private Text text21;
 
+    /**
+     * Text field for displaying the current occupancy status of the selected park.
+     */
     @FXML
     private Text ParkOccupancyTxt;
 
+    /**
+     * ProgressBar indicating the occupancy level of the selected park.
+     * Uses the JFoenix MFXProgressBar component for a stylized progress bar.
+     */
     @FXML
     private MFXProgressBar progressBar;
 
+    /**
+     * Text field for displaying the number of available spots in the selected park.
+     */
     @FXML
     private Text availableSpotsTxt;
 
+    /**
+     * Button to proceed with making a reservation for a parking spot.
+     * Uses the JFoenix MFXButton component.
+     */
     @FXML
     private MFXButton MakeOrderBtn;
 
+    /**
+     * Label for displaying error messages related to parking spot availability and reservation.
+     */
     @FXML
     private Label errorLbl;
 
+    /**
+     * Handles the click event on the "Check Availability" button. This method is triggered when the user
+     * wants to check the availability of spots in a selected park. It first hides any previously visible
+     * UI components related to the park's availability, such as the progress bar and availability text.
+     * <p>
+     * If no park is selected, it displays an error label. Otherwise, it sends a request to the server to
+     * check the available spots in the park identified by the selected item in the {@code parkCmbBox}.
+     * Upon receiving a response from the server, it processes the response to update the UI with the
+     * availability information, including updating a progress bar to reflect the occupancy level of the
+     * park and displaying the number of available spots.
+     * <p>
+     * Error handling is implemented to display relevant error messages through popups if a database error
+     * occurs or if the server response is not as expected.
+     * <p>
+     * Preconditions:
+     * - A park must be selected from the {@code parkCmbBox} for the availability check to proceed.
+     * <p>
+     * Postconditions:
+     * - If available spots are found, the method updates the UI to show the park's occupancy level and
+     * the number of available spots. It also makes the "Make Order" button visible to allow proceeding
+     * with creating an order.
+     * - If an error occurs during the process, appropriate error messages are displayed to the user.
+     *
+     * @param event The {@link ActionEvent} associated with the button click.
+     */
     @FXML
     void OnClickctnCheckAvailability(ActionEvent event) {
         progressBar.setVisible(false);
@@ -105,6 +171,23 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
 
     }
 
+    /**
+     * Populates the park ComboBox with names of parks. This method retrieves park names from
+     * the {@code ParkBank}'s unmodifiable map, which serves as the source of park names and their
+     * corresponding IDs. Each park name is added to an ArrayList, which is then converted to an
+     * {@link ObservableList} to ensure UI components can react to the data changes.
+     * <p>
+     * The {@code parkCmbBox} items are set using this observable list, making the park names available
+     * for selection in the ComboBox. This method is intended to be called during the initialization
+     * phase of the view to ensure the park selection ComboBox is fully populated before user interaction.
+     * <p>
+     * Preconditions:
+     * - The {@code ParkBank} must be initialized and contain a mapping of park names to park IDs.
+     * <p>
+     * Postconditions:
+     * - The {@code parkCmbBox} is populated with the names of parks, allowing the user to select a park
+     * from a dropdown list.
+     */
     private void setParkCmbBox() {
         ArrayList<String> al = new ArrayList<String>();
         for (String key : ParkBank.getUnmodifiableMap().keySet()) {
@@ -114,12 +197,48 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         parkCmbBox.setItems(list);
     }
 
+
+    /**
+     * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
+     * It sets up the initial state of the UI components, specifically populating the park selection ComboBox
+     * and resetting any UI elements to their default state through the {@code cleanup} method.
+     * <p>
+     * The {@code setParkCmbBox} method is called to populate the ComboBox with park names, ensuring the user
+     * can select from the available parks as soon as the UI is displayed. The {@code cleanup} method is invoked
+     * to clear any residual data or states that may persist from previous uses of the UI, such as error messages
+     * or previously selected items, ensuring a clean state for user interaction.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or {@code null} if the
+     *                  location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if the root object was not
+     *                  localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setParkCmbBox();
         cleanup();
     }
 
+
+    /**
+     * Handles the action triggered by clicking the "Make Order" button. This method opens a new popup window
+     * for submitting a spontaneous order, passing along the selected park's name and the number of available spots
+     * to the popup's controller. It is designed to facilitate the process of making a new order based on the
+     * user's selection and the current park availability information.
+     * <p>
+     * The method initializes a {@link MessagePopup} with the FXML layout for the spontaneous order submission form,
+     * retrieves the controller for the popup, and sets necessary data and controllers on it. This includes passing
+     * the {@code ApplicationWindowController} for managing application-wide operations and the {@code MessagePopup}
+     * instance for allowing the popup controller to manage its own window. The {@code start} method of the popup
+     * controller is then called with the necessary parameters to initialize its view.
+     *
+     * @param event The {@link ActionEvent} triggered by clicking the button.
+     *              <p>
+     *              Exceptions:
+     *              - This method catches and logs any exceptions that occur during the process of opening the popup or setting up
+     *              its controller. This ensures that the application does not crash and allows for debugging potential issues
+     *              in the order submission process.
+     */
     @FXML
     void OnClickMakeOrderBtn(ActionEvent event) {
         try {
@@ -135,6 +254,22 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         }
     }
 
+
+    /**
+     * Resets the UI elements to their default states. This method is called to clear any displayed information
+     * and hide UI components that are not relevant until certain actions are performed. Specifically, it hides
+     * the progress bar, park occupancy text, and the "Make Order" button, which are only displayed after checking
+     * for park availability. It also clears any error messages and resets the park selection ComboBox.
+     * <p>
+     * This cleanup method is typically invoked when the view is being prepared for the user to start a new action,
+     * or when the user navigates away from the current view, ensuring that the next time the view is presented, it
+     * starts in a clean state.
+     * <p>
+     * Postconditions:
+     * - The progress bar, park occupancy text, and "Make Order" button are not visible.
+     * - The error label is hidden and the available spots text is cleared.
+     * - The park selection ComboBox is reset to an empty selection.
+     */
     @Override
     public void cleanup() {
         progressBar.setVisible(false);

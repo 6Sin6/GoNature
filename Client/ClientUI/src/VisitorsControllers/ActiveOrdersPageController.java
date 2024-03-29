@@ -37,49 +37,94 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class ActiveOrdersPageController extends BaseController implements Initializable {
 
+    /**
+     * The pane containing the handle order button.
+     */
     @FXML
     private Pane bntHandleOrder;
 
+    /**
+     * The header text.
+     */
     @FXML
     private Text txtHeader;
 
+    /**
+     * The table view displaying orders.
+     */
     @FXML
     private TableView<Map<String, String>> tableOrders;
 
+    /**
+     * The column for order number in the table.
+     */
     @FXML
     private TableColumn<Map, String> colOrderNumber;
 
+    /**
+     * The column for park name in the table.
+     */
     @FXML
     private TableColumn<Map, String> colParkName;
 
+    /**
+     * The column for number of visitors in the table.
+     */
     @FXML
     private TableColumn<Map, String> colNumberOfVisitors;
 
+    /**
+     * The column for telephone number in the table.
+     */
     @FXML
     private TableColumn<Map, String> colTelephone;
 
+    /**
+     * The column for email in the table.
+     */
     @FXML
     private TableColumn<Map, String> colEmail;
 
+    /**
+     * The column for date in the table.
+     */
     @FXML
     private TableColumn<Map, String> colDate;
 
+    /**
+     * The column for time in the table.
+     */
     @FXML
     private TableColumn<Map, String> colTime;
 
-
+    /**
+     * The handle order button.
+     */
     @FXML
     private MFXButton handleOrderbtn;
 
+    /**
+     * The status message label.
+     */
     @FXML
     private Label lblStatusMsg;
+
+    /**
+     * The rectangle used to display errors.
+     */
     @FXML
     private Rectangle errorRec;
 
+    /**
+     * The index of the selected row in the table.
+     */
     private int rowIndex;
 
     private ArrayList<Order> list = new ArrayList<>();
 
+    /**
+     * Resets the controller's state by clearing the selected row index, status message label, and hiding the error rectangle.
+     */
     public void cleanup() {
         rowIndex = -1;
         lblStatusMsg.setText("");
@@ -87,6 +132,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     }
 
+
+    /**
+     * Handles the action event when the "Handle Order" button is clicked.
+     * If no order is selected, it displays an error message.
+     * Otherwise, it loads the "UpdateOrderDetailsPage" and sets the fields with the selected order's details.
+     *
+     * @param event The action event triggered by clicking the button.
+     */
     @FXML
     void OnClickHandleOrderButton(ActionEvent event) {
         if (rowIndex == -1) {
@@ -106,6 +159,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
 
     }
 
+
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * Sets up cell value factories for the table columns and makes the table rows clickable.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colOrderNumber.setCellValueFactory(new MapValueFactory<>("Order Number"));
@@ -119,6 +180,11 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         errorRec.setVisible(false);
     }
 
+
+    /**
+     * Starts the controller by fetching visitor orders from the server and populating the table with the retrieved data.
+     * If there's an error during the process, appropriate error messages are displayed.
+     */
     public void start() {
         Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
         ClientUI.client.accept(send);
@@ -144,6 +210,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         makeRowClickable();
     }
 
+
+    /**
+     * Populates the table with the provided list of orders.
+     * Filters out orders with specific statuses and adds valid orders to the table data.
+     * If the provided list is empty, it displays a message indicating no active orders.
+     *
+     * @param dataList The list of orders to populate the table with.
+     */
     @FXML
     public void populateTable(ArrayList<Order> dataList) {
         list.clear();
@@ -178,6 +252,9 @@ public class ActiveOrdersPageController extends BaseController implements Initia
         Timestamp orderTimeStamp = new Timestamp(System.currentTimeMillis());
     }
 
+    /**
+     * Configures the table rows to be clickable and updates their style based on the order status.
+     */
     private void makeRowClickable() {
         tableOrders.setRowFactory(tv -> {
             TableRow<Map<String, String>> row = new TableRow<Map<String, String>>() {
@@ -211,6 +288,14 @@ public class ActiveOrdersPageController extends BaseController implements Initia
             return row;
         });
     }
+
+
+    /**
+     * Finds an order by its unique ID.
+     *
+     * @param orderId the ID of the order to find
+     * @return the order with the specified ID, or {@code null} if no such order exists
+     */
 
     private Order findOrderById(String orderId) {
         for (Order order : list) {

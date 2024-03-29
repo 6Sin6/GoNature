@@ -33,45 +33,96 @@ import static CommonUtils.CommonUtils.parseVisitTime;
 
 public class OrdersWaitingConfirmationController extends BaseController implements Initializable {
 
+    /**
+     * TableView for displaying orders in the UI.
+     */
     @FXML
     private TableView<Map<String, String>> tableOrders;
 
+    /**
+     * TableColumn for displaying the order number in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colOrderNumber;
 
+    /**
+     * TableColumn for displaying the park name in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colParkName;
 
+    /**
+     * TableColumn for displaying the number of visitors in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colNumberOfVisitors;
 
+    /**
+     * TableColumn for displaying the telephone number in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colTelephone;
 
+    /**
+     * TableColumn for displaying the email in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colEmail;
 
+    /**
+     * TableColumn for displaying the date in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colDate;
 
+    /**
+     * TableColumn for displaying the time in the TableView.
+     */
     @FXML
     private TableColumn<Map, String> colTime;
 
+    /**
+     * Label for displaying status messages in the UI.
+     */
     @FXML
     private Label lblStatusMsg;
 
+    /**
+     * Index of the selected row in the TableView.
+     */
     private int rowIndex;
 
+    /**
+     * Button for handling orders in the UI.
+     */
     @FXML
     private MFXButton handleOrderbtn;
 
+    /**
+     * ArrayList to hold the orders.
+     */
     private ArrayList<Order> list = new ArrayList<>();
 
+
+    /**
+     * Resets the UI elements to their default state for cleanup.
+     * This method sets the rowIndex to -1 to deselect any selected row in the TableView,
+     * and clears any status message displayed in the lblStatusMsg label.
+     */
     public void cleanup() {
         rowIndex = -1;
         lblStatusMsg.setText("");
     }
 
+
+    /**
+     * Handles the action event when the "Handle Order" button is clicked.
+     * This method checks if an order is selected in the TableView.
+     * If an order is selected, it loads the ConfirmVisitationPage and sets the selected order and orders list in the controller.
+     * If no order is selected, it displays an error message in the lblStatusMsg label.
+     *
+     * @param event The ActionEvent representing the user's click on the "Handle Order" button.
+     */
     @FXML
     void OnClickHandleOrderButton(ActionEvent event) {
         if (rowIndex == -1) {
@@ -89,6 +140,15 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
 
     }
 
+
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method sets up cell value factories for each TableColumn in the TableView to bind data to the corresponding columns.
+     * It also configures the TableView to make rows clickable by calling the makeRowClickable method.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colOrderNumber.setCellValueFactory(new MapValueFactory<>("Order Number"));
@@ -101,6 +161,16 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
         makeRowClickable();
     }
 
+
+    /**
+     * Starts the process of retrieving and displaying visitor orders in the TableView.
+     * This method sends a message to the server to get visitor orders associated with the current user.
+     * It handles the response from the server by checking the opcode and data integrity.
+     * If successful, it populates the TableView with the retrieved orders after filtering them,
+     * and displays them in the UI.
+     * If there's an error during communication with the server or if the response is inappropriate,
+     * it displays an error message in a ConfirmationPopup.
+     */
     public void start() {
         Message send = new Message(OpCodes.OP_GET_VISITOR_ORDERS, applicationWindowController.getUser().getUsername(), applicationWindowController.getUser());
         ClientUI.client.accept(send);
@@ -125,6 +195,16 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
         populateTable(filterOrders((ArrayList<Order>) (ClientCommunicator.msg.getMsgData())));
     }
 
+
+    /**
+     * Populates the TableView with the provided list of orders.
+     * This method clears the existing data in the table and then adds new rows based on the provided dataList.
+     * It disables the handleOrderbtn if the dataList is empty and displays a message popup accordingly.
+     * For each order in the dataList, it creates a row with order details and adds it to the table.
+     * The row data includes the order number, park name, number of visitors, telephone, email, date, and time.
+     *
+     * @param dataList The list of orders to populate the TableView with.
+     */
     @FXML
     public void populateTable(ArrayList<Order> dataList) {
         list.clear();
@@ -132,8 +212,7 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
             handleOrderbtn.setDisable(true);
             MessagePopup popup = new MessagePopup("There are no orders awaiting confirmation", Duration.seconds(5), 600, 150, false);
             popup.show(applicationWindowController.getRoot());
-        }
-        else{
+        } else {
             handleOrderbtn.setDisable(false);
         }
         rowIndex = -1;
@@ -162,6 +241,12 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
         tableOrders.setItems(tableData);
     }
 
+
+    /**
+     * Configures the TableView to make its rows clickable.
+     * This method sets a row factory for the table to handle mouse clicks on rows.
+     * When a row is clicked, it retrieves the data of the clicked row and updates the rowIndex accordingly.
+     */
     private void makeRowClickable() {
         // Set row factory to handle clicks on rows
         tableOrders.setRowFactory(tv -> {
@@ -177,6 +262,14 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
         });
     }
 
+
+    /**
+     * Filters the provided list of orders to include only those with the status "Pending Confirmation".
+     * This method iterates through the orders and adds those with the status "Pending Confirmation" to a new list.
+     *
+     * @param orders The list of orders to be filtered.
+     * @return The filtered list of orders with the status "Pending Confirmation".
+     */
     private ArrayList<Order> filterOrders(ArrayList<Order> orders) {
         ArrayList<Order> filteredOrders = new ArrayList<>();
         for (Order order : orders) {

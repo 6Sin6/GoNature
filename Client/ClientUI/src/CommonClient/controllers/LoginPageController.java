@@ -19,39 +19,89 @@ import java.util.ArrayList;
 
 public class LoginPageController extends BaseController {
 
-
+    /**
+     * The label used to display error messages related to the login process.
+     */
     @FXML
     private Label ErrorMsg;
 
+    /**
+     * A password field for the user to enter their password securely.
+     */
     @FXML
     private PasswordField passwordText;
 
+    /**
+     * A text field for the user to enter their username.
+     */
     @FXML
     private TextField userNameText;
 
-
+    /**
+     * Retrieves the username from the username text field.
+     *
+     * @return A string containing the username entered by the user.
+     */
     private String getUserName() {
         return userNameText.getText();
     }
 
+    /**
+     * Retrieves the password from the password field.
+     *
+     * @return A string containing the password entered by the user.
+     */
     private String getPassword() {
         return passwordText.getText();
     }
 
+    /**
+     * Resets all input fields and error messages to their default states.
+     * This method clears the text from the username and password fields,
+     * and resets the error message label.
+     */
     public void resetAllFields() {
         this.ErrorMsg.setText("");
         this.userNameText.setText("");
         this.passwordText.setText("");
     }
 
+    /**
+     * Cleans up the UI by resetting all fields. This method is typically called
+     * during a logout process or when navigating away from the login page to ensure
+     * that sensitive information is not left displayed in the UI components.
+     */
     public void cleanup() {
         resetAllFields();
     }
 
+    /**
+     * Navigates the user interface to the home page. This method is used after
+     * a successful login or logout, or when the user needs to be redirected to the
+     * home page for any other reason.
+     */
     public void navigateToHomePage() {
         applicationWindowController.setCenterPage("/CommonClient/gui/HomePage.fxml");
     }
 
+    /**
+     * Handles the action triggered by the login button click. This method validates the input fields to ensure
+     * they are not empty, constructs a {@link User} object with the provided username and password, and sends
+     * a sign-in request to the server. Depending on the server's response, it either shows an error message,
+     * displays a confirmation popup for various errors, or proceeds to log the user in and navigate to the
+     * appropriate dashboard page.
+     *
+     * <p>It checks for multiple conditions such as if the user is already logged in, if there are database
+     * errors, server errors, or if the user credentials do not match an activated Visitor Group Guide or
+     * a valid user role. For Visitor Group Guides with orders pending confirmation, it fetches and processes
+     * these orders specifically.</p>
+     *
+     * <p>Errors are communicated to the user through the {@code ErrorMsg} text field or through pop-ups
+     * for database or server errors. Upon successful login, it resets the login fields and updates the UI
+     * to reflect the user's role and possibly displays a popup if there are orders pending confirmation.</p>
+     *
+     * @throws CommunicationException If there's an issue communicating with the server.
+     */
     public void onLoginClick() throws CommunicationException {
         if (getUserName().isEmpty() || getPassword().isEmpty()) {
             ErrorMsg.setText("Please fill all fields!");

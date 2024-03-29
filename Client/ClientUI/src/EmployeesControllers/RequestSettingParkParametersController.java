@@ -26,23 +26,49 @@ import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
 
+    /**
+     * Represents a JavaFX label used for displaying error messages.
+     */
     @FXML
     private Label lblErrorMsg;
 
+    /**
+     * Represents a JavaFX label used for displaying success messages.
+     */
     @FXML
     private Label lblSuccessMsg;
 
+    /**
+     * Represents a JavaFX text field used for entering the difference between orders and visitors capacity.
+     */
     @FXML
     private TextField txtDifferenceOrdersVisitors;
 
+    /**
+     * Represents a JavaFX combo box used for selecting the maximum visitation time.
+     */
     @FXML
     private MFXLegacyComboBox<String> cmbMaxVisitation;
 
+    /**
+     * Represents a JavaFX text field used for entering the park capacity.
+     */
     @FXML
     private TextField txtParkCapacity;
 
+    /**
+     * Represents the Park object associated with the controller.
+     */
     private Park park;
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is automatically called by the FXMLLoader when loading the FXML file.
+     * It populates the dropdown menu for selecting maximum visitation time with values ranging from 1 to 8 hours.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         for (int i = 1; i <= 8; i++) {
@@ -50,6 +76,12 @@ public class RequestSettingParkParametersController extends BaseController imple
         }
     }
 
+
+    /**
+     * Resets the UI components related to park parameter modification to their default states.
+     * This method clears the error messages, success messages, and input fields for modifying park parameters.
+     * It is typically used to clean up the UI after a form submission or when resetting the input fields.
+     */
     public void cleanup() {
         lblErrorMsg.setText("");
         lblSuccessMsg.setText("");
@@ -58,6 +90,13 @@ public class RequestSettingParkParametersController extends BaseController imple
         txtParkCapacity.setText("");
     }
 
+
+    /**
+     * Retrieves park parameters for the current park manager user and populates the corresponding fields in the UI.
+     * This method retrieves park details using the park ID associated with the park manager user.
+     * It sends a request to the server to fetch park details and updates the UI fields with the retrieved parameters.
+     * If successful, it sets the retrieved park details to the park manager user and updates the UI accordingly.
+     */
     public void getParkParameters() {
         ParkManager user = (ParkManager) applicationWindowController.getUser();
         Message msg, response;
@@ -98,6 +137,15 @@ public class RequestSettingParkParametersController extends BaseController imple
         txtDifferenceOrdersVisitors.setText(String.valueOf(park.getGapVisitorsCapacity()));
     }
 
+
+    /**
+     * Handles the action event triggered by clicking the "SubmitButton" for updating park parameters.
+     * This method processes the input provided by the user for updating park parameters such as maximum visitation time,
+     * gap between orders and visitors capacity, and park capacity. It validates the input and sends requests to the department
+     * for updating the park parameters. Upon successful submission, it displays a success message.
+     *
+     * @param ignoredEvent The ActionEvent triggered by clicking the "SubmitButton".
+     */
     @FXML
     void OnClickSubmitButton(ActionEvent ignoredEvent) {
         lblSuccessMsg.setText("");
@@ -172,7 +220,6 @@ public class RequestSettingParkParametersController extends BaseController imple
 
         lblSuccessMsg.setText("Your requests have been submitted successfully!");
     }
-
 
 
 }

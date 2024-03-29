@@ -37,12 +37,43 @@ public class Utils {
         put("Capacity Statistics", "usage");
     }};
 
+    /**
+     * Converts the name of a month into its corresponding numerical representation.
+     * <p>
+     * This method parses a month name (e.g., "January", "February", etc.) and converts it into
+     * its numerical order in the calendar year, with January being 1 and December being 12.
+     * The method is case-sensitive and expects the full name of the month in English.
+     *
+     * @param monthName The full name of the month (e.g., "March"), case-sensitive, in English.
+     * @return The numerical representation of the month (e.g., 3 for March).
+     * @throws ParseException If the given month name is not recognized or cannot be parsed,
+     *                        indicating that the input does not correspond to a valid month name.
+     *                        <p>
+     *                        Usage of this method is particularly useful in scenarios where month names are received
+     *                        as text input and need to be converted into numerical form for date calculations or
+     *                        formatting purposes.
+     */
     public static int getNumberFromMonthName(String monthName) throws ParseException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new SimpleDateFormat("MMMM", Locale.ENGLISH).parse(monthName));
         return cal.get(Calendar.MONTH) + 1;
     }
 
+    /**
+     * Validates if the provided ID string meets the specified criteria for validity. An ID is considered valid if it
+     * is exactly 9 characters in length and consists solely of digits.
+     *
+     * @param ID The string representing the ID to be validated.
+     * @return {@code Boolean} - {@code true} if the ID is valid based on the defined criteria, otherwise {@code false}.
+     * <p>
+     * The validation process involves two primary checks:
+     * 1. The ID must not be {@code null}, ensuring that a valid string object is provided for validation.
+     * 2. The length of the ID string must be exactly 9 characters to match the expected format.
+     * 3. Each character in the ID string must be a digit, ensuring no alphabetical or special characters are included.
+     * <p>
+     * This method is particularly useful in scenarios requiring validation of identification numbers or similar
+     * strings where a specific format is expected for data integrity and consistency purposes.
+     */
     public static Boolean isIDValid(String ID) {
         // Check if the string length is exactly 9 characters
         if (ID == null) {
@@ -56,6 +87,17 @@ public class Utils {
         return checkContainsDigitsOnly(ID);
     }
 
+    /**
+     * Checks if a given string consists only of digit characters. This method iterates through
+     * each character of the string, verifying that each character is a digit as defined by
+     * the {@link Character#isDigit(char)} method.
+     *
+     * @param str The string to be checked.
+     * @return {@code Boolean} - {@code true} if the string contains only digits; {@code false} otherwise.
+     * <p>
+     * This utility method is useful for validating input where numeric data is expected in a string format,
+     * ensuring that the string does not contain any non-digit characters such as letters or special symbols.
+     */
     public static Boolean checkContainsDigitsOnly(String str) {
         for (char c : str.toCharArray()) {
             if (!Character.isDigit(c)) {

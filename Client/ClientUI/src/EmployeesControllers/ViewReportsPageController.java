@@ -29,28 +29,58 @@ import static CommonClient.Utils.getNumberFromMonthName;
 
 public class ViewReportsPageController extends BaseController {
 
+    /**
+     * The error message label used to display error messages related to report generation.
+     */
     @FXML
     private Label errMsg;
 
+    /**
+     * The combo box for selecting the month of the report.
+     */
     @FXML
     private ComboBox<String> monthCmb;
 
+    /**
+     * The combo box for selecting the park.
+     */
     @FXML
     private ComboBox<String> parkCmb;
 
+    /**
+     * The combo box for selecting the type of report.
+     */
     @FXML
     private ComboBox<String> reportCmb;
 
+    /**
+     * The label used to display the result of viewing a report.
+     */
     @FXML
     private Label viewResultMsg;
 
+    /**
+     * The combo box for selecting the year of the report.
+     */
     @FXML
     private ComboBox<String> yearCmb;
 
+    /**
+     * A map storing the names of parks.
+     */
     private HashMap<String, String> parkNamesMap = null;
 
+    /**
+     * A flag indicating whether the current page is managed by a park manager.
+     */
     private boolean parkManagerPage = false;
 
+
+    /**
+     * Clears all selections and resets the combo boxes and flags related to the UI state.
+     * This method resets the error and information labels, clears the selections in the combo boxes,
+     * clears the items in the combo boxes, and resets the flags related to the UI state.
+     */
     public void cleanup() {
         errMsg.setText("");
         viewResultMsg.setText("");
@@ -66,14 +96,34 @@ public class ViewReportsPageController extends BaseController {
         parkNamesMap = null;
     }
 
+
+    /**
+     * Retrieves the department ID of the park department manager user.
+     * This method retrieves the department ID from the park department manager user object stored in the application window controller.
+     *
+     * @return The department ID of the park department manager user.
+     */
     private Integer getDepartmentID() {
         return ((ParkDepartmentManager) this.applicationWindowController.getUser()).getDepartmentID();
     }
 
+    /**
+     * Retrieves the ID of the park associated with the current park manager user.
+     * This method retrieves the park ID from the park manager user object stored in the application window controller.
+     *
+     * @return The ID of the park associated with the current park manager user.
+     */
     private String getParkID() {
         return ((ParkManager) applicationWindowController.getUser()).getParkID();
     }
 
+
+    /**
+     * Retrieves the name of the park associated with the current park ID.
+     * This method sends a request to the server to fetch the name of the park associated with the current park ID.
+     *
+     * @return The name of the park, or null if an error occurs during retrieval.
+     */
     private String getParkName() {
         String parkID = this.getParkID();
         Message message = new Message(OpCodes.OP_GET_PARK_NAME_BY_PARK_ID, applicationWindowController.getUser().getUsername(), parkID);
@@ -86,6 +136,13 @@ public class ViewReportsPageController extends BaseController {
         return (String) response.getMsgData();
     }
 
+    /**
+     * Retrieves the names of parks associated with the current department.
+     * This method sends a request to the server to fetch the park names associated with the current department.
+     * If the park names are not already cached, it retrieves them from the server response and caches them for future use.
+     *
+     * @return A map containing park IDs as keys and park names as values, or null if an error occurs during retrieval.
+     */
     private Map<String, String> getParksNames() {
         if (parkNamesMap == null) {
             String departmentID = String.valueOf(this.getDepartmentID());
@@ -108,6 +165,14 @@ public class ViewReportsPageController extends BaseController {
         return parkNamesMap;
     }
 
+
+    /**
+     * Updates the month combo box with the specified number of months.
+     * This method clears the existing items in the month combo box and adds the specified number of months to the combo box.
+     * The months are added based on their names from January to the specified last month.
+     *
+     * @param lastMonth The index of the last month to be included in the combo box.
+     */
     private void updateMonthComboBox(int lastMonth) {
         monthCmb.getItems().clear();
         String[] monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -117,6 +182,14 @@ public class ViewReportsPageController extends BaseController {
         monthCmb.setValue(monthCmb.getItems().get(0));
     }
 
+
+    /**
+     * Initializes the view for generating and viewing reports.
+     * This method sets up the combo boxes for selecting the report type, year, and park, based on the user's role.
+     * If the user is a park manager, the park combo box is disabled, and the report options are limited to park manager reports.
+     * If the user is not a park manager, the park combo box is populated with park names, and both park and department reports are available.
+     * The method also sets up event listeners for the combo boxes to handle user selections.
+     */
     public void start() {
         // Definitions
         ArrayList<String> years = new ArrayList<>();
@@ -162,6 +235,16 @@ public class ViewReportsPageController extends BaseController {
         yearCmb.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onSelectYear(oldVal, newVal));
     }
 
+
+    /**
+     * Handles the selection change event when choosing a year from the year combo box.
+     * This method updates the month combo box based on the selected year.
+     * If the selected year is the current year, it updates the month combo box with the months up to the current month.
+     * If the selected year is not the current year, it updates the month combo box with all twelve months.
+     *
+     * @param oldValue The previously selected year value.
+     * @param newValue The newly selected year value.
+     */
     private void onSelectYear(String oldValue, String newValue) {
         if (oldValue == null || newValue == null)
             return;
@@ -175,6 +258,17 @@ public class ViewReportsPageController extends BaseController {
         } else updateMonthComboBox(12);
     }
 
+
+    /**
+     * Handles the selection change event when choosing a report from the report combo box.
+     * This method adjusts the state of the park combo box based on the selected report.
+     * If the selected report is a park manager report, it enables the park combo box for park selection.
+     * If the selected report is a department report, it disables the park combo box and sets its value to "All Parks".
+     * If the user is a park manager or if the selected report type remains within park manager reports, no action is taken.
+     *
+     * @param oldVal The previously selected report value.
+     * @param newVal The newly selected report value.
+     */
     void onSelectReport(String oldVal, String newVal) {
         if (parkManagerPage ||
                 (Utils.parkManagerReportsMap.containsKey(newVal) && Utils.parkManagerReportsMap.containsKey(oldVal)))
@@ -189,6 +283,15 @@ public class ViewReportsPageController extends BaseController {
         }
     }
 
+
+    /**
+     * Handles the action event triggered by clicking the "View Report" button.
+     * This method retrieves the selected report parameters, such as the report type, month, year, and park ID or department ID,
+     * and sends a message to the server to fetch the corresponding report from the database.
+     * Upon receiving the report data, it displays the report as a PDF file or shows an error message if the report is not found or if there are any errors.
+     *
+     * @param ignoredEvent The ActionEvent triggered by clicking the "View Report" button (ignored).
+     */
     @FXML
     void onClickViewReport(ActionEvent ignoredEvent) {
         String selectedReport = reportCmb.getValue();
@@ -273,6 +376,17 @@ public class ViewReportsPageController extends BaseController {
         }
     }
 
+
+    /**
+     * Retrieves the key associated with a specified value in a given map.
+     * This method iterates through the entries of the map to find the key corresponding to the provided value.
+     * If the value is found, the corresponding key is returned; otherwise, it throws an IllegalArgumentException.
+     *
+     * @param map   The map to search for the value.
+     * @param value The value for which the corresponding key is to be retrieved.
+     * @return The key associated with the specified value.
+     * @throws IllegalArgumentException if the specified value is not found in the map.
+     */
     private String getKeyFromValue(Map<String, String> map, String value) {
         for (Map.Entry<String, String> entry : map.entrySet())
             if (entry.getValue().equals(value))
