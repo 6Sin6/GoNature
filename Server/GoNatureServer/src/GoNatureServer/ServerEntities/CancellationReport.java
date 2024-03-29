@@ -104,9 +104,12 @@ public class CancellationReport extends DepartmentReport implements Serializable
 
 
     /**
-     * Creates a PDF file based on the data in the specified ResultSet.
+     * This method calculates and returns the maximum value for the Y-axis of the line chart after adding a factor.
+     * It first calculates a factor as 10% of the maximum value of the number of visitors.
+     * Then, it adds a certain value to the maximum value based on the calculated factor.
+     * The method then returns the calculated maximum value.
      *
-     * @return A Blob object representing the PDF file.
+     * @return The maximum value for the Y-axis of the line chart after adding a factor.
      */
     @Override
     public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
@@ -165,6 +168,24 @@ public class CancellationReport extends DepartmentReport implements Serializable
         return new SerialBlob(outputStream.toByteArray());
     }
 
+    /**
+     * This method handles the creation of charts for the cancellation report.
+     * It first determines whether to create an average line chart or a distribution histogram based on the averageDistribution parameter.
+     * Then, it creates a BufferedImage of the chart and writes it to a ByteArrayOutputStream.
+     * The method then creates an Image from the ByteArrayOutputStream and adds it to the PDF document.
+     * If the chart is not an average line chart, it also adds the total count and median of cancelled orders to the document.
+     *
+     * @param suffix The suffix to append to the chart title. It should be the ID of the park if the chart is for a park, or an empty string if the chart is for the department.
+     * @param totalCount A reference to an AtomicInteger that will be updated with the total count of cancelled orders.
+     * @param median A reference to an AtomicInteger that will be updated with the median of cancelled orders. It can be null if the chart is an average line chart.
+     * @param document The PDF document to add the chart to.
+     * @param baseFont The font to use for the total count and median titles.
+     * @param departmentDistribution A boolean indicating whether the chart is for the department distribution or not.
+     * @param averageDistribution A boolean indicating whether the chart is an average line chart or not.
+     * @throws IOException If an error occurs while writing to the ByteArrayOutputStream.
+     * @throws DocumentException If an error occurs while adding the chart to the PDF document.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     private void handleChartCreation(String suffix, AtomicInteger totalCount, AtomicInteger median, Document document, BaseFont baseFont, boolean departmentDistribution, boolean averageDistribution) throws IOException, DocumentException, SQLException {
         JFreeChart chart = averageDistribution ? createAverageLineChart(suffix, departmentDistribution) : createDistributionHistogram(suffix, totalCount, median, departmentDistribution);
 
@@ -190,6 +211,18 @@ public class CancellationReport extends DepartmentReport implements Serializable
         }
     }
 
+    /**
+     * This method creates an average line chart for the cancellation report.
+     * It first creates a dataset for the chart by calling the createAverageLineChartSeries method.
+     * Then, it creates the line chart with the title, x-axis label, y-axis label, dataset, and other parameters.
+     * It customizes the background color, line color, and line thickness of the chart.
+     * Finally, it returns the created JFreeChart.
+     *
+     * @param suffix The suffix to append to the chart title. It should be the ID of the park if the chart is for a park, or an empty string if the chart is for the department.
+     * @param departmentDistribution A boolean indicating whether the chart is for the department distribution or not.
+     * @return A JFreeChart representing an average line chart of the cancellation report.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     private JFreeChart createAverageLineChart(String suffix, boolean departmentDistribution) throws SQLException {
         XYSeriesCollection dataset = createAverageLineChartSeries(suffix, departmentDistribution);
 
@@ -214,6 +247,17 @@ public class CancellationReport extends DepartmentReport implements Serializable
         return chart;
     }
 
+
+    /**
+     * This method creates a dataset for the average line chart.
+     * It initializes an XYSeries and populates it with the percentage of cancelled orders for each day of the month.
+     * The method then adds the series to an XYSeriesCollection and returns it.
+     *
+     * @param keySuffix The suffix to append to the key when retrieving data from the departmentData or parksData map. It should be the ID of the park if the data is for a park, or an empty string if the data is for the department.
+     * @param departmentReports A boolean indicating whether to retrieve data from the departmentData map or the parksData map.
+     * @return An XYSeriesCollection representing the dataset for the average line chart.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     private XYSeriesCollection createAverageLineChartSeries(String keySuffix, boolean departmentReports) throws SQLException {
         XYSeries series = new XYSeries("Cancelled Orders");
 
@@ -248,6 +292,12 @@ public class CancellationReport extends DepartmentReport implements Serializable
         return dataset;
     }
 
+    /**
+     * This method calculates and returns the maximum value in a given array of floats.
+     *
+     * @param array The array of floats to find the maximum value in.
+     * @return The maximum value in the given array of floats.
+     */
     private float getMax(float[] array) {
         float max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -258,6 +308,20 @@ public class CancellationReport extends DepartmentReport implements Serializable
         return max;
     }
 
+    /**
+     * This method creates a distribution histogram for the cancellation report.
+     * It first creates a series for the histogram by calling the createDepartmentDistributionSeries method.
+     * Then, it creates the histogram with the title, x-axis label, y-axis label, series, and other parameters.
+     * It customizes the appearance of the histogram, including the background color, gridline color, bar color, and y-axis range.
+     * Finally, it returns the created JFreeChart.
+     *
+     * @param suffix The suffix to append to the chart title. It should be the ID of the park if the chart is for a park, or an empty string if the chart is for the department.
+     * @param totalCount A reference to an AtomicInteger that will be updated with the total count of cancelled orders.
+     * @param median A reference to an AtomicInteger that will be updated with the median of cancelled orders.
+     * @param departmentDistribution A boolean indicating whether the chart is for the department distribution or not.
+     * @return A JFreeChart representing a distribution histogram of the cancellation report.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     private JFreeChart createDistributionHistogram(String suffix, AtomicInteger totalCount, AtomicInteger median, boolean departmentDistribution) throws SQLException {
         XYSeries series = createDepartmentDistributionSeries(totalCount, median, suffix, departmentDistribution);
         XYSeriesCollection dataset = new XYSeriesCollection();
@@ -298,6 +362,18 @@ public class CancellationReport extends DepartmentReport implements Serializable
         return chart;
     }
 
+    /**
+     * This method creates a series for the distribution histogram.
+     * It initializes an XYSeries and populates it with the total cancelled orders for each day of the month.
+     * The method then returns the created series.
+     *
+     * @param totalCount A reference to an AtomicInteger that will be updated with the total count of cancelled orders.
+     * @param median A reference to an AtomicInteger that will be updated with the median of cancelled orders.
+     * @param keySuffix The suffix to append to the key when retrieving data from the departmentData or parksData map. It should be the ID of the park if the data is for a park, or an empty string if the data is for the department.
+     * @param departmentReports A boolean indicating whether to retrieve data from the departmentData map or the parksData map.
+     * @return An XYSeries representing the series for the distribution histogram.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     private XYSeries createDepartmentDistributionSeries(AtomicInteger totalCount, AtomicInteger median, String keySuffix, boolean departmentReports) throws SQLException {
         XYSeries series = new XYSeries("Cancelled Orders");
         ResultSet resultSet = departmentReports ? departmentData.get("distribution" + keySuffix) : parksData.get("distribution" + keySuffix);

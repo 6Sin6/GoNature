@@ -87,8 +87,13 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * This method is intended to create a PDF Blob for the VisitationReport.
-     * Creates a PDF file based on the data in the specified ResultSet.
+     * This method is responsible for creating a PDF Blob for the VisitationReport.
+     * It first creates a PDF document with a title that includes the department ID.
+     * Then, it adds a bar chart (grouped column chart) and a pie chart to the document, each on a new page.
+     * After that, it creates a table container with left and right columns for tables.
+     * It then creates and adds a table for single orders and a table for group orders to the table container.
+     * The table container is then added to the document.
+     * Finally, the document is closed and converted to a Blob, which is returned.
      *
      * @return A Blob object representing the PDF file.
      * @throws DocumentException If there is an error while creating the PDF document.
@@ -149,21 +154,25 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Creates a chart with JFreeChart based on the data in the specified ResultSet.
+     * Creates a bar chart using JFreeChart based on the average time spent by order type for each day of the current month.
+     * The method first initializes a dataset and sets the colors for the bars in the chart.
+     * It then iterates through each day of the current month, retrieves the average time spent for group orders and single/family-sized orders for that day, and adds the data to the dataset.
+     * The maximum time spent is also tracked to set the range of the y-axis in the chart.
+     * Finally, it calls the createGroupedColumnChart method to create the chart with the specified dataset, maximum time spent, titles, and colors.
      *
-     * @return The JFreeChart object representing the chart.
+     * @return A JFreeChart object representing the bar chart.
+     * @throws SQLException If an error occurs while retrieving the time spent data.
      */
     protected JFreeChart createBarChart() throws SQLException {
-        // Definitions
         double maxTimeSpent = 0;
-        // Initialize dataset for the pie chart
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        // Get current date
+
         LocalDate currentDate = LocalDate.now();
-        // Initialize colors for the bars
+
         Color groupOrdersColor = new Color(12, 36, 58);
         Color singleFamilyOrdersColor = new Color(188, 33, 33);
-        // Initialize titles for Axis and chart.
+
         String title = "Average Time Spent by Order Type";
         String xAxisTitle = "Date";
         String yAxisTitle = "Average Time Spent (Hours)";
@@ -190,9 +199,14 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Creates a pie chart with JFreeChart based on the data in the specified ResultSet.
+     * This method creates a pie chart using JFreeChart based on the total time spent by order type for the entire month.
+     * It first initializes a dataset for the pie chart and sets the title of the chart.
+     * Then, it retrieves the total time spent for group orders and single/family-sized orders for the entire month.
+     * The retrieved data is then added to the dataset.
+     * Finally, it calls the createPieChart method from the superclass to create the pie chart with the specified dataset and title.
      *
-     * @return The JFreeChart object representing the pie chart.
+     * @return A JFreeChart object representing the pie chart.
+     * @throws SQLException If an error occurs while retrieving the total time spent data.
      */
     protected JFreeChart createPieChart() throws SQLException {
         // Initialize dataset for the pie chart
@@ -213,10 +227,16 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Creates a table with the data in the specified ResultSet.
+     * This method creates a table with data from a specified ResultSet.
+     * The table is created with columns for "Park ID", "Park Name", "Entrance Time", "Reservation Time", and "Time Spent".
+     * The method then iterates through the ResultSet, adding a row to the table for each record that matches the specified order type.
+     * Each row contains the park ID, park name, entrance time, reservation time, and time spent for the corresponding record.
+     * The method uses the createTable and createCenterCell methods from the superclass to create the table and cells, respectively.
+     * The method also uses the parseVisitTime method to format the time spent.
      *
-     * @param orderType The order type to display in the table.
-     * @return The PdfPTable object representing the table.
+     * @param orderType The order type to display in the table. It should be an integer representing the order type.
+     * @return A PdfPTable object representing the table. Each row in the table corresponds to a record in the ResultSet that matches the specified order type.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
      */
     private PdfPTable createTable(int orderType) throws SQLException {
         // Columns of table
@@ -261,11 +281,19 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Retrieves the average time spent for the specified date and order type.
+     * This method retrieves the average time spent for a specified date and order type from the report data.
+     * It first retrieves the ResultSet for "timespent" from the report data.
+     * Then, it iterates through the ResultSet, checking each record's visitation date against the specified date.
+     * If a match is found, it retrieves the average time spent for the specified order type from the record.
+     * If the retrieved value is null, it is set to 0.0.
+     * The method then converts the average time spent from minutes to hours and returns it.
+     * If no match is found after iterating through the entire ResultSet, the method returns 0.0.
      *
-     * @param date            The date to retrieve the time spent for.
-     * @param orderTypeSuffix The suffix for the order type.
-     * @return The average time spent for the specified date and order type.
+     * @param date            The date to retrieve the time spent for. It should be a string representing the date.
+     * @param orderTypeSuffix The suffix for the order type. It should be a string representing the suffix.
+     * @return The average time spent for the specified date and order type, converted from minutes to hours.
+     *         If no data is found for the specified date, the method returns 0.0.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
      */
     private double getTimeSpentForDate(String date, String orderTypeSuffix) throws SQLException {
         ResultSet timeSpentData = this.reportData.get("timespent");
@@ -286,10 +314,15 @@ public class VisitationReport extends DepartmentReport implements Serializable {
 
 
     /**
-     * Retrieves the total time spent for the specified order type.
+     * This method retrieves the total time spent for a specified order type from the report data.
+     * It first retrieves the ResultSet for "timespent" from the report data.
+     * Then, it iterates through the ResultSet, retrieving the average time spent for the specified order type from each record.
+     * If the retrieved value is not null, it is added to the total time spent.
+     * The method then converts the total time spent from minutes to hours and returns it.
      *
-     * @param orderTypeSuffix The suffix for the order type.
-     * @return The total time spent for the specified order type.
+     * @param orderTypeSuffix The suffix for the order type. It should be a string representing the suffix.
+     * @return The total time spent for the specified order type, converted from minutes to hours.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
      */
     private double getTotalTimeSpent(String orderTypeSuffix) throws SQLException {
         double total = 0.0;

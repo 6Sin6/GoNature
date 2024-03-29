@@ -18,8 +18,12 @@ import java.util.concurrent.TimeUnit;
  * It uses a list of ScheduledExecutorService instances to manage periodic execution of these tasks.
  */
 public class Workers {
-
+    /**
+     * A list of ScheduledExecutorService instances.
+     * Each instance in this list is responsible for managing and scheduling a specific task.
+     */
     private static final List<ScheduledExecutorService> executors = new ArrayList<>();
+
     /**
      * Starts a thread to monitor and update the client connections in the server's UI.
      *
@@ -49,6 +53,7 @@ public class Workers {
             }
         }, "Client Processing Thread").start();
     }
+
     /**
      * Schedules a task to send reminders and manage orders one day before their scheduled time.
      *
@@ -79,6 +84,7 @@ public class Workers {
 //        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(10), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
+
     /**
      * Schedules a task to cancel orders that haven't been confirmed 22 hours before the scheduled time.
      *
@@ -109,6 +115,7 @@ public class Workers {
 //        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
+
     /**
      * Schedules a task to process waitlisted orders 48 hours before the scheduled time.
      *
@@ -138,6 +145,7 @@ public class Workers {
 //        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
+
     /**
      * Schedules a task to update the status of absent orders at the top of every hour.
      *
@@ -166,6 +174,7 @@ public class Workers {
 //        scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.SECONDS.toMillis(5), TimeUnit.MILLISECONDS);
         executors.add(scheduler);
     }
+
     /**
      * Calculates the initial delay required to schedule the tasks at the top of the next hour.
      *
@@ -183,6 +192,7 @@ public class Workers {
         long nextHour = calendar.getTimeInMillis();
         return nextHour - now;
     }
+
     /**
      * Shuts down all the scheduled executor services.
      */

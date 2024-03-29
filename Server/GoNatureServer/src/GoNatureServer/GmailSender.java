@@ -5,8 +5,22 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * This class is responsible for sending emails using Gmail's SMTP server.
+ * It contains a single public static method, sendEmail, which sends an email to a specified recipient.
+ */
 public class GmailSender {
 
+    /**
+     * Sends an email to the specified recipient using Gmail's SMTP server.
+     * This method sets up the SMTP server properties, creates a Session object, and then creates and sends a MimeMessage.
+     * If the message is successfully sent, it prints a success message to the console.
+     * If an error occurs while sending the message, it prints the stack trace of the exception to the console.
+     *
+     * @param to The email address of the recipient.
+     * @param Subject The subject of the email.
+     * @param textMessage The body of the email.
+     */
     public static void sendEmail(String to, String Subject, String textMessage) {
 
         // Set up the SMTP server properties

@@ -7,17 +7,36 @@ import ServerUIPageController.ServerUIFrameController;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is responsible for simulating the import of users from an external database.
+ * It handles the process of retrieving user data and inserting it into the correct tables in the local database.
+ */
 public class ImportSimulator {
+    /**
+     * The controller for the server user interface.
+     */
     private ServerUIFrameController serverController;
+
+    /**
+     * The connection to the database.
+     */
     private DBConnection dbConnection;
+
+    /**
+     * The controller for the database.
+     */
     private DBController dbController;
+
+    /**
+     * The name of the schema in the external database.
+     */
     private final String schemaName = "usermanagement";
 
     /**
-     * Constructor
+     * Constructor for the ImportSimulator class.
      *
-     * @param controller   - the database controller
-     * @param dbConnection - the database connection
+     * @param controller   The controller for the server user interface.
+     * @param dbConnection The connection to the database.
      */
     public ImportSimulator(ServerUIFrameController controller, DBConnection dbConnection) {
         this.serverController = controller;
@@ -26,8 +45,10 @@ public class ImportSimulator {
     }
 
     /**
-     * This method imports all the users from the external database
-     * Meticulously inserts the users into the correct tables
+     * This method handles the import of users from the external database.
+     * It retrieves all user data and inserts it into the correct tables in the local database.
+     * All this based on the role of the user.
+     * @throws Exception If an error occurs while importing users.
      */
     public void handleImportUsers() throws Exception {
         try {

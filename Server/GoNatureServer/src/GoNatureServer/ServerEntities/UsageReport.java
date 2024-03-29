@@ -32,60 +32,114 @@ import java.util.Iterator;
 /**
  * The UsageReport class represents a report detailing the usage of a park.
  * It extends the ParkReport class and contains a bank of UsageReportDetail objects.
+ * The class contains several nested classes: MyTime, OrderDetails, and ParkCapacityDetails, which are used to store and manipulate data related to park usage.
+ * The class also contains methods for creating a PDF report, creating a line chart, creating a pie chart, and creating a table.
+ * The reportData and wasParkFull arrays are used to store data about the number of visitors and whether the park was full at different times.
+ * The maxValue variable is used to store the maximum number of visitors at any given time.
  */
 public class UsageReport extends ParkReport implements Serializable {
+    /**
+     * The MyTime class represents a specific time, with fields for the day of the month and the hour of the day.
+     */
     @SuppressWarnings("InnerClassMayBeStatic")
     private class MyTime {
         private final int day;
         private final int hour;
 
-
+        /**
+         * The constructor for the MyTime class. It takes a Timestamp object and extracts the day of the month and the hour of the day.
+         *
+         * @param timestamp A Timestamp object representing the time.
+         */
         private MyTime(Timestamp timestamp) {
             LocalDateTime dateTime = timestamp.toLocalDateTime();
             this.day = dateTime.getDayOfMonth();
             this.hour = dateTime.getHour();
         }
 
+        /**
+         * Getter for the day field.
+         *
+         * @return The day of the month.
+         */
         private int getDay() {
             return this.day;
         }
 
+        /**
+         * Getter for the hour field.
+         *
+         * @return The hour of the day.
+         */
         private int getHour() {
             return this.hour;
         }
 
     }
 
+    /**
+     * The OrderDetails class represents the details of an order, with fields for the entered time, exited time, and number of visitors.
+     */
     private class OrderDetails {
         private final MyTime enteredTime;
         private final MyTime exitedTime;
         private final int numOfVisitors;
 
+        /**
+         * The constructor for the OrderDetails class. It takes MyTime objects for the entered and exited times, and an integer for the number of visitors.
+         *
+         * @param enteredTime   A MyTime object representing the time the order was entered.
+         * @param exitedTime    A MyTime object representing the time the order was exited.
+         * @param numOfVisitors The number of visitors for the order.
+         */
         private OrderDetails(MyTime enteredTime, MyTime exitedTime, int numOfVisitors) {
             this.enteredTime = enteredTime;
             this.exitedTime = exitedTime;
             this.numOfVisitors = numOfVisitors;
         }
 
+        /**
+         * Getter for the numOfVisitors field.
+         *
+         * @return The number of visitors for the order.
+         */
         private int getNumOfVisitors() {
             return this.numOfVisitors;
         }
 
+        /**
+         * Getter for the enteredTime field.
+         *
+         * @return A MyTime object representing the time the order was entered.
+         */
         private MyTime getEnteredTime() {
             return this.enteredTime;
         }
 
+        /**
+         * Getter for the exitedTime field.
+         *
+         * @return A MyTime object representing the time the order was exited.
+         */
         private MyTime getExitedTime() {
             return this.exitedTime;
         }
     }
 
-
+    /**
+     * The ParkCapacityDetails class represents the details of the park's capacity, with fields for the park's capacity and the date from which the capacity is valid.
+     */
     private class ParkCapacityDetails {
         private final int parkCapacity;
 
         private MyTime fromWhatDate;
 
+        /**
+         * The constructor for the ParkCapacityDetails class. It takes an integer for the park's capacity and a MyTime object for the date from which the capacity is valid.
+         *
+         * @param parkCapacity The park's capacity.
+         * @param fromWhatDate A MyTime object representing the date from which the capacity is valid.
+         */
         public ParkCapacityDetails(int parkCapacity, MyTime fromWhatDate) {
             this.parkCapacity = parkCapacity;
             this.fromWhatDate = fromWhatDate;
@@ -95,10 +149,20 @@ public class UsageReport extends ParkReport implements Serializable {
             return this.parkCapacity;
         }
 
+        /**
+         * Getter for the parkCapacity field.
+         *
+         * @return The park's capacity.
+         */
         private MyTime getFromWhatDate() {
             return this.fromWhatDate;
         }
 
+        /**
+         * Getter for the fromWhatDate field.
+         *
+         * @return A MyTime object representing the date from which the capacity is valid.
+         */
         private void setFromWhatDate(MyTime fromWhatDate) {
             this.fromWhatDate = fromWhatDate;
         }
@@ -125,7 +189,19 @@ public class UsageReport extends ParkReport implements Serializable {
     private final boolean[][] wasParkFull;
     private int maxValue;
 
-
+    /**
+     * The constructor for the UsageReport class. It takes a park ID, park name, a ResultSet of orders, and a park capacity object.
+     * It initializes the reportData and wasParkFull arrays, and sets the maxValue to 0.
+     * It then organizes the park capacity data and order data, and calculates the reportData and wasParkFull arrays.
+     *
+     * @param parkID The ID of the park.
+     * @param parkName The name of the park.
+     * @param resultSet_Orders A ResultSet containing the orders.
+     * @param parkCapacity An object representing the park's capacity. It can be an Integer or a ResultSet.
+     * @throws DocumentException If an error occurs while creating the PDF document.
+     * @throws IOException If an error occurs while writing to the ByteArrayOutputStream.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     */
     public UsageReport(Integer parkID, String parkName, ResultSet resultSet_Orders, Object parkCapacity) throws DocumentException, IOException, SQLException {
         super(parkID, parkName);
         this.reportData = new int[31][12];
@@ -215,19 +291,56 @@ public class UsageReport extends ParkReport implements Serializable {
         }
     }
 
+    /**
+     * This method calculates the index for a given hour in the reportData and wasParkFull arrays.
+     * The arrays have 12 columns, each representing an hour from 8 to 19.
+     * Therefore, the method subtracts 8 from the given hour to get the corresponding index.
+     *
+     * @param hour The hour to get the index for. It should be an integer between 8 and 19.
+     * @return The index in the reportData and wasParkFull arrays that corresponds to the given hour.
+     */
     private int getIndexForHour(int hour) {
         return hour - 8;
     }
 
+    /**
+     * This method calculates the index for the hour of a given MyTime object in the reportData and wasParkFull arrays.
+     * The arrays have 12 columns, each representing an hour from 8 to 19.
+     * Therefore, the method subtracts 8 from the hour of the MyTime object to get the corresponding index.
+     *
+     * @param time The MyTime object to get the hour index for.
+     * @return The index in the reportData and wasParkFull arrays that corresponds to the hour of the given MyTime object.
+     */
     private int getIndexForHour(MyTime time) {
         return time.getHour() - 8;
     }
 
+    /**
+     * This method calculates the index for a given day in the reportData and wasParkFull arrays.
+     * The arrays have 31 rows, each representing a day of the month from 1 to 31.
+     * Therefore, the method subtracts 1 from the given day to get the corresponding index.
+     *
+     * @param day The day to get the index for. It should be an integer between 1 and 31.
+     * @return The index in the reportData and wasParkFull arrays that corresponds to the given day.
+     */
     private int getIndexForDay(int day) {
         return day - 1;
     }
 
 
+    /**
+     * This method creates a PDF Blob of the usage report for a park.
+     * It first creates a ByteArrayOutputStream and a PDF document with a title.
+     * Then, it adds a line chart to the document.
+     * It creates a new page in the document and adds a pie chart and a table if the park was full at any time during the month.
+     * If the park was not full at all during the month, it adds a message to the document stating this.
+     * Finally, it closes the document and returns a Blob containing the PDF data.
+     *
+     * @return A Blob containing the PDF data of the usage report.
+     * @throws DocumentException If an error occurs while creating the PDF document.
+     * @throws SQLException If an error occurs while retrieving data from the ResultSet.
+     * @throws IOException If an error occurs while writing to the ByteArrayOutputStream.
+     */
     @Override
     public Blob createPDFBlob() throws DocumentException, SQLException, IOException {
         String title_Document = "Usage Report - Park: " + super.getParkName();
@@ -261,7 +374,19 @@ public class UsageReport extends ParkReport implements Serializable {
         return new SerialBlob(outputStream.toByteArray());
     }
 
-
+    /**
+     * This method creates a table for the usage report of a park.
+     * It first initializes the necessary variables and creates an ArrayList for the columns of the table.
+     * Then, it creates the table with the specified columns and a column width of 60.
+     * It iterates through each day of the current month and each hour from 8 to 19.
+     * If the park was full at the specified day and hour, it increments the count of times the park was full,
+     * adds the hour range to the information string, and adds a cell to the table for the day, information, and capacity.
+     * If the park was not full at the specified day and hour, it adds a cell to the table for the day, count of times the park was full,
+     * information, and capacity, and resets the count of times the park was full, information, and capacity.
+     * Finally, it returns the created table.
+     *
+     * @return A PdfPTable representing the usage report of the park.
+     */
     private PdfPTable createTable() {
         // Initializing
         String capacity = "", information = "The park was full in these time ranges: ";
@@ -308,7 +433,15 @@ public class UsageReport extends ParkReport implements Serializable {
         return table;
     }
 
-
+    /**
+     * This method generates a string representing a range of one hour starting from the given hour.
+     * It uses the SimpleDateFormat class to format the start and end times of the range in the "HH:mm" format.
+     * The start time is set to the given hour, and the end time is set to one hour later.
+     * The method then returns a string representing the hour range in the format "HH:mm - HH:mm".
+     *
+     * @param hour The start hour of the range. It should be an integer between 0 and 23.
+     * @return A string representing the hour range in the format "HH:mm - HH:mm".
+     */
     private String getHourRange(int hour) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Calendar calendar = Calendar.getInstance();
@@ -319,7 +452,15 @@ public class UsageReport extends ParkReport implements Serializable {
         return sdf.format(startDate) + " - " + sdf.format(endDate);
     }
 
-
+    /**
+     * This method creates a pie chart representing the usage of the park.
+     * It first initializes a DefaultPieDataset and sets the title of the chart to "Park Usage".
+     * It then calculates how many days the park was full this month and adds this data to the dataset.
+     * The method also adds the number of days the park had available spots to the dataset.
+     * Finally, it calls the createPieChart method of the superclass with the dataset and title as arguments, and returns the created JFreeChart.
+     *
+     * @return A JFreeChart representing a pie chart of the park usage.
+     */
     private JFreeChart createPieChart() {
         // Initialize dataset for the pie chart
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
@@ -334,7 +475,14 @@ public class UsageReport extends ParkReport implements Serializable {
         return super.createPieChart(dataset, title);
     }
 
-
+    /**
+     * This method calculates and returns the number of days the park was full this month.
+     * It iterates through each day of the current month and each hour from 8 to 19.
+     * If the park was full at the specified day and hour, it increments a count.
+     * The method then returns the count.
+     *
+     * @return The number of days the park was full this month.
+     */
     private int countDaysFull() {
         int count = 0;
         for (int day = 1; day <= super.getCurrentDay(); day++) {
@@ -351,6 +499,15 @@ public class UsageReport extends ParkReport implements Serializable {
 
     // ******************************** Line Chart Methods ********************************
     // 31 categories in the chart
+    /**
+     * This method creates a line chart representing the number of visitors for each day of the current month.
+     * It first retrieves the dataset for the chart by calling the getDataset method.
+     * Then, it creates the line chart with the title, x-axis label, y-axis label, dataset, and other parameters.
+     * It customizes the Y-axis, line thickness and colors, background color, and legend item font of the chart.
+     * Finally, it returns the created JFreeChart.
+     *
+     * @return A JFreeChart representing a line chart of the number of visitors for each day of the current month.
+     */
     private JFreeChart createLineChart() {
         DefaultCategoryDataset dataset = getDataset();
 
@@ -387,7 +544,13 @@ public class UsageReport extends ParkReport implements Serializable {
         return chart;
     }
 
-
+    /**
+     * This method creates a dataset for the line chart.
+     * It initializes a DefaultCategoryDataset and populates it with the number of visitors for each day of the current month and each hour from 8 to 20.
+     * The method then returns the created dataset.
+     *
+     * @return A DefaultCategoryDataset representing the number of visitors for each day of the current month and each hour from 8 to 20.
+     */
     private DefaultCategoryDataset getDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -405,7 +568,13 @@ public class UsageReport extends ParkReport implements Serializable {
         return dataset;
     }
 
-
+    /**
+     * This method generates a random RGB color.
+     * It generates random integers for the red, green, and blue components of the color, each between 0 and 255.
+     * It then creates and returns a new Color object with the generated RGB components.
+     *
+     * @return A Color object representing a random RGB color.
+     */
     private Color getRandomColor() {
         // Generate a random RGB color
         int r = (int) (Math.random() * 256);
@@ -414,7 +583,14 @@ public class UsageReport extends ParkReport implements Serializable {
         return new Color(r, g, b);
     }
 
-
+    /**
+     * This method calculates and returns the maximum value for the Y-axis of the line chart after adding a factor.
+     * It first calculates a factor as 10% of the maximum value of the number of visitors.
+     * Then, it adds a certain value to the maximum value based on the calculated factor.
+     * The method then returns the calculated maximum value.
+     *
+     * @return The maximum value for the Y-axis of the line chart after adding a factor.
+     */
     private int getMaxValueAfterFactor() {
         double factor = this.maxValue * 0.1;
         if (factor <= 5)
@@ -425,51 +601,4 @@ public class UsageReport extends ParkReport implements Serializable {
             return this.maxValue + 15;
         return this.maxValue + 20;
     }
-
-
-// Line chart graph, per day:
-/*
-    public JFreeChart createLineChart(int day)
-    {
-        // Initialize dataset for the line chart
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        // Initialize titles for Axis and chart
-        String title = "Number of People in the Park";
-        String xAxisTitle = "Time (Hour)";
-        String yAxisTitle = "Number of People";
-
-        // Add data to the dataset for the specified day
-        for (int hour = 8; hour <= 19; hour++)
-        {
-            int visitors = reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)];
-            dataset.addValue(visitors, "Number of People", String.valueOf(hour));
-        }
-
-        JFreeChart chart = ChartFactory.createLineChart(
-                title,
-                xAxisTitle,
-                yAxisTitle,
-                dataset,
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                false
-        );
-
-        // Customize the Y-axis range
-        chart.getCategoryPlot().getRangeAxis().setRange(0, maxValue + 5);
-
-        // Customize the x-axis to show hours
-        chart.getCategoryPlot().getDomainAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-
-
-        // Create a ChartPanel with the chart and set its size
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(100, 100));
-
-        // Return the JFreeChart object
-        return chart;
-    }
-    */
 }
