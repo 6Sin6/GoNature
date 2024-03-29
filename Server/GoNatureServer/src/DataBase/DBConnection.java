@@ -352,7 +352,7 @@ public class DBConnection {
     /**
      * Retrieves an order by its ID.
      *
-     * @param orderId The ID of the order to retrieve.
+     * @param OrderID The ID of the order to retrieve.
      * @return A Map with the items: "isPaid" - payment status of the order. "order" The order with the specified ID, if the order is found, or empty data if the order is not found. null if there is an error.
      */
     public Order getOrderById(String OrderID) throws Exception {
@@ -604,7 +604,7 @@ public class DBConnection {
     public String setExitTimeOfOrder(String orderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "' AND HOUR(ExitedTime) >= HOUR(CURRENT_TIMESTAMP()) AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus IN ('" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "')";
+            String whereClause = "OrderID='" + orderID + "' AND TIMESTAMP(ExitedTime) >= TIMESTAMP(CURRENT_TIMESTAMP()) AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus IN ('" + OrderStatus.STATUS_FULFILLED.getOrderStatus() + "', '" + OrderStatus.STATUS_SPONTANEOUS_ORDER.getOrderStatus() + "')";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
             if (!results.next()) {
                 return "Order ineligible to be updated.";
