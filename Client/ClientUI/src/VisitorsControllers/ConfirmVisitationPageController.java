@@ -105,7 +105,7 @@ public class ConfirmVisitationPageController extends BaseController {
     }
 
     @FXML
-    void OnClickDeclineVisitationButton(ActionEvent event) throws CommunicationException {
+    void OnClickDeclineVisitationButton(ActionEvent event) {
         boolean flag;
         User user = applicationWindowController.getUser();
         Object msg = new Message(OpCodes.OP_HANDLE_VISITATION_CANCEL_ORDER, user.getUsername(), this.order);

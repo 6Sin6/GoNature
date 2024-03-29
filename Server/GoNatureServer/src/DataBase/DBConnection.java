@@ -725,7 +725,7 @@ public class DBConnection {
             while (results.next()) {
                 ResultSet parkResults = dbController.selectRecords(this.schemaName + ".parks", "ParkID=" + results.getString("ParkID"));
                 if (parkResults.next()) {
-                    ResultSet parkManagerResults = dbController.selectRecords(this.schemaName + ".park_employees", "id=" + parkResults.getString("ParkManagerID") + " AND isParkManager=true");
+                    ResultSet parkManagerResults = dbController.selectRecords(this.schemaName + ".park_employees", "employeeid=" + parkResults.getString("ParkManagerID") + " AND isParkManager=true");
                     if (parkManagerResults.next()) {
                         requests.add(new RequestChangingParkParameters(
                                 new Park(

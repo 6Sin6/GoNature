@@ -107,8 +107,9 @@ public class RequestSettingParkParametersController extends BaseController imple
         Timestamp maxVisitationLongevity = null;
 
         Date tmpDate = new Date(System.currentTimeMillis());
+
         if (maxVisitRequest) {
-            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), cmbMaxVisitation.getValue());
+            maxVisitationLongevity = convertStringToTimestamp(tmpDate.toString(), String.format("%02d:00", Integer.parseInt(cmbMaxVisitation.getValue())));
         }
         String parkCapacity = txtParkCapacity.getText();
 
@@ -171,4 +172,7 @@ public class RequestSettingParkParametersController extends BaseController imple
 
         lblSuccessMsg.setText("Your requests have been submitted successfully!");
     }
+
+
+
 }

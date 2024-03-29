@@ -95,22 +95,27 @@ public class HomePageController extends BaseController implements Initializable 
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        if (!(response.getMsgData() instanceof Order)) {
+        if (!(response.getMsgData() instanceof Order) && response.getMsgData() != null) {
             ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
             confirmationPopup.show(applicationWindowController.getRoot());
             return;
         }
-        Order order = (Order) response.getMsgData();
-        if (order == null) {
+        if (response.getMsgData()==null){
             onAuthPopup.setErrorLabel("Invalid ID or Link! Try again");
             return;
         }
-
+        Order order = (Order) response.getMsgData();
         onAuthPopup.setErrorLabel("");
         try {
             String pathToPage = order.getOrderStatus() == OrderStatus.STATUS_PENDING_CONFIRMATION ? "/VisitorsUI/ConfirmVisitationPage.fxml" : "/VisitorsUI/UpdateOrderDetailsPage.fxml";
             if (order.getOrderType() == OrderType.ORD_TYPE_GROUP) {
                 onAuthPopup.setErrorLabel("Group Orders are not allowed to be updated without sign in !");
+                return;
+            }
+            if (order.getOrderStatus() == OrderStatus.STATUS_CANCELLED ||
+                    order.getOrderStatus() == OrderStatus.STATUS_CONFIRMED_AND_ABSENT ||
+                    order.getOrderStatus() == OrderStatus.STATUS_FULFILLED) {
+                onAuthPopup.setErrorLabel("Order Is Inactive");
                 return;
             }
             applicationWindowController.setCenterPage(pathToPage);

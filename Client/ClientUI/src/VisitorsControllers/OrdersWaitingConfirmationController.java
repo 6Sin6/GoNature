@@ -133,6 +133,9 @@ public class OrdersWaitingConfirmationController extends BaseController implemen
             MessagePopup popup = new MessagePopup("There are no orders awaiting confirmation", Duration.seconds(5), 600, 150, false);
             popup.show(applicationWindowController.getRoot());
         }
+        else{
+            handleOrderbtn.setDisable(false);
+        }
         rowIndex = -1;
         ObservableList<Map<String, String>> tableData = FXCollections.observableArrayList();
         for (Order item : dataList) {
