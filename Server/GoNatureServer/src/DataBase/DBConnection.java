@@ -352,7 +352,7 @@ public class DBConnection {
     /**
      * Retrieves an order by its ID.
      *
-     * @param orderId The ID of the order to retrieve.
+     * @param OrderID The ID of the order to retrieve.
      * @return A Map with the items: "isPaid" - payment status of the order. "order" The order with the specified ID, if the order is found, or empty data if the order is not found. null if there is an error.
      */
     public Order getOrderById(String OrderID) throws Exception {
