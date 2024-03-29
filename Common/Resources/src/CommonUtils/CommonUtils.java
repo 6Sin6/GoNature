@@ -2,6 +2,7 @@ package CommonUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -204,6 +205,26 @@ public class CommonUtils {
 
         // Format the Date object into a string
         return dateFormat.format(visitTime);
+    }
+
+    public static boolean isTimeBetween(Timestamp startTime, Timestamp endTime) {
+        // Generate the current timestamp
+        Timestamp currentTime = Timestamp.from(Instant.now());
+
+        // Convert Timestamps directly to LocalDateTime for comparison
+        LocalDateTime startDateTime = startTime.toLocalDateTime();
+        LocalDateTime endDateTime = endTime.toLocalDateTime();
+        LocalDateTime currentDateTime = currentTime.toLocalDateTime();
+
+        // Check if the current date-time is between start and end date-times
+        if (startDateTime.isBefore(endDateTime)) {
+            return !currentDateTime.isBefore(startDateTime) && !currentDateTime.isAfter(endDateTime);
+        } else {
+            // For intervals that cross midnight (start date-time is after end date-time),
+            // check if current date-time is after start date-time or before end date-time
+            return !currentDateTime.isBefore(startDateTime) || !currentDateTime.isAfter(endDateTime);
+        }
+
     }
 
 }

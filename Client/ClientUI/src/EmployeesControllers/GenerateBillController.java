@@ -10,6 +10,7 @@ import Entities.Message;
 import Entities.OpCodes;
 import Entities.Order;
 import Entities.OrderStatus;
+import Entities.OrderType;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -17,7 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.util.Pair;
+import javafx.util.Duration;
 
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class GenerateBillController extends BaseController {
     private Label lblErrorMsg;
 
     @FXML
-    private MFXButton paidBtn;
+    private MFXButton EnterParkButton;
 
     @FXML
     private Text successMsg;
@@ -46,10 +47,12 @@ public class GenerateBillController extends BaseController {
         txtOrderID.clear();
         lblErrorMsg.setText("");
         successMsg.setText("");
+        EnterParkButton.setDisable(true);
+        btnGenerateBill.setDisable(false);
     }
 
     @FXML
-    void OnClickMarkOrderAsPaid(ActionEvent event) {
+    void OnClickEnterParkButton(ActionEvent event) {
         if (mostRecentOrder == null) {
             lblErrorMsg.setText("Please generate a bill first");
             successMsg.setText("");
@@ -121,13 +124,6 @@ public class GenerateBillController extends BaseController {
             return;
         }
 
-        OrderStatus orderStatus = order.getOrderStatus();
-        if (orderStatus != OrderStatus.STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT && orderStatus != OrderStatus.STATUS_CONFIRMED_PENDING_PAYMENT) {
-            lblErrorMsg.setText("Order not confirmed, no bill to present yet.");
-            successMsg.setText("");
-            return;
-        }
-
         boolean isPrepaid = (boolean) results.get("isPaid");
 
         mostRecentOrder = order;
@@ -139,6 +135,46 @@ public class GenerateBillController extends BaseController {
         lblErrorMsg.setText("");
         successMsg.setText("Bill generated successfully");
         handleBillPresentation(mostRecentOrder, isPrepaid);
+        switch (mostRecentOrder.getOrderStatus()) {
+            case STATUS_WAITLIST:
+            case STATUS_FULFILLED:
+            case STATUS_PENDING_CONFIRMATION:
+            case STATUS_CANCELLED:
+            case STATUS_CONFIRMED_AND_ABSENT:
+                lblErrorMsg.setText("Order status is not valid for generating a bill and entering the park");
+                EnterParkButton.setDisable(true);
+                break;
+            case STATUS_ACCEPTED:
+                String propmtMsg;
+                if (mostRecentOrder.getOrderType() == OrderType.ORD_TYPE_GROUP) {
+                    propmtMsg = "The order can be paid from the group guide user only.";
+                } else {
+                    propmtMsg = "Order status is not valid for generating a bill and entering the park";
+                }
+                lblErrorMsg.setText(propmtMsg);
+                EnterParkButton.setDisable(true);
+                break;
+            case STATUS_CONFIRMED_PENDING_PAYMENT:
+            case STATUS_SPONTANEOUS_ORDER_PENDING_PAYMENT:
+                if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
+                    handleBillPresentation(mostRecentOrder, isPrepaid);
+                } else {
+                    EnterParkButton.setDisable(true);
+                    lblErrorMsg.setText("Reservation time is not now.");
+                }
+                break;
+            case STATUS_SPONTANEOUS_ORDER:
+            case STATUS_CONFIRMED_PAID:
+                if (CommonUtils.isTimeBetween(mostRecentOrder.getEnteredTime(), mostRecentOrder.getExitedTime())) {
+                    EnterParkButton.setDisable(false);
+                    lblErrorMsg.setText("Order is already paid and the visitor/s can enter the park.");
+                } else {
+                    EnterParkButton.setDisable(true);
+                    lblErrorMsg.setText("Order is already paid and but the reservation time is not now.");
+                }
+                break;
+
+        }
     }
 
     private void handleBillPresentation(Order order, boolean prepaid) {
@@ -163,6 +199,20 @@ public class GenerateBillController extends BaseController {
 
     public void setOrderNum(String orderID) {
         txtOrderID.setText(orderID);
+    }
+
+    public void showPopUpAfterBillGeneration(boolean isBillGenerated, String orderID) {
+        setOrderNum(orderID);
+        String msgToPrompt;
+        if (isBillGenerated) {
+            msgToPrompt = "Order marked as paid successfully";
+        } else {
+            msgToPrompt = "Something went wrong. Please try again.";
+        }
+        MessagePopup popup = new MessagePopup(msgToPrompt, Duration.seconds(5), 300, 150, false);
+        popup.show(applicationWindowController.getRoot());
+        EnterParkButton.setDisable(!isBillGenerated);
+        btnGenerateBill.setDisable(isBillGenerated);
     }
 
 }

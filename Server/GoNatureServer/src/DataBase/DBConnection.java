@@ -8,7 +8,6 @@ import GoNatureServer.ServerEntities.UsageReport;
 import GoNatureServer.ServerEntities.VisitationReport;
 import ServerUIPageController.ServerUIFrameController;
 import com.itextpdf.text.DocumentException;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.*;
@@ -619,13 +618,32 @@ public class DBConnection {
     public String setExitTimeOfOrder(String orderID) throws Exception {
         try {
             String tableName = this.schemaName + ".orders";
-            String whereClause = "OrderID='" + orderID + "' AND HOUR(EnteredTime) <= HOUR(CURRENT_TIMESTAMP()) AND YEAR(VisitationDate) = YEAR(CURRENT_DATE) AND MONTH(VisitationDate) = MONTH(CURRENT_DATE) AND DAY(VisitationDate) = DAY(CURRENT_DATE) AND orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus();
+            String whereClause = "OrderID='" + orderID + "'";
             ResultSet results = dbController.selectRecordsFields(tableName, whereClause, "ExitedTime", "VisitationDate");
             if (!results.next()) {
-                return "Order ineligible to be updated.";
+                return "Order ID does not exist.";
             }
 
-            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP(), orderStatus=" + OrderStatus.STATUS_FULFILLED.getOrderStatus(), whereClause)) {
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp exitTime = results.getTimestamp("ExitedTime");
+            // Extract year and month components from the current time
+            LocalDate currentDate = currentTime.toLocalDateTime().toLocalDate();
+            int currentYear = currentDate.getYear();
+            int currentMonth = currentDate.getMonthValue();
+
+            // Extract year and month components from the exit time
+            LocalDate exitDate = exitTime.toLocalDateTime().toLocalDate();
+            int exitYear = exitDate.getYear();
+            int exitMonth = exitDate.getMonthValue();
+            if (currentYear != exitYear || currentMonth != exitMonth) {
+                return "Order is not for today.";
+            }
+
+            if (currentTime.compareTo(exitTime) > 0) {
+                return "Order has already been fulfilled.";
+            }
+
+            if (!dbController.updateRecord(tableName, "ExitedTime=CURRENT_TIMESTAMP()", whereClause)) {
                 return "Update failed. Please try again.";
             }
 

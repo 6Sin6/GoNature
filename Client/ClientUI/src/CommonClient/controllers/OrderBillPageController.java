@@ -1,10 +1,11 @@
 package CommonClient.controllers;
 
+import CommonClient.ClientUI;
+import CommonUtils.CommonUtils;
+import CommonUtils.ConfirmationPopup;
 import CommonUtils.MessagePopup;
-import Entities.Discount;
-import Entities.Order;
-import Entities.OrderStatus;
-import Entities.OrderType;
+import EmployeesControllers.GenerateBillController;
+import Entities.*;
 import VisitorsControllers.ActiveOrdersPageController;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -57,6 +58,7 @@ public class OrderBillPageController extends BaseController {
     private MessagePopup messageController;
     private boolean groupGuidePage;
     private String orderID;
+    private Order mostRecentOrder;
 
     public void cleanup() {
         discountTxt.setText("");
@@ -80,10 +82,32 @@ public class OrderBillPageController extends BaseController {
     public void proceedToPayment() {
         messageController.closePopup(true);
         if (!groupGuidePage) {
+            Message msg = new Message(OpCodes.OP_MARK_ORDER_AS_PAID, applicationWindowController.getUser().getUsername(), mostRecentOrder);
+            ClientUI.client.accept(msg);
+
+            Message response = ClientCommunicator.msg;
+            OpCodes returnOpCode = response.getMsgOpcode();
+            if (returnOpCode == OpCodes.OP_DB_ERR) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            // Checking if the response from the server is inappropriate.
+            if (returnOpCode != OpCodes.OP_MARK_ORDER_AS_PAID) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+            if (!(response.getMsgData() instanceof Boolean)) {
+                ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+                confirmationPopup.show(applicationWindowController.getRoot());
+                return;
+            }
+
             applicationWindowController.loadEmployeesPage("GenerateBillPage");
             Object controller = applicationWindowController.getCurrentActiveController();
             if (controller instanceof GenerateBillController) {
-                ((GenerateBillController) controller).setOrderNum(orderID);
+                ((GenerateBillController) controller).showPopUpAfterBillGeneration((Boolean) response.getMsgData(), orderID);
             }
         } else {
             applicationWindowController.loadVisitorsPage("ActiveOrdersPage");
@@ -96,6 +120,7 @@ public class OrderBillPageController extends BaseController {
     }
 
     public void start(Order order, boolean referredPostOrder, boolean prepaid) {
+        mostRecentOrder = order;
         this.groupGuidePage = referredPostOrder;
         this.orderID = order.getOrderID();
 
