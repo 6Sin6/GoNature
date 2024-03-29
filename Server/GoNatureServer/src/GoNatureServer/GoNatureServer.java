@@ -501,7 +501,7 @@ public class GoNatureServer extends AbstractServer {
     private void handleUpdateExitTimeOfOrder(Message message, ConnectionToClient client) throws Exception {
         String orderID = message.getMsgData().toString();
         String answer = db.setExitTimeOfOrder(orderID);
-        Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, null, answer);
+        Message respondMsg = new Message(OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER, message.getMsgUserName(), answer);
         client.sendToClient(respondMsg);
     }
 
