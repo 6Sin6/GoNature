@@ -76,6 +76,12 @@ public class MenuSiderController extends BaseController {
     @FXML
     private Label usernameLabel;
 
+    /**
+     * The label for displaying the organization's name.
+     */
+    @FXML
+    private Label orgLabel;
+
 
     /**
      * Logs out the user and resets the menu.
@@ -108,6 +114,15 @@ public class MenuSiderController extends BaseController {
      */
     public void setUsername(String username) {
         usernameLabel.setText(username);
+    }
+
+    /**
+     * Sets the organization's name displayed in the menu.
+     *
+     * @param orgName the organization's name to display
+     */
+    public void setOrgName(String orgName) {
+        orgLabel.setText(orgName);
     }
 
 

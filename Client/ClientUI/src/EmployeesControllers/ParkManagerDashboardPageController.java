@@ -27,10 +27,6 @@ public class ParkManagerDashboardPageController extends BaseController {
         parkMgrTxt.setText("");
     }
 
-    public void start() {
-        parkMgrTxt.setText("Welcome, " + applicationWindowController.getUser().getUsername() + "! Your park: " + (ParkBank.getParkNameByID(((ParkManager) applicationWindowController.getUser()).getParkID())));
-    }
-
     @FXML
     public void OnClickChangeParkParametersButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("RequestSettingParkParametersPage");

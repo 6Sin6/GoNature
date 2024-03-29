@@ -142,12 +142,6 @@ public class LoginPageController extends BaseController {
             } else {
                 applicationWindowController.loadDashboardPage(user.getRole());
                 applicationWindowController.loadMenu(user);
-                Object controller = applicationWindowController.getCurrentActiveController();
-                if (user instanceof ParkManager && controller instanceof ParkManagerDashboardPageController) {
-                    ((ParkManagerDashboardPageController) controller).start();
-                } else if (user instanceof ParkDepartmentManager && controller instanceof DepartmentManagerDashboardPageController) {
-                    ((DepartmentManagerDashboardPageController) controller).start();
-                }
             }
         } else {
             ErrorMsg.setText("Invalid username or password, Please try again!");

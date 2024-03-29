@@ -40,34 +40,6 @@ public class DepartmentManagerDashboardPageController extends BaseController {
         errorTxt.setText("");
     }
 
-    public void start() {
-        depMgrWelcome.setText("Welcome, " + applicationWindowController.getUser().getUsername() + "! The parks under your management are:");
-        Message msg = new Message(OpCodes.OP_GET_DEPARTMENT_MANAGER_PARKS, applicationWindowController.getUser().getUsername(), ((ParkDepartmentManager) applicationWindowController.getUser()).getDepartmentID());
-        ClientUI.client.accept(msg);
-        Message response = ClientCommunicator.msg;
-        if (response.getMsgOpcode() == OpCodes.OP_DB_ERR) {
-            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
-            confirmationPopup.show(applicationWindowController.getRoot());
-            return;
-        }
-
-        if (response.getMsgOpcode() != OpCodes.OP_GET_DEPARTMENT_MANAGER_PARKS) {
-            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
-            confirmationPopup.show(applicationWindowController.getRoot());
-            return;
-        }
-
-        ArrayList<String> parks = (ArrayList<String>) response.getMsgData();
-        StringBuilder parkNames = new StringBuilder();
-        for (String park : parks) {
-            parkNames.append(park);
-            if (parks.indexOf(park) != parks.size() - 1) {
-                parkNames.append(", ");
-            }
-        }
-        depMgrParks.setText(parkNames.toString());
-    }
-
     @FXML
     public void OnClickIssueReportsButton(ActionEvent event) {
         applicationWindowController.loadEmployeesPage("IssueReportsPage");

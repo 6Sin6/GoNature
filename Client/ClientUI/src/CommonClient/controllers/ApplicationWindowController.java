@@ -196,6 +196,13 @@ public class ApplicationWindowController implements Initializable {
                     menuController.setRole(Role.roleToString(user.getRole()));
                     String prefix = user instanceof SingleVisitor ? "Visitor ID: " : "Welcome ";
                     menuController.setUsername(prefix + user.getUsername());
+
+                    if (user instanceof ParkManager) {
+                        menuController.setOrgName(ParkBank.getParkNameByID(((ParkManager) user).getParkID()));
+                    } else if (user instanceof ParkDepartmentManager) {
+                        menuController.setOrgName("Department: " + ((ParkDepartmentManager) user).getDepartmentID());
+                    }
+
                     menuController.buildMenuItems(this);
                 }
             }
