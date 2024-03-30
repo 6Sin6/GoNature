@@ -164,3 +164,16 @@
     -fx-border-radius: 3px; /* Border radius */
     -fx-text-fill: white; /* Text color */
 }
+
+#parkCmbCheck {
+    -fx-font-size: 16px;
+    -fx-font-family: Arial;
+    -fx-text-fill: #000;
+}
+
+#parkCmbCheck:disabled {
+    -fx-opacity: 1;
+    -fx-font-size: 16px;
+    -fx-font-family: Arial;
+    -fx-text-fill: #000;
+}

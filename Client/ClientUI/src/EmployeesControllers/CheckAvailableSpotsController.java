@@ -8,23 +8,28 @@ import CommonUtils.MessagePopup;
 import Entities.Message;
 import Entities.OpCodes;
 import Entities.ParkBank;
+import Entities.ParkEmployee;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
-public class CheckAvailableSpotsController extends BaseController implements Initializable {
+/**
+ * The CheckAvailableSpotsController class is responsible for handling the user interactions
+ * in the "Check Available Spots" view of the application. This includes checking the availability
+ * of parking spots in a selected park and initiating the process of making a new order.
+ * The class extends the BaseController class and overrides its cleanup method to reset the UI elements
+ * to their default states. It also provides methods to handle the actions triggered by the UI components,
+ * such as clicking the "Check Availability" and "Make Order" buttons.
+ */
+public class CheckAvailableSpotsController extends BaseController {
     /**
      * A list that holds the names of parks. This is observable, meaning UI components
      * can listen and react to its changes.
@@ -42,7 +47,7 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
      * Uses the JFoenix MFXLegacyComboBox component for enhanced UI features.
      */
     @FXML
-    private MFXLegacyComboBox<String> parkCmbBox;
+    private MFXLegacyComboBox<String> parkCmbCheck;
 
     /**
      * Button to initiate the check for parking spot availability.
@@ -127,11 +132,11 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         ParkOccupancyTxt.setVisible(false);
         MakeOrderBtn.setVisible(false);
         availableSpotsTxt.setVisible(false);
-        if (parkCmbBox.getValue().equals("")) {
+        if (parkCmbCheck.getValue().equals("")) {
             errorLbl.setVisible(true);
             return;
         }
-        String parkID = ParkBank.getUnmodifiableMap().get(parkCmbBox.getValue());
+        String parkID = ParkBank.getUnmodifiableMap().get(parkCmbCheck.getValue());
         errorLbl.setVisible(false);
         Message msgToServer = new Message(OpCodes.OP_CHECK_AVAILABLE_SPOT, applicationWindowController.getUser().getUsername(), parkID);
         ClientUI.client.accept(msgToServer);
@@ -189,14 +194,9 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
      * from a dropdown list.
      */
     private void setParkCmbBox() {
-        ArrayList<String> al = new ArrayList<String>();
-        for (String key : ParkBank.getUnmodifiableMap().keySet()) {
-            al.add(key);
-        }
-        list = FXCollections.observableArrayList(al);
-        parkCmbBox.setItems(list);
+        parkCmbCheck.setValue(ParkBank.getParkNameByID(((ParkEmployee) applicationWindowController.getUser()).getPark().getParkID()));
+        parkCmbCheck.setDisable(true);
     }
-
 
     /**
      * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
@@ -207,16 +207,10 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
      * can select from the available parks as soon as the UI is displayed. The {@code cleanup} method is invoked
      * to clear any residual data or states that may persist from previous uses of the UI, such as error messages
      * or previously selected items, ensuring a clean state for user interaction.
-     *
-     * @param location  The location used to resolve relative paths for the root object, or {@code null} if the
-     *                  location is not known.
-     * @param resources The resources used to localize the root object, or {@code null} if the root object was not
-     *                  localized.
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setParkCmbBox();
+    public void start() {
         cleanup();
+        setParkCmbBox();
     }
 
 
@@ -248,7 +242,7 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
             msg.show(applicationWindowController.getRoot());
 
             controller.setMessagePopup(msg);
-            controller.start(parkCmbBox.getValue(), availableSpots);
+            controller.start(parkCmbCheck.getValue(), availableSpots);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,7 +271,7 @@ public class CheckAvailableSpotsController extends BaseController implements Ini
         MakeOrderBtn.setVisible(false);
         errorLbl.setVisible(false);
         availableSpotsTxt.setText("");
-        parkCmbBox.setValue("");
+        parkCmbCheck.setValue("");
     }
 
 }

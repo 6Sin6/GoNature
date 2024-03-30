@@ -84,7 +84,7 @@ public abstract class GeneralEmployeeDashboardController extends BaseController 
      * "Check Available Spots Page." This method is part of the application's UI flow, allowing users, typically
      * employees or park managers, to view the current availability of spots in various parks or facilities
      * managed by the application.
-     * <p>
+     * The controller invokes the start method of the CheckAvailableSpotsController to initialize the page.
      * Upon invocation, this method leverages the {@code applicationWindowController} to switch the current view
      * to the page dedicated to checking spot availability. It ensures that the employees or managers can access
      * the functionality to monitor and manage the occupancy and availability of the managed areas effectively.
@@ -96,6 +96,10 @@ public abstract class GeneralEmployeeDashboardController extends BaseController 
     @FXML
     public void OnClickAvailableSpotButton(ActionEvent ignoredEvent) {
         applicationWindowController.loadEmployeesPage("CheckAvailableSpotsPage");
+        Object controller = applicationWindowController.getCurrentActiveController();
+        if (controller instanceof CheckAvailableSpotsController) {
+            ((CheckAvailableSpotsController) controller).start();
+        }
     }
 
 
