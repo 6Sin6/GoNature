@@ -4,7 +4,19 @@ import Entities.Order;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * The {@code OrderProcessor} class provides functionality to process orders and
+ * determine the optimal combination of them to meet a specified target number of visitors.
+ * It utilizes a recursive approach to explore all possible combinations of orders
+ * and selects the one that most closely matches the target number of visitors without exceeding it.
+ *
+ * <p>The primary method {@code findBestCombination} initiates the process by taking a list of orders
+ * and the target number of visitors as inputs. It then delegates the task to a private recursive method
+ * that iteratively builds combinations of orders, tracks their sum of visitors, and compares them against
+ * the target number. The process aims to find the combination of orders whose sum of visitors is closest to,
+ * but not exceeding, the target number.</p>
 
+ */
 public class OrderProcessor {
     /**
      * Returns the best combination of orders that sum up to the target number of visitors.
