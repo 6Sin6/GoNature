@@ -161,11 +161,9 @@ public class UsageReport extends ParkReport implements Serializable {
         /**
          * This method sets the date from which the park's capacity is valid.
          * It takes a MyTime object representing the date and assigns it to the fromWhatDate field.
-         *
-         * @param fromWhatDate A MyTime object representing the date from which the park's capacity is valid.
          */
-        private void setFromWhatDate(MyTime fromWhatDate) {
-            this.fromWhatDate = fromWhatDate;
+        private void setFromWhatDateNull() {
+            this.fromWhatDate = null;
         }
     }
 
@@ -189,6 +187,7 @@ public class UsageReport extends ParkReport implements Serializable {
 
     private final boolean[][] wasParkFull;
     private int maxValue;
+    private boolean wasFullAtAll;
 
     /**
      * The constructor for the UsageReport class. It takes a park ID, park name, a ResultSet of orders, and a park capacity object.
@@ -209,7 +208,6 @@ public class UsageReport extends ParkReport implements Serializable {
         this.wasParkFull = new boolean[31][12];
         this.maxValue = 0;
         ArrayList<ParkCapacityDetails> capacity = new ArrayList<>();
-        //ParkCapacityDetails[] capacity;
         ArrayList<OrderDetails> orders = new ArrayList<>();
 
 
@@ -241,7 +239,7 @@ public class UsageReport extends ParkReport implements Serializable {
         Iterator<ParkCapacityDetails> iterator_ParkCapacityDetails = capacity.iterator();
         ParkCapacityDetails currCapacity = iterator_ParkCapacityDetails.next(); // It has next for sure, so no need to check
         if (capacity.size() == 1)
-            currCapacity.setFromWhatDate(null);
+            currCapacity.setFromWhatDateNull();
 
         int[] amountToExit = new int[12]; // representing amount of people need to exit, and when (indexing like reportData hours)
         int numOfVisitors, totalInPark = 0;
@@ -251,7 +249,8 @@ public class UsageReport extends ParkReport implements Serializable {
         {
             if (currOrder.enteredTime.getDay() == day) // to check if there were no orders in this day
             {
-                for (int hour = 8; hour < 20; hour++) // meaning time range: [hour, hour+1)
+                int hour = 8;
+                while(hour < 20) // meaning time range: [hour, hour+1)
                 {
                     // collect data for reportData
                     if (currOrder.enteredTime.getDay() == day && currOrder.enteredTime.getHour() == hour) // to check if the current order is relevant
@@ -263,10 +262,6 @@ public class UsageReport extends ParkReport implements Serializable {
                         // if they exit at 20:00 we don't mind since everyone exit there.
                         if (currOrder.getExitedTime().getHour() != 20)
                             amountToExit[this.getIndexForHour(currOrder.getExitedTime())] += numOfVisitors;
-
-                        // go to next order
-                        if (iterator_orders.hasNext())
-                            currOrder = iterator_orders.next();
                     }
                     this.maxValue = Math.max(this.maxValue, totalInPark);
                     totalInPark -= amountToExit[getIndexForHour(hour)];
@@ -279,12 +274,24 @@ public class UsageReport extends ParkReport implements Serializable {
                         if (currCapacity.getFromWhatDate().getDay() <= day && currCapacity.getFromWhatDate().getHour() < hour) {
                             if (iterator_ParkCapacityDetails.hasNext())
                                 currCapacity = iterator_ParkCapacityDetails.next();
-                            else currCapacity.setFromWhatDate(null);
+                            else currCapacity.setFromWhatDateNull();
                         }
                     }
 
-                    if (totalInPark == currCapacity.getParkCapacity())
+                    if (totalInPark >= currCapacity.getParkCapacity())
+                    {
+                        this.wasFullAtAll = true;
                         this.wasParkFull[getIndexForDay(day)][getIndexForHour(hour)] = true;
+                    }
+
+                    // go to next order
+                    if (iterator_orders.hasNext())
+                    {
+                        currOrder = iterator_orders.next();
+                        if (currOrder.getEnteredTime().getHour() != hour)
+                            hour++;
+                    }
+                    else hour++;
                 }
                 // reached end of day, hour is 20, all leaving:
                 totalInPark = 0;
@@ -359,7 +366,7 @@ public class UsageReport extends ParkReport implements Serializable {
         // Add Pie Chart and Table
 
         PdfPTable table = this.createTable();
-        if (table.getTotalHeight() > 0) // Checking if park was full at all this month
+        if (this.wasFullAtAll) // Checking if park was full at all this month
         {
             document.add(super.createPDFTitle("Amount of Days park was full\n"));
             super.addJFreeChartToDocument(document, this.createPieChart(), 500, 500);
@@ -390,7 +397,8 @@ public class UsageReport extends ParkReport implements Serializable {
      */
     private PdfPTable createTable() {
         // Initializing
-        String capacity = "", information = "The park was full in these time ranges: ";
+        StringBuilder capacity = new StringBuilder();
+        StringBuilder information = new StringBuilder("The park was full in these time ranges: ");
         int amountOfTimes = 0;
         // Columns of table
         ArrayList<String> columns = new ArrayList<>();
@@ -408,26 +416,25 @@ public class UsageReport extends ParkReport implements Serializable {
             for (int hour = 8; hour <= 19; hour++) {
                 if (this.wasParkFull[this.getIndexForDay(day)][this.getIndexForHour(hour)]) {
                     amountOfTimes++;
-                    information += this.getHourRange(hour) + ", ";
+                    information.append(this.getHourRange(hour)).append(", ");
 
-                    table.addCell(super.createCenterCell(String.valueOf(day)));
-                    table.addCell(super.createCenterCell(information));
-                    if (capacity == "")
-                        capacity = String.valueOf(this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)]);
-                    else capacity += ", " + this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)];
+                    if (capacity.length() == 0)
+                        capacity = new StringBuilder(String.valueOf(this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)]));
+                    else if (Integer.parseInt(capacity.substring(capacity.length() - 2)) != this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)])
+                        capacity.append(", ").append(this.reportData[this.getIndexForDay(day)][this.getIndexForHour(hour)]);
                 }
             }
             if (amountOfTimes != 0) {
-                information = information.substring(0, information.length() - 2);
+                information = new StringBuilder(information.substring(0, information.length() - 2));
 
                 table.addCell(super.createCenterCell(String.valueOf(day)));
                 table.addCell(super.createCenterCell(String.valueOf(amountOfTimes)));
-                table.addCell(super.createCenterCell(information));
-                table.addCell(super.createCenterCell(capacity));
+                table.addCell(super.createCenterCell(information.toString()));
+                table.addCell(super.createCenterCell(capacity.toString()));
 
-                information = "The park was full in these time ranges: ";
+                information = new StringBuilder("The park was full in these time ranges: ");
                 amountOfTimes = 0;
-                capacity = "";
+                capacity = new StringBuilder();
             }
         }
 
@@ -532,7 +539,7 @@ public class UsageReport extends ParkReport implements Serializable {
         // Customize line thickness and colors
         for (int i = 0; i < dataset.getRowCount(); i++) {
             plot.getRenderer().setSeriesStroke(i, new BasicStroke(2.0f)); // Increase line thickness
-            plot.getRenderer().setSeriesPaint(i, getRandomColor()); // Set a random color for each series
+            plot.getRenderer().setSeriesPaint(i, getColor(i)); // Set a random color for each series
         }
 
         // Set background color
@@ -569,19 +576,49 @@ public class UsageReport extends ParkReport implements Serializable {
         return dataset;
     }
 
+
+
     /**
-     * This method generates a random RGB color.
-     * It generates random integers for the red, green, and blue components of the color, each between 0 and 255.
-     * It then creates and returns a new Color object with the generated RGB components.
+     * Retrieves a color from a predefined array of distinct colors based on the index.
      *
-     * @return A Color object representing a random RGB color.
+     * @param i The index of the color to retrieve.
+     * @return The Color object representing the color at the specified index.
      */
-    private Color getRandomColor() {
-        // Generate a random RGB color
-        int r = (int) (Math.random() * 256);
-        int g = (int) (Math.random() * 256);
-        int b = (int) (Math.random() * 256);
-        return new Color(r, g, b);
+    private Color getColor(int i)
+    {
+        Color[] distinctColors = {
+                new Color(255, 0, 0),       // Red
+                new Color(0, 255, 0),       // Green
+                new Color(0, 0, 255),       // Blue
+                new Color(255, 255, 0),     // Yellow
+                new Color(255, 0, 255),     // Magenta
+                new Color(0, 255, 255),     // Cyan
+                new Color(255, 128, 0),     // Orange
+                new Color(128, 0, 255),     // Purple
+                new Color(255, 128, 128),   // Light Pink
+                new Color(128, 255, 128),   // Light Green
+                new Color(128, 128, 255),   // Light Blue
+                new Color(255, 255, 128),   // Light Yellow
+                new Color(255, 128, 255),   // Light Purple
+                new Color(128, 255, 255),   // Light Cyan
+                new Color(192, 192, 192),   // Light Gray
+                new Color(128, 128, 128),   // Medium Gray
+                new Color(64, 64, 64),      // Dark Gray
+                new Color(0, 0, 0),         // Black
+                new Color(255, 255, 192),   // Pale Yellow
+                new Color(255, 192, 255),   // Pale Magenta
+                new Color(192, 255, 255),   // Pale Cyan
+                new Color(192, 255, 192),   // Pale Green
+                new Color(255, 192, 192),   // Light Coral
+                new Color(192, 192, 255),   // Light Lavender
+                new Color(255, 192, 128),   // Peach
+                new Color(192, 128, 255),   // Lavender
+                new Color(128, 255, 192),   // Light Sea Green
+                new Color(255, 165, 0),     // Orange
+                new Color(255, 69, 0),      // Red-Orange
+                new Color(218, 112, 214)    // Orchid
+        };
+        return distinctColors[i];
     }
 
     /**
@@ -598,8 +635,6 @@ public class UsageReport extends ParkReport implements Serializable {
             return this.maxValue + 5;
         if (factor <= 10)
             return this.maxValue + 10;
-        if (factor <= 15)
-            return this.maxValue + 15;
-        return this.maxValue + 20;
+        return this.maxValue + 15;
     }
 }
