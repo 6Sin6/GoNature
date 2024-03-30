@@ -47,7 +47,7 @@
                </font></MFXButton>
             <ImageView fx:id="imgLoading" fitHeight="50.0" fitWidth="50.0" layoutX="160.0" layoutY="410.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
-                  <Image url="/assets/loading.gif" />
+                  <Image url="@/assets/loading.gif" />
                </image>
             </ImageView>
          </children>
