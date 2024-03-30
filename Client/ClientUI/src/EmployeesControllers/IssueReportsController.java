@@ -116,7 +116,7 @@ public class IssueReportsController extends BaseController {
         btnGenerateReport.setDisable(true);
         generateResultMsg.setText("Generating report...");
         imgLoading.setVisible(true);
-        applicationWindowController.toggleMenuButtons(true, true, true, false, true, true);
+        applicationWindowController.toggleMenuButtons(true);
 
         String selectedReport = reportCmb.getValue();
         String reportType;
