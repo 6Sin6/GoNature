@@ -116,6 +116,28 @@ public class HomePageController extends BaseController implements Initializable 
         }
 
         String[] data = {values[0], values[1]};
+        Message signInReq = new Message(OpCodes.OP_SIGN_IN, values[0], values[0]);
+        ClientUI.client.accept(signInReq);
+        Message respondToSignIn = ClientCommunicator.msg;
+        if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_VISITOR_GROUP_GUIDE) {
+            onAuthPopup.setErrorLabel("Activated Group Guides must connect as users via Login !");
+            return;
+        }
+        if (respondToSignIn.getMsgOpcode() == OpCodes.OP_SIGN_IN_ALREADY_LOGGED_IN) {
+            onAuthPopup.setErrorLabel("Already Signed In !");
+            return;
+        }
+        if (respondToSignIn.getMsgOpcode() == OpCodes.OP_DB_ERR) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.DB_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
+        // Checking if the response from the server is inappropriate.
+        if (respondToSignIn.getMsgOpcode() != OpCodes.OP_SIGN_IN) {
+            ConfirmationPopup confirmationPopup = new ConfirmationPopup(CommonUtils.SERVER_ERROR, applicationWindowController, 800, 400, true, "OK", true);
+            confirmationPopup.show(applicationWindowController.getRoot());
+            return;
+        }
         Message message = new Message(OpCodes.OP_GET_USER_ORDERS_BY_USERID_ORDERID, "", data);
         ClientUI.client.accept(message);
         Message response = ClientCommunicator.msg;
