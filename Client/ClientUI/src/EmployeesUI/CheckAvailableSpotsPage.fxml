@@ -2,7 +2,6 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
-<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.CheckAvailableSpotsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.CheckAvailableSpotsController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -27,8 +26,7 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXLegacyComboBox fx:id="parkCmbCheck" layoutX="66.0" layoutY="259.0" prefHeight="48.0" prefWidth="208.0" />
-            <MFXButton fx:id="ctnCheckAvailability" styleClass="actButtonGreen" buttonType="RAISED" defaultButton="true" layoutX="283.0" layoutY="259.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Check Availability" />
+            <MFXButton fx:id="ctnCheckAvailability" buttonType="RAISED" defaultButton="true" layoutX="283.0" layoutY="259.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Check Availability" />
             <MFXProgressBar fx:id="progressBar" animationSpeed="0.0" layoutX="68.0" layoutY="400.0" prefHeight="40.0" prefWidth="347.0" />
             <Text fx:id="ParkOccupancyTxt" layoutX="68.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Occupancy" wrappingWidth="184.5732421875">
                <font>
@@ -40,12 +38,13 @@
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <MFXButton fx:id="MakeOrderBtn" styleClass="actButtonGreen" buttonType="RAISED" defaultButton="true" layoutX="170.0" layoutY="502.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Make Spontaneous Order" />
+            <MFXButton fx:id="MakeOrderBtn" buttonType="RAISED" defaultButton="true" layoutX="170.0" layoutY="502.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Make Spontaneous Order" />
             <Label fx:id="errorLbl" layoutX="68.0" layoutY="227.0" prefHeight="40.0" prefWidth="153.0" styleClass="error-text" text="Pick a park please:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
+            <Text fx:id="txtParkName" layoutX="66.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" />
          </children>
       </Pane>
    </children>

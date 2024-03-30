@@ -12,7 +12,6 @@ import Entities.ParkEmployee;
 import client.ClientCommunicator;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
-import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,11 +42,10 @@ public class CheckAvailableSpotsController extends BaseController {
     private Integer availableSpots;
 
     /**
-     * ComboBox for selecting a park. Populated with park names from {@code list}.
-     * Uses the JFoenix MFXLegacyComboBox component for enhanced UI features.
+     * Text for displaying park name.
      */
     @FXML
-    private MFXLegacyComboBox<String> parkCmbCheck;
+    private Text txtParkName;
 
     /**
      * Button to initiate the check for parking spot availability.
@@ -132,11 +130,11 @@ public class CheckAvailableSpotsController extends BaseController {
         ParkOccupancyTxt.setVisible(false);
         MakeOrderBtn.setVisible(false);
         availableSpotsTxt.setVisible(false);
-        if (parkCmbCheck.getValue().equals("")) {
+        if (txtParkName.getText().isEmpty()) {
             errorLbl.setVisible(true);
             return;
         }
-        String parkID = ParkBank.getUnmodifiableMap().get(parkCmbCheck.getValue());
+        String parkID = ParkBank.getUnmodifiableMap().get(txtParkName.getText());
         errorLbl.setVisible(false);
         Message msgToServer = new Message(OpCodes.OP_CHECK_AVAILABLE_SPOT, applicationWindowController.getUser().getUsername(), parkID);
         ClientUI.client.accept(msgToServer);
@@ -193,9 +191,8 @@ public class CheckAvailableSpotsController extends BaseController {
      * - The {@code parkCmbBox} is populated with the names of parks, allowing the user to select a park
      * from a dropdown list.
      */
-    private void setParkCmbBox() {
-        parkCmbCheck.setValue(ParkBank.getParkNameByID(((ParkEmployee) applicationWindowController.getUser()).getPark().getParkID()));
-        parkCmbCheck.setDisable(true);
+    private void setParkText() {
+        txtParkName.setText(ParkBank.getParkNameByID(((ParkEmployee) applicationWindowController.getUser()).getPark().getParkID()));
     }
 
     /**
@@ -203,14 +200,14 @@ public class CheckAvailableSpotsController extends BaseController {
      * It sets up the initial state of the UI components, specifically populating the park selection ComboBox
      * and resetting any UI elements to their default state through the {@code cleanup} method.
      * <p>
-     * The {@code setParkCmbBox} method is called to populate the ComboBox with park names, ensuring the user
+     * The {@code setParkText} method is called to populate the ComboBox with park names, ensuring the user
      * can select from the available parks as soon as the UI is displayed. The {@code cleanup} method is invoked
      * to clear any residual data or states that may persist from previous uses of the UI, such as error messages
      * or previously selected items, ensuring a clean state for user interaction.
      */
     public void start() {
         cleanup();
-        setParkCmbBox();
+        setParkText();
     }
 
 
@@ -242,7 +239,7 @@ public class CheckAvailableSpotsController extends BaseController {
             msg.show(applicationWindowController.getRoot());
 
             controller.setMessagePopup(msg);
-            controller.start(parkCmbCheck.getValue(), availableSpots);
+            controller.start(txtParkName.getText(), availableSpots);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -271,7 +268,7 @@ public class CheckAvailableSpotsController extends BaseController {
         MakeOrderBtn.setVisible(false);
         errorLbl.setVisible(false);
         availableSpotsTxt.setText("");
-        parkCmbCheck.setValue("");
+        txtParkName.setText("");
     }
 
 }
