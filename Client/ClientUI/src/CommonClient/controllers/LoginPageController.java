@@ -17,6 +17,11 @@ import javafx.util.Duration;
 import javax.naming.CommunicationException;
 import java.util.ArrayList;
 
+/**
+ * This controller class manages the login page of a JavaFX application. It is responsible for
+ * capturing user input for login credentials, validating these credentials, and facilitating
+ * the navigation based on the user's role after successful authentication.
+ */
 public class LoginPageController extends BaseController {
 
     /**

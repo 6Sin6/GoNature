@@ -15,6 +15,11 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
+/**
+ * Controller class responsible for managing the UI and user interactions on the department manager's dashboard page.
+ * This page provides options for issuing reports, viewing existing reports, and managing authorization requests for
+ * park parameters.
+ */
 public class DepartmentManagerDashboardPageController extends BaseController {
     /**
      * Button for issuing new reports. When clicked, it initiates the process for the department manager to issue new reports.

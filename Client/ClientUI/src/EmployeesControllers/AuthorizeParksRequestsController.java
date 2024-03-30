@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import static CommonUtils.CommonUtils.convertMinutesToTimestamp;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * Controller class responsible for managing the UI and user interactions related to authorizing or declining
+ * park parameter change requests made by park department managers.
+ */
 public class AuthorizeParksRequestsController extends BaseController {
     /**
      * A button used for authorizing selected requests from the table.

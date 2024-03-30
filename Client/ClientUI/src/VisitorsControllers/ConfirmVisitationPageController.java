@@ -18,6 +18,21 @@ import java.util.ArrayList;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This class represents the controller for managing the confirmation of visitation orders.
+ * It controls the UI elements related to confirming or declining visitation requests,
+ * displaying relevant information about the order, and handling user interactions for confirmation or cancellation.
+ * The controller sets up labels to display details of the visitation order, such as park name, number of visitors,
+ * contact information, visitation date and time, and order number.
+ * It also provides methods for setting the order and updating the displayed information accordingly.
+ * The class includes event handlers for clicking the confirm and decline visitation buttons,
+ * which send messages to the server to handle the respective actions.
+ * It displays appropriate confirmation or error messages based on the server response.
+ * Additionally, the controller manages the cleanup of resources and navigation after confirming or declining a visitation order.
+ * The class assumes the existence of an application window controller for managing page navigation and popups,
+ * as well as a client communicator for communicating with the server.
+ */
+
 public class ConfirmVisitationPageController extends BaseController {
     /**
      * Text field displaying the header or title for the current screen or section.

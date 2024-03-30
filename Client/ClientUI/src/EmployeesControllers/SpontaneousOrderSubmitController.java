@@ -17,6 +17,15 @@ import javafx.scene.text.Text;
 
 import javax.naming.CommunicationException;
 
+/**
+ * This class represents the controller for submitting spontaneous orders.
+ * It allows users to create new orders without prior reservation, providing necessary details such as visitor information
+ * and preferences. The controller handles validation of input fields, creation of orders, and communication with the server
+ * to process the order creation request. Upon successful order creation, it displays a confirmation popup and navigates
+ * the user to the GenerateBillPage for further processing. This controller also initializes with park details and
+ * maximum number of visitors allowed for efficient order submission.
+ */
+
 public class SpontaneousOrderSubmitController extends BaseController {
 
     /**

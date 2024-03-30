@@ -27,6 +27,18 @@ import java.util.Map;
 
 import static CommonClient.Utils.getNumberFromMonthName;
 
+/**
+ * This class represents the controller for the view reports page.
+ * It allows park department managers and park managers to select various parameters,
+ * such as the report type, month, year, and park, and view corresponding reports.
+ * The class handles user interactions with combo boxes to select report parameters,
+ * fetches reports from the server, and displays them as PDF files.
+ * Additionally, it provides methods to retrieve department IDs, park IDs, and park names,
+ * as well as to update combo boxes based on user selections.
+ * The class also contains utility methods to clean up UI state, handle selection change events,
+ * and retrieve keys from values in maps.
+ */
+
 public class ViewReportsPageController extends BaseController {
 
     /**

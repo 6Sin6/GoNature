@@ -23,6 +23,14 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This controller manages the UI for updating order details, including email, phone number, and cancellation.
+ * It allows users to update their order information and handles the communication with the server for updating orders.
+ * The controller provides methods to set fields with order details, validate input fields, handle order updates,
+ * cancellation, and bill presentation. It also initializes the UI components and processes user interactions.
+ * The UI elements include labels, text fields, and buttons for updating, canceling, and paying orders.
+ * Additionally, it implements the Initializable interface to initialize the controller class after the FXML file has been loaded.
+ */
 
 public class UpdateOrderDetailsPageController extends BaseController implements Initializable {
 

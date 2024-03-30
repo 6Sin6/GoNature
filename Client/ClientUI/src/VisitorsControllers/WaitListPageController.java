@@ -20,6 +20,15 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This controller manages the waitlist page where users can sign up for the waitlist when the park is at full capacity.
+ * It displays information about the visitation order, including the park name, visitation date, time, visitor's details,
+ * and provides a button for users to sign up for the waitlist. The controller handles button clicks to sign up users
+ * for the waitlist, retrieves the current user from the application window controller, and processes the order accordingly.
+ * It distinguishes between single visitors and visitor group guides and sends appropriate messages to the server based on the user type.
+ * The controller displays confirmation popups based on the server response and allows users to return to the dashboard after signing up.
+ */
+
 public class WaitListPageController extends BaseController implements Initializable {
 
 

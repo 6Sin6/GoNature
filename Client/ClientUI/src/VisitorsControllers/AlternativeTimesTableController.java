@@ -37,6 +37,21 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This class represents the controller for managing alternative times table.
+ * It facilitates the display of available time slots for orders and handles user interactions with the displayed data.
+ * The controller initializes a table view to show available dates and times for orders, allowing users to select
+ * a preferred time slot for alternative order creation.
+ * The class also provides methods for handling user actions, such as clicking the "Handle Order" button to initiate
+ * the creation of an alternative order based on the selected time slot.
+ * Additionally, it communicates with the server to retrieve available time slots and updates the UI accordingly.
+ * The controller ensures proper initialization of UI elements, sets up event handlers for user interactions,
+ * and manages the display of error messages or notifications to the user.
+ * It also contains methods for resetting the UI state and cleaning up after processing.
+ * The class assumes the existence of an application window controller for managing page navigation and popups,
+ * as well as helper methods for processing timestamp data into a displayable format.
+ */
+
 public class AlternativeTimesTableController extends BaseController implements Initializable {
 
     /**

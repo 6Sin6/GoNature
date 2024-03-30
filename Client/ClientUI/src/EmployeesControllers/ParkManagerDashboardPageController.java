@@ -8,6 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 
+/**
+ * This class represents the controller for the park manager dashboard page.
+ * It extends the {@link BaseController} class and provides specific functionality
+ * related to managing the park manager dashboard, including changing park parameters,
+ * issuing reports, and viewing reports.
+ */
 public class ParkManagerDashboardPageController extends BaseController {
 
     /**

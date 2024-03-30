@@ -26,6 +26,16 @@ import java.util.ResourceBundle;
 
 import static CommonClient.Utils.setComboBoxHours;
 
+/**
+ * This controller manages the order visitation page for single visitors.
+ * It handles the form inputs for selecting the date, park, time, and other details
+ * required to create a visitation order. The controller validates user inputs,
+ * creates an order object based on the input data, and sends it to the server for processing.
+ * Depending on the server response, it displays confirmation messages, error messages,
+ * or prompts the user to join a waitlist or view alternative times if the park is at full capacity.
+ * Additionally, it provides methods to initialize the form components, handle button clicks,
+ * and clear/reset the input fields.
+ */
 
 public class VisitorOrderVisitationPageController extends BaseController implements Initializable {
 

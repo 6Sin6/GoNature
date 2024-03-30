@@ -34,6 +34,19 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This class represents the controller for the active orders page.
+ * It allows visitors to view their active orders and handles interactions with order data.
+ * The class manages the display of active orders in a table view, allowing visitors to click on orders
+ * to view their details and handle them accordingly.
+ * The controller initializes the table view with relevant columns and populates it with active orders retrieved from the server.
+ * Visitors can click on an order in the table to select it for further actions, such as updating order details.
+ * The class also provides methods for handling user actions, such as clicking the "Handle Order" button
+ * to update order details or cancelling orders.
+ * Additionally, it configures the appearance of table rows based on the status of the orders,
+ * highlighting waitlisted and confirmed orders with different background colors.
+ * The controller communicates with the server to fetch visitor orders and update order statuses as necessary.
+ */
 
 public class ActiveOrdersPageController extends BaseController implements Initializable {
 

@@ -23,6 +23,11 @@ import java.util.Objects;
 
 import static CommonUtils.CommonUtils.isAllDigits;
 
+/**
+ * Controller class responsible for generating bills for orders in the system.
+ * This class handles user interactions such as entering order IDs and generating bills,
+ * as well as presenting bills and handling responses from the server.
+ */
 public class GenerateBillController extends BaseController {
     /**
      * The button used to generate a bill.

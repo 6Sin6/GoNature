@@ -26,6 +26,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This controller manages the UI for creating group guide visitation orders. It handles user inputs
+ * such as email, first name, last name, phone number, date, number of visitors, park selection, and
+ * time of visit. The controller validates user inputs and communicates with the server to create
+ * new visitation orders. It also handles scenarios such as existing orders, full park capacity, and
+ * alternative time slots or waitlist options. The UI components include text fields, combo boxes, and
+ * date pickers for user interaction. Additionally, the controller provides methods for initializing
+ * the UI components, resetting input fields, validating inputs, and handling the bill presentation
+ * for successful orders. The controller implements the Initializable interface to initialize the
+ * controller class after the FXML file has been loaded, setting up data bindings and event handlers.
+ */
+
 public class GroupGuideOrderVisitationPageController extends BaseController implements Initializable {
     /**
      * ObservableList to hold data for combo boxes or other UI components.

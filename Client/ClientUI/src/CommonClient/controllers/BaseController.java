@@ -1,5 +1,10 @@
 package CommonClient.controllers;
 
+
+/**
+ * An abstract base class for all controllers in the JavaFX application. This class provides common functionalities
+ * and fields that are required by all controllers, such as handling the application's window controller and performing cleanup tasks.
+ */
 public abstract class BaseController {
     protected ApplicationWindowController applicationWindowController;
 

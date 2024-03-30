@@ -12,6 +12,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * This class represents the controller for the registration of a group guide.
+ * It extends the {@link BaseController} class and provides functionality for validating
+ * and submitting the details of a group guide for activation.
+ */
+
 public class RegisterGroupGuideController extends BaseController {
 
     /**

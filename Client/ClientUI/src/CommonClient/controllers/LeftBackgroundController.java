@@ -6,6 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * This class is responsible for controlling a back button represented by an ImageView.
+ * It is part of the application's GUI, specifically designed for use cases where a
+ * navigation menu is not present, and direct, context-sensitive navigation is required.
+ */
 public class LeftBackgroundController extends BaseController {
 
     /**

@@ -24,6 +24,14 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.convertStringToTimestamp;
 import static CommonUtils.CommonUtils.convertTimestampToMinutes;
 
+/**
+ * This class represents the controller for setting park parameters.
+ * It allows park managers to modify parameters such as maximum visitation time, gap between orders and visitors capacity,
+ * and park capacity. The controller communicates with the server to retrieve park details, validate user input,
+ * and submit requests to update park parameters. It provides methods for initializing the controller, cleaning up UI components,
+ * retrieving park parameters, and handling the submission of parameter modification requests.
+ */
+
 public class RequestSettingParkParametersController extends BaseController implements Initializable {
 
     /**

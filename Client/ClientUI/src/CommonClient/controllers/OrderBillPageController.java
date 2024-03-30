@@ -17,6 +17,10 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Controller class responsible for managing the UI and user interactions
+ * related to displaying billing information for an order.
+ */
 public class OrderBillPageController extends BaseController {
     /**
      * An ImageView serving as a back button, allowing users to return to the previous screen.

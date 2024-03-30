@@ -10,6 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * This class represents the controller for the Connect Client Page in a JavaFX application. It extends a base controller
+ * class and manages the user interface and interactions for connecting to a server.
+ */
 public class ConnectClientPageController extends BaseController {
 
     /**

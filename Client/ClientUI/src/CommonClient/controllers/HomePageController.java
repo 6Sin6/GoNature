@@ -22,6 +22,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the Home Page of the JavaFX application, managing user interactions for authentication,
+ * booking, and navigating other sections of the application.
+ */
 public class HomePageController extends BaseController implements Initializable {
     /**
      * The button used for booking actions.

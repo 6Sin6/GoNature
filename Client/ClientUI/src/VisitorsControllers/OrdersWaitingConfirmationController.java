@@ -31,6 +31,18 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This controller manages the UI for displaying and handling visitor orders awaiting confirmation.
+ * It includes a TableView to display order details such as order number, park name, number of visitors,
+ * telephone, email, date, and time. The controller provides functionality to handle order confirmation
+ * by loading the ConfirmVisitationPage for selected orders. It also filters and populates the TableView
+ * with orders in the "Pending Confirmation" status. The UI elements include TableView, TableColumns,
+ * Label, and a Button for handling orders. The controller implements the Initializable interface to
+ * initialize the controller class after the FXML file has been loaded, setting up data bindings and
+ * event handlers. It also utilizes common utility methods for parsing visit dates and times. Additionally,
+ * the controller sets up row click events to select orders in the TableView and updates the rowIndex accordingly.
+ */
+
 public class OrdersWaitingConfirmationController extends BaseController implements Initializable {
 
     /**

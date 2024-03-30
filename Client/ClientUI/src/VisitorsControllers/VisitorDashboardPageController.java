@@ -10,6 +10,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
+/**
+ * This controller manages the dashboard page for single visitors.
+ * It handles UI elements such as buttons, text, and images for ordering visits and viewing orders.
+ * The controller provides methods to initialize the dashboard, handle button clicks for ordering visits and viewing orders,
+ * and retrieve the unique ID of the current user, assumed to be a SingleVisitor.
+ * Additionally, it extends the GeneralVisitorDashboard class to inherit common functionality and UI elements.
+ */
+
 public class VisitorDashboardPageController extends GeneralVisitorDashboard {
     /**
      * Default constructor for the VisitorDashboardPageController.

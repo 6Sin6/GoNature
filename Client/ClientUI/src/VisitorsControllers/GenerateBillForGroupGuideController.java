@@ -13,6 +13,16 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This controller manages the generation of bills for group guide orders.
+ * It extends the {@link CommonClient.controllers.OrderBillPageController OrderBillPageController}
+ * and is responsible for initializing the UI with information related to the provided order,
+ * handling user actions such as proceeding to payment, and interacting with the server to mark
+ * group guide orders as paid. The UI includes fields for displaying order details such as
+ * the order ID, number of visitors, price, discount, and total price after discount.
+ * The controller also handles cleanup of the UI and closing of associated message popups.
+ */
+
 public class GenerateBillForGroupGuideController extends OrderBillPageController {
 
     /**

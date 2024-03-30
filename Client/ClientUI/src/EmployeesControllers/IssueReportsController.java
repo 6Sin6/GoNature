@@ -16,7 +16,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
-
+/**
+ * Controller class responsible for handling the generation of reports by employees.
+ * This class allows users to select a report type from a combo box and initiate the generation process.
+ * It displays relevant UI elements during the report generation process and updates them upon completion.
+ */
 public class IssueReportsController extends BaseController {
     /**
      * The button that triggers the generation of a report.

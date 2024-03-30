@@ -13,6 +13,11 @@ import javafx.fxml.FXML;
 
 import static Entities.OpCodes.OP_UPDATE_EXIT_TIME_OF_ORDER;
 
+/**
+ * Abstract controller class providing common functionality for general employee dashboard pages.
+ * This class defines methods for handling user interactions such as submitting data and navigating
+ * to different pages within the application.
+ */
 public abstract class GeneralEmployeeDashboardController extends BaseController {
     protected InputTextPopup popup;
 

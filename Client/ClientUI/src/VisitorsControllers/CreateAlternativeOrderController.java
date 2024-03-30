@@ -20,6 +20,21 @@ import java.util.ResourceBundle;
 import static CommonUtils.CommonUtils.parseVisitDate;
 import static CommonUtils.CommonUtils.parseVisitTime;
 
+/**
+ * This class represents the controller for creating alternative visitation orders.
+ * It controls the UI elements related to signing up for visitation, displaying order details,
+ * handling user interactions, and communicating with the server to create new visitation orders.
+ * The controller sets up labels to display details of the visitation order, such as park name,
+ * number of visitors, contact information, visitation date and time, and order number.
+ * It also provides a method for setting the fields with order details and a full name.
+ * The class includes an event handler for clicking the sign-up button, which sends a message to the server
+ * to create a new visitation order and displays appropriate confirmation or error messages based on the server response.
+ * Additionally, it handles the initialization of the controller after loading the FXML file
+ * and manages the presentation of a bill for the order in case of a visitor group guide.
+ * The class assumes the existence of an application window controller for managing page navigation and popups,
+ * as well as a client communicator for communicating with the server.
+ */
+
 public class CreateAlternativeOrderController extends BaseController implements Initializable {
 
     /**
