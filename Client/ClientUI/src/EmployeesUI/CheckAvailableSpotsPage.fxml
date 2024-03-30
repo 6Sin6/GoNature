@@ -28,7 +28,7 @@
                </font>
             </Text>
             <MFXLegacyComboBox fx:id="parkCmbBox" layoutX="66.0" layoutY="259.0" prefHeight="48.0" prefWidth="208.0" />
-            <MFXButton fx:id="ctnCheckAvailability" buttonType="RAISED" defaultButton="true" layoutX="283.0" layoutY="259.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Check Availability" />
+            <MFXButton fx:id="ctnCheckAvailability" styleClass="actButtonGreen" buttonType="RAISED" defaultButton="true" layoutX="283.0" layoutY="259.0" onAction="#OnClickctnCheckAvailability" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Check Availability" />
             <MFXProgressBar fx:id="progressBar" animationSpeed="0.0" layoutX="68.0" layoutY="400.0" prefHeight="40.0" prefWidth="347.0" />
             <Text fx:id="ParkOccupancyTxt" layoutX="68.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Park Occupancy" wrappingWidth="184.5732421875">
                <font>
@@ -40,7 +40,7 @@
                   <Font name="System Bold" size="21.0" />
                </font>
             </Text>
-            <MFXButton fx:id="MakeOrderBtn" buttonType="RAISED" defaultButton="true" layoutX="170.0" layoutY="502.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Make Spontaneous Order" />
+            <MFXButton fx:id="MakeOrderBtn" styleClass="actButtonGreen" buttonType="RAISED" defaultButton="true" layoutX="170.0" layoutY="502.0" onAction="#OnClickMakeOrderBtn" prefHeight="48.0" prefWidth="165.0" rippleColor="#adff49" text="Make Spontaneous Order" />
             <Label fx:id="errorLbl" layoutX="68.0" layoutY="227.0" prefHeight="40.0" prefWidth="153.0" styleClass="error-text" text="Pick a park please:">
                <font>
                   <Font size="18.0" />

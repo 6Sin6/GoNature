@@ -9,9 +9,9 @@ public class ParkEmployeeDashboardControllerPageController extends GeneralEmploy
      * This method calls the superclass method {@code OnClickExitButton} with a null argument,
      * effectively simulating a click on the exit button to update the exit time.
      *
-     * @param event The ActionEvent triggered by clicking the "UpdateExitTime" button.
+     * @param ignoredEvent The ActionEvent triggered by clicking the "UpdateExitTime" button.
      */
-    public void OnClickUpdateExitTime(ActionEvent event) {
+    public void OnClickUpdateExitTime(ActionEvent ignoredEvent) {
         super.OnClickExitButton(null);
     }
 }
