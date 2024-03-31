@@ -74,7 +74,7 @@ public class ConfirmationPopup extends BasePopup {
         yesButton.setText(FirstBtn);
         yesButton.getStyleClass().add("menu-item-big");
         Label questionLabel = new Label(question);
-        questionLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white;");
+        questionLabel.setStyle("-fx-font-size: 20px;-fx-text-fill: white; -fx-wrap-text: true; -fx-text-alignment: center;");
         popup.getChildren().addAll(questionLabel, yesButton);
 
         yesButton.setOnAction(e -> {
@@ -103,7 +103,7 @@ public class ConfirmationPopup extends BasePopup {
      */
     public ConfirmationPopup(Integer ErrorMsg, ApplicationWindowController appController, int width, int height, boolean fullScreenMode, String FirstBtn, boolean exitOnOut) {
         super(fullScreenMode, width, height);
-        String question = "";
+            String question = "";
         switch (ErrorMsg) {
             case 1:
                 question = DB_ERROR_MSG;

@@ -11,105 +11,90 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane id="rootBillPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.SpontaneousOrderSubmitController">
+<Pane id="rootBillPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmployeesControllers.SpontaneousOrderSubmitController">
     <children>
         <ImageView fitHeight="800.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/parkEmployeeBackground.jpg"/>
+                <Image url="@/assets/parkEmployeeBackground.jpg" />
             </image>
         </ImageView>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="399.0" layoutX="42.0" layoutY="191.0"
-                   stroke="BLACK" strokeType="INSIDE" width="407.0"/>
-        <Text layoutX="252.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spontaneous Order"
-              textAlignment="CENTER" wrappingWidth="496.873046875">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#88ddd4" height="451.0" layoutX="42.0" layoutY="191.0" stroke="BLACK" strokeType="INSIDE" width="407.0" />
+        <Text layoutX="252.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spontaneous Order" textAlignment="CENTER" wrappingWidth="496.873046875">
             <font>
-                <Font name="System Bold" size="48.0"/>
+                <Font name="System Bold" size="48.0" />
             </font>
         </Text>
-        <MFXButton fx:id="btnCreateOrder" styleClass="actButtonGreen" buttonType="RAISED" defaultButton="true" layoutX="196.0" layoutY="529.0"
-                   onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49"
-                   text="Create Order"/>
+        <MFXButton fx:id="btnCreateOrder" buttonType="RAISED" defaultButton="true" layoutX="212.0" layoutY="576.0" onAction="#OnClickCreateOrderButton" prefHeight="50.0" prefWidth="100.0" rippleColor="#adff49" styleClass="actButtonGreen" text="Create Order" />
         <Text layoutX="90.0" layoutY="287.0" text="First Name:">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
         <Text layoutX="90.0" layoutY="330.0" text="Last Name:">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
         <Text layoutX="90.0" layoutY="371.0" text="Number of visitors:">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
         <Text layoutX="90.0" layoutY="417.0" text="Phone:">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
         <Text layoutX="90.0" layoutY="457.0" text="Email:">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
-        <Text fx:id="DetailsTxt" layoutX="46.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              wrappingWidth="399.8730396926403">
+        <Text fx:id="DetailsTxt" layoutX="46.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="399.8730396926403">
             <font>
-                <Font name="System Bold" size="18.0"/>
+                <Font name="System Bold" size="18.0" />
             </font>
         </Text>
-        <Label fx:id="errorLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="52.0" layoutY="436.0"
-               prefHeight="40.0" prefWidth="387.0" styleClass="error-text" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="errorLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="59.0" layoutY="480.0" prefHeight="40.0" prefWidth="387.0" styleClass="error-text" textAlignment="CENTER" textFill="RED">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Label>
-        <TextField fx:id="txtFirstName" layoutX="230.0" layoutY="265.0" prefHeight="30.0" prefWidth="200.0"/>
-        <TextField fx:id="txtLastName" layoutX="230.0" layoutY="308.0" prefHeight="30.0" prefWidth="200.0"/>
-        <TextField fx:id="txtNumOfVisitors" alignment="CENTER" layoutX="230.0" layoutY="349.0" prefHeight="30.0"
-                   prefWidth="200.0" promptText="1"/>
-        <TextField fx:id="txtPhone" layoutX="230.0" layoutY="395.0" prefHeight="30.0" prefWidth="200.0"
-                   promptText="0512345678"/>
-        <TextField fx:id="txtEmail" layoutX="230.0" layoutY="435.0" prefHeight="30.0" prefWidth="200.0"
-                   promptText="israelwins@mail.com"/>
-        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="265.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <TextField fx:id="txtFirstName" layoutX="230.0" layoutY="265.0" prefHeight="30.0" prefWidth="200.0" />
+        <TextField fx:id="txtLastName" layoutX="230.0" layoutY="308.0" prefHeight="30.0" prefWidth="200.0" />
+        <TextField fx:id="txtNumOfVisitors" alignment="CENTER" layoutX="230.0" layoutY="349.0" prefHeight="30.0" prefWidth="200.0" promptText="1" />
+        <TextField fx:id="txtPhone" layoutX="230.0" layoutY="395.0" prefHeight="30.0" prefWidth="200.0" promptText="0512345678" />
+        <TextField fx:id="txtEmail" layoutX="230.0" layoutY="435.0" prefHeight="30.0" prefWidth="200.0" promptText="israelwins@mail.com" />
+        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/fnameIcon.png"/>
+                <Image url="@/assets/fnameIcon.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="308.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/fnameIcon.png"/>
+                <Image url="@/assets/fnameIcon.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="349.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/familyIcon.png"/>
+                <Image url="@/assets/familyIcon.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="395.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="395.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/phoneIcon.png"/>
+                <Image url="@/assets/phoneIcon.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="435.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="52.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/assets/emailIcon.png"/>
+                <Image url="@/assets/emailIcon.png" />
             </image>
         </ImageView>
-        <Text layoutX="82.0" layoutY="505.0" text="With a group guide?" wrappingWidth="323.0">
+        <Text layoutX="98.0" layoutY="552.0" text="With a group guide?" wrappingWidth="323.0">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
-        <CheckBox fx:id="groupGuideCheckBox" layoutX="54.0" layoutY="491.0" mnemonicParsing="false"/>
+        <CheckBox fx:id="groupGuideCheckBox" layoutX="70.0" layoutY="538.0" mnemonicParsing="false" />
     </children>
 </Pane>
