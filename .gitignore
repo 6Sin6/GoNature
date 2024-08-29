@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Intellij IDEA
 .idea
 .classpath
@@ -7,4 +8,15 @@ out/
 
 # Project exclude paths
 /Client/GoNatureClient/bin/
+=======
+# Intellij IDEA
+.idea
+.classpath
+# Bin folder
+bin/
+out/
+
+# Project exclude paths
+/Client/GoNatureClient/bin/
+>>>>>>> 937eb6f28e58b044d4520868dfaf69406b7405b6
 /GoNatureServer/bin/

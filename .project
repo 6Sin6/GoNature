@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>GoNature-ProjectDev</name>
@@ -12,4 +13,20 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>GoNature-ProjectDev</name>
+	<comment/>
+	<projects/>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments/>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+>>>>>>> 937eb6f28e58b044d4520868dfaf69406b7405b6
 </projectDescription>
